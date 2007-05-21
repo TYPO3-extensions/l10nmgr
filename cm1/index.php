@@ -262,19 +262,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$fileContent = t3lib_div::getUrl($uploadedTempFile);
 				t3lib_div::unlink_tempfile($uploadedTempFile);
 
-					// Parse XML in a rude fashion:
-				$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML!
-				$translation = array();
-
-					// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
-				if (is_array($xmlNodes['Workbook'][0]['ch']['Worksheet'][0]['ch']['Table'][0]['ch']['Row']))	{
-					foreach($xmlNodes['Workbook'][0]['ch']['Worksheet'][0]['ch']['Table'][0]['ch']['Row'] as $row)	{
-						if (!isset($row['ch']['Cell'][0]['attrs']['ss:Index']))	{
-							list($Ttable, $Tuid, $Tkey) = explode('][',substr(trim($row['ch']['Cell'][0]['ch']['Data'][0]['values'][0]),12,-1));
-							$translation[$Ttable][$Tuid][$Tkey] = $row['ch']['Cell'][3]['ch']['Data'][0]['values'][0];
-						}
-					}
-				}
+					// Parse XML
+				$translation = $this->parseXML( $fileContent );
 				
 				if (count($translation) && $this->submitContent($accum,$translation)) {
 					$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
@@ -761,6 +750,33 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			// Serialize back and save it to record:
 		$l10ncfg['flexformdiff'] = serialize($flexFormDiffForAllLanguages);
 		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg','uid='.intval($l10ncfg['uid']),array('flexformdiff' => $l10ncfg['flexformdiff']));
+	}
+
+
+
+	function parseXML( $fileContent ) {
+			// Parse XML in a rude fashion:
+		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML!
+		$translation = array();
+
+			// At least OpenOfficeOrg Calc changes the worksheet identifier. For now we better check for this, otherwise we cannot import translations edited with OpenOfficeOrg Calc.
+		if ( isset( $xmlNodes['Workbook'][0]['ch']['Worksheet'] ) ) {
+			$worksheetIdentifier = 'Worksheet';
+		}
+		if ( isset( $xmlNodes['Workbook'][0]['ch']['ss:Worksheet'] ) ) {
+			$worksheetIdentifier = 'ss:Worksheet';
+		}
+
+			// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
+		if (is_array($xmlNodes['Workbook'][0]['ch'][$worksheetIdentifier][0]['ch']['Table'][0]['ch']['Row']))	{
+			foreach($xmlNodes['Workbook'][0]['ch'][$worksheetIdentifier][0]['ch']['Table'][0]['ch']['Row'] as $row)	{
+				if (!isset($row['ch']['Cell'][0]['attrs']['ss:Index']))	{
+					list($Ttable, $Tuid, $Tkey) = explode('][',substr(trim($row['ch']['Cell'][0]['ch']['Data'][0]['values'][0]),12,-1));
+					$translation[$Ttable][$Tuid][$Tkey] = $row['ch']['Cell'][3]['ch']['Data'][0]['values'][0];
+				}
+			}
+		}
+		return $translation;
 	}
 }
 

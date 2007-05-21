@@ -1,4 +1,6 @@
-(add new changes on top of this file)
+2007-05-21 Andreas Otto <andreas.otto@dkd.de>
+
+	* Applied patch to file cm1/index.php: Make it possible to import XML files that were created with OpenOffice.org.
 
 06-11-29 Kasper Skårhøj  <kasperYYYY@typo3.com>
 
