@@ -2,14 +2,11 @@
 <T3locallang>
 	<meta type="array">
 		<type>module</type>
-		<description>Language labels for l10nmgr module cm1</description>
+		<description>Language labels for l10nmgr module cm2</description>
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="title">L10N Export/Import</label>
-			<label index="function1">Function #1</label>
-			<label index="function2">Function #2</label>
-			<label index="function3">Function #3</label>
+			<label index="title">L10N Translation Index Overview</label>
 		</languageKey>
 	</data>
 </T3locallang>
