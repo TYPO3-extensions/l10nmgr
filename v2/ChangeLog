@@ -1,3 +1,6 @@
+2007-10-22 Daniel Zielinski <d.zielinski@mx.uni-saarland.de>
+	* Added xml:lang attribute to XML export
+	* Changed filenaming. Now uses ISO-2-Letter code.
 2007-10-20 Kasper Skårhøj
 
 	* Committed work I did on this extension for Dassault in August and October. This includes:
