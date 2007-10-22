@@ -1,7 +1,7 @@
 <?php
 
 	// DO NOT REMOVE OR CHANGE THESE 3 LINES:
-define('TYPO3_MOD_PATH', '../typo3conf/ext/l10nmgr/mod1/');
+define('TYPO3_MOD_PATH', '../typo3conf/ext/tx_l10nmgr/mod1/');
 $BACK_PATH='../../../../typo3/';
 $MCONF['name']='web_txl10nmgrM1';
 
@@ -10,5 +10,5 @@ $MCONF['access']='user,group';
 $MCONF['script']='index.php';
 
 $MLANG['default']['tabs_images']['tab'] = 'moduleicon.gif';
-$MLANG['default']['ll_ref']='LLL:EXT:l10nmgr/mod1/locallang_mod.xml';
+$MLANG['default']['ll_ref']='LLL:EXT:tx_l10nmgr/mod1/locallang_mod.xml';
 ?>

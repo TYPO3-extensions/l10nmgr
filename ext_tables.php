@@ -9,7 +9,7 @@ t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_cfg");
 
 $TCA["tx_l10nmgr_cfg"] = Array (
 	"ctrl" => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg',		
+		'title' => 'LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg',		
 		'label' => 'title',	
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
@@ -25,7 +25,7 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 
 $TCA["tx_l10nmgr_priorities"] = Array (
 	"ctrl" => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities',		
+		'title' => 'LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_priorities',		
 		'label' => 'title',	
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
