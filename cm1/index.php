@@ -605,21 +605,30 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 		}
 
-		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count></TYPO3LOC>";
-		$XML = str_replace('###INSERT_ROWS###',implode('', $output), $XML);
-		$XML = str_replace('###INSERT_ROW_COUNT###',count($output), $XML);
-
 		//get syslang name
 		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
 		$sysL = $t8Tools->getSystemLanguages();
 		foreach($sysL as $sL)	{
 			if ($sL['uid']==$sysLang)	{
 				$sysLangName=str_replace(' ','-',$sL['title']);
+				$sysLangIso2L=$sL['static_lang_isocode'];
 			}
 		}
 		
+		// get ISO2L code
+		if ($sysLangIso2L && t3lib_extMgm::isLoaded('static_info_tables'))        {
+			$iso2L = '';
+			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$sysLangIso2L,'lg_iso_2');
+			$iso2L = ' xml:lang="'.$staticLangArr['lg_iso_2'].'"';
+		}
+
+		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\"".$iso2L.">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count></TYPO3LOC>";
+
+		$XML = str_replace('###INSERT_ROWS###',implode('', $output), $XML);
+		$XML = str_replace('###INSERT_ROW_COUNT###',count($output), $XML);
+
 			// Setting filename:
-		$filename = 'xml_export_'.$sysLangName.'_'.date('dmy-Hi').'.xml';
+		$filename = 'xml_export_'.$staticLangArr['lg_iso_2'].'_'.date('dmy-Hi').'.xml';
 
 			// Creating output header:
 		$mimeType = 'text/xml';
