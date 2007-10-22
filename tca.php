@@ -87,4 +87,71 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 		"1" => Array("showitem" => "")
 	)
 );
+
+$TCA["tx_l10nmgr_priorities"] = Array (
+	"ctrl" => $TCA["tx_l10nmgr_priorities"]["ctrl"],
+	"interface" => Array (
+		"showRecordFieldList" => "hidden,title,description,languages,element"
+	),
+	"feInterface" => $TCA["tx_l10nmgr_priorities"]["feInterface"],
+	"columns" => Array (
+		"hidden" => Array (		
+			"exclude" => 1,
+			"label" => "LLL:EXT:lang/locallang_general.xml:LGL.hidden",
+			"config" => Array (
+				"type" => "check",
+				"default" => "0"
+			)
+		),
+		"title" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.title",		
+			"config" => Array (
+				"type" => "input",	
+				"size" => "30",
+			)
+		),
+		"description" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.description",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",	
+				"rows" => "5",
+			)
+		),
+		"languages" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.languages",		
+			"config" => Array (
+				"type" => "select",	
+				"foreign_table" => "sys_language",	
+				"foreign_table_where" => "AND sys_language.pid=###SITEROOT### ORDER BY sys_language.uid",	
+				"size" => 5,	
+				"minitems" => 0,
+				"maxitems" => 100,
+			)
+		),
+		"element" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.element",		
+			"config" => Array (
+				"type" => "group",	
+				"internal_type" => "db",	
+				"allowed" => "*",	
+				"prepend_tname" => TRUE,
+				"size" => 10,	
+				"minitems" => 0,
+				"maxitems" => 10,
+				"show_thumbs" => 1
+			)
+		),
+	),
+	"types" => Array (
+		"0" => Array("showitem" => "hidden;;1;;1-1-1, title;;;;2-2-2, description;;;;3-3-3, languages, element")
+	),
+	"palettes" => Array (
+		"1" => Array("showitem" => "")
+	)
+);
 ?>
