@@ -3,6 +3,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 if (TYPO3_MODE=="BE")    {
         
     t3lib_extMgm::addModule("web","txl10nmgrM1","",t3lib_extMgm::extPath($_EXTKEY)."mod1/");
+	t3lib_extMgm::addModule("user","txl10nmgrM2","top",t3lib_extMgm::extPath($_EXTKEY)."mod2/");
 }
 t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_cfg");
 
@@ -22,6 +23,27 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 	)
 );
 
+$TCA["tx_l10nmgr_priorities"] = Array (
+	"ctrl" => Array (
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities',		
+		'label' => 'title',	
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'cruser_id' => 'cruser_id',
+		"sortby" => "sorting",	
+		"delete" => "deleted",	
+		"rootLevel" => 1,
+		"enablecolumns" => Array (		
+			"disabled" => "hidden",
+		),
+		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
+		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_priorities.gif",
+	),
+	"feInterface" => Array (
+		"fe_admin_fieldList" => "hidden, title, description, languages, element",
+	)
+);
+
 
 if (TYPO3_MODE=="BE")	{
 	$GLOBALS["TBE_MODULES_EXT"]["xMOD_alt_clickmenu"]["extendCMclasses"][]=array(
@@ -29,4 +51,5 @@ if (TYPO3_MODE=="BE")	{
 		"path" => t3lib_extMgm::extPath($_EXTKEY)."class.tx_l10nmgr_cm1.php"
 	);
 }
+
 ?>

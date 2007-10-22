@@ -26,6 +26,12 @@
 			<label index="tx_l10nmgr_cfg.tablelist">Tables to export:</label>
 			<label index="tx_l10nmgr_cfg.exclude">Exclude elements (comma list of &quot;table:uid&quot; pairs):</label>
 			<label index="tx_l10nmgr_cfg.include">Include elements (comma list of &quot;table:uid&quot; pairs):</label>
+			
+			<label index="tx_l10nmgr_priorities">Localization Priority</label>
+			<label index="tx_l10nmgr_priorities.title">Title:</label>
+			<label index="tx_l10nmgr_priorities.description">Description:</label>
+			<label index="tx_l10nmgr_priorities.languages">Priority applies to languages:</label>
+			<label index="tx_l10nmgr_priorities.element">Element(s):</label>			
 		</languageKey>
 	</data>
 </T3locallang>

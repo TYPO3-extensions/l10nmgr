@@ -85,9 +85,7 @@ class tx_l10nmgr_cm1 {
 				1	// Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
 			);
 
-
-
-			// Simply merges the two arrays together and returns ...
+				// Simply merges the two arrays together and returns ...
 			$menuItems=array_merge($menuItems,$localItems);
 		}
 		return $menuItems;
