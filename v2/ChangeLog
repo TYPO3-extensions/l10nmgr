@@ -6,6 +6,8 @@
 	* Added settings file for SDLTrados TagEditor to cm1.
 	* Added settings file for SDL Passolo to cm1.
 	* Added TODO/wish list.
+	* Modified l10nmgr_cfg table. Added source language selection field.
+	* Added CSH functionality.
 
 2007-10-20 Kasper Skårhøj
 

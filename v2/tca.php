@@ -4,7 +4,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 $TCA["tx_l10nmgr_cfg"] = Array (
 	"ctrl" => $TCA["tx_l10nmgr_cfg"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "title,depth,tablelist,exclude"
+		"showRecordFieldList" => "title,depth,sourceLangStaticId,tablelist,exclude"
 	),
 	"feInterface" => $TCA["tx_l10nmgr_cfg"]["feInterface"],
 	"columns" => Array (
@@ -79,9 +79,25 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 				"rows" => "3",
 			)
 		),
+		"sourceLangStaticId" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.sourceLang",		
+			"displayCond" => "EXT:static_info_tables:LOADED:true",
+			"config" => Array (
+				'type' => 'select',
+				'items' => Array (
+					Array('',0),
+				),
+				'foreign_table' => 'static_languages',
+				'foreign_table_where' => 'AND static_languages.pid=0 ORDER BY static_languages.lg_name_en',
+				'size' => 1,
+				'minitems' => 0,
+				'maxitems' => 1,
+			)
+		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "title;;;;2-2-2, depth;;;;3-3-3, tablelist, exclude, include, displaymode")
+		"0" => Array("showitem" => "title;;;;2-2-2, depth;;;;3-3-3, sourceLangStaticId, tablelist, exclude, include, displaymode")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
