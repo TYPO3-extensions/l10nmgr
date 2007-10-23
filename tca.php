@@ -10,7 +10,7 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 	"columns" => Array (
 		"title" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.title",		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.title",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "48",	
@@ -19,16 +19,16 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 		),
 		"depth" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth",		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth",		
 			"config" => Array (
 				"type" => "select",
 				"items" => Array (
-					Array("LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.0", "0"),
-					Array("LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.1", "1"),
-					Array("LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.2", "2"),
-					Array("LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.3", "3"),
-					Array("LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.4", "100"),
-					Array("LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.-1", "-1"),
+					Array("LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.0", "0"),
+					Array("LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.1", "1"),
+					Array("LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.2", "2"),
+					Array("LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.3", "3"),
+					Array("LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.4", "100"),
+					Array("LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.depth.I.-1", "-1"),
 				),
 				"size" => 1,	
 				"maxitems" => 1,
@@ -36,13 +36,13 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 		),
 		"displaymode" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.displaymode",		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.displaymode",		
 			"config" => Array (
 				"type" => "select",
 				"items" => Array (
-					Array("LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.displaymode.I.0", "0"),
-					Array("LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.displaymode.I.1", "1"),
-					Array("LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.displaymode.I.2", "2"),
+					Array("LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.displaymode.I.0", "0"),
+					Array("LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.displaymode.I.1", "1"),
+					Array("LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.displaymode.I.2", "2"),
 				),
 				"size" => 1,	
 				"maxitems" => 1,
@@ -50,7 +50,7 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 		),
 		"tablelist" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.tablelist",		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.tablelist",		
 			"config" => Array (
 				'type' => 'select',
 				'special' => 'tables',
@@ -63,7 +63,7 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 		),
 		"exclude" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.exclude",		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.exclude",		
 			"config" => Array (
 				"type" => "text",
 				"cols" => "48",	
@@ -72,7 +72,7 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 		),
 		"include" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.include",		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.include",		
 			"config" => Array (
 				"type" => "text",
 				"cols" => "48",	
@@ -105,7 +105,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 		),
 		"title" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.title",		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.title",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "30",
@@ -113,7 +113,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 		),
 		"description" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.description",		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.description",		
 			"config" => Array (
 				"type" => "text",
 				"cols" => "30",	
@@ -122,7 +122,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 		),
 		"languages" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.languages",		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.languages",		
 			"config" => Array (
 				"type" => "select",	
 				"foreign_table" => "sys_language",	
@@ -134,7 +134,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 		),
 		"element" => Array (		
 			"exclude" => 1,		
-			"label" => "LLL:EXT:tx_l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.element",		
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.element",		
 			"config" => Array (
 				"type" => "group",	
 				"internal_type" => "db",	

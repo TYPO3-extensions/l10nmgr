@@ -52,7 +52,7 @@
 
 
 	// Include API
-require_once (t3lib_extMgm::extPath('tx_l10nmgr').'cm1/class.tx_l10nmgr_tools.php');
+require_once (t3lib_extMgm::extPath('l10nmgr').'cm1/class.tx_l10nmgr_tools.php');
 
 
 /**
@@ -188,10 +188,6 @@ Traversing page tree and building an index of translation needs
 			}
 		}
 	}
-}
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tx_l10nmgr/class.tx_l10nmgr_index.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tx_l10nmgr/class.tx_l10nmgr_index.php']);
 }
 
 ?>

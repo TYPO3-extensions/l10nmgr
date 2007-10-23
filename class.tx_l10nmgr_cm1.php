@@ -77,10 +77,10 @@ class tx_l10nmgr_cm1 {
 
 				// Repeat this (below) for as many items you want to add!
 				// Remember to add entries in the localconf.php file for additional titles.
-			$url = t3lib_extMgm::extRelPath("tx_l10nmgr")."cm1/index.php?id=".$uid;
+			$url = t3lib_extMgm::extRelPath("l10nmgr")."cm1/index.php?id=".$uid;
 			$localItems[] = $backRef->linkItem(
 				$GLOBALS["LANG"]->getLLL("cm1_title",$LL),
-				$backRef->excludeIcon('<img src="'.t3lib_extMgm::extRelPath("tx_l10nmgr").'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
+				$backRef->excludeIcon('<img src="'.t3lib_extMgm::extRelPath("l10nmgr").'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
 				$backRef->urlRefForCM($url),
 				1	// Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
 			);
@@ -99,15 +99,15 @@ class tx_l10nmgr_cm1 {
 	function includeLL()	{
 		global $LANG;
 
-		$LOCAL_LANG = $LANG->includeLLFile('EXT:tx_l10nmgr/locallang.xml',FALSE);
+		$LOCAL_LANG = $LANG->includeLLFile('EXT:l10nmgr/locallang.xml',FALSE);
 		return $LOCAL_LANG;
 	}
 }
 
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tx_l10nmgr/class.tx_l10nmgr_cm1.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tx_l10nmgr/class.tx_l10nmgr_cm1.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/class.tx_l10nmgr_cm1.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/class.tx_l10nmgr_cm1.php']);
 }
 
 ?>

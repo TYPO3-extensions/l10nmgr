@@ -22,7 +22,7 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
- * Module 'L10N Manager' for the 'tx_l10nmgr' extension.
+ * Module 'L10N Manager' for the 'l10nmgr' extension.
  *
  * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
  */
@@ -34,7 +34,7 @@ unset($MCONF);
 require ("conf.php");
 require ($BACK_PATH."init.php");
 require ($BACK_PATH."template.php");
-$LANG->includeLLFile("EXT:tx_l10nmgr/mod1/locallang.xml");
+$LANG->includeLLFile("EXT:l10nmgr/mod1/locallang.xml");
 require_once (PATH_t3lib."class.t3lib_scbase.php");
 $BE_USER->modAccess($MCONF,1);	// This checks permissions and exits if the users has no permission for entry.
 	// DEFAULT initialization of a module [END]
@@ -179,8 +179,8 @@ class tx_l10nmgr_module1 extends t3lib_SCbase {
 
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tx_l10nmgr/mod1/index.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tx_l10nmgr/mod1/index.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/mod1/index.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/mod1/index.php']);
 }
 
 
