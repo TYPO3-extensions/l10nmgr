@@ -6,6 +6,7 @@ if (TYPO3_MODE=="BE")    {
 	t3lib_extMgm::addModule("user","txl10nmgrM2","top",t3lib_extMgm::extPath($_EXTKEY)."mod2/");
 }
 t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_cfg");
+t3lib_extMgm::addLLrefForTCAdescr('tx_l10nmgr_cfg','EXT:l10nmgr/locallang_csh_l10nmgr.php');
 
 $TCA["tx_l10nmgr_cfg"] = Array (
 	"ctrl" => Array (
