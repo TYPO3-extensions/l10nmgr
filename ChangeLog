@@ -1,3 +1,11 @@
+2007-10-23 Daniel Zielinski <d.zielinski@l10ntech.de>
+
+	* Added simple XML export. Thanks to Daniel Pötzinger.
+	* Changed file naming using ISO-2-Letter code instead of syslanguage names.
+	* Added xml:lang attribute to <TYPO3LOC> element.
+	* Added settings file for SDLTrados TagEditor to cm1.
+	* Added TODO/wish list.
+
 2007-10-20 Kasper SkŒrh¿j
 
 	* Committed work I did on this extension for Dassault in August and October. This includes:
