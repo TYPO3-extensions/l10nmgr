@@ -617,10 +617,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		if ($sysLangIso2LId && t3lib_extMgm::isLoaded('static_info_tables'))        {
 			$targetIso2L = '';
 			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$sysLangIso2LId,'lg_iso_2');
-			$targetIso2L = ' xml:lang="'.$staticLangArr['lg_iso_2'].'"';
+			//$targetIso2L = ' xml:lang="'.$staticLangArr['lg_iso_2'].'"';
 		}
 
-		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\"".$targetIso2L.">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count></TYPO3LOC>";
+		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\"".$targetIso2L.">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count></TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named target lang.
 
 		$XML = str_replace('###INSERT_ROWS###',implode('', $output), $XML);
 		$XML = str_replace('###INSERT_ROW_COUNT###',count($output), $XML);
