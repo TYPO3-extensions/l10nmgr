@@ -190,4 +190,8 @@ Traversing page tree and building an index of translation needs
 	}
 }
 
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/class.tx_l10nmgr_index.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/class.tx_l10nmgr_index.php']);
+}
+
 ?>

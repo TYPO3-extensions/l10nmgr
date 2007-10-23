@@ -81,6 +81,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				'link' => 'Overview with links',
 				'inlineEdit' => 'Inline Edit',
 				'export_excel' => 'ImpExp: Excel',
+				'export_xml' => 'ImpExp: XML',
 			),
 			'lang' => array(),
 			'onlyChangedContent' => ''
@@ -277,6 +278,35 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				// If export of XML is asked for, do that (this will exit and push a file for download)
 			if (t3lib_div::_POST('export_excel'))	{
 				$this->render_excelXML($accum, $sysLang);
+			}
+		} elseif ($this->MOD_SETTINGS["action"]=='export_xml')	{		// XML import/export
+			
+				// Buttons:
+			$info.= '<input type="submit" value="Refresh" name="_" />';
+			$info.= '<input type="submit" value="Export" name="export_xml" />';
+			$info.= '<input type="submit" value="Import" name="import_xml" /><input type="file" size="60" name="uploaded_import_file" />';
+
+				// Read uploaded file:
+			if (t3lib_div::_POST('import_xml') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
+				$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
+				$fileContent = t3lib_div::getUrl($uploadedTempFile);
+				t3lib_div::unlink_tempfile($uploadedTempFile);
+
+					// Parse XML in a rude fashion:
+				$translation=$this->parseSimpleXML($fileContent);
+				
+				if (count($translation) && $this->submitContent($accum,$translation)) {
+					$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
+					$this->updateFlexFormDiff($l10ncfg, $sysLang);
+					
+						// reloading if submitting stuff...
+					$accum = $this->getAccumulated($tree, $l10ncfg, $sysLang);	
+				}
+			}
+
+				// If export of XML is asked for, do that (this will exit and push a file for download)
+			if (t3lib_div::_POST('export_xml'))	{
+				$this->render_simpleXML($accum, $sysLang);
 			}
 		} else {	// Default display:
 			$info.= '<input type="submit" value="Refresh" name="_" />';
@@ -518,6 +548,92 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		Header('Content-Type: '.$mimeType);
 		Header('Content-Disposition: attachment; filename='.$filename);
 		echo $excelXML;
+		exit;
+	}
+
+	/**
+	 * Render the simple XML export
+	 *
+	 * @param	array		Translation data for configuration
+	 * @return	string		HTML content
+	 */
+	function render_simpleXML($accum, $sysLang)	{
+
+		$output = array();
+
+			// Traverse the structure and generate XML output:
+		foreach($accum as $pId => $page)	{
+			foreach($accum[$pId]['items'] as $table => $elements)	{
+				foreach($elements as $elementUid => $data)	{
+					if (is_array($data['fields']))	{
+						$fieldsForRecord = array();
+						foreach($data['fields'] as $key => $tData)	{
+							if (is_array($tData))	{
+								list(,$uidString,$fieldName) = explode(':',$key);
+								list($uidValue) = explode('/',$uidString);
+
+								$diff = '';
+								$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
+								if ($uidValue==='NEW')	{
+									$diff = htmlspecialchars('[New value]');
+								} elseif (!$tData['diffDefaultValue']) {
+									$diff = htmlspecialchars('[No diff available]');
+								} elseif ($noChangeFlag)	{
+									$diff = htmlspecialchars('[No change]');
+								} else {
+									$diff = $this->diffCMP($tData['diffDefaultValue'],$tData['defaultValue']);
+									$diff = str_replace('<span class="diff-r">','<Font html:Color="#FF0000" xmlns="http://www.w3.org/TR/REC-html40">',$diff);
+									$diff = str_replace('<span class="diff-g">','<Font html:Color="#00FF00" xmlns="http://www.w3.org/TR/REC-html40">',$diff);
+									$diff = str_replace('</span>','</Font>',$diff);
+								}
+								$diff.= ($tData['msg']?'[NOTE: '.htmlspecialchars($tData['msg']).']':'');
+								if (!$this->MOD_SETTINGS["onlyChangedContent"] || !$noChangeFlag)	{
+									reset($tData['previewLanguageValues']);
+									$dataForTranslation=$tData['defaultValue'];
+									// Substitutions for XML conformity here
+										
+									$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
+									
+								}
+							}
+						}						
+					}
+				}
+			}
+
+		}
+
+		//get syslang name
+		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
+		$sysL = $t8Tools->getSystemLanguages();
+		foreach($sysL as $sL)	{
+			if ($sL['uid']==$sysLang)	{
+				//$sysLangName=str_replace(' ','-',$sL['title']);
+				$sysLangIso2LId=$sL['static_lang_isocode'];
+			}
+		}
+		
+		// get ISO2L code
+		if ($sysLangIso2LId && t3lib_extMgm::isLoaded('static_info_tables'))        {
+			$targetIso2L = '';
+			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$sysLangIso2LId,'lg_iso_2');
+			$targetIso2L = ' xml:lang="'.$staticLangArr['lg_iso_2'].'"';
+		}
+
+		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\"".$targetIso2L.">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count></TYPO3LOC>";
+
+		$XML = str_replace('###INSERT_ROWS###',implode('', $output), $XML);
+		$XML = str_replace('###INSERT_ROW_COUNT###',count($output), $XML);
+
+			// Setting filename:
+		$filename = 'xml_export_'.$staticLangArr['lg_iso_2'].'_'.date('dmy-Hi').'.xml';
+
+			// Creating output header:
+		$mimeType = 'text/xml';
+		Header('Charset: utf-8');
+		Header('Content-Type: '.$mimeType);
+		Header('Content-Disposition: attachment; filename='.$filename);
+		echo $XML;
 		exit;
 	}
 
@@ -778,6 +894,26 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		}
 		return $translation;
 	}
+
+	/**
+	* @param SimpleXML
+	* @return array with translated informations
+	**/
+	function parseSimpleXML($fileContent) {
+		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML!
+				$translation = array();
+	
+					// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
+				if (is_array($xmlNodes['TYPO3LOC'][0]['ch']['Data']))	{
+					foreach($xmlNodes['TYPO3LOC'][0]['ch']['Data'] as $row)	{
+						$attrs=$row['attrs'];
+						$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
+					}
+				}
+			//	print_r($translation);
+			return $translation;
+	}
+
 }
 
 
