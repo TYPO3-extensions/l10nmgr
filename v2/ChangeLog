@@ -1,0 +1,15 @@
+2007-10-20 Kasper Skårhøj
+
+	* Committed work I did on this extension for Dassault in August and October. This includes:
+	* A "Translation Tasks" module which is destined to be a "task center" for translators including listing of explicitly set priorities by webmasters.
+	* An translation index table which helps us to make a overview of what translations are pending. This also needs more adaption.
+	* Some of this may depend on core-hooks which are upcoming.
+	* Expecting to finish these features for a "first real version" in January 2008 for Dassault. Until then, use at own risk.
+
+2007-05-21 Andreas Otto <andreas.otto@dkd.de>
+
+	* Applied patch to file cm1/index.php: Make it possible to import XML files that were created with OpenOffice.org.
+
+06-11-29 Kasper Sk√•rh√∏j  <kasperYYYY@typo3.com>
+
+	* Initial release
