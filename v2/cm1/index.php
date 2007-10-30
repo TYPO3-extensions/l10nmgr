@@ -600,10 +600,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 										$dataForTranslation = $parseHTML->TS_images_rte($dataForTranslation);
 										$dataForTranslation = $parseHTML->TS_links_rte($dataForTranslation);
 										$dataForTranslation = $parseHTML->TS_transform_rte($dataForTranslation,$css=1); // which mode is best?
+										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'">'.$dataForTranslation.'</Data>'."\n";
+									} else {
+										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
 									}
-										
-									$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'">'.$dataForTranslation.'</Data>'."\n";
-									//$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
 									
 								}
 							}
