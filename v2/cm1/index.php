@@ -56,6 +56,7 @@ require ($BACK_PATH.'template.php');
 $LANG->includeLLFile('EXT:l10nmgr/cm1/locallang.xml');
 require_once (PATH_t3lib.'class.t3lib_scbase.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'cm1/class.tx_l10nmgr_tools.php');
+require_once(PATH_t3lib.'class.t3lib_parsehtml_proc.php');
 
 
 /**
@@ -306,7 +307,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 				// If export of XML is asked for, do that (this will exit and push a file for download)
 			if (t3lib_div::_POST('export_xml'))	{
-				$this->render_simpleXML($accum, $sysLang);
+				$this->render_simpleXML($accum, $sysLang, $l10ncfg);
 			}
 		} else {	// Default display:
 			$info.= '<input type="submit" value="Refresh" name="_" />';
@@ -557,19 +558,23 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 * @param	array		Translation data for configuration
 	 * @return	string		HTML content
 	 */
-	function render_simpleXML($accum, $sysLang)	{
+	function render_simpleXML($accum, $sysLang, $l10ncfg)	{
 
+		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 		$output = array();
 
 			// Traverse the structure and generate XML output:
 		foreach($accum as $pId => $page)	{
 			foreach($accum[$pId]['items'] as $table => $elements)	{
 				foreach($elements as $elementUid => $data)	{
+					if (!empty($data['ISOcode']))	{
+						$targetIso2L = ' targetLang="'.$data['ISOcode'].'"';
+					}
 					if (is_array($data['fields']))	{
 						$fieldsForRecord = array();
 						foreach($data['fields'] as $key => $tData)	{
 							if (is_array($tData))	{
-								list(,$uidString,$fieldName) = explode(':',$key);
+								list(,$uidString,$fieldName) = explode(':',$key); 
 								list($uidValue) = explode('/',$uidString);
 
 								$diff = '';
@@ -591,8 +596,14 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 									reset($tData['previewLanguageValues']);
 									$dataForTranslation=$tData['defaultValue'];
 									// Substitutions for XML conformity here
+									if ($fieldName == "bodytext") { // to be substituted with check if field is RTE-enabled
+										$dataForTranslation = $parseHTML->TS_images_rte($dataForTranslation);
+										$dataForTranslation = $parseHTML->TS_links_rte($dataForTranslation);
+										$dataForTranslation = $parseHTML->TS_transform_rte($dataForTranslation,$css=1); // which mode is best?
+									}
 										
-									$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
+									$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'">'.$dataForTranslation.'</Data>'."\n";
+									//$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
 									
 								}
 							}
@@ -602,25 +613,16 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			}
 
 		}
-
-		//get syslang name
-		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
-		$sysL = $t8Tools->getSystemLanguages();
-		foreach($sysL as $sL)	{
-			if ($sL['uid']==$sysLang)	{
-				//$sysLangName=str_replace(' ','-',$sL['title']);
-				$sysLangIso2LId=$sL['static_lang_isocode'];
-			}
-		}
 		
-		// get ISO2L code
-		if ($sysLangIso2LId && t3lib_extMgm::isLoaded('static_info_tables'))        {
-			$targetIso2L = '';
-			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$sysLangIso2LId,'lg_iso_2');
-			//$targetIso2L = ' xml:lang="'.$staticLangArr['lg_iso_2'].'"';
-		}
+		// get ISO2L code for source language
+			if ($l10ncfg['sourceLangStaticId'] && t3lib_extMgm::isLoaded('static_info_tables'))        {
+					$sourceIso2L = '';
+					$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$l10ncfg['sourceLangStaticId'],'lg_iso_2');
+	   			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
+   		}
 
-		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\"".$targetIso2L.">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count></TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named target lang.
+		
+		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count></TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named sysTargetLang.
 
 		$XML = str_replace('###INSERT_ROWS###',implode('', $output), $XML);
 		$XML = str_replace('###INSERT_ROW_COUNT###',count($output), $XML);
@@ -739,7 +741,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				// Now, submitting translation data:
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
 			$tce->stripslashes_values = FALSE;
-			$tce->dontProcessTransformations = TRUE;
+			$tce->dontProcessTransformations = TRUE; 
 			$tce->start($TCEmain_data,array());	// check has been done previously that there is a backend user which is Admin and also in live workspace
 			$tce->process_datamap();
 			
@@ -900,6 +902,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	* @return array with translated informations
 	**/
 	function parseSimpleXML($fileContent) {
+
+		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
+
 		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML!
 				$translation = array();
 	
@@ -907,10 +912,18 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				if (is_array($xmlNodes['TYPO3LOC'][0]['ch']['Data']))	{
 					foreach($xmlNodes['TYPO3LOC'][0]['ch']['Data'] as $row)	{
 						$attrs=$row['attrs'];
-						$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
+						list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
+						if ($fieldName == "bodytext") { //substitute check with rte enabled fields from TCA
+							$translationValue = $row['values'][0];
+							$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!
+							$translationValue = $parseHTML->TS_images_db($translationValue);
+							$translationValue = $parseHTML->TS_links_db($translationValue);
+							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
+						} else {
+							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
+						}
 					}
 				}
-			//	print_r($translation);
 			return $translation;
 	}
 

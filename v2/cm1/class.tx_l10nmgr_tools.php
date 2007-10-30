@@ -258,6 +258,7 @@ class tx_l10nmgr_tools {
 								$previewLanguageValues[$prevSysUid] = $prevLangRec[$prevSysUid][$field];
 							}
 
+				//debug($row[$field]);
 							$this->translationDetails_addField($tInfo['translation_table'].':'.t3lib_BEfunc::wsMapId($tInfo['translation_table'],$translationUID).':'.$field, $cfg, $row[$field], $translationRecord[$field], $diffDefaultValue, $previewLanguageValues);
 					}
 				}
