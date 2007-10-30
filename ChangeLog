@@ -1,3 +1,9 @@
+2007-10-30 Daniel Zielinski <d.zielinski@l10ntech.de>
+
+	* Added transformation of bodytext content by using functions from t3lib_parsehtml_proc. (Now converting links, images, tags back and forth) HTML content element issue remains open.
+	* Removed xml:lang from <TYPO3LOC> element.
+	* Added targetLang and sourceLang as ISO2Letter code
+
 2007-10-23 Daniel Zielinski <d.zielinski@l10ntech.de>
 
 	* Added simple XML export. Thanks to Daniel Pötzinger.

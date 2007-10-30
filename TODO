@@ -2,10 +2,10 @@
 
 2007-10-23 Daniel Zielinski <d.zielinski@l10ntech.de>
 
-	* xml:lang element must indicate target language (should be configurable => added to l10nmgr_cfg)
-	* CDATA is a real problem for CAT-Tools (from calculating translation service offers to translation itself). Should be fixed as soon as possible.
+	* CDATA is a real problem for CAT-Tools (from calculating translation service offers to translation itself). Should be fixed as soon as possible. Remains a problem for HTML content elements
+	* Add switch for field types for XML import/export (currently only hard coded for bodytext field)
 	* Settings files for XML output for major CAT tools (missing: across, déjàVu)
-	* Documentation (Translation into German and Spanish can be done by me)
+	* Documentation (Translation into German and Spanish can be done at Saarland University )
 	* Translation of frontend labels
 	* Workflow support with email notification and download center (Kasper working on it?)
 	* Analysis of volume to be translated
