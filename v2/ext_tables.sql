@@ -14,6 +14,7 @@ CREATE TABLE tx_l10nmgr_cfg (
 	exclude text NOT NULL,
 	include text NOT NULL,
 	flexformdiff mediumtext NOT NULL,
+	sourceLangStaticId char(2) NOT NULL default '',
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
