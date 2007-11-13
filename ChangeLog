@@ -1,3 +1,8 @@
+2007-11-13 Daniel Zielinski <d.zielinski@l10ntech.de>
+
+	* Added XML settings files for across (www.across.net) and DÈj‡Vu (www.atril.com).
+	* All settings files now in one folder.
+
 2007-10-30 Daniel Zielinski <d.zielinski@l10ntech.de>
 
 	* Added transformation of bodytext content by using functions from t3lib_parsehtml_proc. (Now converting links, images, tags back and forth) HTML content element issue remains open.
