@@ -8,5 +8,15 @@
 		<languageKey index="default" type="array">
 			<label index="title">L10N Translation Index Overview</label>
 		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="title">Übersetzungsindex - Übersicht</label>
+		</languageKey>
+		<languageKey index="it" type="array">
+			<label index="title">Indice delle traduzioni - Vista d'insieme</label>
+		</languageKey>
 	</data>
+	<orig_hash type="array">
+	</orig_hash>
+	<orig_text type="array">
+	</orig_text>
 </T3locallang>
