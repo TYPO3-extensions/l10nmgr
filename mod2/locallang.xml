@@ -8,5 +8,15 @@
 		<languageKey index="default" type="array">
 			<label index="title">Translation Priorities:</label>
 		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="title">Priorität der Übersetzungen:</label>
+		</languageKey>
+		<languageKey index="it" type="array">
+			<label index="title">Priorità delle traduzioni:</label>
+		</languageKey>
 	</data>
+	<orig_hash type="array">
+	</orig_hash>
+	<orig_text type="array">
+	</orig_text>
 </T3locallang>

@@ -9,5 +9,17 @@
 			<label index="mlang_tabs_tab">Translation Tasks</label>
 			<label index="mlang_labels_tabdescr">Task center for translators</label>
 		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="mlang_tabs_tab">Übersetzungen</label>
+			<label index="mlang_labels_tabdescr">Task Center für Übersetzer</label>
+		</languageKey>
+		<languageKey index="it" type="array">
+			<label index="mlang_tabs_tab">Traduzioni</label>
+			<label index="mlang_labels_tabdescr">Task Center per traduttori</label>
+		</languageKey>
 	</data>
+	<orig_hash type="array">
+	</orig_hash>
+	<orig_text type="array">
+	</orig_text>
 </T3locallang>
