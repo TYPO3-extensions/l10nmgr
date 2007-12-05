@@ -1,3 +1,9 @@
+2007-12-05 Daniel Zielinski <d.zielinski@l10ntech.de>
+	
+	* Changed XML-Format: Now includes grouping element <pageGrp id="$pid"> to group translatable data. Needed for access to page context in CAT-Tools.
+	* XML-Format now contains format version number (needed for compatibility issues)
+	* Added download links for settings files in XML mode (temporary - should later be configurable and included in l10n package)
+
 2007-11-13 Daniel Zielinski <d.zielinski@l10ntech.de>
 
 	* Added XML settings files for across (www.across.net) and DéjàVu (www.atril.com).
@@ -20,7 +26,7 @@
 	* Modified l10nmgr_cfg table. Added source language selection field.
 	* Added CSH functionality.
 
-2007-10-20 Kasper SkŒrh¿j
+2007-10-20 Kasper Skårhøj
 
 	* Committed work I did on this extension for Dassault in August and October. This includes:
 	* A "Translation Tasks" module which is destined to be a "task center" for translators including listing of explicitly set priorities by webmasters.
@@ -32,6 +38,6 @@
 
 	* Applied patch to file cm1/index.php: Make it possible to import XML files that were created with OpenOffice.org.
 
-06-11-29 Kasper SkÃ¥rhÃ¸j  <kasperYYYY@typo3.com>
+06-11-29 Kasper Skårhøj  <kasperYYYY@typo3.com>
 
 	* Initial release
