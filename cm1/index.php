@@ -309,6 +309,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			if (t3lib_div::_POST('export_xml'))	{
 				$this->render_simpleXML($accum, $sysLang, $l10ncfg);
 			}
+				// Temporary links to settings files. Should be changed when download of L10N packages is available.
+			$info.='<br/><br/>'.$this->doc->icons(1).'Available settings files: <a href="/typo3conf/ext/l10nmgr/settings/acrossL10nmgrConfig.dst" title="Download settings file" target="_new">across</a> | <a href="/typo3conf/ext/l10nmgr/settings/dejaVuL10nmgrConfig.dvflt" title="Download settings file" target="_new">DéjàVu</a> | <a href="/typo3conf/ext/l10nmgr/settings/SDLTradosTagEditor.ini" title="Download settings file" target="_new">SDL Trados</a> | <a href="/typo3conf/ext/l10nmgr/settings/SDLPassolo.xfg" title="Download settings file" target="_new">SDL Passolo</a><br/><br/>';
 		} else {	// Default display:
 			$info.= '<input type="submit" value="Refresh" name="_" />';
 		}
@@ -565,6 +567,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 			// Traverse the structure and generate XML output:
 		foreach($accum as $pId => $page)	{
+			$output[]='<PageGrp id="'.$pId.'">'."\n";
 			foreach($accum[$pId]['items'] as $table => $elements)	{
 				foreach($elements as $elementUid => $data)	{
 					if (!empty($data['ISOcode']))	{
@@ -612,6 +615,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				}
 			}
 
+		$output[]='</PageGrp>'."\n";
 		}
 		
 		// get ISO2L code for source language
@@ -622,7 +626,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
    		}
 
 		
-		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count></TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named sysTargetLang.
+		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC version=\"2.0\" sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.">\n###INSERT_ROWS###\n<count type=\"datasets\">###INSERT_ROW_COUNT###</count>\n</TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named sysTargetLang.
 
 		$XML = str_replace('###INSERT_ROWS###',implode('', $output), $XML);
 		$XML = str_replace('###INSERT_ROW_COUNT###',count($output), $XML);
@@ -909,18 +913,24 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$translation = array();
 	
 					// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
-				if (is_array($xmlNodes['TYPO3LOC'][0]['ch']['Data']))	{
-					foreach($xmlNodes['TYPO3LOC'][0]['ch']['Data'] as $row)	{
-						$attrs=$row['attrs'];
-						list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
-						if ($fieldName == "bodytext") { //substitute check with rte enabled fields from TCA
-							$translationValue = $row['values'][0];
-							$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!
-							$translationValue = $parseHTML->TS_images_db($translationValue);
-							$translationValue = $parseHTML->TS_links_db($translationValue);
-							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
-						} else {
-							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
+				//print '<pre>'; print_r($xmlNodes);print '</pre>';
+				if (is_array($xmlNodes['TYPO3LOC'][0]['ch']['PageGrp']))	{
+				   	foreach($xmlNodes['TYPO3LOC'][0]['ch']['PageGrp'] as $pageGrp)	{
+						//print '<pre>'; print_r($pageGrp); print '</pre>';
+						if (is_array($pageGrp['ch']['Data'])) {
+							foreach($pageGrp['ch']['Data'] as $row)	{
+								$attrs=$row['attrs'];
+								list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
+								if ($fieldName == "bodytext") { //substitute check with rte enabled fields from TCA
+									$translationValue = $row['values'][0];
+									$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!
+									$translationValue = $parseHTML->TS_images_db($translationValue);
+									$translationValue = $parseHTML->TS_links_db($translationValue);
+									$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
+								} else {
+									$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
+								}
+							}
 						}
 					}
 				}
