@@ -603,9 +603,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 										$dataForTranslation = $parseHTML->TS_images_rte($dataForTranslation);
 										$dataForTranslation = $parseHTML->TS_links_rte($dataForTranslation);
 										$dataForTranslation = $parseHTML->TS_transform_rte($dataForTranslation,$css=1); // which mode is best?
-										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'">'.$dataForTranslation.'</Data>'."\n";
+										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'">'.str_replace('&nbsp;',' ',$dataForTranslation).'</Data>'."\n";
 									} else {
-										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
+										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.str_replace('&nbsp;',' ',$dataForTranslation).']]></Data>'."\n";
 									}
 									
 								}
@@ -909,7 +909,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 
-		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML!
+		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML! //str_replace should be obsolete as no nbsps are exported any longer
 				$translation = array();
 	
 					// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
