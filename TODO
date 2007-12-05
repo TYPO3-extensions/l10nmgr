@@ -7,7 +7,6 @@
 	* Documentation (Translation into German and Spanish can be done at Saarland University )
 	* Translation of frontend labels => some draft translations exist
 	* Workflow support with email notification and download center (Kasper working on it?)
-	* Analysis of volume to be translated (until now count for DB records words or letters would be nicer)
 	* Automatic substitution of links to documents in fileadmin? Integrating translated PDFs can take quite some time. Same for images.
 	* Automatic substitution of L= parameters in HTML content elements (as advanced option?)
 	* Add option to exclude table fields (columns) from export (e.g. header_link)

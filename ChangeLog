@@ -1,5 +1,6 @@
 2007-12-05 Daniel Zielinski <d.zielinski@l10ntech.de>
 	
+	* Added word and char count for calculation of translation costs (experimental!). XML export only. (funct wordCount)
 	* &nbsp; now substituted before XML export as it is not XML conform.
 	* Changed XML-Format: Now includes grouping element <pageGrp id="$pid"> to group translatable data. Needed for access to page context in CAT-Tools.
 	* XML-Format now contains format version number (needed for compatibility issues)

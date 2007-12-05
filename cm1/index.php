@@ -626,13 +626,19 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
    		}
 
 		
-		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC version=\"2.0\" sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.">\n###INSERT_ROWS###\n<count type=\"datasets\">###INSERT_ROW_COUNT###</count>\n</TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named sysTargetLang.
+		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC version=\"2.0\" sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.">\n###INSERT_ROWS###\n<count type=\"datasets\">###INSERT_ROW_COUNT###</count>\n<count type=\"words\">###INSERT_WORD_COUNT###</count>\n<count type=\"chars\">###INSERT_CHAR_COUNT###</count>\n</TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named sysTargetLang.
+
+		$count = $this->wordCount($output,$staticLangArr['lg_iso_2']);
 
 		$XML = str_replace('###INSERT_ROWS###',implode('', $output), $XML);
 		$XML = str_replace('###INSERT_ROW_COUNT###',count($output), $XML);
+		$XML = str_replace('###INSERT_WORD_COUNT###',$count['words'], $XML);
+		$XML = str_replace('###INSERT_CHAR_COUNT###',$count['chars'], $XML);
 
-			// Setting filename:
+			// Setting filenames:
 		$filename = 'xml_export_'.$staticLangArr['lg_iso_2'].'_'.date('dmy-Hi').'.xml';
+			// Where to store?
+		$reportfile = 'xml_export_'.$staticLangArr['lg_iso_2'].'_'.date('dmy-Hi').'.html';
 
 			// Creating output header:
 		$mimeType = 'text/xml';
@@ -935,6 +941,49 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 					}
 				}
 			return $translation;
+	}
+
+
+	/**
+	* @param output
+	* @return array with word count result
+	**/
+		//Experimental!!!
+	function wordCount($output,$locale) { 
+			//After problems with Umlauts breaking words into parts... due to str_word_count encoding problems
+		if (!empty($locale)) {
+			$loc = setlocale (LC_ALL, strtolower($locale).'_'.$locale, $locale); 
+		}
+		$count['chars'] =0;
+		$count['words'] =0;
+		foreach ($output as $text) {
+			$pattern[0]= '/<!\[CDATA\[/'; //remove CDATA
+		        $pattern[1]= '/\]\]>/'; //remove CDATA
+		        $pattern[2]= '/<[^<ai]*>/'; //remove all tags but img and a
+		        $pattern[3]= '/<a [^<]* title="([^<]*)"[^<]*>/i'; //link title
+		        $pattern[4]= '/<\/[^<]*>/'; //remove all closing tags
+		        $pattern[5]= '/(<img [^<]*)( title="([^"]*)")([^<]*>)/i'; //image title
+		        $pattern[6]= '/(<img [^<]*)( alt="([^"]*)")([^<]*>)/i'; //image alt
+		        $pattern[7]= '/(<img [^<]*)( longdesc="([^"]*)")([^<]*>)/i'; //img longdesc
+		        $pattern[8]= '/(<[^<]*>)/'; //all remaining links
+		        $subst[0]= '';
+		        $subst[1]= '';
+		        $subst[2]= '';
+		        $subst[3]= '$1 ';
+		        $subst[4]= '';
+		        $subst[5]= '$1 $4 $3 ';
+		        $subst[6]= '$1 $4 $3 ';
+		        $subst[7]= '$1 $4 $3 ';
+		        $subst[8]= '';
+
+		        $text=preg_replace($pattern,$subst,$text);
+
+		        $words=str_word_count(utf8_decode($text));
+
+			$count['words']=$count['words']+$words;
+			$count['chars']=$count['chars']+strlen(utf8_decode($text));
+		}
+		return $count;
 	}
 
 }
