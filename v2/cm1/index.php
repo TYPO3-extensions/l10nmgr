@@ -55,7 +55,20 @@ require ($BACK_PATH.'init.php');
 require ($BACK_PATH.'template.php');
 $LANG->includeLLFile('EXT:l10nmgr/cm1/locallang.xml');
 require_once (PATH_t3lib.'class.t3lib_scbase.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'cm1/class.tx_l10nmgr_tools.php');
+
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_l10ncfgDetailView.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_l10nHTMLListView.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/excelXML/class.tx_l10nmgr_excelXMLView.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/CATXML/class.tx_l10nmgr_CATXMLView.php');
+
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nConfiguration.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nBaseService.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translationData.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translationDataFactory.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nBaseService.php');
+
+
+
 require_once(PATH_t3lib.'class.t3lib_parsehtml_proc.php');
 
 
@@ -125,11 +138,13 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 
 			// Find l10n configuration record:
-		$l10ncfg = t3lib_BEfunc::getRecord('tx_l10nmgr_cfg', $this->id);
-		if (is_array($l10ncfg))	{
+		$l10ncfgObj=t3lib_div::makeInstance('tx_l10nmgr_l10nConfiguration');
+		$l10ncfgObj->load($this->id);
+		
+		if ($l10ncfgObj->isLoaded())	{
 
 				// Setting page id
-			$this->id = $l10ncfg['pid'];
+			$this->id = $l10ncfgObj->getData('pid');
 			$this->perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
 			$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
 			$access = is_array($this->pageinfo) ? 1 : 0;
@@ -139,40 +154,24 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$this->content.=$this->doc->startPage($LANG->getLL('title'));
 				$this->content.=$this->doc->header($LANG->getLL('title'));
 				
-				$this->content.=$this->doc->section('','
-				<table border="1" cellpadding="1" cellspacing="0" width="400">
-					<tr class="bgColor5 tableheader">
-						<td colspan="4">Configuration: <strong>'.htmlspecialchars($l10ncfg['title']).' ['.$l10ncfg['uid'].']</strong></td>
-					</tr>
-					<tr class="bgColor3">
-						<td><strong>Depth:</strong></td>
-						<td>'.htmlspecialchars($l10ncfg['depth']).'</td>
-						<td><strong>Tables:</strong></td>
-						<td>'.htmlspecialchars($l10ncfg['tablelist']).'</td>
-					</tr>
-					<tr class="bgColor3">
-						<td><strong>Exclude:</strong></td>
-						<td>'.htmlspecialchars($l10ncfg['exclude']).'</td>
-						<td><strong>Include:</strong></td>
-						<td>'.htmlspecialchars($l10ncfg['include']).'</td>
-					</tr>
-				</table>
-				
-				');
+				//create and render view to show details for the current l10nmgrcfg
+				$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
+				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj);
+				$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
 				
 				
 				$this->content.=$this->doc->divider(5);
 				$this->content.=$this->doc->section('',
-						t3lib_BEfunc::getFuncMenu($l10ncfg['uid'],"SET[lang]",$this->MOD_SETTINGS["lang"],$this->MOD_MENU["lang"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
-						t3lib_BEfunc::getFuncMenu($l10ncfg['uid'],"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
-						t3lib_BEfunc::getFuncCheck($l10ncfg['uid'],"SET[onlyChangedContent]",$this->MOD_SETTINGS["onlyChangedContent"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).' New/Changed content only</br>'
+						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[lang]",$this->MOD_SETTINGS["lang"],$this->MOD_MENU["lang"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
+						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
+						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[onlyChangedContent]",$this->MOD_SETTINGS["onlyChangedContent"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).' New/Changed content only</br>'
 					);
 
 					// Render content:
 				if (!count($this->MOD_MENU['lang']))	{
 					$this->content.= $this->doc->section('ERROR','User has no access to edit any translations');
 				} else {
-					$this->moduleContent($l10ncfg);
+					$this->moduleContent($l10ncfgObj);
 				}
 
 				// ShortCut
@@ -202,451 +201,140 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 * @param	array		Localization Configuration record
 	 * @return	void
 	 */
-	function moduleContent($l10ncfg)	{
+	function moduleContent($l10ncfgObj)	{
 		global $TCA;
 
 			// Get language to export here:
 		$sysLang = $this->MOD_SETTINGS["lang"];
 
-			// Showing the tree:
-			// Initialize starting point of page tree:
-		$treeStartingPoint = intval($l10ncfg['depth']==-1 ? t3lib_div::_GET('srcPID') : $l10ncfg['pid']);
-		$treeStartingRecord = t3lib_BEfunc::getRecordWSOL('pages', $treeStartingPoint);
-		$depth = $l10ncfg['depth'];
-
-			// Initialize tree object:
-		$tree = t3lib_div::makeInstance('t3lib_pageTree');
-		$tree->init('AND '.$GLOBALS['BE_USER']->getPagePermsClause(1));
-		$tree->addField('l18n_cfg');
-
-			// Creating top icon; the current page
-		$HTML = t3lib_iconWorks::getIconImage('pages', $treeStartingRecord, $GLOBALS['BACK_PATH'],'align="top"');
-		$tree->tree[] = array(
-			'row' => $treeStartingRecord,
-			'HTML'=> $HTML
-		);
-
-			// Create the tree from starting point:
-		if ($depth>0)	$tree->getTree($treeStartingPoint, $depth, '');
-
-
-			// Generate array with data for the translation export
-		$accum = $this->getAccumulated($tree, $l10ncfg, $sysLang);
-
-
-
-
-			// Based on the "action" we show a set of buttons and execute some functionality:
-		if ($this->MOD_SETTINGS["action"]=='inlineEdit')	{	// Inline editing:
-			
-				// Buttons:
-			$info.= '<input type="submit" value="Save" name="saveInline" onclick="return confirm(\'You are about to create/update ALL localizations in this form? Continue?\');" />';
-			$info.= '<input type="submit" value="Cancel" name="_" onclick="return confirm(\'You are about to discard any changes you made. Continue?\');" />';
-
-				// See, if incoming translation is available, if so, submit it and re-generate array with data
-			if (t3lib_div::_POST('saveInline') && $this->submitContent($accum,t3lib_div::_POST('translation')))	{
-				$this->updateFlexFormDiff($l10ncfg, $sysLang);
-
-					// reloading if submitting stuff...
-				$accum = $this->getAccumulated($tree, $l10ncfg, $sysLang);	
-			}
-
-		} elseif ($this->MOD_SETTINGS["action"]=='export_excel')	{		// Excel import/export:
-			
-				// Buttons:
-			$info.= '<input type="submit" value="Refresh" name="_" />';
-			$info.= '<input type="submit" value="Export" name="export_excel" />';
-			$info.= '<input type="submit" value="Import" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
-
-				// Read uploaded file:
-			if (t3lib_div::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
-				$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
-				$fileContent = t3lib_div::getUrl($uploadedTempFile);
-				t3lib_div::unlink_tempfile($uploadedTempFile);
-
-					// Parse XML
-				$translation = $this->parseXML( $fileContent );
-				
-				if (count($translation) && $this->submitContent($accum,$translation)) {
-					$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
-					$this->updateFlexFormDiff($l10ncfg, $sysLang);
-					
-						// reloading if submitting stuff...
-					$accum = $this->getAccumulated($tree, $l10ncfg, $sysLang);	
-				}
-			}
-
-				// If export of XML is asked for, do that (this will exit and push a file for download)
-			if (t3lib_div::_POST('export_excel'))	{
-				$this->render_excelXML($accum, $sysLang);
-			}
-		} elseif ($this->MOD_SETTINGS["action"]=='export_xml')	{		// XML import/export
-			
-				// Buttons:
-			$info.= '<input type="submit" value="Refresh" name="_" />';
-			$info.= '<input type="submit" value="Export" name="export_xml" />';
-			$info.= '<input type="submit" value="Import" name="import_xml" /><input type="file" size="60" name="uploaded_import_file" />';
-
-				// Read uploaded file:
-			if (t3lib_div::_POST('import_xml') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
-				$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
-				$fileContent = t3lib_div::getUrl($uploadedTempFile);
-				t3lib_div::unlink_tempfile($uploadedTempFile);
-
-					// Parse XML in a rude fashion:
-				$translation=$this->parseSimpleXML($fileContent);
-				
-				if (count($translation) && $this->submitContent($accum,$translation)) {
-					$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
-					$this->updateFlexFormDiff($l10ncfg, $sysLang);
-					
-						// reloading if submitting stuff...
-					$accum = $this->getAccumulated($tree, $l10ncfg, $sysLang);	
-				}
-			}
-
-				// If export of XML is asked for, do that (this will exit and push a file for download)
-			if (t3lib_div::_POST('export_xml'))	{
-				$this->render_simpleXML($accum, $sysLang, $l10ncfg);
-			}
-				// Temporary links to settings files. Should be changed when download of L10N packages is available.
-			$info.='<br/><br/>'.$this->doc->icons(1).'Available settings files: <a href="/typo3conf/ext/l10nmgr/settings/acrossL10nmgrConfig.dst" title="Download settings file" target="_new">across</a> | <a href="/typo3conf/ext/l10nmgr/settings/dejaVuL10nmgrConfig.dvflt" title="Download settings file" target="_new">DéjàVu</a> | <a href="/typo3conf/ext/l10nmgr/settings/SDLTradosTagEditor.ini" title="Download settings file" target="_new">SDL Trados</a> | <a href="/typo3conf/ext/l10nmgr/settings/SDLPassolo.xfg" title="Download settings file" target="_new">SDL Passolo</a><br/><br/>';
-		} else {	// Default display:
-			$info.= '<input type="submit" value="Refresh" name="_" />';
-		}
-
-			// Render the module content (for all modes):
-		$this->content.=$this->doc->section('',$info.$this->render_HTMLOverview($accum, $sysLang, $l10ncfg));
-	}
-
-	/**
-	 * Render the module content in HTML
-	 *
-	 * @param	array		Translation data for configuration
-	 * @param	integer		Sys language uid
-	 * @param	array		Configuration record
-	 * @return	string		HTML content
-	 */
-	function render_HTMLOverview($accum, $sysLang, $l10ncfg)	{
-
-		$output = '';
+		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 		
-		$showSingle = t3lib_div::_GET('showSingle');
 
-		if ($l10ncfg['displaymode']>0)	{
-			$showSingle = $showSingle ? $showSingle : 'NONE';
-			if ($l10ncfg['displaymode']==2)	{ $noAnalysis = TRUE;}
-		} else $noAnalysis = FALSE;
-
-			// Traverse the structure and generate HTML output:
-		foreach($accum as $pId => $page)	{
-			$output.= '<h3>'.$page['header']['icon'].htmlspecialchars($page['header']['title']).' ['.$pId.']</h3>';
-
-			$tableRows = array();
-
-			foreach($accum[$pId]['items'] as $table => $elements)	{
-				foreach($elements as $elementUid => $data)	{
-					if (is_array($data['fields']))	{
-
-						$FtableRows = array();
-						$flags = array();
-						
-						if (!$noAnalysis || $showSingle===$table.':'.$elementUid)	{
-							foreach($data['fields'] as $key => $tData)	{
-								if (is_array($tData))	{
-									list(,$uidString,$fieldName) = explode(':',$key);
-									list($uidValue) = explode('/',$uidString);
-
-									$diff = '';
-									$edit = TRUE;
-									$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
-									if ($uidValue==='NEW')	{
-										$diff = '<em>New value</em>';
-										$flags['new']++;
-									} elseif (!isset($tData['diffDefaultValue'])) {
-										$diff = '<em>No diff available</em>';
-										$flags['unknown']++;
-									} elseif ($noChangeFlag)	{
-										$diff = 'No change.';
-										$edit = TRUE;
-										$flags['noChange']++;
-									} else {
-										$diff = $this->diffCMP($tData['diffDefaultValue'],$tData['defaultValue']);
-										$flags['update']++;
-									}
-
-									if (!$this->MOD_SETTINGS["onlyChangedContent"] || !$noChangeFlag)	{
-										$fieldCells = array();
-										$fieldCells[] = '<b>'.htmlspecialchars($fieldName).'</b>'.($tData['msg']?'<br/><em>'.htmlspecialchars($tData['msg']).'</em>':'');
-										$fieldCells[] = nl2br(htmlspecialchars($tData['defaultValue']));
-										$fieldCells[] = $edit && $this->MOD_SETTINGS["action"]=='inlineEdit' ? ($tData['fieldType']==='text' ? '<textarea name="'.htmlspecialchars('translation['.$table.']['.$elementUid.']['.$key.']').'" cols="60" rows="5">'.t3lib_div::formatForTextarea($tData['translationValue']).'</textarea>' : '<input name="'.htmlspecialchars('translation['.$table.']['.$elementUid.']['.$key.']').'" value="'.htmlspecialchars($tData['translationValue']).'" size="60" />') : nl2br(htmlspecialchars($tData['translationValue']));
-										$fieldCells[] = $diff;
-									
-										reset($tData['previewLanguageValues']);
-										if ($page['header']['prevLang']) $fieldCells[] = nl2br(htmlspecialchars(current($tData['previewLanguageValues'])));
-
-										$FtableRows[] = '<tr><td>'.implode('</td><td>',$fieldCells).'</td></tr>';
-									}
-								}
-							}
-						}
-						
-						if (count($FtableRows) || $noAnalysis)	{
-							
-								// Link:
-							if ($this->MOD_SETTINGS["action"]=='link')	{
-								reset($data['fields']);
-								list(,$uidString) = explode(':',key($data['fields']));
-								if (substr($uidString,0,3)!=='NEW')	{
-									$editId = is_array($data['translationInfo']['translations'][$sysLang]) ? $data['translationInfo']['translations'][$sysLang]['uid'] : $data['translationInfo']['uid'];
-									$editLink = ' - <a href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::editOnClick('&edit['.$data['translationInfo']['translation_table'].']['.$editId.']=edit',$this->doc->backPath)).'"><em>[Click to edit]</em></a>';
-								} else {
-									$editLink = ' - <a href="'.htmlspecialchars($this->doc->issueCommand(
-													'&cmd['.$table.']['.$data['translationInfo']['uid'].'][localize]='.$sysLang
-													)).'"><em>[Click to localize]</em></a>';
-								}
-							} else $editLink = '';
-
-							$tableRows[] = '<tr class="bgColor3">
-								<td colspan="2" style="width:300px;"><a href="'.htmlspecialchars('index.php?id='.t3lib_div::_GET('id').'&showSingle='.rawurlencode($table.':'.$elementUid)).'">'.htmlspecialchars($table.':'.$elementUid).'</a>'.$editLink.'</td>
-								<td colspan="3" style="width:200px;">'.htmlspecialchars(t3lib_div::arrayToLogString($flags)).'</td>
-							</tr>';
-
-							if (!$showSingle || $showSingle===$table.':'.$elementUid)	{
-								$tableRows[] = '<tr class="bgColor5 tableheader">
-									<td>Fieldname:</td>
-									<td width="25%">Default:</td>
-									<td width="25%">Translation:</td>
-									<td width="25%">Diff:</td>
-									'.($page['header']['prevLang'] ? '<td width="25%">PrevLang:</td>' : '').'
-								</tr>';
-
-								$tableRows = array_merge($tableRows, $FtableRows);
-							}
-						}
-					}
-				}
-			}
-
-			if (count($tableRows))	{
-				$output.= '<table border="1" cellpadding="1" cellspacing="1" class="bgColor2" style="border: 1px solid #999999;">'.implode('',$tableRows).'</table>';
-			}
-		}
-
-		return $output;
-	}
-
-
-	/**
-	 * Render the excel XML export
-	 *
-	 * @param	array		Translation data for configuration
-	 * @return	string		HTML content
-	 */
-	function render_excelXML($accum, $sysLang)	{
-
-		$output = array();
-
-			// Traverse the structure and generate HTML output:
-		foreach($accum as $pId => $page)	{
-			$output[]= '
-			<!-- Page header -->
-		   <Row>
-		    <Cell ss:Index="2" ss:StyleID="s35"><Data ss:Type="String">'.htmlspecialchars($page['header']['title'].' ['.$pId.']').'</Data></Cell>
-		    <Cell ss:StyleID="s35"></Cell>
-		    <Cell ss:StyleID="s35"></Cell>
-		    <Cell ss:StyleID="s35"></Cell>
-		    '.($page['header']['prevLang'] ? '<Cell ss:StyleID="s35"></Cell>' : '').'
-		   </Row>';
-
-			$output[]= '
-			<!-- Field list header -->
-		   <Row>
-		    <Cell ss:Index="2" ss:StyleID="s38"><Data ss:Type="String">Fieldname:</Data></Cell>
-		    <Cell ss:StyleID="s38"><Data ss:Type="String">Original Value:</Data></Cell>
-		    <Cell ss:StyleID="s38"><Data ss:Type="String">Translation:</Data></Cell>
-		    <Cell ss:StyleID="s38"><Data ss:Type="String">Difference since last tr.:</Data></Cell>
-		    '.($page['header']['prevLang'] ? '<Cell ss:StyleID="s38"><Data ss:Type="String">Preview Language:</Data></Cell>' : '').'
-		   </Row>';
-
-			foreach($accum[$pId]['items'] as $table => $elements)	{
-				foreach($elements as $elementUid => $data)	{
-					if (is_array($data['fields']))	{
-
-						$fieldsForRecord = array();
-						foreach($data['fields'] as $key => $tData)	{
-							if (is_array($tData))	{
-								list(,$uidString,$fieldName) = explode(':',$key);
-								list($uidValue) = explode('/',$uidString);
-
-								$diff = '';
-								$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
-								if ($uidValue==='NEW')	{
-									$diff = htmlspecialchars('[New value]');
-								} elseif (!$tData['diffDefaultValue']) {
-									$diff = htmlspecialchars('[No diff available]');
-								} elseif ($noChangeFlag)	{
-									$diff = htmlspecialchars('[No change]');
-								} else {
-									$diff = $this->diffCMP($tData['diffDefaultValue'],$tData['defaultValue']);
-									$diff = str_replace('<span class="diff-r">','<Font html:Color="#FF0000" xmlns="http://www.w3.org/TR/REC-html40">',$diff);
-									$diff = str_replace('<span class="diff-g">','<Font html:Color="#00FF00" xmlns="http://www.w3.org/TR/REC-html40">',$diff);
-									$diff = str_replace('</span>','</Font>',$diff);
-								}
-								$diff.= ($tData['msg']?'[NOTE: '.htmlspecialchars($tData['msg']).']':'');
+		switch ($this->MOD_SETTINGS["action"]) {
+				case 'inlineEdit':
+					// Buttons:
+					$info.= '<input type="submit" value="Save" name="saveInline" onclick="return confirm(\'You are about to create/update ALL localizations in this form? Continue?\');" />';
+					$info.= '<input type="submit" value="Cancel" name="_" onclick="return confirm(\'You are about to discard any changes you made. Continue?\');" />';
+					
+					//simple init of translation object:
+					$translationData=t3lib_div::makeInstance('tx_l10nmgr_translationData');		
+					$translationData->setTranslationData(t3lib_div::_POST('translation'));
+					$translationData->setLanguage($sysLang);
 								
-								if (!$this->MOD_SETTINGS["onlyChangedContent"] || !$noChangeFlag)	{
-									reset($tData['previewLanguageValues']);
-									$fieldsForRecord[]= '
-								<!-- Translation row: -->
-								   <Row ss:StyleID="s25">
-								    <Cell><Data ss:Type="String">'.htmlspecialchars('translation['.$table.']['.$elementUid.']['.$key.']').'</Data></Cell>
-								    <Cell ss:StyleID="s26"><Data ss:Type="String">'.htmlspecialchars($fieldName).'</Data></Cell>
-								    <Cell ss:StyleID="s27"><Data ss:Type="String">'.str_replace(chr(10),'&#10;',htmlspecialchars($tData['defaultValue'])).'</Data></Cell>
-								    <Cell ss:StyleID="s39"><Data ss:Type="String">'.str_replace(chr(10),'&#10;',htmlspecialchars($tData['translationValue'])).'</Data></Cell>
-								    <Cell ss:StyleID="s27"><Data ss:Type="String">'.$diff.'</Data></Cell>
-								    '.($page['header']['prevLang'] ? '<Cell ss:StyleID="s27"><Data ss:Type="String">'.str_replace(chr(10),'&#10;',htmlspecialchars(current($tData['previewLanguageValues']))).'</Data></Cell>' : '').'
-								   </Row>
-									';
-								}
-							}
-						}
-
-						if (count($fieldsForRecord))	{
-							$output[]= '
-							<!-- Element header -->
-						   <Row>
-						    <Cell ss:Index="2" ss:StyleID="s37"><Data ss:Type="String">Element: '.htmlspecialchars($table.':'.$elementUid).'</Data></Cell>
-						    <Cell ss:StyleID="s37"></Cell>
-						    <Cell ss:StyleID="s37"></Cell>
-						    <Cell ss:StyleID="s37"></Cell>
-						    '.($page['header']['prevLang'] ? '<Cell ss:StyleID="s37"></Cell>' : '').'
-						   </Row>
-							';
-							
-							$output = array_merge($output, $fieldsForRecord);
-						}
+						// See, if incoming translation is available, if so, submit it
+					if (t3lib_div::_POST('saveInline')) {
+						$service->saveTranslation($l10ncfgObj,$translationData);
+							// reloading if submitting stuff...
+						//$accum = $this->getAccumulated($tree, $l10ncfg, $sysLang);	
 					}
-				}
-			}
-
-				$output[]= '
-				<!-- Spacer row -->
-			   <Row>
-			    <Cell ss:Index="2"><Data ss:Type="String"></Data></Cell>
-			   </Row>
-				';
+				break;
+				case 'export_excel':
+						// Buttons:
+						$info.= '<input type="submit" value="Refresh" name="_" />';
+						$info.= '<input type="submit" value="Export" name="export_excel" />';
+						$info.= '<input type="submit" value="Import" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
+			
+							// Read uploaded file:
+						if (t3lib_div::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
+							$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
+							
+							$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
+							//TODO: catch exeption
+							$translationData=$factory->getTranslationDataFromExcelXMLFile($uploadedTempFile);
+							$translationData->setLanguage($sysLang);
+							
+							t3lib_div::unlink_tempfile($uploadedTempFile);
+							
+							$service->saveTranslation($l10ncfgObj,$translationData);
+							
+							$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
+							
+						}
+			
+							// If export of XML is asked for, do that (this will exit and push a file for download)
+						if (t3lib_div::_POST('export_excel'))	{
+							// Render the XML
+							$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
+							$viewClass=new $viewClassName($l10ncfgObj,$sysLang);
+							$this->_downloadXML($viewClass);
+						}
+				
+				break;
+				case 'export_xml':		// XML import/export
+			
+						// Buttons:
+					$info.= '<input type="submit" value="Refresh" name="_" />';
+					$info.= '<input type="submit" value="Export" name="export_xml" />';
+					$info.= '<input type="submit" value="Import" name="import_xml" /><input type="file" size="60" name="uploaded_import_file" />';
+		
+						// Read uploaded file:
+						if (t3lib_div::_POST('import_xml') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
+							$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
+							
+							$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
+							//TODO: catch exeption
+							$translationData=$factory->getTranslationDataFromCATXMLFile($uploadedTempFile);
+							$translationData->setLanguage($sysLang);
+								
+							t3lib_div::unlink_tempfile($uploadedTempFile);
+								
+								
+							$service->saveTranslation($l10ncfgObj,$translationData);
+							$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
+						}	
+						// If export of XML is asked for, do that (this will exit and push a file for download)
+						if (t3lib_div::_POST('export_xml'))	{
+							// Render the XML
+							$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
+							$viewClass=new $viewClassName($l10ncfgObj,$sysLang);
+							if ($this->MOD_SETTINGS["onlyChangedContent"]) {
+								$viewClass->setModeOnlyChanged();
+							}
+							$this->_downloadXML($viewClass);
+						}
+					break;
+					DEFAULT:	// Default display:
+						$info.= '<input type="submit" value="Refresh" name="_" />';					
+					break;
+		} //switch block
+		
+		// Render the module content (for all modes):
+		//*******************************************
+		$htmlListViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10nHTMLListView');
+		$htmlListView=new $htmlListViewClassName($l10ncfgObj,$sysLang);
+		if ($this->MOD_SETTINGS["onlyChangedContent"]) {
+			$htmlListView->setModeOnlyChanged();
 		}
-
-		$excelXML = t3lib_div::getUrl('./excel_template.xml');
-		$excelXML = str_replace('###INSERT_ROWS###',implode('', $output), $excelXML);
-		$excelXML = str_replace('###INSERT_ROW_COUNT###',count($output), $excelXML);
-
-			// Setting filename:
-		$filename = 'excel_export_'.$sysLang.'_'.date('dmy-Hi').'.xml';
-
-			// Creating output header:
-		$mimeType = 'text/xml';
-		Header('Charset: utf-8');
-		Header('Content-Type: '.$mimeType);
-		Header('Content-Disposition: attachment; filename='.$filename);
-		echo $excelXML;
-		exit;
+		if ($this->MOD_SETTINGS["action"]=='inlineEdit') {
+			$htmlListView->setModeWithInlineEdit();
+		}
+		if ($this->MOD_SETTINGS["action"]=='link') {
+			$htmlListView->setModeShowEditLinks();
+		}
+		
+		$this->content.=$this->doc->section('',$info.$htmlListView->renderOverview());
 	}
 
 	/**
-	 * Render the simple XML export
-	 *
-	 * @param	array		Translation data for configuration
-	 * @return	string		HTML content
-	 */
-	function render_simpleXML($accum, $sysLang, $l10ncfg)	{
-
-		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
-		$output = array();
-
-			// Traverse the structure and generate XML output:
-		foreach($accum as $pId => $page)	{
-			$output[]='<PageGrp id="'.$pId.'">'."\n";
-			foreach($accum[$pId]['items'] as $table => $elements)	{
-				foreach($elements as $elementUid => $data)	{
-					if (!empty($data['ISOcode']))	{
-						$targetIso2L = ' targetLang="'.$data['ISOcode'].'"';
-					}
-					if (is_array($data['fields']))	{
-						$fieldsForRecord = array();
-						foreach($data['fields'] as $key => $tData)	{
-							if (is_array($tData))	{
-								list(,$uidString,$fieldName) = explode(':',$key); 
-								list($uidValue) = explode('/',$uidString);
-
-								$diff = '';
-								$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
-								if ($uidValue==='NEW')	{
-									$diff = htmlspecialchars('[New value]');
-								} elseif (!$tData['diffDefaultValue']) {
-									$diff = htmlspecialchars('[No diff available]');
-								} elseif ($noChangeFlag)	{
-									$diff = htmlspecialchars('[No change]');
-								} else {
-									$diff = $this->diffCMP($tData['diffDefaultValue'],$tData['defaultValue']);
-									$diff = str_replace('<span class="diff-r">','<Font html:Color="#FF0000" xmlns="http://www.w3.org/TR/REC-html40">',$diff);
-									$diff = str_replace('<span class="diff-g">','<Font html:Color="#00FF00" xmlns="http://www.w3.org/TR/REC-html40">',$diff);
-									$diff = str_replace('</span>','</Font>',$diff);
-								}
-								$diff.= ($tData['msg']?'[NOTE: '.htmlspecialchars($tData['msg']).']':'');
-								if (!$this->MOD_SETTINGS["onlyChangedContent"] || !$noChangeFlag)	{
-									reset($tData['previewLanguageValues']);
-									$dataForTranslation=$tData['defaultValue'];
-									// Substitutions for XML conformity here
-									if ($fieldName == "bodytext") { // to be substituted with check if field is RTE-enabled
-										$dataForTranslation = $parseHTML->TS_images_rte($dataForTranslation);
-										$dataForTranslation = $parseHTML->TS_links_rte($dataForTranslation);
-										$dataForTranslation = $parseHTML->TS_transform_rte($dataForTranslation,$css=1); // which mode is best?
-										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'">'.str_replace('&nbsp;',' ',$dataForTranslation).'</Data>'."\n";
-									} else {
-										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.str_replace('&nbsp;',' ',$dataForTranslation).']]></Data>'."\n";
-									}
-									
-								}
-							}
-						}						
-					}
-				}
-			}
-
-		$output[]='</PageGrp>'."\n";
-		}
+	* function sends downloadheader and calls render method of the view.
+	*  it is used for excelXML and CATXML
+	**/
+	function _downloadXML($xmlView) {
 		
-		// get ISO2L code for source language
-			if ($l10ncfg['sourceLangStaticId'] && t3lib_extMgm::isLoaded('static_info_tables'))        {
-					$sourceIso2L = '';
-					$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$l10ncfg['sourceLangStaticId'],'lg_iso_2');
-	   			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
-   		}
-
-		
-		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC version=\"2.0\" sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.">\n###INSERT_ROWS###\n<count type=\"datasets\">###INSERT_ROW_COUNT###</count>\n<count type=\"words\">###INSERT_WORD_COUNT###</count>\n<count type=\"chars\">###INSERT_CHAR_COUNT###</count>\n</TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named sysTargetLang.
-
-		$count = $this->wordCount($output,$staticLangArr['lg_iso_2']);
-
-		$XML = str_replace('###INSERT_ROWS###',implode('', $output), $XML);
-		$XML = str_replace('###INSERT_ROW_COUNT###',count($output), $XML);
-		$XML = str_replace('###INSERT_WORD_COUNT###',$count['words'], $XML);
-		$XML = str_replace('###INSERT_CHAR_COUNT###',$count['chars'], $XML);
-
-			// Setting filenames:
-		$filename = 'xml_export_'.$staticLangArr['lg_iso_2'].'_'.date('dmy-Hi').'.xml';
-			// Where to store?
-		$reportfile = 'xml_export_'.$staticLangArr['lg_iso_2'].'_'.date('dmy-Hi').'.html';
-
-			// Creating output header:
+		// Setting filename:
+		$filename = $xmlView->getFileName();
 		$mimeType = 'text/xml';
+		$this->_sendDownloadHeader($mimeType,$filename);
+		echo $xmlView->render();
+		exit;
+	}
+
+	function _sendDownloadHeader($mimeType,$filename) {
+			// Creating output header:
+		
 		Header('Charset: utf-8');
 		Header('Content-Type: '.$mimeType);
 		Header('Content-Disposition: attachment; filename='.$filename);
-		echo $XML;
-		exit;
 	}
 
 	/**
@@ -661,330 +349,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
 		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
 	}
-
-	/**
-	 * Submit incoming content to database. Must match what is available in $accum.
-	 *
-	 * @param	array		Translation configuration
-	 * @param	array		Array with incoming translation. Must match what is found in $accum
-	 * @return	boolean		TRUE, if $inputArray was an array and processing was performed.
-	 */
-	function submitContent($accum,$inputArray)	{
-
-		if (is_array($inputArray))	{
-
-				// Initialize:
-			$flexToolObj = t3lib_div::makeInstance('t3lib_flexformtools');
-			$TCEmain_data = array();
-			$TCEmain_cmd = array();
-			
-			$this->flexFormDiffArray = array();
-
-				// Traverse:
-			foreach($accum as $pId => $page)	{
-				foreach($accum[$pId]['items'] as $table => $elements)	{
-					foreach($elements as $elementUid => $data)	{
-						if (is_array($data['fields']))	{
-							foreach($data['fields'] as $key => $tData)	{
-								if (is_array($tData) && isset($inputArray[$table][$elementUid][$key]))	{
-									list($Ttable,$TuidString,$Tfield,$Tpath) = explode(':',$key);
-									list($Tuid,$Tlang,$TdefRecord) = explode('/',$TuidString);
-
-										// If new element is required, we prepare for localization
-									if ($Tuid==='NEW')	{
-										$TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
-									}
-
-										// If FlexForm, we set value in special way:
-									if ($Tpath)	{
-										if (!is_array($TCEmain_data[$Ttable][$TuidString][$Tfield]))	{
-											$TCEmain_data[$Ttable][$TuidString][$Tfield] = array();
-										}
-										$flexToolObj->setArrayValueByPath($Tpath,$TCEmain_data[$Ttable][$TuidString][$Tfield],$inputArray[$table][$elementUid][$key]);
-										$this->flexFormDiffArray[$key] = array('translated' => $inputArray[$table][$elementUid][$key], 'default' => $tData['defaultValue']);
-									} else {
-										$TCEmain_data[$Ttable][$TuidString][$Tfield] = $inputArray[$table][$elementUid][$key];
-									}
-									unset($inputArray[$table][$elementUid][$key]);	// Unsetting so in the end we can see if $inputArray was fully processed.
-								}
-							}
-							if (is_array($inputArray[$table][$elementUid]) && !count($inputArray[$table][$elementUid]))	{
-								unset($inputArray[$table][$elementUid]);	// Unsetting so in the end we can see if $inputArray was fully processed.
-							}
-						}
-					}
-					if (is_array($inputArray[$table]) && !count($inputArray[$table]))	{
-						unset($inputArray[$table]);	// Unsetting so in the end we can see if $inputArray was fully processed.
-					}
-				}
-			}
-#debug($TCEmain_cmd,'$TCEmain_cmd');
-#debug($TCEmain_data,'$TCEmain_data');
-
-				// Execute CMD array: Localizing records:
-			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
-			$tce->stripslashes_values = FALSE;
-			if (count($TCEmain_cmd))	{
-				$tce->start(array(),$TCEmain_cmd);
-				$tce->process_cmdmap();
-				if (count($tce->errorLog))	{
-					debug($tce->errorLog,'TCEmain localization errors:');
-				}
-			}
-#debug($tce->copyMappingArray_merged,'$tce->copyMappingArray_merged');
-				// Remapping those elements which are new:
-			foreach($TCEmain_data as $table => $items)	{
-				foreach($TCEmain_data[$table] as $TuidString => $fields)	{
-					list($Tuid,$Tlang,$TdefRecord) = explode('/',$TuidString);
-					if ($Tuid === 'NEW')	{
-						if ($tce->copyMappingArray_merged[$table][$TdefRecord])	{
-							$TCEmain_data[$table][t3lib_BEfunc::wsMapId($table,$tce->copyMappingArray_merged[$table][$TdefRecord])] = $fields;
-						} else {
-							debug('Record "'.$table.':'.$TdefRecord.'" was NOT localized as it should have been!');
-						}
-						unset($TCEmain_data[$table][$TuidString]);
-					}
-				}
-			}
-#debug($TCEmain_data,'$TCEmain_data');
-
-				// Now, submitting translation data:
-			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
-			$tce->stripslashes_values = FALSE;
-			$tce->dontProcessTransformations = TRUE; 
-			$tce->start($TCEmain_data,array());	// check has been done previously that there is a backend user which is Admin and also in live workspace
-			$tce->process_datamap();
-			
-			if (count($tce->errorLog))	{
-				debug($tce->errorLog,'TCEmain update errors:');
-			}
-			
-			if (count($tce->autoVersionIdMap) && count($this->flexFormDiffArray))	{
-			#	debug($this->flexFormDiffArray);
-				foreach($this->flexFormDiffArray as $key => $value)	{
-					list($Ttable,$Tuid,$Trest) = explode(':',$key,3);
-					if ($tce->autoVersionIdMap[$Ttable][$Tuid])	{
-						$this->flexFormDiffArray[$Ttable.':'.$tce->autoVersionIdMap[$Ttable][$Tuid].':'.$Trest] = $this->flexFormDiffArray[$key];
-						unset($this->flexFormDiffArray[$key]);
-					}
-				}
-#				debug($tce->autoVersionIdMap);
-#				debug($this->flexFormDiffArray);
-			}
-			
-			
-				// Should be empty now - or there were more information in the incoming array than there should be!
-			if (count($inputArray))	{
-				debug($inputArray,'These fields were ignored since they were not in the configuration:');
-			}
-
-			return TRUE;
-		}
-	}
-
-	/**
-	 * Create information array with accumulated information
-	 *
-	 * @param	array		Page tree
-	 * @param	array		Localization configuration record.
-	 * @param	integer		sys_language uid
-	 * @return	array		Information array
-	 */
-	function getAccumulated($tree, $l10ncfg, $sysLang) 	{
-		global $TCA;
-
-		$accum = array();
-		
-			// FlexForm Diff data:
-		$flexFormDiff = unserialize($l10ncfg['flexformdiff']);
-		$flexFormDiff = $flexFormDiff[$sysLang];
-
-		$excludeIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg['exclude'],1));
-
-			// Init:
-		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
-		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
-
-			// Set preview language (only first one in list is supported):
-		$previewLanguage = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
-		if ($previewLanguage)	{
-			$t8Tools->previewLanguages = array($previewLanguage);
-		}
-
-			// Traverse tree elements:
-		foreach($tree->tree as $treeElement)	{
-
-			$pageId = $treeElement['row']['uid'];
-			if (!isset($excludeIndex['pages:'.$pageId]) && ($treeElement['row']['l18n_cfg']&2)!=2 && $treeElement['row']['doktype']<200)	{
-			
-				$accum[$pageId]['header']['title']	= $treeElement['row']['title'];
-				$accum[$pageId]['header']['icon']	= $treeElement['HTML'];
-				$accum[$pageId]['header']['prevLang'] = $previewLanguage;
-				$accum[$pageId]['items'] = array();
-
-					// Traverse tables:
-				foreach($TCA as $table => $cfg)	{
-
-						// Only those tables we want to work on:
-					if (t3lib_div::inList($l10ncfg['tablelist'], $table))	{
-
-						if ($table === 'pages')	{
-							$accum[$pageId]['items'][$table][$pageId] = $t8Tools->translationDetails('pages',t3lib_BEfunc::getRecordWSOL('pages',$pageId),$sysLang, $flexFormDiff);
-						} else {
-							$allRows = $t8Tools->getRecordsToTranslateFromTable($table, $pageId);
-							if (is_array($allRows))	{
-								if (count($allRows))	{
-										// Now, for each record, look for localization:
-									foreach($allRows as $row)	{
-										t3lib_BEfunc::workspaceOL($table,$row);
-										if (is_array($row) && !isset($excludeIndex[$table.':'.$row['uid']]))	{
-											$accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-
-		$includeIndex = array_unique(t3lib_div::trimExplode(',',$l10ncfg['include'],1));
-		foreach($includeIndex as $recId)	{
-			list($table, $uid) = explode(':',$recId);
-			$row = t3lib_BEfunc::getRecordWSOL($table, $uid);
-			if (count($row))	{
-				$accum[-1]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
-			}
-		}
-
-#debug($accum);
-		return $accum;
-	}
 	
-	function updateFlexFormDiff(&$l10ncfg, $sysLang)	{
-
-			// Updating diff-data:
-			// First, unserialize/initialize:
-		$flexFormDiffForAllLanguages = unserialize($l10ncfg['flexformdiff']);
-		if (!is_array($flexFormDiffForAllLanguages))	{
-			$flexFormDiffForAllLanguages = array();
-		}
-
-			// Set the data ($this->flexFormDiffArray should be set inside submitContent())
-		$flexFormDiffForAllLanguages[$sysLang] = array_merge((array)$flexFormDiffForAllLanguages[$sysLang],$this->flexFormDiffArray);
-
-			// Serialize back and save it to record:
-		$l10ncfg['flexformdiff'] = serialize($flexFormDiffForAllLanguages);
-		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg','uid='.intval($l10ncfg['uid']),array('flexformdiff' => $l10ncfg['flexformdiff']));
-	}
-
-
-
-	function parseXML( $fileContent ) {
-			// Parse XML in a rude fashion:
-		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML!
-		$translation = array();
-
-			// At least OpenOfficeOrg Calc changes the worksheet identifier. For now we better check for this, otherwise we cannot import translations edited with OpenOfficeOrg Calc.
-		if ( isset( $xmlNodes['Workbook'][0]['ch']['Worksheet'] ) ) {
-			$worksheetIdentifier = 'Worksheet';
-		}
-		if ( isset( $xmlNodes['Workbook'][0]['ch']['ss:Worksheet'] ) ) {
-			$worksheetIdentifier = 'ss:Worksheet';
-		}
-
-			// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
-		if (is_array($xmlNodes['Workbook'][0]['ch'][$worksheetIdentifier][0]['ch']['Table'][0]['ch']['Row']))	{
-			foreach($xmlNodes['Workbook'][0]['ch'][$worksheetIdentifier][0]['ch']['Table'][0]['ch']['Row'] as $row)	{
-				if (!isset($row['ch']['Cell'][0]['attrs']['ss:Index']))	{
-					list($Ttable, $Tuid, $Tkey) = explode('][',substr(trim($row['ch']['Cell'][0]['ch']['Data'][0]['values'][0]),12,-1));
-					$translation[$Ttable][$Tuid][$Tkey] = $row['ch']['Cell'][3]['ch']['Data'][0]['values'][0];
-				}
-			}
-		}
-		return $translation;
-	}
-
-	/**
-	* @param SimpleXML
-	* @return array with translated informations
-	**/
-	function parseSimpleXML($fileContent) {
-
-		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
-
-		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML! //str_replace should be obsolete as no nbsps are exported any longer
-				$translation = array();
 	
-					// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
-				//print '<pre>'; print_r($xmlNodes);print '</pre>';
-				if (is_array($xmlNodes['TYPO3LOC'][0]['ch']['PageGrp']))	{
-				   	foreach($xmlNodes['TYPO3LOC'][0]['ch']['PageGrp'] as $pageGrp)	{
-						//print '<pre>'; print_r($pageGrp); print '</pre>';
-						if (is_array($pageGrp['ch']['Data'])) {
-							foreach($pageGrp['ch']['Data'] as $row)	{
-								$attrs=$row['attrs'];
-								list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
-								if ($fieldName == "bodytext") { //substitute check with rte enabled fields from TCA
-									$translationValue = $row['values'][0];
-									$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!
-									$translationValue = $parseHTML->TS_images_db($translationValue);
-									$translationValue = $parseHTML->TS_links_db($translationValue);
-									$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
-								} else {
-									$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
-								}
-							}
-						}
-					}
-				}
-			return $translation;
-	}
-
-
-	/**
-	* @param output
-	* @return array with word count result
-	**/
-		//Experimental!!!
-	function wordCount($output,$locale) { 
-			//After problems with Umlauts breaking words into parts... due to str_word_count encoding problems
-		if (!empty($locale)) {
-			$loc = setlocale (LC_ALL, strtolower($locale).'_'.$locale, $locale); 
-		}
-		$count['chars'] =0;
-		$count['words'] =0;
-		foreach ($output as $text) {
-			$pattern[0]= '/<!\[CDATA\[/'; //remove CDATA
-		        $pattern[1]= '/\]\]>/'; //remove CDATA
-		        $pattern[2]= '/<[^<ai]*>/'; //remove all tags but img and a
-		        $pattern[3]= '/<a [^<]* title="([^<]*)"[^<]*>/i'; //link title
-		        $pattern[4]= '/<\/[^<]*>/'; //remove all closing tags
-		        $pattern[5]= '/(<img [^<]*)( title="([^"]*)")([^<]*>)/i'; //image title
-		        $pattern[6]= '/(<img [^<]*)( alt="([^"]*)")([^<]*>)/i'; //image alt
-		        $pattern[7]= '/(<img [^<]*)( longdesc="([^"]*)")([^<]*>)/i'; //img longdesc
-		        $pattern[8]= '/(<[^<]*>)/'; //all remaining links
-		        $subst[0]= '';
-		        $subst[1]= '';
-		        $subst[2]= '';
-		        $subst[3]= '$1 ';
-		        $subst[4]= '';
-		        $subst[5]= '$1 $4 $3 ';
-		        $subst[6]= '$1 $4 $3 ';
-		        $subst[7]= '$1 $4 $3 ';
-		        $subst[8]= '';
-
-		        $text=preg_replace($pattern,$subst,$text);
-
-		        $words=str_word_count(utf8_decode($text));
-
-			$count['words']=$count['words']+$words;
-			$count['chars']=$count['chars']+strlen(utf8_decode($text));
-		}
-		return $count;
-	}
 
 }
 
