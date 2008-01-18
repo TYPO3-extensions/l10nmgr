@@ -131,7 +131,8 @@ class tx_l10nmgr_module1 extends t3lib_SCbase {
 	}
 
 	/**
-	 * Generates the module content
+	 * Generates the module content: Renders a list of L10NMGR Configurations,
+	 * is aware of BE-permissions of the current user
 	 *
 	 * @return	void
 	 */
