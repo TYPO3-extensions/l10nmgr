@@ -133,12 +133,16 @@ class tx_l10nmgr_translationDataFactory {
 				if (is_array($xmlNodes['TYPO3LOC'][0]['ch']['Data']))	{
 					foreach($xmlNodes['TYPO3LOC'][0]['ch']['Data'] as $row)	{
 						$attrs=$row['attrs'];
+						
 						list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
-						if ($fieldName == "bodytext") { //substitute check with rte enabled fields from TCA
-							$translationValue = $row['values'][0];
+						if ($attrs['transformations']=='1') { //substitute check with rte enabled fields from TCA
+							$translationValue =$this->_getXMLFromTreeArray($row['ch']);							
+							//$translationValue = $row['values'][0];
 							$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!
 							$translationValue = $parseHTML->TS_images_db($translationValue);
 							$translationValue = $parseHTML->TS_links_db($translationValue);
+							//substitute & with &amp;
+							$translationValue=str_replace('&amp;','&',$translationValue);
 							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
 						} else {
 							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
@@ -146,6 +150,26 @@ class tx_l10nmgr_translationDataFactory {
 					}
 				}
 			return $translation;
+	}
+	
+	function _getXMLFromTreeArray($array) {		
+		foreach ($array as $k=>$v) {
+			
+			if ($k=='ch') {								
+					$xml.=$this->_getXMLFromTreeArray($v);												
+			}
+			elseif ($k=='values') {				
+				$xml.=$v[0];
+			}
+			else {				
+				foreach ($v as $k2=>$v2) {
+					$xml.='<'.$k.'>';
+					$xml.=$this->_getXMLFromTreeArray($v2);
+					$xml.='</'.$k.'>';
+				}
+			}		
+		}
+		return $xml;
 	}
 	
 }

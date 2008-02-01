@@ -4,7 +4,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 $TCA["tx_l10nmgr_cfg"] = Array (
 	"ctrl" => $TCA["tx_l10nmgr_cfg"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "title,depth,sourceLangStaticId,tablelist,exclude"
+		"showRecordFieldList" => "title,depth,sourceLangStaticId,tablelist,exclude,incfcewithdefaultlanguage"
 	),
 	"feInterface" => $TCA["tx_l10nmgr_cfg"]["feInterface"],
 	"columns" => Array (
@@ -95,9 +95,17 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 				'maxitems' => 1,
 			)
 		),
+		"incfcewithdefaultlanguage" => Array (		
+			"exclude" => 1,
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.incfcewithdefaultall",
+			"config" => Array (
+				"type" => "check",
+				"default" => "0"
+			)
+		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "title;;;;2-2-2, depth;;;;3-3-3, sourceLangStaticId, tablelist, exclude, include, displaymode")
+		"0" => Array("showitem" => "title;;;;2-2-2, depth;;;;3-3-3, sourceLangStaticId, tablelist, exclude, include, displaymode, incfcewithdefaultlanguage")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -161,7 +169,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 				"maxitems" => 10,
 				"show_thumbs" => 1
 			)
-		),
+		),		
 	),
 	"types" => Array (
 		"0" => Array("showitem" => "hidden;;1;;1-1-1, title;;;;2-2-2, description;;;;3-3-3, languages, element")

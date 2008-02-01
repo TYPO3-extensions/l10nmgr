@@ -22,10 +22,10 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_xmltools.php');
 
 /**
- * excelXML: Renders the excel XML
+ * excelXML: Renders the XML
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  * @package TYPO3
@@ -72,6 +72,7 @@ class tx_l10nmgr_CATXMLView {
 					if (!empty($data['ISOcode']))	{
 						$targetIso2L = ' targetLang="'.$data['ISOcode'].'"';
 					}
+					
 					if (is_array($data['fields']))	{
 						$fieldsForRecord = array();
 						foreach($data['fields'] as $key => $tData)	{
@@ -84,12 +85,22 @@ class tx_l10nmgr_CATXMLView {
 									reset($tData['previewLanguageValues']);
 									$dataForTranslation=$tData['defaultValue'];
 									// Substitutions for XML conformity here
-									if ($fieldName == "bodytext") { // to be substituted with check if field is RTE-enabled
-										$dataForTranslation = $parseHTML->TS_images_rte($dataForTranslation);
-										$dataForTranslation = $parseHTML->TS_links_rte($dataForTranslation);
-										$dataForTranslation = $parseHTML->TS_transform_rte($dataForTranslation,$css=1); // which mode is best?
-										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'">'.$dataForTranslation.'</Data>'."\n";
-									} else {
+									$_isTranformedXML=FALSE;
+									if ($tData['fieldType']=='text' &&  $tData['isRTE']) { // to be substituted with check if field is RTE-enabled ($fieldName == "bodytext")
+										$dataForTranslationTranformed = $parseHTML->TS_images_rte($dataForTranslation);
+										$dataForTranslationTranformed = $parseHTML->TS_links_rte($dataForTranslationTranformed);
+										$dataForTranslationTranformed = $parseHTML->TS_transform_rte($dataForTranslationTranformed,$css=1); // which mode is best?
+										//substitute & with &amp;
+										$dataForTranslationTranformed=str_replace('&','&amp;',$dataForTranslationTranformed);
+										if (tx_l10nmgr_xmltools::isValidXML($dataForTranslationTranformed)) {
+											$_isTranformedXML=TRUE;
+											$dataForTranslation=$dataForTranslationTranformed;
+										}										
+									}
+									if ($_isTranformedXML) {
+										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";	
+									}
+									else {
 										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
 									}
 									

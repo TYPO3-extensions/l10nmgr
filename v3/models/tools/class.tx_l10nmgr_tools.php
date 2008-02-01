@@ -78,6 +78,7 @@ class tx_l10nmgr_tools {
 
 	var $previewLanguages = array();	// Array of sys_language_uids, eg. array(1,2)
 	var $verbose = TRUE;		// If TRUE, when fields are not included there will be shown a detailed explanation.
+	var $includeFceWithDefaultLanguage = FALSE; 	//if set to true also FCE with language setting default will be included (not only All)
 
 		// Internal:
 	var $t8Tools = NULL;				// Object to t3lib_transl8tools, set in constructor
@@ -85,6 +86,7 @@ class tx_l10nmgr_tools {
 	var $sysLanguages = array();		// System languages initialized
 	var $flexFormDiff = array();		// FlexForm diff data
 	var $sys_languages = array();		// System languages records, loaded by constructor
+
 
 	/**
 	 * Constructor
@@ -182,8 +184,12 @@ class tx_l10nmgr_tools {
 			$this->sysLanguages = $this->t8Tools->getSystemLanguages();
 			$this->detailsOutput['ISOcode'] = $this->sysLanguages[$sysLang]['ISOcode'];
 
-				// ALL language; then look for flexform:
-			$flexFormTranslation = $tInfo['sys_language_uid']==-1 && !count($tInfo['translations']);
+			// ALL language; then look for flexform:
+			//$flexFormTranslation = $tInfo['sys_language_uid']==-1 && !count($tInfo['translations']);			
+			//check for FCE:
+			$flexFormTranslation = $row['CType']==templavoila_pi1 && !count($tInfo['translations']);			
+			$flexFormTranslation = $this->includeFceWithDefaultLanguage?$flexFormTranslation:($tInfo['sys_language_uid']==-1 && $flexFormTranslation);
+			
 			if ($flexFormTranslation || $table === 'pages')	{
 				$this->detailsOutput['log'][] = 'Mode: "ALL" language with no translation set; looking for flexform fields';
 
@@ -218,8 +224,8 @@ class tx_l10nmgr_tools {
 					}
 				}
 			}
-
-			if (!$flexFormTranslation)	{
+			//if no FCE and not language "ALL"
+			if (!$flexFormTranslation && $tInfo['sys_language_uid']!=-1)	{
 				if (count($tInfo['translations']))	{
 					$this->detailsOutput['log'][] = 'Mode: translate existing record';
 					$translationUID = $tInfo['translations'][$sysLang]['uid'];
@@ -357,7 +363,8 @@ class tx_l10nmgr_tools {
 												'previewLanguageValues' => $previewLanguageValues,
 												'msg' => $msg,
 												'readOnly' => $TCEformsCfg['l10n_display']=='defaultAsReadonly',
-												'fieldType' => $TCEformsCfg['config']['type']
+												'fieldType' => $TCEformsCfg['config']['type'],
+												'isRTE'=>$this->_isRTEField($key,$TCEformsCfg)
 											);
 									} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; ->filters[noIntegers] was set and dataValue "'.$dataValue.'" was an integer';
 								} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; ->filters[noEmptyValues] was set and dataValue "'.$dataValue.'" was empty and no translation found either.';
@@ -368,7 +375,25 @@ class tx_l10nmgr_tools {
 			} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; "l10n_mode" for the field was "exclude" and field is not translated then.';
 		} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; fields of type "flex" can only be translated in the context of an "ALL" language record';
 	}
-
+	
+	/**
+	 * Check if the field is an RTE in the Backend
+	 *
+	 * @param	string		Key is a combination of table, uid, field and structure path, identifying the field
+	 * @param	array		TCA configuration for field
+	 * @return	boolean
+	 */
+	function _isRTEField($key,$TCEformsCfg) {		
+		if (strstr($TCEformsCfg['defaultExtras'],'richtext')) {
+			return true;
+		}
+		//TODO: check richtext settings depeding on type value (TCA based)
+		list(,,$kFieldName) = explode(':',$key);
+		if ($kFieldName=='bodytext') {
+			return true;
+		}		
+		return false;		
+	}
 
 	/**
 	 * Creating localization index for a single record (which must be default/international language and an online version!)
