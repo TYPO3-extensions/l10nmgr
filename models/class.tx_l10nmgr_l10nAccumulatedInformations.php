@@ -78,6 +78,9 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 			// Init:
 		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
 		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
+		if ($l10ncfg['incfcewithdefaultlanguage']==1) {
+			$t8Tools->includeFceWithDefaultLanguage=TRUE;
+		}
 
 			// Set preview language (only first one in list is supported):
 		$previewLanguage = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
