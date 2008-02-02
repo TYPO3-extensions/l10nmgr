@@ -1,3 +1,9 @@
+2008-02-01 Kasper Skårhøj
+
+	* Added --noFlush flag to command line cleaner tool, extended --pid to accept comma separated list of PIDs
+	* Added Context Sensitive Item "L10Nmgr tools" which expands to a submenu with items 'Create priority', 'Manage priorities','Update Index','Flush Translations'. These functions were requested by Dassault.
+	* For flushing to really work for flexforms (clearing the vDEFbase value) it needs the latest TYPO3 core for a modication to tcemain (clear_flexFormData_vDEFbase)
+
 2007-10-20 Kasper Skårhøj
 
 	* Committed work I did on this extension for Dassault in August and October. This includes:

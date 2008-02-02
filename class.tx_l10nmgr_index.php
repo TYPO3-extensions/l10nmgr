@@ -80,9 +80,10 @@ class tx_l10nmgr_index extends tx_lowlevel_cleaner_core {
 
 			// Setting up help:
 		$this->cli_options[] = array('--echotree level', 'When "level" is set to 1 or higher you will see the page of the page tree outputted as it is traversed. A value of 2 for "level" will show even more information.');
-		$this->cli_options[] = array('--pid id', 'Setting start page in page tree. Default is the page tree root, 0 (zero)');
+		$this->cli_options[] = array('--pid id_list', 'Setting start page in page tree. Default is the page tree root, 0 (zero). You can specify a list of ids, eg "22,7,3" if you like. If you specify a negative id (eg. -1) nothing is index, but the index table is just flushed.');
 		$this->cli_options[] = array('--workspace id', 'Setting workspace uid for the session. Default is "0" for live workspace. The translation index depends on the workspace.');
 		$this->cli_options[] = array('--depth int', 'Setting traversal depth. 0 (zero) will only analyse start page (see --pid), 1 will traverse one level of subpages etc.');
+		$this->cli_options[] = array('--noFlush', 'If set, the index for the workspace will not be flushed. Normally you want to flush the index as a part of the process to make sure the rebuild of the index is empty before building it. But in cases you build individual parts of the tree you may like to use this option.');
 
 		$this->cli_help['name'] = 'tx_l10nmgr_index -- Building translation index';
 		$this->cli_help['description'] = trim('
@@ -107,7 +108,7 @@ Traversing page tree and building an index of translation needs
 			'index' => array(),
 		);
 
-		$startingPoint = $this->cli_isArg('--pid') ? t3lib_div::intInRange($this->cli_argValue('--pid'),0) : 0;
+		$startingPoints = t3lib_div::intExplode(',',$this->cli_argValue('--pid'));
 		$workspaceID = $this->cli_isArg('--workspace') ? t3lib_div::intInRange($this->cli_argValue('--workspace'),-1) : 0;
 		$depth = $this->cli_isArg('--depth') ? t3lib_div::intInRange($this->cli_argValue('--depth'),0) : 1000;
 
@@ -119,7 +120,9 @@ Traversing page tree and building an index of translation needs
 		}
 
 		$this->resultArray = &$resultArray;
-		$this->genTree($startingPoint,$depth,(int)$this->cli_argValue('--echotree'),'main_parseTreeCallBack');
+		foreach($startingPoints as $pidPoint)	{
+			if ($pidPoint>=0)	$this->genTree($pidPoint,$depth,(int)$this->cli_argValue('--echotree'),'main_parseTreeCallBack');
+		}
 
 		return $resultArray;
 	}
@@ -174,8 +177,12 @@ Traversing page tree and building an index of translation needs
 		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
 		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
 
-		echo 'Flushing translation index for workspace '.$GLOBALS['BE_USER']->workspace.chr(10);
-		$t8Tools->flushIndexOfWorkspace($GLOBALS['BE_USER']->workspace);
+		if (!$this->cli_isArg('--noFlush'))	{
+			echo 'Flushing translation index for workspace '.$GLOBALS['BE_USER']->workspace.chr(10);
+			$t8Tools->flushIndexOfWorkspace($GLOBALS['BE_USER']->workspace);
+		} else {
+			echo 'Did NOT flush translation index for workspace '.$GLOBALS['BE_USER']->workspace.' since it was disabled by --noFlush'.chr(10);
+		}
 
 		foreach($this->resultArray['index'] as $pageId => $accum)	{
 			echo 'Adding entries for page '.$pageId.' "'.$accum['header']['title'].'":'.chr(10);

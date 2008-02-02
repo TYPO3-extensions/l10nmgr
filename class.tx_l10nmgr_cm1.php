@@ -70,24 +70,44 @@ class tx_l10nmgr_cm1 {
 		if (!$backRef->cmLevel)	{
 
 				// Returns directly, because the clicked item was not from the pages table
-			if ($table!="tx_l10nmgr_cfg")	return $menuItems;
+			if ($table=="tx_l10nmgr_cfg")	{
 
-				// Adds the regular item:
-			$LL = $this->includeLL();
+					// Adds the regular item:
+				$LL = $this->includeLL();
 
-				// Repeat this (below) for as many items you want to add!
-				// Remember to add entries in the localconf.php file for additional titles.
-			$url = t3lib_extMgm::extRelPath("l10nmgr")."cm1/index.php?id=".$uid;
-			$localItems[] = $backRef->linkItem(
-				$GLOBALS["LANG"]->getLLL("cm1_title",$LL),
-				$backRef->excludeIcon('<img src="'.t3lib_extMgm::extRelPath("l10nmgr").'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
-				$backRef->urlRefForCM($url),
-				1	// Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
-			);
+					// Repeat this (below) for as many items you want to add!
+					// Remember to add entries in the localconf.php file for additional titles.
+				$url = t3lib_extMgm::extRelPath("l10nmgr")."cm1/index.php?id=".$uid;
+				$localItems[] = $backRef->linkItem(
+					$GLOBALS["LANG"]->getLLL("cm1_title",$LL),
+					$backRef->excludeIcon('<img src="'.t3lib_extMgm::extRelPath("l10nmgr").'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
+					$backRef->urlRefForCM($url),
+					1	// Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
+				);
+			}
+			
+			$localItems["moreoptions_tx_l10nmgr_cm3"] = $backRef->linkItem(
+				'L10Nmgr tools',
+				'',
+				"top.loadTopMenu('".t3lib_div::linkThisScript()."&cmLevel=1&subname=moreoptions_tx_l10nmgrXX_cm3');return false;",
+				0,
+				1
+			);			
 
 				// Simply merges the two arrays together and returns ...
 			$menuItems=array_merge($menuItems,$localItems);
+		} elseif (t3lib_div::_GET('subname')=='moreoptions_tx_l10nmgrXX_cm3') {
+
+			$url = t3lib_extMgm::extRelPath("l10nmgr")."cm3/index.php?id=".$uid.'&table='.$table;
+			$localItems[] = $backRef->linkItem('Create priority','',$backRef->urlRefForCM($url.'&cmd=createPriority'),1);
+			$localItems[] = $backRef->linkItem('Manage priorities','',$backRef->urlRefForCM($url.'&cmd=managePriorities'),1);
+			$localItems[] = $backRef->linkItem('Update Index','',$backRef->urlRefForCM($url.'&cmd=updateIndex'),1);
+			$localItems[] = $backRef->linkItem('Flush Translations','',$backRef->urlRefForCM($url.'&cmd=flushTranslations'),1);
+			
+			$menuItems=array_merge($menuItems,$localItems);
 		}
+		
+		
 		return $menuItems;
 	}
 

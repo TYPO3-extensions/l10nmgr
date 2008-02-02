@@ -425,6 +425,105 @@ class tx_l10nmgr_tools {
 
 		return $items;
 	}
+	
+	function updateIndexForRecord($table,$uid)	{
+		$output = '';
+		
+		if ($table=='pages')	{
+			$items = $this->indexDetailsPage($uid);
+		} else {
+			$items = array();
+			if ($tmp = $this->indexDetailsRecord($table,$uid))	{
+				$items[$table][$uid] = $tmp;
+			}
+		}
+
+		if (count($items))	{
+			foreach($items as $tt => $rr)	{
+				foreach($rr as $rUid => $rDetails)	{
+					$this->updateIndexTableFromDetailsArray($rDetails);
+					$output.= 'Updated <em>'.$tt.':'.$rUid.'</em></br>';
+				}
+			}
+		} else {
+			$output.= 'No records to update (you can only update records that can actually be translated)';
+		}	
+		
+		return $output;	
+	}	
+	
+	function flushTranslations($table,$uid,$exec=FALSE)	{
+
+		$flexToolObj = t3lib_div::makeInstance('t3lib_flexformtools');
+		$TCEmain_data = array();
+		$TCEmain_cmd = array();
+
+			// Simply collecting information about indexing on a page to assess what has to be flushed. Maybe this should move to be an API in 
+		if ($table=='pages')	{
+			$items = $this->indexDetailsPage($uid);
+		} else {
+			$items = array();
+			if ($tmp = $this->indexDetailsRecord($table,$uid))	{
+				$items[$table][$uid] = $tmp;
+			}
+		}
+		
+		$remove = array();
+		if (count($items))	{
+			foreach($items as $tt => $rr)	{
+				foreach($rr as $rUid => $rDetails)	{
+					
+					if (is_array($rDetails['fullDetails']))	{
+						foreach($rDetails['fullDetails'] as $infoRec)	{
+							$tInfo = $infoRec['translationInfo'];
+							if (is_array($tInfo))	{
+								
+								$flexFormTranslation = $tInfo['sys_language_uid']==-1 && !count($tInfo['translations']);
+
+									// Flexforms:
+								if ($flexFormTranslation || $table === 'pages')	{
+									if (is_array($infoRec['fields']))	{
+										foreach($infoRec['fields'] as $theKey => $theVal)	{
+											$pp = explode(':',$theKey);
+											if ($pp[3] && $pp[0]===$tt && (int)$pp[1]===(int)$rUid)	{
+												$remove['resetFlexFormFields'][$tt][$rUid][$pp[2]][] = $pp[3];
+												
+												if (!is_array($TCEmain_data[$tt][$rUid][$pp[2]]))	{
+													$TCEmain_data[$tt][$rUid][$pp[2]] = array();
+												}
+												$flexToolObj->setArrayValueByPath($pp[3],$TCEmain_data[$tt][$rUid][$pp[2]],'');
+											}
+										}
+									}
+								}
+								
+									// Looking for translations of element in terms of records. Those should be deleted then.
+								if (!$flexFormTranslation && is_array($tInfo['translations']))	{
+									foreach($tInfo['translations'] as $translationChildToRemove)	{
+										$remove['deleteRecords'][$tInfo['translation_table']][$translationChildToRemove['uid']] = $translationChildToRemove;
+										$TCEmain_cmd[$tInfo['translation_table']][$translationChildToRemove['uid']]['delete']=1;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		if ($exec)	{
+				// Now, submitting translation data:
+			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
+			$tce->stripslashes_values = FALSE;
+			$tce->dontProcessTransformations = TRUE;
+			$tce->clear_flexFormData_vDEFbase = TRUE;
+			$tce->start($TCEmain_data,$TCEmain_cmd);	// check has been done previously that there is a backend user which is Admin and also in live workspace
+			$tce->process_datamap();
+			$tce->process_cmdmap();
+		}
+		
+		return array($remove,$TCEmain_cmd,$TCEmain_data,$tce->errorLog);
+	}
 
 	/**
 	 * Diff-compare markup
