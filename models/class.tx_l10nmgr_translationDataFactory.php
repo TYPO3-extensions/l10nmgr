@@ -152,24 +152,28 @@ class tx_l10nmgr_translationDataFactory {
 			return $translation;
 	}
 	
-	function _getXMLFromTreeArray($array) {		
-		foreach ($array as $k=>$v) {
-			
-			if ($k=='ch') {								
-					$xml.=$this->_getXMLFromTreeArray($v);												
-			}
-			elseif ($k=='values') {				
-				$xml.=$v[0];
-			}
-			else {				
-				foreach ($v as $k2=>$v2) {
-					$xml.='<'.$k.'>';
-					$xml.=$this->_getXMLFromTreeArray($v2);
-					$xml.='</'.$k.'>';
+	function _getXMLFromTreeArray($array) {	
+		if (is_array($array))	 {
+			foreach ($array as $k=>$v) {
+				
+				if ($k=='ch') {								
+						$xml.=$this->_getXMLFromTreeArray($v);												
 				}
-			}		
+				elseif ($k=='values') {				
+					$xml.=$v[0];
+				}
+				else {	
+					if (is_array($v))	{
+						foreach ($v as $k2=>$v2) {
+							$xml.='<'.$k.'>';
+							$xml.=$this->_getXMLFromTreeArray($v2);
+							$xml.='</'.$k.'>';
+						}
+					}
+				}		
+			}
+			return $xml;
 		}
-		return $xml;
 	}
 	
 }

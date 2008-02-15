@@ -1,3 +1,10 @@
+2008-02-15 Daniel Pötzinger
+	* introduce new FCE translationMode: <langDatabaseOverlay>1</langDatabaseOverlay>
+	* => therefore allow translation of flexforms also for overlay records
+	* begin to work on tools class to get the translationDetails for this new translationMode
+	TODO: refactor tools class (e.g. translationDetailsRepository as main class with several helperclasses)
+				diffCalculation for this kind of FCEs
+
 2008-02-01 Daniel Pötzinger
 	* add detection for RTE field in tools class
 	* change detection of flexible CE by CType and not by language==-1 (All)

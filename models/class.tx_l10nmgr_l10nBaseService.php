@@ -66,13 +66,15 @@ class tx_l10nmgr_l10nBaseService {
 			$TCEmain_cmd = array();
 			
 			$_flexFormDiffArray = array();
-
+		
 				// Traverse:
 			foreach($accum as $pId => $page)	{
 				foreach($accum[$pId]['items'] as $table => $elements)	{
 					foreach($elements as $elementUid => $data)	{
 						if (is_array($data['fields']))	{
-							foreach($data['fields'] as $key => $tData)	{								
+								
+							foreach($data['fields'] as $key => $tData)	{	
+														
 								if ( is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {									
 									
 									list($Ttable,$TuidString,$Tfield,$Tpath) = explode(':',$key);
@@ -94,6 +96,7 @@ class tx_l10nmgr_l10nBaseService {
 										if (!is_array($TCEmain_data[$Ttable][$TuidString][$Tfield]))	{
 											$TCEmain_data[$Ttable][$TuidString][$Tfield] = array();
 										}
+										//TCEMAINDATA is passed as refernece here:
 										$flexToolObj->setArrayValueByPath($Tpath,$TCEmain_data[$Ttable][$TuidString][$Tfield],$inputArray[$table][$elementUid][$key]);
 										$_flexFormDiffArray[$key] = array('translated' => $inputArray[$table][$elementUid][$key], 'default' => $tData['defaultValue']);
 									} else {
@@ -101,6 +104,10 @@ class tx_l10nmgr_l10nBaseService {
 									}
 									unset($inputArray[$table][$elementUid][$key]);	// Unsetting so in the end we can see if $inputArray was fully processed.
 								}
+								else {
+									//debug($tData,'fields not set for: '.$elementUid.'-'.$key);							
+									//debug($inputArray[$table],'inputarray');
+								}	
 							}
 							if (is_array($inputArray[$table][$elementUid]) && !count($inputArray[$table][$elementUid]))	{
 								unset($inputArray[$table][$elementUid]);	// Unsetting so in the end we can see if $inputArray was fully processed.
@@ -112,8 +119,8 @@ class tx_l10nmgr_l10nBaseService {
 					}
 				}
 			}
-#debug($TCEmain_cmd,'$TCEmain_cmd');
-#debug($TCEmain_data,'$TCEmain_data');
+//debug($TCEmain_cmd,'$TCEmain_cmd');
+//debug($TCEmain_data,'$TCEmain_data');
 
 				// Execute CMD array: Localizing records:
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
@@ -125,7 +132,7 @@ class tx_l10nmgr_l10nBaseService {
 					debug($tce->errorLog,'TCEmain localization errors:');
 				}
 			}
-#debug($tce->copyMappingArray_merged,'$tce->copyMappingArray_merged');
+//debug($tce->copyMappingArray_merged,'$tce->copyMappingArray_merged');
 				// Remapping those elements which are new:
 			foreach($TCEmain_data as $table => $items)	{
 				foreach($TCEmain_data[$table] as $TuidString => $fields)	{
@@ -140,12 +147,13 @@ class tx_l10nmgr_l10nBaseService {
 					}
 				}
 			}
-#debug($TCEmain_data,'$TCEmain_data');
+//debug($TCEmain_data,'$TCEmain_data');
 
 				// Now, submitting translation data:
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
 			$tce->stripslashes_values = FALSE;
 			$tce->dontProcessTransformations = TRUE; 
+			//print_r($TCEmain_data);
 			$tce->start($TCEmain_data,array());	// check has been done previously that there is a backend user which is Admin and also in live workspace
 			$tce->process_datamap();
 			
