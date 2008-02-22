@@ -122,7 +122,9 @@ class tx_l10nmgr_translationDataFactory {
 
 		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 
-		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML!
+		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent),2);	// For some reason PHP chokes on incoming &nbsp; in XML!
+		
+		
 		if (!is_array($xmlNodes)) {
 			$this->_errorMsg.=$xmlNodes;
 			return false;
@@ -136,11 +138,32 @@ class tx_l10nmgr_translationDataFactory {
 						
 						list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
 						if ($attrs['transformations']=='1') { //substitute check with rte enabled fields from TCA
-							$translationValue =$this->_getXMLFromTreeArray($row['ch']);							
-							//$translationValue = $row['values'][0];
-							$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!
-							$translationValue = $parseHTML->TS_images_db($translationValue);
+							
+							//$translationValue =$this->_getXMLFromTreeArray($row);							
+							$translationValue=$row['XMLvalue'];
+							
+							//fixed setting of Parser (TO-DO set it via typoscript)	
+								$parseHTML->procOptions['typolist']=FALSE;
+								$parseHTML->procOptions['typohead']=FALSE;
+								$parseHTML->procOptions['keepPDIVattribs']=TRUE;
+								$parseHTML->procOptions['dontConvBRtoParagraph']=TRUE;
+								//$parseHTML->procOptions['preserveTags'].=',br';
+								if (!is_array($parseHTML->procOptions['HTMLparser_db.'])) {
+										$parseHTML->procOptions['HTMLparser_db.']=array();
+								}
+								$parseHTML->procOptions['HTMLparser_db.']['xhtml_cleaning']=TRUE;
+								//trick to preserve strongtags
+								$parseHTML->procOptions['denyTags']='strong';
+								//$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
+								$parseHTML->procOptions['dontRemoveUnknownTags_db']=TRUE;
+								
+							$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!						
+							//print_r($translationValue);
+							$translationValue = $parseHTML->TS_images_db($translationValue);													
+							//print_r($translationValue);
 							$translationValue = $parseHTML->TS_links_db($translationValue);
+							//print_r($translationValue);
+							//	print_r($translationValue);
 							//substitute & with &amp;
 							$translationValue=str_replace('&amp;','&',$translationValue);
 							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
@@ -163,7 +186,7 @@ class tx_l10nmgr_translationDataFactory {
 					$xml.=$v[0];
 				}
 				else {	
-					if (is_array($v))	{
+					if (is_array($v) && $k !='attrs')	{
 						foreach ($v as $k2=>$v2) {
 							$xml.='<'.$k.'>';
 							$xml.=$this->_getXMLFromTreeArray($v2);
@@ -175,6 +198,8 @@ class tx_l10nmgr_translationDataFactory {
 			return $xml;
 		}
 	}
+	
+	
 	
 }
 

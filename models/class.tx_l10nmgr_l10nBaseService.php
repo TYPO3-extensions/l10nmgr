@@ -163,7 +163,7 @@ class tx_l10nmgr_l10nBaseService {
 			
 			if (count($tce->autoVersionIdMap) && count($_flexFormDiffArray))	{
 			#	debug($this->flexFormDiffArray);
-				foreach(_flexFormDiffArray as $key => $value)	{
+				foreach($_flexFormDiffArray as $key => $value)	{
 					list($Ttable,$Tuid,$Trest) = explode(':',$key,3);
 					if ($tce->autoVersionIdMap[$Ttable][$Tuid])	{
 						$_flexFormDiffArray[$Ttable.':'.$tce->autoVersionIdMap[$Ttable][$Tuid].':'.$Trest] = $_flexFormDiffArray[$key];
