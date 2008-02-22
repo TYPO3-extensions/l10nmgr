@@ -237,6 +237,7 @@ class tx_l10nmgr_tools {
 												$flexObj = t3lib_div::makeInstance('t3lib_flexformtools');
 												$this->_callBackParams_keyForTranslationDetails=$key;
 												$this->_callBackParams_translationXMLArray=t3lib_div::xml2array($translationRecord[$field]);
+												$this->_callBackParams_currentRow=$row;
 												$flexObj->traverseFlexFormXMLData($table,$field,$row,$this,'translationDetails_flexFormCallBackForOverlay');
 											}
 											$this->detailsOutput['log'][] = 'Mode: useOverlay looking for flexform fields!';
@@ -251,7 +252,7 @@ class tx_l10nmgr_tools {
 											//debug($row[$field]);
 											
 											
-											$this->translationDetails_addField($key, $cfg, $row[$field], $translationRecord[$field], $diffDefaultValue, $previewLanguageValues);
+											$this->translationDetails_addField($key, $cfg, $row[$field], $translationRecord[$field], $diffDefaultValue, $previewLanguageValues,$row);
 										}
 								}
 								//elseif ($cfg[
@@ -433,11 +434,11 @@ class tx_l10nmgr_tools {
 		//echo $dataValue.'<hr>';
 		$translValue=$pObj->getArrayValueByPath($structurePath, $this->_callBackParams_translationXMLArray);
 		//TODO:
-			$diffDefaultValue='';
+			$diffDefaultValue=$dataValue;
 			$previewLanguageValues=array();
 			
 		$key=$this->_callBackParams_keyForTranslationDetails.':'.$structurePath;
-		$this->translationDetails_addField($key, $dsArr['TCEforms'], $dataValue, $translValue, $diffDefaultValue, $previewLanguageValues);		
+		$this->translationDetails_addField($key, $dsArr['TCEforms'], $dataValue, $translValue, $diffDefaultValue, $previewLanguageValues,$this->_callBackParams_currentRow);		
 			
 	}
 	
@@ -453,7 +454,7 @@ class tx_l10nmgr_tools {
 	 * @param	array		Array of preview language values identified by keys (which are sys_language uids)
 	 * @return	void
 	 */
-	function translationDetails_addField($key, $TCEformsCfg, $dataValue, $translationValue, $diffDefaultValue='', $previewLanguageValues=array())	{
+	function translationDetails_addField($key, $TCEformsCfg, $dataValue, $translationValue, $diffDefaultValue='', $previewLanguageValues=array(),$contentRow=array())	{
 		$msg = '';
 
 		list(,,$kFieldName) = explode(':',$key);
@@ -477,7 +478,7 @@ class tx_l10nmgr_tools {
 												'msg' => $msg,
 												'readOnly' => $TCEformsCfg['l10n_display']=='defaultAsReadonly',
 												'fieldType' => $TCEformsCfg['config']['type'],
-												'isRTE'=>$this->_isRTEField($key,$TCEformsCfg)
+												'isRTE'=>$this->_isRTEField($key,$TCEformsCfg,$contentRow)
 											);
 									} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; ->filters[noIntegers] was set and dataValue "'.$dataValue.'" was an integer';
 								} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; ->filters[noEmptyValues] was set and dataValue "'.$dataValue.'" was empty and no translation found either.';
@@ -496,15 +497,24 @@ class tx_l10nmgr_tools {
 	 * @param	array		TCA configuration for field
 	 * @return	boolean
 	 */
-	function _isRTEField($key,$TCEformsCfg) {		
-		if (strstr($TCEformsCfg['defaultExtras'],'richtext')) {
-			return true;
+	function _isRTEField($key,$TCEformsCfg,$contentRow) {		
+		if (!is_array($contentRow)) {
+			return false;
+		}
+		
+		if ($contentRow['CType']=='templavoila_pi1') {
+			if (strstr($TCEformsCfg['defaultExtras'],'richtext')) {
+				
+				return true;
+			}
 		}
 		//TODO: check richtext settings depeding on type value (TCA based)
-		list(,,$kFieldName) = explode(':',$key);
-		if ($kFieldName=='bodytext') {
-			return true;
-		}		
+		if ($contentRow['CType']=='text') {
+			list(,,$kFieldName) = explode(':',$key);
+			if ($kFieldName=='bodytext') {				
+				return true;
+			}		
+		}
 		return false;		
 	}
 

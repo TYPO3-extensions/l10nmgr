@@ -1,3 +1,8 @@
+2008-02-22 Daniel Pötzinger
+	*CATXML: fixes to RTE field transformations (setup of processing)
+	*CATXML: robustnesscheck for utf8 and valid xml
+
+
 2008-02-15 Daniel Pötzinger
 	* introduce new FCE translationMode: <langDatabaseOverlay>1</langDatabaseOverlay>
 	* => therefore allow translation of flexforms also for overlay records

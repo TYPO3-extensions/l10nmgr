@@ -23,6 +23,7 @@
 ***************************************************************/
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_xmltools.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf8tools.php');
 
 /**
  * excelXML: Renders the XML
@@ -61,7 +62,7 @@ class tx_l10nmgr_CATXMLView {
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
 		$accum=$accumObj->getInfoArray();	
 	
-		
+		$errorMessage=array();
 		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 		$output = array();
 
@@ -80,30 +81,38 @@ class tx_l10nmgr_CATXMLView {
 								list(,$uidString,$fieldName) = explode(':',$key); 
 								list($uidValue) = explode('/',$uidString);
 
-
-								if (!$this->MOD_SETTINGS["onlyChangedContent"] || !$noChangeFlag)	{
+								$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
+								
+								if (!$this->modeOnlyChanged || !$noChangeFlag)	{
 									reset($tData['previewLanguageValues']);
 									$dataForTranslation=$tData['defaultValue'];
 									// Substitutions for XML conformity here
 									$_isTranformedXML=FALSE;
+									
 									if ($tData['fieldType']=='text' &&  $tData['isRTE']) { // to be substituted with check if field is RTE-enabled ($fieldName == "bodytext")
 										$dataForTranslationTranformed = $parseHTML->TS_images_rte($dataForTranslation);
 										$dataForTranslationTranformed = $parseHTML->TS_links_rte($dataForTranslationTranformed);
 										$dataForTranslationTranformed = $parseHTML->TS_transform_rte($dataForTranslationTranformed,$css=1); // which mode is best?
+										
 										//substitute & with &amp;
 										$dataForTranslationTranformed=str_replace('&','&amp;',$dataForTranslationTranformed);
-										if (tx_l10nmgr_xmltools::isValidXML($dataForTranslationTranformed)) {
+										if (tx_l10nmgr_xmltools::isValidXML('<dummy>'.$dataForTranslationTranformed.'</dummy>')) {
 											$_isTranformedXML=TRUE;
 											$dataForTranslation=$dataForTranslationTranformed;
-										}										
+										}																	
 									}
 									if ($_isTranformedXML) {
 										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";	
 									}
 									else {
-										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
-									}
-									
+										$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
+										if (tx_l10nmgr_xmltools::isValidXML('<test><![CDATA['.$dataForTranslation.']]></test>')) {
+											$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
+										}
+										else {
+											$errorMessage[]="\t\t".'<InternalMessage><![CDATA['.$elementUid.'/'.$table.'/'.$key.' has invalid characters and cannot be converted to correct XML/utf8]]></InternalMessage>';												
+										}
+									}									
 								}
 							}
 						}						
@@ -121,14 +130,14 @@ class tx_l10nmgr_CATXMLView {
    		}
 
 		
-		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count></TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named sysTargetLang.
+		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count><Internal>###INSERT_MESSAGES###</Internal></TYPO3LOC>"; 
 
 		$XML = str_replace('###INSERT_ROWS###',implode('', $output), $XML);
 		$XML = str_replace('###INSERT_ROW_COUNT###',count($output), $XML);
+		$XML = str_replace('###INSERT_MESSAGES###',implode('', $errorMessage), $XML);
 
 			
-		return $XML;
-		exit;
+		return $XML;		
 	}
 	
 	function getFilename() {
@@ -141,6 +150,10 @@ class tx_l10nmgr_CATXMLView {
 		// Setting filename:
 		$filename = 'xml_export_'.$staticLangArr['lg_iso_2'].'_'.date('dmy-Hi').'.xml';
 		return $filename;
+	}
+	
+	function setModeOnlyChanged() {
+		$this->modeOnlyChanged=TRUE;
 	}
 	
 }
