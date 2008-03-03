@@ -26,11 +26,9 @@
 
 
 /**
- * l10nInformations 
- *  calculates accumulated informations for a l10n.
- *		Needs a tree object and a l10ncfg (and is aggregate Base)
+ * translationData: encapsulates the data which are needed for saving a new translation.
  *
- * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author	Daniel Pötzinger <development@aoemedia.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
@@ -50,7 +48,7 @@ class tx_l10nmgr_translationData {
 		$this->sysLang=$sysLang;		
 	}
 	
-	function getTranslationData() {
+	function &getTranslationData() {
 		return $this->data;
 	}
 	

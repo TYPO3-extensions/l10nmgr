@@ -26,7 +26,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_too
 
 
 /**
- * l10nInformations 
+ * l10nAccumulatedInformations 
  *  calculates accumulated informations for a l10n.
  *		Needs a tree object and a l10ncfg to work.
  *

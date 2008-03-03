@@ -27,9 +27,11 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translati
 
 /**
  * Returns initialised TranslationData Objects
- * This is used to get TranslationData out of the import files
+ * This is used to get TranslationData out of the import files for example
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author	Daniel Pötzinger <ext@aoemedia.de>
+ *
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
