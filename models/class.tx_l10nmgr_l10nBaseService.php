@@ -26,11 +26,10 @@
 
 
 /**
- * l10nInformations 
- *  calculates accumulated informations for a l10n.
- *		Needs a tree object and a l10ncfg (and is aggregate Base)
+ * baseService class for offering common services like saving translation etc...
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author	Daniel Pötzinger <development@aoemedia.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */

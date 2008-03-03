@@ -26,9 +26,10 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_xml
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf8tools.php');
 
 /**
- * excelXML: Renders the XML
+ * CATXMLView: Renders the XML for the use for translation agencies
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author	Daniel Pötzinger <development@aoemedia.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */

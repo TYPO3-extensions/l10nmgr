@@ -25,10 +25,14 @@
 
 
 /**
- * l10nmgr detail view:
- * 	renders information for a l10nmgrcfg record.
+ * l10nHTMLListView:
+ * 	renders accumulated informations for the browser: 
+ *	- Table with inline editing / links  etc...
+ *	
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author	Daniel Pötzinger <development@aoemedia.de>
+ *
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */

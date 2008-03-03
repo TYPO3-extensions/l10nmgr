@@ -26,11 +26,13 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nAccum
 
 
 /**
- * l10nInformations 
- *  calculates accumulated informations for a l10n.
- *		Needs a tree object and a l10ncfg (and is aggregate Base)
+ * l10nConfiguration 
+ *  Capsulate a 10ncfg record.
+ *	Has factory method to get a relevant AccumulatedInformationsObject
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author	Daniel Pötzinger <ext@aoemedia.de>
+ *
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
