@@ -211,9 +211,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 					
 			// See, if incoming translation is available, if so, submit it
 		if (t3lib_div::_POST('saveInline')) {
-			$service->saveTranslation($l10ncfgObj,$translationData);						
-				// reloading if submitting stuff...
-			//$accum = $this->getAccumulated($tree, $l10ncfg, $sysLang);	
+			$service->saveTranslation($l10ncfgObj,$translationData);									
 		}
 		return $info;
 	}
