@@ -92,6 +92,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		global $LANG;
 		$this->MOD_MENU = Array (
 			'action' => array(
+				'' => '==Select Action==',
 				'link' => 'Overview with links',
 				'inlineEdit' => 'Inline Edit',
 				'export_excel' => 'ImpExp: Excel',
@@ -194,6 +195,98 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$this->content.=$this->doc->endPage();
 		echo $this->content;
 	}
+	
+	function inlineEditAction($l10ncfgObj) {
+		$sysLang = $this->MOD_SETTINGS["lang"];
+		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
+		$info='';
+		// Buttons:
+		$info.= '<input type="submit" value="Save" name="saveInline" onclick="return confirm(\'You are about to create/update ALL localizations in this form? Continue?\');" />';
+		$info.= '<input type="submit" value="Cancel" name="_" onclick="return confirm(\'You are about to discard any changes you made. Continue?\');" />';
+		
+		//simple init of translation object:
+		$translationData=t3lib_div::makeInstance('tx_l10nmgr_translationData');		
+		$translationData->setTranslationData(t3lib_div::_POST('translation'));
+		$translationData->setLanguage($sysLang);
+					
+			// See, if incoming translation is available, if so, submit it
+		if (t3lib_div::_POST('saveInline')) {
+			$service->saveTranslation($l10ncfgObj,$translationData);						
+				// reloading if submitting stuff...
+			//$accum = $this->getAccumulated($tree, $l10ncfg, $sysLang);	
+		}
+		return $info;
+	}
+	function catXMLExportImportAction($l10ncfgObj) {		
+		$sysLang = $this->MOD_SETTINGS["lang"];
+		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
+			// Buttons:
+			$info.= '<input type="submit" value="Refresh" name="_" />';
+			$info.= '<input type="submit" value="Export" name="export_xml" />';
+			$info.= '<input type="submit" value="Import" name="import_xml" /><input type="file" size="60" name="uploaded_import_file" />';
+
+				// Read uploaded file:
+				if (t3lib_div::_POST('import_xml') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
+					$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
+					
+					$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
+					//TODO: catch exeption
+					$translationData=$factory->getTranslationDataFromCATXMLFile($uploadedTempFile);
+					$translationData->setLanguage($sysLang);
+						
+					t3lib_div::unlink_tempfile($uploadedTempFile);
+						
+						
+					$service->saveTranslation($l10ncfgObj,$translationData);
+					$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
+				}	
+				// If export of XML is asked for, do that (this will exit and push a file for download)
+				if (t3lib_div::_POST('export_xml'))	{
+					// Render the XML
+					$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
+					$viewClass=new $viewClassName($l10ncfgObj,$sysLang);
+					if ($this->MOD_SETTINGS["onlyChangedContent"]) {
+						$viewClass->setModeOnlyChanged();
+					}
+					$this->_downloadXML($viewClass);
+				}
+		return $info;
+	}
+	
+	function excelExportImportAction($l10ncfgObj) {
+		$sysLang = $this->MOD_SETTINGS["lang"];
+		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
+		// Buttons:
+		$info.= '<input type="submit" value="Refresh" name="_" />';
+		$info.= '<input type="submit" value="Export" name="export_excel" />';
+		$info.= '<input type="submit" value="Import" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
+
+			// Read uploaded file:
+		if (t3lib_div::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
+			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
+			
+			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
+			//TODO: catch exeption
+			$translationData=$factory->getTranslationDataFromExcelXMLFile($uploadedTempFile);
+			$translationData->setLanguage($sysLang);
+			
+			t3lib_div::unlink_tempfile($uploadedTempFile);
+			
+			$service->saveTranslation($l10ncfgObj,$translationData);
+			
+			$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
+			
+		}
+
+			// If export of XML is asked for, do that (this will exit and push a file for download)
+		if (t3lib_div::_POST('export_excel'))	{
+			// Render the XML
+			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
+			$viewClass=new $viewClassName($l10ncfgObj,$sysLang);
+			$this->_downloadXML($viewClass);
+		}
+		return $info;
+	}
 
 	/**
 	 * Creating module content
@@ -202,118 +295,56 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function moduleContent($l10ncfgObj)	{
-		global $TCA;
+		global $TCA,$LANG;
 
 			// Get language to export here:
 		$sysLang = $this->MOD_SETTINGS["lang"];
 
-		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
+		
 		
 
 		switch ($this->MOD_SETTINGS["action"]) {
-				case 'inlineEdit':
-					// Buttons:
-					$info.= '<input type="submit" value="Save" name="saveInline" onclick="return confirm(\'You are about to create/update ALL localizations in this form? Continue?\');" />';
-					$info.= '<input type="submit" value="Cancel" name="_" onclick="return confirm(\'You are about to discard any changes you made. Continue?\');" />';
-					
-					//simple init of translation object:
-					$translationData=t3lib_div::makeInstance('tx_l10nmgr_translationData');		
-					$translationData->setTranslationData(t3lib_div::_POST('translation'));
-					$translationData->setLanguage($sysLang);
-								
-						// See, if incoming translation is available, if so, submit it
-					if (t3lib_div::_POST('saveInline')) {
-						$service->saveTranslation($l10ncfgObj,$translationData);
-							// reloading if submitting stuff...
-						//$accum = $this->getAccumulated($tree, $l10ncfg, $sysLang);	
+				case 'inlineEdit': case 'link':
+					$htmlListViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10nHTMLListView');
+					$htmlListView=new $htmlListViewClassName($l10ncfgObj,$sysLang);
+					$subheader=$LANG->getLL('inlineEdit');
+					if ($this->MOD_SETTINGS["action"]=='inlineEdit') {
+						$subheader=$LANG->getLL('link');
+						$subcontent=$this->inlineEditAction($l10ncfgObj);	
+						$htmlListView->setModeWithInlineEdit();
 					}
+					// Render the module content (for all modes):
+					//*******************************************
+					
+					if ($this->MOD_SETTINGS["onlyChangedContent"]) {
+						$htmlListView->setModeOnlyChanged();
+					}					
+					if ($this->MOD_SETTINGS["action"]=='link') {
+						$htmlListView->setModeShowEditLinks();
+					}
+					$subcontent.=$htmlListView->renderOverview();			
 				break;
 				case 'export_excel':
-						// Buttons:
-						$info.= '<input type="submit" value="Refresh" name="_" />';
-						$info.= '<input type="submit" value="Export" name="export_excel" />';
-						$info.= '<input type="submit" value="Import" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
-			
-							// Read uploaded file:
-						if (t3lib_div::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
-							$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
-							
-							$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
-							//TODO: catch exeption
-							$translationData=$factory->getTranslationDataFromExcelXMLFile($uploadedTempFile);
-							$translationData->setLanguage($sysLang);
-							
-							t3lib_div::unlink_tempfile($uploadedTempFile);
-							
-							$service->saveTranslation($l10ncfgObj,$translationData);
-							
-							$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
-							
-						}
-			
-							// If export of XML is asked for, do that (this will exit and push a file for download)
-						if (t3lib_div::_POST('export_excel'))	{
-							// Render the XML
-							$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
-							$viewClass=new $viewClassName($l10ncfgObj,$sysLang);
-							$this->_downloadXML($viewClass);
-						}
+					$subheader=$LANG->getLL('export_excel');
+					$subcontent=$this->excelExportImportAction($l10ncfgObj);	
 				
 				break;
 				case 'export_xml':		// XML import/export
-			
-						// Buttons:
-					$info.= '<input type="submit" value="Refresh" name="_" />';
-					$info.= '<input type="submit" value="Export" name="export_xml" />';
-					$info.= '<input type="submit" value="Import" name="import_xml" /><input type="file" size="60" name="uploaded_import_file" />';
-		
-						// Read uploaded file:
-						if (t3lib_div::_POST('import_xml') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
-							$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
-							
-							$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
-							//TODO: catch exeption
-							$translationData=$factory->getTranslationDataFromCATXMLFile($uploadedTempFile);
-							$translationData->setLanguage($sysLang);
-								
-							t3lib_div::unlink_tempfile($uploadedTempFile);
-								
-								
-							$service->saveTranslation($l10ncfgObj,$translationData);
-							$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
-						}	
-						// If export of XML is asked for, do that (this will exit and push a file for download)
-						if (t3lib_div::_POST('export_xml'))	{
-							// Render the XML
-							$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
-							$viewClass=new $viewClassName($l10ncfgObj,$sysLang);
-							if ($this->MOD_SETTINGS["onlyChangedContent"]) {
-								$viewClass->setModeOnlyChanged();
-							}
-							$this->_downloadXML($viewClass);
-						}
-					break;
-					DEFAULT:	// Default display:
-						$info.= '<input type="submit" value="Refresh" name="_" />';					
-					break;
+					$subheader=$LANG->getLL('export_xml');
+					$subcontent=$this->catXMLExportImportAction($l10ncfgObj);					
+				break;
+				
+				DEFAULT:	// Default display:
+					$subcontent= '<input type="submit" value="Refresh" name="_" />';					
+				break;
 		} //switch block
 		
-		// Render the module content (for all modes):
-		//*******************************************
-		$htmlListViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10nHTMLListView');
-		$htmlListView=new $htmlListViewClassName($l10ncfgObj,$sysLang);
-		if ($this->MOD_SETTINGS["onlyChangedContent"]) {
-			$htmlListView->setModeOnlyChanged();
-		}
-		if ($this->MOD_SETTINGS["action"]=='inlineEdit') {
-			$htmlListView->setModeWithInlineEdit();
-		}
-		if ($this->MOD_SETTINGS["action"]=='link') {
-			$htmlListView->setModeShowEditLinks();
-		}
 		
-		$this->content.=$this->doc->section('',$info.$htmlListView->renderOverview());
+		
+		$this->content.=$this->doc->section($subheader,$subcontent);
 	}
+	
+	
 
 	/**
 	* function sends downloadheader and calls render method of the view.
