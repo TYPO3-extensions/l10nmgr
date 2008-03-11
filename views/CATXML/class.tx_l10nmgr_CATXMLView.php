@@ -36,7 +36,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf
 class tx_l10nmgr_CATXMLView {
 
 
-	var $l10ncfgObj;	// 
+	var $l10ncfgObj;
 	var $sysLang;
 
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $sysLang) {
@@ -55,28 +55,28 @@ class tx_l10nmgr_CATXMLView {
 	 * @param	array		Translation data for configuration
 	 * @return	string		HTML content
 	 */
-	function render()	{
+	function render() {
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
-		$accum=$accumObj->getInfoArray();	
+		$accum=$accumObj->getInfoArray();
 
 		$errorMessage=array();
 		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 		$output = array();
 
 			// Traverse the structure and generate XML output:
-		foreach($accum as $pId => $page)	{
+		foreach($accum as $pId => $page) {
 			$output[]='<PageGrp id="'.$pId.'">'."\n";
-			foreach($accum[$pId]['items'] as $table => $elements)	{
-				foreach($elements as $elementUid => $data)	{
-					if (!empty($data['ISOcode']))	{
+			foreach($accum[$pId]['items'] as $table => $elements) {
+				foreach($elements as $elementUid => $data) {
+					if (!empty($data['ISOcode'])) {
 						$targetIso2L = ' targetLang="'.$data['ISOcode'].'"';
 					}
 
-					if (is_array($data['fields']))	{
+					if (is_array($data['fields'])) {
 						$fieldsForRecord = array();
-						foreach($data['fields'] as $key => $tData)	{
-							if (is_array($tData))	{
+						foreach($data['fields'] as $key => $tData) {
+							if (is_array($tData)) {
 								list(,$uidString,$fieldName) = explode(':',$key); 
 								list($uidValue) = explode('/',$uidString);
 
@@ -101,7 +101,7 @@ class tx_l10nmgr_CATXMLView {
 										}
 									}
 									if ($_isTranformedXML) {
-										$output[]= "\t\t".'<Data table="'.$table.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";	
+										$output[]= "\t\t".'<Data table="'.$table.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";
 									}
 									else {
 										$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
@@ -121,12 +121,12 @@ class tx_l10nmgr_CATXMLView {
 			$output[]='</PageGrp>'."\n";
 		}
 
-		// get ISO2L code for source language
-			if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
-					$sourceIso2L = '';
-					$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
-	   			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
-   		}
+			// get ISO2L code for source language
+		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
+			$sourceIso2L = '';
+			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
+			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
+		}
 
 		$XML = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 		$XML .= '<TYPO3LOC l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . '>' . "\n";
@@ -157,13 +157,7 @@ class tx_l10nmgr_CATXMLView {
 	}
 
 }
-
-
-
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/tx_l10nmgr_l10nmgrconfiguration_detail.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/tx_l10nmgr_l10nmgrconfiguration_detail.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS['TYPO3_MODE']['XCLASS']['ext/l10nmgr/views/CATXML/class.tx_l10nmgr_CATXMLView.php'])	{
+	include_once($TYPO3_CONF_VARS['TYPO3_MODE']['XCLASS']['ext/l10nmgr/views/CATXML/class.tx_l10nmgr_CATXMLView.php']);
 }
-
-
 ?>
