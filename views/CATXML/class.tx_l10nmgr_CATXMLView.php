@@ -69,6 +69,7 @@ class tx_l10nmgr_CATXMLView {
 
 			// Traverse the structure and generate XML output:
 		foreach($accum as $pId => $page)	{
+			$output[]='<PageGrp id="'.$pId.'">'."\n";
 			foreach($accum[$pId]['items'] as $table => $elements)	{
 				foreach($elements as $elementUid => $data)	{
 					if (!empty($data['ISOcode']))	{
@@ -103,12 +104,12 @@ class tx_l10nmgr_CATXMLView {
 										}																	
 									}
 									if ($_isTranformedXML) {
-										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";	
+										$output[]= "\t\t".'<Data table="'.$table.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";	
 									}
 									else {
 										$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
 										if (tx_l10nmgr_xmltools::isValidXML('<test><![CDATA['.$dataForTranslation.']]></test>')) {
-											$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
+											$output[]= "\t\t".'<Data table="'.$table.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
 										}
 										else {
 											$errorMessage[]="\t\t".'<InternalMessage><![CDATA['.$elementUid.'/'.$table.'/'.$key.' has invalid characters and cannot be converted to correct XML/utf8]]></InternalMessage>';												
@@ -120,7 +121,7 @@ class tx_l10nmgr_CATXMLView {
 					}
 				}
 			}
-
+			$output[]='</PageGrp>'."\n";
 		}
 		
 		// get ISO2L code for source language
