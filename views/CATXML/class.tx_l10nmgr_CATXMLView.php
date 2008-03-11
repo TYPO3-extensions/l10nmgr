@@ -35,20 +35,17 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf
  */
 class tx_l10nmgr_CATXMLView {
 
-	
+
 	var $l10ncfgObj;	// 
 	var $sysLang;
-	
 
-	
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $sysLang) {
 		global $BACK_PATH;
 		$this->sysLang=$sysLang;
 		$this->l10ncfgObj=$l10ncfgObj;
-		
+
 		$this->doc = t3lib_div::makeInstance('noDoc');
 		$this->doc->backPath = $BACK_PATH;
-		
 	}
 
 
@@ -62,7 +59,7 @@ class tx_l10nmgr_CATXMLView {
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
 		$accum=$accumObj->getInfoArray();	
-	
+
 		$errorMessage=array();
 		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 		$output = array();
@@ -75,7 +72,7 @@ class tx_l10nmgr_CATXMLView {
 					if (!empty($data['ISOcode']))	{
 						$targetIso2L = ' targetLang="'.$data['ISOcode'].'"';
 					}
-					
+
 					if (is_array($data['fields']))	{
 						$fieldsForRecord = array();
 						foreach($data['fields'] as $key => $tData)	{
@@ -84,24 +81,24 @@ class tx_l10nmgr_CATXMLView {
 								list($uidValue) = explode('/',$uidString);
 
 								$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
-								
+
 								if (!$this->modeOnlyChanged || !$noChangeFlag)	{
 									reset($tData['previewLanguageValues']);
 									$dataForTranslation=$tData['defaultValue'];
 									// Substitutions for XML conformity here
 									$_isTranformedXML=FALSE;
-									
+
 									if ($tData['fieldType']=='text' &&  $tData['isRTE']) { // to be substituted with check if field is RTE-enabled ($fieldName == "bodytext")
 										$dataForTranslationTranformed = $parseHTML->TS_images_rte($dataForTranslation);
 										$dataForTranslationTranformed = $parseHTML->TS_links_rte($dataForTranslationTranformed);
 										$dataForTranslationTranformed = $parseHTML->TS_transform_rte($dataForTranslationTranformed,$css=1); // which mode is best?
-										
+
 										//substitute & with &amp;
 										$dataForTranslationTranformed=str_replace('&','&amp;',$dataForTranslationTranformed);
 										if (tx_l10nmgr_xmltools::isValidXML('<dummy>'.$dataForTranslationTranformed.'</dummy>')) {
 											$_isTranformedXML=TRUE;
 											$dataForTranslation=$dataForTranslationTranformed;
-										}																	
+										}
 									}
 									if ($_isTranformedXML) {
 										$output[]= "\t\t".'<Data table="'.$table.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";	
@@ -114,16 +111,16 @@ class tx_l10nmgr_CATXMLView {
 										else {
 											$errorMessage[]="\t\t".'<InternalMessage><![CDATA['.$elementUid.'/'.$table.'/'.$key.' has invalid characters and cannot be converted to correct XML/utf8]]></InternalMessage>';												
 										}
-									}									
+									}
 								}
 							}
-						}						
+						}
 					}
 				}
 			}
 			$output[]='</PageGrp>'."\n";
 		}
-		
+
 		// get ISO2L code for source language
 			if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
 					$sourceIso2L = '';
@@ -131,33 +128,34 @@ class tx_l10nmgr_CATXMLView {
 	   			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
    		}
 
-		
-		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.">\n###INSERT_ROWS###\n<count>###INSERT_ROW_COUNT###</count><Internal>###INSERT_MESSAGES###</Internal></TYPO3LOC>"; 
+		$XML = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+		$XML .= '<TYPO3LOC l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . '>' . "\n";
+		$XML .= implode('', $output) . "\n"; 
+		$XML .= "<count>" . count($output) . "</count>\n"; 
+		$XML .= "<Internal>" . implode('', $errorMessage) . "</Internal>\n"; 
+		$XML .= "</TYPO3LOC>"; 
 
-		$XML = str_replace('###INSERT_ROWS###',implode('', $output), $XML);
-		$XML = str_replace('###INSERT_ROW_COUNT###',count($output), $XML);
-		$XML = str_replace('###INSERT_MESSAGES###',implode('', $errorMessage), $XML);
-
-			
-		return $XML;		
+		return $XML;
 	}
-	
+
+
 	function getFilename() {
-		
+
 		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
-					$sourceIso2L = '';
-					$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
-	   			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
-   		}
+			$sourceIso2L = '';
+			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
+			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
+		}
 		// Setting filename:
 		$filename = 'xml_export_'.$staticLangArr['lg_iso_2'].'_'.date('dmy-Hi').'.xml';
 		return $filename;
 	}
-	
+
+
 	function setModeOnlyChanged() {
 		$this->modeOnlyChanged=TRUE;
 	}
-	
+
 }
 
 
