@@ -1,3 +1,6 @@
+2008-03-11 Daniel Zielinski
+	*CATXML: Added baseURL attribute to TYPO3LOC element
+
 2008-02-22 Daniel Pötzinger
 	*CATXML: fixes to RTE field transformations (setup of processing)
 	*CATXML: robustnesscheck for utf8 and valid xml

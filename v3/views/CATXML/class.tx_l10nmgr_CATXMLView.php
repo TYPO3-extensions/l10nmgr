@@ -30,6 +30,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  * @author	Daniel Pötzinger <development@aoemedia.de>
+ * @author	Daniel Zielinski <d.zielinski@L10Ntech.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
@@ -129,7 +130,7 @@ class tx_l10nmgr_CATXMLView {
 		}
 
 		$XML = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-		$XML .= '<TYPO3LOC l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . '>' . "\n";
+		$XML .= '<TYPO3LOC l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . ' baseURL="'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'">' . "\n";
 		$XML .= implode('', $output) . "\n"; 
 		$XML .= "<count>" . count($output) . "</count>\n"; 
 		$XML .= "<Internal>" . implode('', $errorMessage) . "</Internal>\n"; 
