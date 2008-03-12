@@ -146,8 +146,11 @@ class tx_l10nmgr_CATXMLView {
 			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
 			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
 		}
+
+		$fileNamePrefix = (trim( $this->l10ncfgObj->getData('filenameprefix') )) ? $this->l10ncfgObj->getData('filenameprefix') : 'export_language' ;
+
 		// Setting filename:
-		$filename = 'xml_export_'.$staticLangArr['lg_iso_2'].'_'.date('dmy-Hi').'.xml';
+		$filename =  $fileNamePrefix . '_' . $staticLangArr['lg_iso_2'] . '_' . date('dmy-Hi').'.xml';
 		return $filename;
 	}
 
