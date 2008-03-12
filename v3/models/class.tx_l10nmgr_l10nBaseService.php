@@ -39,8 +39,8 @@ class tx_l10nmgr_l10nBaseService {
 	function saveTranslation($l10ncfgObj,$translationObj) {
 		$sysLang=$translationObj->getLanguage();
 		$accumObj=$l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
-		$flexFormDiffArray=$this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray($sysLang),
-																																$translationObj->getTranslationData());
+		$flexFormDiffArray=$this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray($sysLang),$translationObj->getTranslationData());
+
 		if ($flexFormDiffArray !== false) {
 			$l10ncfgObj->updateFlexFormDiff($sysLang,$flexFormDiffArray);
 		}
@@ -65,7 +65,6 @@ class tx_l10nmgr_l10nBaseService {
 			$TCEmain_cmd = array();
 			
 			$_flexFormDiffArray = array();
-		
 				// Traverse:
 			foreach($accum as $pId => $page)	{
 				foreach($accum[$pId]['items'] as $table => $elements)	{

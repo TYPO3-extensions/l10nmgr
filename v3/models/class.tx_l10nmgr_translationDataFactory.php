@@ -124,56 +124,63 @@ class tx_l10nmgr_translationDataFactory {
 
 		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 
-		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent),2);	// For some reason PHP chokes on incoming &nbsp; in XML!
-		
+		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent),3);	// For some reason PHP chokes on incoming &nbsp; in XML!
 		
 		if (!is_array($xmlNodes)) {
 			$this->_errorMsg.=$xmlNodes;
 			return false;
 		}
+//print_r($xmlNodes); exit;
 				$translation = array();
 	
 					// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
-				if (is_array($xmlNodes['TYPO3LOC'][0]['ch']['Data']))	{
-					foreach($xmlNodes['TYPO3LOC'][0]['ch']['Data'] as $row)	{
-						$attrs=$row['attrs'];
+				if (is_array($xmlNodes['TYPO3LOC'][0]['ch']['PageGrp']))	{
+				   	foreach($xmlNodes['TYPO3LOC'][0]['ch']['PageGrp'] as $pageGrp)	{
+						if (is_array($pageGrp['ch']['Data'])) {
+							foreach($pageGrp['ch']['Data'] as $row)	{
+
+								$attrs=$row['attrs'];
 						
-						list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
-						if ($attrs['transformations']=='1') { //substitute check with rte enabled fields from TCA
+								list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
+
+								if ($attrs['transformations']=='1') { //substitute check with rte enabled fields from TCA
 							
-							//$translationValue =$this->_getXMLFromTreeArray($row);							
-							$translationValue=$row['XMLvalue'];
-							
-							//fixed setting of Parser (TO-DO set it via typoscript)	
-								$parseHTML->procOptions['typolist']=FALSE;
-								$parseHTML->procOptions['typohead']=FALSE;
-								$parseHTML->procOptions['keepPDIVattribs']=TRUE;
-								$parseHTML->procOptions['dontConvBRtoParagraph']=TRUE;
-								//$parseHTML->procOptions['preserveTags'].=',br';
-								if (!is_array($parseHTML->procOptions['HTMLparser_db.'])) {
-										$parseHTML->procOptions['HTMLparser_db.']=array();
-								}
-								$parseHTML->procOptions['HTMLparser_db.']['xhtml_cleaning']=TRUE;
-								//trick to preserve strongtags
-								$parseHTML->procOptions['denyTags']='strong';
-								//$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
-								$parseHTML->procOptions['dontRemoveUnknownTags_db']=TRUE;
+									//$translationValue =$this->_getXMLFromTreeArray($row['values']);
+
+									$translationValue=$row['XMLvalue'];
 								
-							$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!						
-							//print_r($translationValue);
-							$translationValue = $parseHTML->TS_images_db($translationValue);													
-							//print_r($translationValue);
-							$translationValue = $parseHTML->TS_links_db($translationValue);
-							//print_r($translationValue);
-							//	print_r($translationValue);
-							//substitute & with &amp;
-							$translationValue=str_replace('&amp;','&',$translationValue);
-							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
-						} else {
-							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
+									//fixed setting of Parser (TO-DO set it via typoscript)	
+									$parseHTML->procOptions['typolist']=FALSE;
+									$parseHTML->procOptions['typohead']=FALSE;
+									$parseHTML->procOptions['keepPDIVattribs']=TRUE;
+									$parseHTML->procOptions['dontConvBRtoParagraph']=TRUE;
+									//$parseHTML->procOptions['preserveTags'].=',br';
+									if (!is_array($parseHTML->procOptions['HTMLparser_db.'])) {
+										$parseHTML->procOptions['HTMLparser_db.']=array();
+									}
+									$parseHTML->procOptions['HTMLparser_db.']['xhtml_cleaning']=TRUE;
+									//trick to preserve strongtags
+									$parseHTML->procOptions['denyTags']='strong';
+									//$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
+									$parseHTML->procOptions['dontRemoveUnknownTags_db']=TRUE;
+									
+									$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!						
+									$translationValue = $parseHTML->TS_images_db($translationValue);													
+									//print_r($translationValue);
+									$translationValue = $parseHTML->TS_links_db($translationValue);
+									//print_r($translationValue);
+
+									//substitute & with &amp;
+									$translationValue=str_replace('&amp;','&',$translationValue);
+									$translation[$attrs['table']][$attrs[elementUid]][$attrs['key']] = $translationValue;						
+								} else {
+									$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
+								}
+							}
 						}
 					}
 				}
+			//print_r($translation);
 			return $translation;
 	}
 	
