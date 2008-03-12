@@ -25,6 +25,7 @@
  * l10nmgr module cm1
  *
  * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
+ * @author	Daniel Zielinski <d.zielinski@l10ntech.de>
  */
 /**
  * [CLASS/FUNCTION INDEX of SCRIPT]
@@ -222,6 +223,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			$info.= '<input type="submit" value="Refresh" name="_" />';
 			$info.= '<input type="submit" value="Export" name="export_xml" />';
 			$info.= '<input type="submit" value="Import" name="import_xml" /><input type="file" size="60" name="uploaded_import_file" />';
+			// Temporary links to settings files. Should be changed when download of L10N packages is available.
+			$info.='<br/><br/>'.$this->doc->icons(1).'Available settings files: <a href="'.t3lib_extMgm::extRelPath('l10nmgr').'settings/acrossL10nmgrConfig.dst" title="Download settings file" target="_new">across</a> | <a href="'.t3lib_extMgm::extRelPath('l10nmgr').'settings/dejaVuL10nmgrConfig.dvflt" title="Download settings file" target="_new">DéjàVu</a> | <a href="'.t3lib_extMgm::extRelPath('l10nmgr').'settings/SDLTradosTagEditor.ini" title="Download settings file" target="_new">SDL Trados</a> | <a href="'.t3lib_extMgm::extRelPath('l10nmgr').'settings/SDLPassolo.xfg" title="Download settings file" target="_new">SDL Passolo</a><br/><br/>';
 
 				// Read uploaded file:
 				if (t3lib_div::_POST('import_xml') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
