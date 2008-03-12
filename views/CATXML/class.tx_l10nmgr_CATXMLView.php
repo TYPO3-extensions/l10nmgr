@@ -96,18 +96,19 @@ class tx_l10nmgr_CATXMLView {
 
 										//substitute & with &amp;
 										$dataForTranslationTranformed=str_replace('&','&amp;',$dataForTranslationTranformed);
-										if (tx_l10nmgr_xmltools::isValidXML('<dummy>'.$dataForTranslationTranformed.'</dummy>')) {
+										$dataForTranslationTranformed=t3lib_div::deHSCentities($dataForTranslationTranformed);
+										if (tx_l10nmgr_xmltools::isValidXML('<!DOCTYPE dummy [ <!ENTITY nbsp " "> ]><dummy>'.$dataForTranslationTranformed.'</dummy>')) {
 											$_isTranformedXML=TRUE;
 											$dataForTranslation=$dataForTranslationTranformed;
 										}
 									}
 									if ($_isTranformedXML) {
-										$output[]= "\t\t".'<Data table="'.$table.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";
+										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";
 									}
 									else {
 										$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
-										if (tx_l10nmgr_xmltools::isValidXML('<test><![CDATA['.$dataForTranslation.']]></test>')) {
-											$output[]= "\t\t".'<Data table="'.$table.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
+										if (tx_l10nmgr_xmltools::isValidXML('<!DOCTYPE test [ <!ENTITY nbsp " "> ]><test><![CDATA['.$dataForTranslation.']]></test>')) {
+											$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
 										}
 										else {
 											$errorMessage[]="\t\t".'<InternalMessage><![CDATA['.$elementUid.'/'.$table.'/'.$key.' has invalid characters and cannot be converted to correct XML/utf8]]></InternalMessage>';												
@@ -130,7 +131,7 @@ class tx_l10nmgr_CATXMLView {
 		}
 
 		$XML = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-		$XML .= '<TYPO3LOC l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . ' baseURL="'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'">' . "\n";
+		$XML .= '<!DOCTYPE TYPO3LOC [ <!ENTITY nbsp " "> ]>'."\n".'<TYPO3LOC l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . ' baseURL="'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'">' . "\n";
 		$XML .= implode('', $output) . "\n"; 
 		$XML .= "<count>" . count($output) . "</count>\n"; 
 		$XML .= "<Internal>" . implode('', $errorMessage) . "</Internal>\n"; 

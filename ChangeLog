@@ -2,6 +2,8 @@
 	*CATXML: Added baseURL attribute to TYPO3LOC element
 	*CATXML: Added download links for settings files
 	*CATXML: Updated SDL Trados TagEditor settings
+	*CATXML: Added nbsp entity declaration. Now preserving &nbsp;
+	*CATXML: Fixed import (added missing elementUid attribute in export, now parsing pageGrp element)
 
 2008-02-22 Daniel Pötzinger
 	*CATXML: fixes to RTE field transformations (setup of processing)
