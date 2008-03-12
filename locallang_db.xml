@@ -8,6 +8,7 @@
 		<languageKey index="default" type="array">
 			<label index="tx_l10nmgr_cfg">L10N Manager Configuration</label>
 			<label index="tx_l10nmgr_cfg.title">Title:</label>
+			<label index="tx_l10nmgr_cfg.filenameprefix">Export filenameprefix:</label>
 			<label index="tx_l10nmgr_cfg.incfcewithdefaultall">Include FCE with default language:</label>			
 			<label index="tx_l10nmgr_cfg.depth.I.0">This page only</label>
 			<label index="tx_l10nmgr_cfg.depth.I.1">1 deep</label>
@@ -37,6 +38,7 @@
 		<languageKey index="de" type="array">
 			<label index="tx_l10nmgr_cfg">L10N-Manager Konfiguration</label>
 			<label index="tx_l10nmgr_cfg.title">Name:</label>
+			<label index="tx_l10nmgr_cfg.filenameprefix">Export Präfix:</label>
 			<label index="tx_l10nmgr_cfg.depth.I.0">Nur diese Seite</label>
 			<label index="tx_l10nmgr_cfg.depth.I.1">1 Ebene</label>
 			<label index="tx_l10nmgr_cfg.depth.I.2">2 Ebenen</label>
