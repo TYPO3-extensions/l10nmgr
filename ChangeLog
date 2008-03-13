@@ -1,3 +1,8 @@
+2008-03-13 Daniel Zielinski <d.zielinski@l10ntech.de>
+	
+	* Fixed import. 
+	* Added $parseHTML->procOptions. Now preserving <br />.
+
 2007-12-05 Daniel Zielinski <d.zielinski@l10ntech.de>
 	
 	* Added word and char count for calculation of translation costs (experimental!). XML export only. (funct wordCount)
