@@ -25,6 +25,7 @@
  * l10nmgr module cm1
  *
  * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
+ * @author	Daniel Zielinski <d.zielinski@l10ntech.de>
  */
 /**
  * [CLASS/FUNCTION INDEX of SCRIPT]
@@ -626,7 +627,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
    		}
 
 		
-		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC version=\"2.0\" sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.">\n###INSERT_ROWS###\n<count type=\"datasets\">###INSERT_ROW_COUNT###</count>\n<count type=\"words\">###INSERT_WORD_COUNT###</count>\n<count type=\"chars\">###INSERT_CHAR_COUNT###</count>\n</TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named sysTargetLang.
+		$XML = '<?xml version="1.0" encoding="UTF-8"?>'."\n<TYPO3LOC version=\"2.0\" sysLang=\"".$sysLang."\"".$sourceIso2L.$targetIso2L.' baseURL="'.t3lib_div::getIndpEnv("TYPO3_SITE_URL")."\">\n###INSERT_ROWS###\n<count type=\"datasets\">###INSERT_ROW_COUNT###</count>\n<count type=\"words\">###INSERT_WORD_COUNT###</count>\n<count type=\"chars\">###INSERT_CHAR_COUNT###</count>\n</TYPO3LOC>"; //Here we need source language iso-2-letter code for CAT tools. sysLang should be named sysTargetLang.
 
 		$count = $this->wordCount($output,$staticLangArr['lg_iso_2']);
 
@@ -915,7 +916,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 
-		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML! //str_replace should be obsolete as no nbsps are exported any longer
+		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent),3);	// For some reason PHP chokes on incoming &nbsp; in XML! //str_replace should be obsolete as no nbsps are exported any longer
 				$translation = array();
 	
 					// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
@@ -928,13 +929,29 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 								$attrs=$row['attrs'];
 								list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
 								if ($fieldName == "bodytext") { //substitute check with rte enabled fields from TCA
-									$translationValue = $row['values'][0];
+									$translationValue=$row['XMLvalue'];
+
+									//fixed setting of Parser (TO-DO set it via typoscript)	
+									$parseHTML->procOptions['typolist']=FALSE;
+									$parseHTML->procOptions['typohead']=FALSE;
+									$parseHTML->procOptions['keepPDIVattribs']=TRUE;
+									$parseHTML->procOptions['dontConvBRtoParagraph']=TRUE;
+									//$parseHTML->procOptions['preserveTags'].=',br';
+									if (!is_array($parseHTML->procOptions['HTMLparser_db.'])) {
+										$parseHTML->procOptions['HTMLparser_db.']=array();
+									}
+									$parseHTML->procOptions['HTMLparser_db.']['xhtml_cleaning']=TRUE;
+									//trick to preserve strongtags
+									$parseHTML->procOptions['denyTags']='strong';
+									//$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
+									$parseHTML->procOptions['dontRemoveUnknownTags_db']=TRUE;
+
 									$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!
 									$translationValue = $parseHTML->TS_images_db($translationValue);
 									$translationValue = $parseHTML->TS_links_db($translationValue);
 									$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
 								} else {
-									$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
+									$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['XMLvalue'];						
 								}
 							}
 						}
