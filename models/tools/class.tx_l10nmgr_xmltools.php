@@ -28,8 +28,19 @@
  *
  * @author	Daniel Pötzinger <development@aoemedia.de>
  */
+ 
+ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf8tools.php');
 
 class tx_l10nmgr_xmltools {
+	var $parseHTML;
+	
+	function tx_l10nmgr_xmltools() {
+		$this->parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");	
+		
+	}
+	function isValidXMLString($xmlString) {		
+		return $this->isValidXML('<!DOCTYPE dummy [ <!ENTITY nbsp " "> ]><dummy>'.$xmlString.'</dummy>');
+	}
 	function isValidXML($xml) {
 		$parser = xml_parser_create();
 		$vals = array();
@@ -42,6 +53,60 @@ class tx_l10nmgr_xmltools {
 			return false;
 		else
 			return true;
+	}
+	
+	/**
+	 * Transforms a RTE Field to valid XML
+	 * 
+	 *
+	 * @param	string		HTML String which should be transformed
+	 * @return	mixed		false if transformation failed, string with XML if all fine
+	 */
+	function RTE2XML($content,$withStripBadUTF8=TRUE) {
+		$content_org=$content;
+		$content = $this->parseHTML->TS_images_rte($content);
+		$content = $this->parseHTML->TS_links_rte($content);
+		$content = $this->parseHTML->TS_transform_rte($content,$css=1); 
+		//substitute & with &amp;
+		$content=str_replace('&','&amp;',$content);
+		$content=t3lib_div::deHSCentities($content);
+		if ($withStripBadUTF8) {
+			$content=tx_l10nmgr_utf8tools::utf8_bad_strip($content);
+		}
+		if ($this->isValidXMLString($content)) {
+			return $content;
+		}
+		else {
+			return false;
+		}		
+	}
+	/**
+	 * Transforms a XML back to RTE / reverse function of RTE2XML
+	 * 
+	 *
+	 * @param	string		XMLString which should be transformed
+	 * @return	string		string with HTML
+	 */
+	function XML2RTE($xmlstring) {
+		//fixed setting of Parser (TO-DO set it via typoscript)	
+			$this->parseHTML->procOptions['typolist']=FALSE;
+			$this->parseHTML->procOptions['typohead']=FALSE;
+			$this->parseHTML->procOptions['keepPDIVattribs']=TRUE;
+			$this->parseHTML->procOptions['dontConvBRtoParagraph']=TRUE;
+			//$parseHTML->procOptions['preserveTags'].=',br';
+			if (!is_array($this->parseHTML->procOptions['HTMLparser_db.'])) {
+				$this->parseHTML->procOptions['HTMLparser_db.']=array();
+			}
+			$this->parseHTML->procOptions['HTMLparser_db.']['xhtml_cleaning']=TRUE;
+			//trick to preserve strongtags
+			$this->parseHTML->procOptions['denyTags']='strong';
+			//$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
+			$this->parseHTML->procOptions['dontRemoveUnknownTags_db']=TRUE;			
+			$content = $this->parseHTML->TS_transform_db($xmlstring,$css=0); // removes links from content if not called first!						
+			$content = $this->parseHTML->TS_images_db($content);
+			$content = $this->parseHTML->TS_links_db($content);
+			return $content;
+		//	return str_replace('&amp;','&',$content);
 	}
 
 }
