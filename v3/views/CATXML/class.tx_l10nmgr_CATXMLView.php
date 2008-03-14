@@ -61,8 +61,8 @@ class tx_l10nmgr_CATXMLView {
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
 		$accum=$accumObj->getInfoArray();
 
-		$errorMessage=array();
-		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
+		$errorMessage=array();	
+		$xmlTool= t3lib_div::makeInstance("tx_l10nmgr_xmltools");
 		$output = array();
 
 			// Traverse the structure and generate XML output:
@@ -71,7 +71,7 @@ class tx_l10nmgr_CATXMLView {
 			foreach($accum[$pId]['items'] as $table => $elements) {
 				foreach($elements as $elementUid => $data) {
 					if (!empty($data['ISOcode'])) {
-						$targetIso2L = ' targetLang="'.$data['ISOcode'].'"';
+						$targetIso=$data['ISOcode'];						
 					}
 
 					if (is_array($data['fields'])) {
@@ -88,16 +88,9 @@ class tx_l10nmgr_CATXMLView {
 									$dataForTranslation=$tData['defaultValue'];
 									// Substitutions for XML conformity here
 									$_isTranformedXML=FALSE;
-
-									if ($tData['fieldType']=='text' &&  $tData['isRTE']) { // to be substituted with check if field is RTE-enabled ($fieldName == "bodytext")
-										$dataForTranslationTranformed = $parseHTML->TS_images_rte($dataForTranslation);
-										$dataForTranslationTranformed = $parseHTML->TS_links_rte($dataForTranslationTranformed);
-										$dataForTranslationTranformed = $parseHTML->TS_transform_rte($dataForTranslationTranformed,$css=1); // which mode is best?
-
-										//substitute & with &amp;
-										$dataForTranslationTranformed=str_replace('&','&amp;',$dataForTranslationTranformed);
-										$dataForTranslationTranformed=t3lib_div::deHSCentities($dataForTranslationTranformed);
-										if (tx_l10nmgr_xmltools::isValidXML('<!DOCTYPE dummy [ <!ENTITY nbsp " "> ]><dummy>'.$dataForTranslationTranformed.'</dummy>')) {
+									if ($tData['fieldType']=='text' &&  $tData['isRTE']) { 
+										$dataForTranslationTranformed=$xmlTool->RTE2XML($dataForTranslation);										
+										if ($dataForTranslationTranformed!==false) {
 											$_isTranformedXML=TRUE;
 											$dataForTranslation=$dataForTranslationTranformed;
 										}
@@ -107,11 +100,11 @@ class tx_l10nmgr_CATXMLView {
 									}
 									else {
 										$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
-										if (tx_l10nmgr_xmltools::isValidXML('<!DOCTYPE test [ <!ENTITY nbsp " "> ]><test><![CDATA['.$dataForTranslation.']]></test>')) {
+										if ($xmlTool->isValidXMLString($dataForTranslation)) {
 											$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
 										}
 										else {
-											$errorMessage[]="\t\t".'<InternalMessage><![CDATA['.$elementUid.'/'.$table.'/'.$key.' has invalid characters and cannot be converted to correct XML/utf8]]></InternalMessage>';												
+											$errorMessage[]="\t\t".'<InternalMessage><![CDATA['.$elementUid.'/'.$table.'/'.$key.' is no valid XML (invalid characters or invalid chars)]]></InternalMessage>';												
 										}
 									}
 								}
@@ -132,9 +125,18 @@ class tx_l10nmgr_CATXMLView {
 
 		$XML = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 		$XML .= '<!DOCTYPE TYPO3LOC [ <!ENTITY nbsp " "> ]>'."\n".'<TYPO3LOC l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . ' baseURL="'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'">' . "\n";
-		$XML .= implode('', $output) . "\n"; 
-		$XML .= "<count>" . count($output) . "</count>\n"; 
-		$XML .= "<Internal>" . implode('', $errorMessage) . "</Internal>\n"; 
+		$XML .= '<head>'."\n";
+		$XML .=	"\t".'<l10ncfg>'.$this->l10ncfgObj->getData('uid').'</l10ncfg>'."\n";
+		$XML .=	"\t".'<sysLang>'.$sysLang.'</sysLang>'."\n";
+		$XML .=	"\t".'<sourceLang>'.$staticLangArr['lg_iso_2'].'</sourceLang>'."\n";
+		$XML .=	"\t".'<targetLang>'.$targetIso.'</targetLang>'."\n";
+		$XML .=	"\t".'<baseURL>'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'</baseURL>'."\n";
+		$XML .=	"\t".'<workspaceId>'.$GLOBALS['BE_USER']->workspace.'</workspaceId>'."\n";				
+		$XML .=	"\t".'<count>'.$accumObj->getFieldCount().'</count>'."\n";
+		$XML .=	"\t".'<wordCount>'.$accumObj->getWordCount().'</wordCount>'."\n";
+		$XML .=	"\t".'<Internal>'.implode("\n\t", $errorMessage).'</Internal>'."\n";
+		$XML .= '</head>'."\n";
+		$XML .= implode('', $output) . "\n";
 		$XML .= "</TYPO3LOC>"; 
 
 		return $XML;

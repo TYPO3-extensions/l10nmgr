@@ -49,6 +49,9 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 	
 	var $_accumulatedInformations=array();	
 	
+	var $_fieldCount=0;
+	var $_wordCount=0;
+	
 	
 	function tx_l10nmgr_l10nAccumulatedInformations($tree,$l10ncfg,$sysLang) {
 		$this->tree=$tree;
@@ -106,7 +109,8 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 					if (t3lib_div::inList($l10ncfg['tablelist'], $table))	{
 
 						if ($table === 'pages')	{
-							$accum[$pageId]['items'][$table][$pageId] = $t8Tools->translationDetails('pages',t3lib_BEfunc::getRecordWSOL('pages',$pageId),$sysLang, $flexFormDiff);
+							$accum[$pageId]['items'][$table][$pageId] = $t8Tools->translationDetails('pages',t3lib_BEfunc::getRecordWSOL('pages',$pageId),$sysLang, $flexFormDiff);														
+							$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$pageId]['fields']);
 						} else {
 							$allRows = $t8Tools->getRecordsToTranslateFromTable($table, $pageId);
 							if (is_array($allRows))	{
@@ -116,6 +120,7 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 										t3lib_BEfunc::workspaceOL($table,$row);
 										if (is_array($row) && !isset($excludeIndex[$table.':'.$row['uid']]))	{
 											$accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
+											$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);											
 										}
 									}
 								}
@@ -131,8 +136,9 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 		foreach($includeIndex as $recId)	{
 			list($table, $uid) = explode(':',$recId);
 			$row = t3lib_BEfunc::getRecordWSOL($table, $uid);
-			if (count($row))	{
+			if (count($row))	{				
 				$accum[-1]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
+				$this->_increaseInternalCounters($accum[-1]['items'][$table][$row['uid']]['fields']);
 			}
 		}
 
@@ -150,8 +156,24 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 		return $this->_accumulatedInformations;
 	}
 	
-
+	function getFieldCount() {
+		return $this->_fieldCount;
+	}
 	
+	function getWordCount() {
+		return $this->_wordCount;
+	}
+	
+	function _increaseInternalCounters($fieldsArray) {
+		if (is_array($fieldsArray)) {
+			$this->_fieldCount=$this->_fieldCount+count($fieldsArray);
+			if (function_exists('str_word_count')) {
+				foreach ($fieldsArray as $v) {				
+					$this->_wordCount=$this->_wordCount+str_word_count($v['defaultValue']);		
+				}
+			}
+		}
+	}
 }
 
 
