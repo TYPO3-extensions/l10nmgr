@@ -1,3 +1,6 @@
+2008-03-23 Andreas Otto <andreas.otto@dkd.de>
+	*Increased version number of branch v3 to 3.0.0-dev.
+
 2008-03-14 Daniel Pötzinger
 	*seperate XML<->RTE Transformations to xmltools
 	*CATXML: add <head> part to XML, with wordcount and correct fieldcount
@@ -28,15 +31,15 @@
 	* change detection of flexible CE by CType and not by language==-1 (All)
 	* use rte field in CATXML export to check if transformations should be used
 	* more stabil transformation: check if XML is valid / replace & with &amps;
-	* add transformation attribut to CATXML (to flag if a transformation is required)	
+	* add transformation attribut to CATXML (to flag if a transformation is required)
 	* fix import of CATXML with xml data (no cdata): new function _getXMLFromTreeArray in translationdatafactory
-	
+
 
 2008-01-18 Daniel Pötzinger
 	* restructuring the main BE-Modul (cm1) and splitting it in a Domainmodel + MVC (description and UML is provided in doc)
 
 2007-12-05 Daniel Zielinski <d.zielinski@l10ntech.de>
-	
+
 	* Added word and char count for calculation of translation costs (experimental!). XML export only. (funct wordCount)
 	* &nbsp; now substituted before XML export as it is not XML conform.
 	* Changed XML-Format: Now includes grouping element <pageGrp id="$pid"> to group translatable data. Needed for access to page context in CAT-Tools.
