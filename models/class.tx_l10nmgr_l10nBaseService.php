@@ -46,7 +46,7 @@ class tx_l10nmgr_l10nBaseService {
 		}
 	}
 	
-	
+		
 	
 	/**
 	 * Submit incoming content to database. Must match what is available in $accum.
