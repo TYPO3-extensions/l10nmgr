@@ -45,6 +45,7 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 	
 	var $tree=array();
 	var $l10ncfg=array();
+	var $disallowDoktypes = array('--div--','3','6','255');
 	var $sysLang;
 	
 	var $_accumulatedInformations=array();	
@@ -57,9 +58,8 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 		$this->tree=$tree;
 		$this->l10ncfg=$l10ncfg;
 		$this->sysLang=$sysLang;
-		
+
 		$this->_calculateInternalAccumulatedInformationsArray();
-		
 	}
 	
 	/** set internal _accumulatedInformations array. Is called from constructor and uses the given tree, lang and l10ncfg
@@ -95,8 +95,8 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 		foreach($tree->tree as $treeElement)	{
 
 			$pageId = $treeElement['row']['uid'];
-			if (!isset($excludeIndex['pages:'.$pageId]) && ($treeElement['row']['l18n_cfg']&2)!=2 && $treeElement['row']['doktype']<200)	{
-			
+			if (!isset($excludeIndex['pages:'.$pageId]) && ($treeElement['row']['l18n_cfg']&2)!=2 && !in_array($treeElement['row']['doktype'], $this->disallowDoktypes) )	{
+
 				$accum[$pageId]['header']['title']	= $treeElement['row']['title'];
 				$accum[$pageId]['header']['icon']	= $treeElement['HTML'];
 				$accum[$pageId]['header']['prevLang'] = $previewLanguage;
@@ -113,6 +113,7 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 							$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$pageId]['fields']);
 						} else {
 							$allRows = $t8Tools->getRecordsToTranslateFromTable($table, $pageId);
+
 							if (is_array($allRows))	{
 								if (count($allRows))	{
 										// Now, for each record, look for localization:
