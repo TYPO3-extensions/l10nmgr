@@ -28,38 +28,31 @@
 /**
  * translationData: encapsulates the data which are needed for saving a new translation.
  *
- * @author	Daniel Pötzinger <development@aoemedia.de>
+ * @author	Daniel Poetzinger <development@aoemedia.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_translationData {
-	
-	
-	
+
 	var $data=array();
 	var $sysLang;
-	
-	
+
 	function setTranslationData($data) {
-		$this->data=$data;		
+		$this->data=$data;
 	}
-	
+
 	function setLanguage($sysLang) {
-		$this->sysLang=$sysLang;		
+		$this->sysLang=$sysLang;
 	}
-	
+
 	function &getTranslationData() {
 		return $this->data;
 	}
-	
+
 	function getLanguage() {
 		return $this->sysLang;
 	}
-	
-	
 }
-
-
 
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/tx_l10nmgr_l10nmgrconfiguration_detail.php'])	{

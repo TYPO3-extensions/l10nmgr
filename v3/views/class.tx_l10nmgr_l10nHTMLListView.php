@@ -84,7 +84,7 @@ class tx_l10nmgr_l10nHTMLListView {
 		$accum=$accumObj->getInfoArray();				
 		$l10ncfg=$this->l10ncfg;
 		
-		
+
 		$output = '';
 		
 		$showSingle = t3lib_div::_GET('showSingle');

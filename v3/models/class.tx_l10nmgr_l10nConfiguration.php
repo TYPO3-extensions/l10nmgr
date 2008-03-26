@@ -81,28 +81,27 @@ class tx_l10nmgr_l10nConfiguration {
 	function getId() {
 		return $this->getData('uid');
 	}
-	
+
 	/**
 	* Factory method to create AccumulatedInformations Object (e.g. build tree etc...) (Factorys should have all dependencies passed as parameter)
 	*
 	* @param int	$overrideStartingPoint		optional override startingpoint  TODO!
 	* @return tx_l10nmgr_l10nAccumulatedInformations
 	**/
-	
 	function getL10nAccumulatedInformationsObjectForLanguage($sysLang,$overrideStartingPoint='') {
+
 		$l10ncfg=$this->l10ncfg;
 		// Showing the tree:
 		// Initialize starting point of page tree:
 		$treeStartingPoint = intval($l10ncfg['depth']==-1 ? t3lib_div::_GET('srcPID') : $l10ncfg['pid']);
 		$treeStartingRecord = t3lib_BEfunc::getRecordWSOL('pages', $treeStartingPoint);
 		$depth = $l10ncfg['depth'];
-		
-		
+
 		// Initialize tree object:
 		$tree = t3lib_div::makeInstance('t3lib_pageTree');
 		$tree->init('AND '.$GLOBALS['BE_USER']->getPagePermsClause(1));
 		$tree->addField('l18n_cfg');
-		
+
 		// Creating top icon; the current page
 		$HTML = t3lib_iconWorks::getIconImage('pages', $treeStartingRecord, $GLOBALS['BACK_PATH'],'align="top"');
 		$tree->tree[] = array(
@@ -111,15 +110,14 @@ class tx_l10nmgr_l10nConfiguration {
 		);
 		// Create the tree from starting point:
 		if ($depth>0)	$tree->getTree($treeStartingPoint, $depth, '');
-		
+
 		//now create and init accum Info object:
 		$accumObjName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10nAccumulatedInformations');
 		$accumObj=new $accumObjName($tree,$l10ncfg,$sysLang);
-		
+
 		return $accumObj;
 	}
-	
-	
+
 	function updateFlexFormDiff($sysLang,$flexFormDiffArray)	{
 		$l10ncfg=$this->l10ncfg;
 			// Updating diff-data:
@@ -136,7 +134,6 @@ class tx_l10nmgr_l10nConfiguration {
 		$l10ncfg['flexformdiff'] = serialize($flexFormDiffForAllLanguages);
 		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg','uid='.intval($l10ncfg['uid']),array('flexformdiff' => $l10ncfg['flexformdiff']));
 	}
-	
 }
 
 
