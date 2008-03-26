@@ -1,0 +1,64 @@
+2008-02-15 Daniel Pötzinger
+	* introduce new FCE translationMode: <langDatabaseOverlay>1</langDatabaseOverlay>
+	* => therefore allow translation of flexforms also for overlay records
+	* begin to work on tools class to get the translationDetails for this new translationMode
+	TODO: refactor tools class (e.g. translationDetailsRepository as main class with several helperclasses)
+				diffCalculation for this kind of FCEs
+
+2008-02-01 Daniel Pötzinger
+	* add detection for RTE field in tools class
+	* change detection of flexible CE by CType and not by language==-1 (All)
+	* use rte field in CATXML export to check if transformations should be used
+	* more stabil transformation: check if XML is valid / replace & with &amps;
+	* add transformation attribut to CATXML (to flag if a transformation is required)	
+	* fix import of CATXML with xml data (no cdata): new function _getXMLFromTreeArray in translationdatafactory
+	
+
+2008-01-18 Daniel Pötzinger
+	* restructuring the main BE-Modul (cm1) and splitting it in a Domainmodel + MVC (description and UML is provided in doc)
+
+2007-12-05 Daniel Zielinski <d.zielinski@l10ntech.de>
+	
+	* Added word and char count for calculation of translation costs (experimental!). XML export only. (funct wordCount)
+	* &nbsp; now substituted before XML export as it is not XML conform.
+	* Changed XML-Format: Now includes grouping element <pageGrp id="$pid"> to group translatable data. Needed for access to page context in CAT-Tools.
+	* XML-Format now contains format version number (needed for compatibility issues)
+	* Added download links for settings files in XML mode (temporary - should later be configurable and included in l10n package)
+
+2007-11-13 Daniel Zielinski <d.zielinski@l10ntech.de>
+
+	* Added XML settings files for across (www.across.net) and DéjàVu (www.atril.com).
+	* All settings files now in one folder.
+
+2007-10-30 Daniel Zielinski <d.zielinski@l10ntech.de>
+
+	* Added transformation of bodytext content by using functions from t3lib_parsehtml_proc. (Now converting links, images, tags back and forth) HTML content element issue remains open.
+	* Removed xml:lang from <TYPO3LOC> element.
+	* Added targetLang and sourceLang as ISO2Letter code
+
+2007-10-23 Daniel Zielinski <d.zielinski@l10ntech.de>
+
+	* Added simple XML export. Thanks to Daniel Pötzinger.
+	* Changed file naming using ISO-2-Letter code instead of syslanguage names.
+	* Added xml:lang attribute to <TYPO3LOC> element.
+	* Added settings file for SDLTrados TagEditor to cm1.
+	* Added settings file for SDL Passolo to cm1.
+	* Added TODO/wish list.
+	* Modified l10nmgr_cfg table. Added source language selection field.
+	* Added CSH functionality.
+
+2007-10-20 Kasper Skårhøj
+
+	* Committed work I did on this extension for Dassault in August and October. This includes:
+	* A "Translation Tasks" module which is destined to be a "task center" for translators including listing of explicitly set priorities by webmasters.
+	* An translation index table which helps us to make a overview of what translations are pending. This also needs more adaption.
+	* Some of this may depend on core-hooks which are upcoming.
+	* Expecting to finish these features for a "first real version" in January 2008 for Dassault. Until then, use at own risk.
+
+2007-05-21 Andreas Otto <andreas.otto@dkd.de>
+
+	* Applied patch to file cm1/index.php: Make it possible to import XML files that were created with OpenOffice.org.
+
+06-11-29 Kasper Skårhøj  <kasperYYYY@typo3.com>
+
+	* Initial release
