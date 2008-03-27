@@ -1,4 +1,7 @@
-2008-03-26 Daniel Pönger <poetzinger@aoemedia.de>
+2008-03-27 Michael Klapper <klapper@aoemedia.de>
+	* Changed database field "sourceLangStaticId char(3) NOT NULL default ''," to save "static_countries" with ID's > 99
+
+2008-03-26 Daniel Pötzinger <poetzinger@aoemedia.de>
 	* add ImportManager Class
 	* add checks and support for old XML CAT Version
 

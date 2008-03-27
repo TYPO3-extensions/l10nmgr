@@ -14,7 +14,7 @@ CREATE TABLE tx_l10nmgr_cfg (
 	exclude text NOT NULL,
 	include text NOT NULL,
 	flexformdiff mediumtext NOT NULL,
-	sourceLangStaticId char(2) NOT NULL default '',
+	sourceLangStaticId char(3) NOT NULL default '',
 	incfcewithdefaultlanguage int(11) DEFAULT '0' NOT NULL,
 	filenameprefix tinytext NOT NULL,
 	
