@@ -35,40 +35,30 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_xml
 require_once (PATH_t3lib.'class.t3lib_tcemain.php');
 
 class tx_xmltools_testcase extends tx_phpunit_testcase {
-
 	
 	public function test_isXMLString()
-	{
-		
+	{		
+		//prepare testdatas
 		$_fixture_noXML='<a>my test<p>test</p>';
 		$_fixture_noXML2='my test & du';
-		$_fixture_validXML='<a>my test</a><p>test</p><strong>&amp;<i></i><br /></strong>';
-		
-		$xmlTools=t3lib_div::makeInstance('tx_l10nmgr_xmltools');	
-			
-      
+		$_fixture_validXML='<a>my test</a><p>test</p><strong>&amp;<i></i><br /></strong>';		
+		//do the tests
+		$xmlTools=t3lib_div::makeInstance('tx_l10nmgr_xmltools');	      
     $this->assertFalse($xmlTools->isValidXMLString($_fixture_noXML), "invalid xml is detected as XML!");    
     $this->assertFalse($xmlTools->isValidXMLString($_fixture_noXML2), "invalid xml 2 is detected as XML!");    
-    $this->assertTrue($xmlTools->isValidXMLString($_fixture_validXML), "XML should be valid"); 
-    
+    $this->assertTrue($xmlTools->isValidXMLString($_fixture_validXML), "XML should be valid");   
     
 	}
-	
-	
-	
+
 	public function test_simpleTransformationTest()
 	{
 		//prepare testdata
 		$fixtureRTE='<link 3>my link</link><strong>strong text</strong>'."\n";
-		$fixtureRTE.='test';
-		
+		$fixtureRTE.='test';		
 		//do the test:
 		$xmlTools=t3lib_div::makeInstance('tx_l10nmgr_xmltools');										
-		$transformed=$xmlTools->XML2RTE($xmlTools->RTE2XML($fixtureRTE));
-		
-    $this->assertEquals($transformed, $fixtureRTE, "transformationresult:".$transformed." is not equal to source.");    
-    
-    
+		$transformed=$xmlTools->XML2RTE($xmlTools->RTE2XML($fixtureRTE));		
+    $this->assertEquals($transformed, $fixtureRTE, "transformationresult:".$transformed." is not equal to source.");
 	}
 	
 	public function test_transformationLinkTagTest()

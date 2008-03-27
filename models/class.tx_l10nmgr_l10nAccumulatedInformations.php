@@ -41,12 +41,13 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_too
  */
 class tx_l10nmgr_l10nAccumulatedInformations {
 	
-	
+	var $objectStatus='new';	//status of this object. Is set to processed if internal Variables are calculated.
 	
 	var $tree=array();
 	var $l10ncfg=array();
 	var $disallowDoktypes = array('--div--','3','6','255');
 	var $sysLang;
+	var $forcedPreviewLanguage;
 	
 	var $_accumulatedInformations=array();	
 	
@@ -57,10 +58,20 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 	function tx_l10nmgr_l10nAccumulatedInformations($tree,$l10ncfg,$sysLang) {
 		$this->tree=$tree;
 		$this->l10ncfg=$l10ncfg;
-		$this->sysLang=$sysLang;
-
-		$this->_calculateInternalAccumulatedInformationsArray();
+		$this->sysLang=$sysLang;		
 	}
+	
+	function setForcedPreviewLanguage($prevLangId) {
+		$this->forcedPreviewLanguage=$prevLangId;
+	}
+	
+	function process() {
+		if ($this->objectStatus!='processed') {
+			$this->_calculateInternalAccumulatedInformationsArray();
+		}
+		$this->objectStatus='processed';
+	}
+	
 	
 	/** set internal _accumulatedInformations array. Is called from constructor and uses the given tree, lang and l10ncfg
 	* @return void
@@ -86,7 +97,12 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 		}
 
 			// Set preview language (only first one in list is supported):
-		$previewLanguage = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
+		if ($this->forcedPreviewLanguage!='') {
+			$previewLanguage=$this->forcedPreviewLanguage;
+		}
+		else {
+			$previewLanguage = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
+		}
 		if ($previewLanguage)	{
 			$t8Tools->previewLanguages = array($previewLanguage);
 		}
@@ -154,6 +170,7 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 	 * @return	array		Complete Information array
 	 */
 	function getInfoArray() 	{
+		$this->process();		
 		return $this->_accumulatedInformations;
 	}
 	

@@ -237,6 +237,9 @@ class tx_l10nmgr_tools {
 												$flexObj = t3lib_div::makeInstance('t3lib_flexformtools');
 												$this->_callBackParams_keyForTranslationDetails=$key;
 												$this->_callBackParams_translationXMLArray=t3lib_div::xml2array($translationRecord[$field]);
+												foreach($this->previewLanguages as $prevSysUid)	{
+													$this->_callBackParams_previewLanguageXMLArrays[$prevSysUid] = t3lib_div::xml2array($prevLangRec[$prevSysUid][$field]);
+												}	
 												$this->_callBackParams_currentRow=$row;
 												$flexObj->traverseFlexFormXMLData($table,$field,$row,$this,'translationDetails_flexFormCallBackForOverlay');
 											}
@@ -435,7 +438,11 @@ class tx_l10nmgr_tools {
 		$translValue=$pObj->getArrayValueByPath($structurePath, $this->_callBackParams_translationXMLArray);
 		//TODO:
 			$diffDefaultValue=$dataValue;
-			$previewLanguageValues=array();
+		
+		foreach($this->previewLanguages as $prevSysUid)	{			 
+			$previewLanguageValues[$prevSysUid] = $pObj->getArrayValueByPath($structurePath, $this->_callBackParams_previewLanguageXMLArrays[$prevSysUid]);			
+		}	
+		
 			
 		$key=$this->_callBackParams_keyForTranslationDetails.':'.$structurePath;
 		$this->translationDetails_addField($key, $dsArr['TCEforms'], $dataValue, $translValue, $diffDefaultValue, $previewLanguageValues,$this->_callBackParams_currentRow);		

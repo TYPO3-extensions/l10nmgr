@@ -36,7 +36,8 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf
  */
 class tx_l10nmgr_CATXMLView {
 
-
+	var $forcedSourceLanguage=false;
+	
 	var $l10ncfgObj;
 	var $sysLang;
 
@@ -59,6 +60,9 @@ class tx_l10nmgr_CATXMLView {
 	function render() {
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
+		if ($this->forcedSourceLanguage) {
+			$accumObj->setForcedPreviewLanguage($this->forcedSourceLanguage);
+		}
 		$accum=$accumObj->getInfoArray();
 
 		$errorMessage=array();	
@@ -85,7 +89,12 @@ class tx_l10nmgr_CATXMLView {
 
 								if (!$this->modeOnlyChanged || !$noChangeFlag)	{
 									reset($tData['previewLanguageValues']);
-									$dataForTranslation=$tData['defaultValue'];
+									if ($this->forcedSourceLanguage) {
+										$dataForTranslation=$tData['previewLanguageValues'][$this->forcedSourceLanguage];
+									}
+									else {
+										$dataForTranslation=$tData['defaultValue'];
+									}
 									// Substitutions for XML conformity here
 									$_isTranformedXML=FALSE;
 									if ($tData['fieldType']=='text' &&  $tData['isRTE']) { 
@@ -135,6 +144,7 @@ class tx_l10nmgr_CATXMLView {
 		$XML .=	"\t".'<count>'.$accumObj->getFieldCount().'</count>'."\n";
 		$XML .=	"\t".'<wordCount>'.$accumObj->getWordCount().'</wordCount>'."\n";
 		$XML .=	"\t".'<Internal>'.implode("\n\t", $errorMessage).'</Internal>'."\n";
+		$XML .=	"\t".'<FormatVersion>'.L10NMGR_FILEVERSION.'</FormatVersion>'."\n";
 		$XML .= '</head>'."\n";
 		$XML .= implode('', $output) . "\n";
 		$XML .= "</TYPO3LOC>"; 
@@ -161,6 +171,13 @@ class tx_l10nmgr_CATXMLView {
 
 	function setModeOnlyChanged() {
 		$this->modeOnlyChanged=TRUE;
+	}
+	
+	/**
+	* 
+	**/
+	function setForcedSourceLanguage($id) {
+		$this->forcedSourceLanguage=$id;
 	}
 
 }

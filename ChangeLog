@@ -1,3 +1,7 @@
+2008-03-26 Daniel Pönger <poetzinger@aoemedia.de>
+	* add ImportManager Class
+	* add checks and support for old XML CAT Version
+
 2008-03-23 Andreas Otto <andreas.otto@dkd.de>
 	*Increased version number of branch v3 to 3.0.0-dev.
 
