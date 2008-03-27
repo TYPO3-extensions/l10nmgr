@@ -37,13 +37,19 @@
 class tx_l10nmgr_l10ncfgDetailView {
 
 	var $l10ncfgObj = array();	// Internal array (=datarow of config record)
+
+	/**
+	 * @var $doc
+	 */
+	var $doc = null;
 	
 	/**
 	* constructor. Set the internal required objects as paramter in constructor (kind of dependency injection, and communicate the dependencies)
 	* @param tx_l10nmgr_l10nConfiguration	
 	**/
-	function tx_l10nmgr_l10ncfgDetailView($l10ncfgObj) {
+	function tx_l10nmgr_l10ncfgDetailView($l10ncfgObj, $doc) {
 		$this->l10ncfgObj=&$l10ncfgObj;
+		$this->doc = $doc;
 	}
 	
 	/**
@@ -62,29 +68,36 @@ class tx_l10nmgr_l10ncfgDetailView {
 	*	(needs valid configuration to be set)
 	**/
 	function render()	{
+		global $LANG;
+		$content = '';
+
 		if (!$this->_hasValidConfig()) {
-			return 'ERROR: no valid l10nmgr config!';
+			return $LANG->getLL('general.export.configuration.error.title');
 		}
-		$content='
+
+		$configurationSettings = '
 				<table border="1" cellpadding="1" cellspacing="0" width="400">
 					<tr class="bgColor5 tableheader">
-						<td colspan="4">Configuration: <strong>'.htmlspecialchars($this->l10ncfgObj->getData('title')).' ['.$this->l10ncfgObj->getData('uid').']</strong></td>
+						<td colspan="4"><strong>'.htmlspecialchars($this->l10ncfgObj->getData('title')).' ['.$this->l10ncfgObj->getData('uid').']</strong></td>
 					</tr>
 					<tr class="bgColor3">
 						<td><strong>Depth:</strong></td>
-						<td>'.htmlspecialchars($this->l10ncfgObj->getData('depth')).'</td>
+						<td>'.htmlspecialchars($this->l10ncfgObj->getData('depth')).'&nbsp;</td>
 						<td><strong>Tables:</strong></td>
-						<td>'.htmlspecialchars($this->l10ncfgObj->getData('tablelist')).'</td>
+						<td>'.htmlspecialchars($this->l10ncfgObj->getData('tablelist')).'&nbsp;</td>
 					</tr>
 					<tr class="bgColor3">
 						<td><strong>Exclude:</strong></td>
-						<td>'.htmlspecialchars($this->l10ncfgObj->getData('exclude')).'</td>
+						<td>'.htmlspecialchars($this->l10ncfgObj->getData('exclude')).'&nbsp;</td>
 						<td><strong>Include:</strong></td>
-						<td>'.htmlspecialchars($this->l10ncfgObj->getData('include')).'</td>
+						<td>'.htmlspecialchars($this->l10ncfgObj->getData('include')).'&nbsp;</td>
 					</tr>
 				</table>';
+
+		$content .= $this->doc->section($LANG->getLL('general.export.configuration.title'), $configurationSettings);
+
 		return $content;
-		
+
 	}
 	
 	

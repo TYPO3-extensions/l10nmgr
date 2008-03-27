@@ -43,7 +43,7 @@ class tx_l10nmgr_CATXMLView {
 
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $sysLang) {
 		global $BACK_PATH;
-		$this->sysLang=$sysLang;
+		$this->sysLang = $sysLang;
 		$this->l10ncfgObj=$l10ncfgObj;
 
 		$this->doc = t3lib_div::makeInstance('noDoc');
@@ -88,7 +88,11 @@ class tx_l10nmgr_CATXMLView {
 								$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
 
 								if (!$this->modeOnlyChanged || !$noChangeFlag)	{
-									reset($tData['previewLanguageValues']);
+									
+									if (is_array($tData['previewLanguageValues']) && !empty($tData['previewLanguageValues'])) {
+										reset($tData['previewLanguageValues']);
+									}
+									
 									if ($this->forcedSourceLanguage) {
 										$dataForTranslation=$tData['previewLanguageValues'][$this->forcedSourceLanguage];
 									}
@@ -164,7 +168,7 @@ class tx_l10nmgr_CATXMLView {
 		$fileNamePrefix = (trim( $this->l10ncfgObj->getData('filenameprefix') )) ? $this->l10ncfgObj->getData('filenameprefix') : 'export_language' ;
 
 		// Setting filename:
-		$filename =  $fileNamePrefix . '_' . $staticLangArr['lg_iso_2'] . '_' . date('dmy-Hi').'.xml';
+		$filename =  $fileNamePrefix . '_' . $staticLangArr['lg_iso_2'] . '_' . date('dmy-His').'.xml';
 		return $filename;
 	}
 
