@@ -132,9 +132,11 @@ class tx_l10nmgr_l10nBaseService {
 			}
 //debug($tce->copyMappingArray_merged,'$tce->copyMappingArray_merged');
 				// Remapping those elements which are new:
+			$this->lastTCEMAINCommandsCount=0;
 			foreach($TCEmain_data as $table => $items)	{
 				foreach($TCEmain_data[$table] as $TuidString => $fields)	{
 					list($Tuid,$Tlang,$TdefRecord) = explode('/',$TuidString);
+					$this->lastTCEMAINCommandsCount++;
 					if ($Tuid === 'NEW')	{
 						if ($tce->copyMappingArray_merged[$table][$TdefRecord])	{
 							$TCEmain_data[$table][t3lib_BEfunc::wsMapId($table,$tce->copyMappingArray_merged[$table][$TdefRecord])] = $fields;
