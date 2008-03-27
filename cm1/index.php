@@ -263,7 +263,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			if (t3lib_div::_POST('import_xml') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
 				$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
 				$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
-								
+
 				if (t3lib_div::_POST('import_oldformat')=='1') {					
 					//Support for the old Format of XML Import (without pagegrp element)
 					$info.='Import uses the old Format without pagegrp element and checks!';
