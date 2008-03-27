@@ -93,15 +93,16 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 *
 	 * @return	void
 	 */
-	function menuConfig()	{
+	function menuConfig() {
 		global $LANG;
+
 		$this->MOD_MENU = Array (
 			'action' => array(
-				'' => '==Select Action==',
-				'link' => 'Overview with links',
-				'inlineEdit' => 'Inline Edit',
-				'export_excel' => 'ImpExp: Excel',
-				'export_xml' => 'ImpExp: XML',
+				''             => $LANG->getLL('general.action.blank.title'),
+				'link'         => $LANG->getLL('general.action.edit.link.title'),
+				'inlineEdit'   => $LANG->getLL('general.action.edit.inline.title'),
+				'export_excel' => $LANG->getLL('general.action.export.excel.title'),
+				'export_xml'   => $LANG->getLL('general.action.export.xml.title'),
 			),
 			'lang' => array(),
 			'onlyChangedContent' => ''
@@ -124,7 +125,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 *
 	 * @return	void
 	 */
-	function main()	{
+	function main() {
 		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
 
 			// Get language to export/import
@@ -197,7 +198,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 *
 	 * @return	void
 	 */
-	function printContent()	{
+	function printContent() {
 
 		$this->content.=$this->doc->endPage();
 		echo $this->content;
@@ -313,7 +314,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			t3lib_div::unlink_tempfile($uploadedTempFile);
 		}	
 		// If export of XML is asked for, do that (this will exit and push a file for download)
-		if (t3lib_div::_POST('export_xml'))	{
+		if (t3lib_div::_POST('export_xml')) {
 			// Render the XML
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
 			$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage);
@@ -370,7 +371,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 * @param	array		Localization Configuration record
 	 * @return	void
 	 */
-	function moduleContent($l10ncfgObj)	{
+	function moduleContent($l10ncfgObj) {
 		global $TCA,$LANG;
 
 		switch ($this->MOD_SETTINGS["action"]) {
@@ -442,7 +443,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 * @param	string		New content
 	 * @return	string		Marked up string.
 	 */
-	function diffCMP($old, $new)	{
+	function diffCMP($old, $new) {
 			// Create diff-result:
 		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
 		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);

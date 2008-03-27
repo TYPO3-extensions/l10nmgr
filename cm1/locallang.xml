@@ -6,10 +6,11 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="inlineEdit">inline Editing</label>
-			<label index="linkEdit">Overview with links</label>
-			<label index="export_excel">Excel Export/Import</label>
-			<label index="export_xml">XML Export/Import</label>
+			<label index="general.action.blank.title">==Select Action==</label>
+			<label index="general.action.edit.link.title">inline Editing</label>
+			<label index="general.action.edit.inline.title">Overview with links</label>
+			<label index="general.action.export.excel.title">Excel Export/Import</label>
+			<label index="general.action.export.xml.title">XML Export/Import</label>
 
 			<label index="general.title">L10N Export/Import</label>
 			<label index="general.export.configuration.title">Configuration of translation object:</label>
