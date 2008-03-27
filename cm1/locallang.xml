@@ -15,7 +15,7 @@
 			<label index="general.title">L10N Export/Import</label>
 			<label index="general.export.configuration.title">Configuration of translation object:</label>
 			<label index="general.export.configuration.error.title">ERROR: no valid l10nmgr config!</label>
-           
+
 			<label index="file.settings.available.title">Available settings files:</label>
 			<label index="file.settings.across.title">across</label>
 			<label index="file.settings.dejaVu.title">DéjàVu</label>
@@ -26,6 +26,9 @@
 			<label index="export.xml.headline.title">Export: </label>
 			<label index="export.xml.source-language.title">force source Language: </label>
 			<label index="export.xml.new.title">New/Changed content only </label>
+            
+			<label index="export.process.error.empty.message">Empty element</label>
+			<label index="export.process.error.invalid.message">invalid characters in the element detected</label>
 
 			<label index="import.xml.headline.title">Import: </label>
 			<label index="import.xml.old-format.title">Import old Format (v2)</label>
