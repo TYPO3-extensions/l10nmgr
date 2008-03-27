@@ -6,26 +6,39 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="title">L10N Export/Import</label>
 			<label index="inlineEdit">inline Editing</label>
 			<label index="linkEdit">Overview with links</label>
 			<label index="export_excel">Excel Export/Import</label>
 			<label index="export_xml">XML Export/Import</label>
-			<label index="function1">Function #1</label>
-			<label index="function2">Function #2</label>
-			<label index="function3">Function #3</label>
+
+			<label index="general.title">L10N Export/Import</label>
+			<label index="general.export.configuration.title">Configuration of translation object:</label>
+			<label index="general.export.configuration.error.title">ERROR: no valid l10nmgr config!</label>
+           
+			<label index="file.settings.available.title">Available settings files:</label>
+			<label index="file.settings.across.title">across</label>
+			<label index="file.settings.dejaVu.title">DéjàVu</label>
+			<label index="file.settings.sdltrados.title">SDL Trados</label>
+			<label index="file.settings.sdlpassolo.title">SDL Passolo</label>
+			<label index="file.settings.download.title">Download settings file</label>
+
+			<label index="export.xml.headline.title">Export: </label>
+			<label index="export.xml.source-language.title">force source Language: </label>
+			<label index="export.xml.new.title">New/Changed content only </label>
+
+			<label index="import.xml.headline.title">Import: </label>
+			<label index="import.xml.old-format.title">Import old Format (v2)</label>
+			<label index="import.error.title">Error in Import:</label>
+
+			<label index="misc.messages.title">Messages:</label>
 		</languageKey>
+
 		<languageKey index="de" type="array">
 			<label index="title">L10N Export/Import</label>
-			<label index="function1">Function #1</label>
-			<label index="function2">Function #2</label>
-			<label index="function3">Function #3</label>
 		</languageKey>
+
 		<languageKey index="it" type="array">
 			<label index="title">L10N Esportazione/Importazione</label>
-			<label index="function1">Function #1</label>
-			<label index="function2">Function #2</label>
-			<label index="function3">Function #3</label>
 		</languageKey>
 	</data>
 	<orig_hash type="array">

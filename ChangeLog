@@ -1,5 +1,8 @@
 2008-03-27 Michael Klapper <klapper@aoemedia.de>
 	* Changed database field "sourceLangStaticId char(3) NOT NULL default ''," to save "static_countries" with ID's > 99
+	* Move label to external locallang.xml file (cm1)
+	* Change reading and displaying of available configuration files
+	* Fix the option "export from source language"
 
 2008-03-26 Daniel Pötzinger <poetzinger@aoemedia.de>
 	* add ImportManager Class
