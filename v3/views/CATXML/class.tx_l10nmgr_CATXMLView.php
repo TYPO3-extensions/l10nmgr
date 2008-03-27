@@ -37,11 +37,12 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf
 class tx_l10nmgr_CATXMLView {
 
 	var $forcedSourceLanguage=false;
-	
+
 	var $l10ncfgObj;
 	var $sysLang;
 
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $sysLang) {
+
 		global $BACK_PATH;
 		$this->sysLang = $sysLang;
 		$this->l10ncfgObj=$l10ncfgObj;
@@ -58,6 +59,8 @@ class tx_l10nmgr_CATXMLView {
 	 * @return	string		HTML content
 	 */
 	function render() {
+		global $LANG;
+
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
 		if ($this->forcedSourceLanguage) {
@@ -75,7 +78,7 @@ class tx_l10nmgr_CATXMLView {
 			foreach($accum[$pId]['items'] as $table => $elements) {
 				foreach($elements as $elementUid => $data) {
 					if (!empty($data['ISOcode'])) {
-						$targetIso=$data['ISOcode'];						
+						$targetIso=$data['ISOcode'];
 					}
 
 					if (is_array($data['fields'])) {
@@ -88,37 +91,39 @@ class tx_l10nmgr_CATXMLView {
 								$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
 
 								if (!$this->modeOnlyChanged || !$noChangeFlag)	{
-									
-									if (is_array($tData['previewLanguageValues']) && !empty($tData['previewLanguageValues'])) {
-										reset($tData['previewLanguageValues']);
-									}
-									
-									if ($this->forcedSourceLanguage) {
-										$dataForTranslation=$tData['previewLanguageValues'][$this->forcedSourceLanguage];
-									}
-									else {
-										$dataForTranslation=$tData['defaultValue'];
-									}
-									// Substitutions for XML conformity here
-									$_isTranformedXML=FALSE;
-									if ($tData['fieldType']=='text' &&  $tData['isRTE']) { 
-										$dataForTranslationTranformed=$xmlTool->RTE2XML($dataForTranslation);										
-										if ($dataForTranslationTranformed!==false) {
-											$_isTranformedXML=TRUE;
-											$dataForTranslation=$dataForTranslationTranformed;
-										}
-									}
-									if ($_isTranformedXML) {
-										$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";
-									}
-									else {
-										$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
-										if ($xmlTool->isValidXMLString($dataForTranslation)) {
-											$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
+
+									if ( ($this->forcedSourceLanguage && isset($tData['previewLanguageValues'][$this->forcedSourceLanguage])) || $this->forcedSourceLanguage === false) {
+
+										if ($this->forcedSourceLanguage) {
+											$dataForTranslation = $tData['previewLanguageValues'][$this->forcedSourceLanguage];
 										}
 										else {
-											$errorMessage[]="\t\t".'<InternalMessage><![CDATA['.$elementUid.'/'.$table.'/'.$key.' is no valid XML (invalid characters or invalid chars)]]></InternalMessage>';												
+											$dataForTranslation=$tData['defaultValue'];
 										}
+										// Substitutions for XML conformity here
+										$_isTranformedXML=FALSE;
+										if ($tData['fieldType']=='text' &&  $tData['isRTE']) { 
+											$dataForTranslationTranformed=$xmlTool->RTE2XML($dataForTranslation);
+											if ($dataForTranslationTranformed!==false) {
+												$_isTranformedXML=TRUE;
+												$dataForTranslation=$dataForTranslationTranformed;
+											}
+										}
+										if ($_isTranformedXML) {
+											$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";
+										}
+										else {
+											$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
+											if ($xmlTool->isValidXMLString($dataForTranslation)) {
+												$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
+											}
+											else {
+												$errorMessage[] = $this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'), $elementUid.'/'.$table.'/'.$key);
+											}
+										}
+
+									} else {
+										$errorMessage[] = $this->setInternalMessage($LANG->getLL('export.process.error.empty.message'), $elementUid.'/'.$table.'/'.$key);
 									}
 								}
 							}
@@ -144,7 +149,7 @@ class tx_l10nmgr_CATXMLView {
 		$XML .=	"\t".'<sourceLang>'.$staticLangArr['lg_iso_2'].'</sourceLang>'."\n";
 		$XML .=	"\t".'<targetLang>'.$targetIso.'</targetLang>'."\n";
 		$XML .=	"\t".'<baseURL>'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'</baseURL>'."\n";
-		$XML .=	"\t".'<workspaceId>'.$GLOBALS['BE_USER']->workspace.'</workspaceId>'."\n";				
+		$XML .=	"\t".'<workspaceId>'.$GLOBALS['BE_USER']->workspace.'</workspaceId>'."\n";
 		$XML .=	"\t".'<count>'.$accumObj->getFieldCount().'</count>'."\n";
 		$XML .=	"\t".'<wordCount>'.$accumObj->getWordCount().'</wordCount>'."\n";
 		$XML .=	"\t".'<Internal>'.implode("\n\t", $errorMessage).'</Internal>'."\n";
@@ -155,7 +160,6 @@ class tx_l10nmgr_CATXMLView {
 
 		return $XML;
 	}
-
 
 	function getFilename() {
 
@@ -176,12 +180,28 @@ class tx_l10nmgr_CATXMLView {
 	function setModeOnlyChanged() {
 		$this->modeOnlyChanged=TRUE;
 	}
-	
+
 	/**
-	* 
-	**/
+	 * Build single item of "internal" message
+	 *
+	 * @param	string		$message
+	 * @param	string		$key
+	 * @access	private
+	 * @return	string
+	 */
+	function setInternalMessage($message, $key) {
+		return "\t\t" . '<skipedItem><description>' . $message . '</description><key>' . $key . '</key></skipedItem>' . "\n";
+	}
+
+	/**
+	* Force a new source language to export the content to translate
+	*
+	* @param	integer		$id
+	* @access	public
+	* @return	void
+	*/
 	function setForcedSourceLanguage($id) {
-		$this->forcedSourceLanguage=$id;
+		$this->forcedSourceLanguage = $id;
 	}
 
 }
