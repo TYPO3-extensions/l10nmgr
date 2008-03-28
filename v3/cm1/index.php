@@ -169,8 +169,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
 				$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
 
-				$this->content.=$this->doc->divider(5);
-				$this->content.=$this->doc->section('',
+				$this->content.=$this->doc->divider(25);
+				$this->content.=$this->doc->section($LANG->getLL('general.export.choose.action.title'),
 						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[lang]",$this->sysLanguage,$this->MOD_MENU["lang"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
 						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
 						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[onlyChangedContent]",$this->MOD_SETTINGS["onlyChangedContent"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.new.title') . '</br>'
@@ -379,6 +379,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$htmlListViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10nHTMLListView');
 				$htmlListView=new $htmlListViewClassName($l10ncfgObj,$this->sysLanguage);
 				$subheader=$LANG->getLL('inlineEdit');
+
 				if ($this->MOD_SETTINGS["action"]=='inlineEdit') {
 					$subheader=$LANG->getLL('link');
 					$subcontent=$this->inlineEditAction($l10ncfgObj);
@@ -389,29 +390,29 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 				if ($this->MOD_SETTINGS["onlyChangedContent"]) {
 					$htmlListView->setModeOnlyChanged();
-				}					
+				}
 				if ($this->MOD_SETTINGS["action"]=='link') {
 					$htmlListView->setModeShowEditLinks();
 				}
-				$subcontent.=$htmlListView->renderOverview();
+				$subcontent .= $htmlListView->renderOverview();
 			break;
 
 			case 'export_excel':
-				$subheader=$LANG->getLL('export_excel');
-				$subcontent=$this->excelExportImportAction($l10ncfgObj);
+				$subheader  = $LANG->getLL('export_excel');
+				$subcontent = $this->excelExportImportAction($l10ncfgObj);
 			break;
 
 			case 'export_xml':		// XML import/export
-				$subheader=$LANG->getLL('export_xml');
-				$subcontent=$this->catXMLExportImportAction($l10ncfgObj);
+				$subheader  = $LANG->getLL('export_xml');
+				$subcontent = $this->catXMLExportImportAction($l10ncfgObj);
 			break;
 
 			DEFAULT:	// Default display:
-				$subcontent= '<input type="submit" value="Refresh" name="_" />';
+				$subcontent = '<input type="submit" value="Refresh" name="_" />';
 			break;
 		} //switch block
 
-		$this->content.=$this->doc->section($subheader,$subcontent);
+		$this->content .= $this->doc->section($subheader,$subcontent);
 	}
 
 	/**
