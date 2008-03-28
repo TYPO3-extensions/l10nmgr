@@ -16,6 +16,8 @@
 			<label index="general.export.configuration.title">Configuration of translation object:</label>
 			<label index="general.export.configuration.error.title">ERROR: no valid l10nmgr config!</label>
 
+			<label index="general.export.choose.action.title">Choose your action</label>
+
 			<label index="file.settings.available.title">Available settings files:</label>
 			<label index="file.settings.across.title">across</label>
 			<label index="file.settings.dejaVu.title">DéjàVu</label>
