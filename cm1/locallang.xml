@@ -36,6 +36,12 @@
 			<label index="import.xml.old-format.title">Import old Format (v2)</label>
 			<label index="import.error.title">Error in Import:</label>
 
+			<label index="import.manager.error.parsing.xml2tree.message">XML2Tree parsing error: </label>
+			<label index="import.manager.error.missing.meta.message">could not found meta data in XML!</label>
+			<label index="import.manager.error.version.message">Incorrect Version of the Format: %s (required: %s)</label>
+			<label index="import.manager.error.workspace.message">Export was taken from a diffrent Workspace, please import in this workspace to avoid problems: Current %s (required: %s)</label>
+			<label index="import.manager.error.language.message">'Export was taken from a diffrent Language, please select correct language above! current: %s (required: %s)</label>
+
 			<label index="misc.messages.title">Messages:</label>
 		</languageKey>
 
