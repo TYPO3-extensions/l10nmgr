@@ -288,7 +288,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
 			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
-			if (t3lib_div::_POST('import_oldformat')=='1') {					
+			if (t3lib_div::_POST('import_oldformat')=='1') {
 				//Support for the old Format of XML Import (without pagegrp element)
 				$info.='Import uses the old Format without pagegrp element and checks!';
 				$translationData=$factory->getTranslationDataFromOldFormatCATXMLFile($uploadedTempFile);
@@ -298,7 +298,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			}
 			else {
 				// Relevant processing of XML Import with the help of the Importmanager
-				$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');					
+				$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
 				$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage);
 				if ($importManager->parseAndCheckXMLFile()===false) {
 					$info.='<br/><br/>' . $this->doc->header($LANG->getLL('import.error.title')) .$importManager->getErrorMessages();
@@ -312,7 +312,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				}
 			}
 			t3lib_div::unlink_tempfile($uploadedTempFile);
-		}	
+		}
 		// If export of XML is asked for, do that (this will exit and push a file for download)
 		if (t3lib_div::_POST('export_xml')) {
 			// Render the XML
@@ -339,7 +339,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$info.= '<input type="submit" value="Import" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
 
 			// Read uploaded file:
-		if (t3lib_div::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
+		if (t3lib_div::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name'])) {
 			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
 
 			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
@@ -355,7 +355,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		}
 
 			// If export of XML is asked for, do that (this will exit and push a file for download)
-		if (t3lib_div::_POST('export_excel'))	{
+		if (t3lib_div::_POST('export_excel')) {
 			// Render the XML
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
 			$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage);
