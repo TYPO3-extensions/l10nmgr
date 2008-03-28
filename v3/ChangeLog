@@ -1,3 +1,7 @@
+2008-03-28 Michael Klapper <klapper@aoemedia.de>
+	* Changed internal message handling (export XML)
+	* Changed XML export indention
+
 2008-03-27 Michael Klapper <klapper@aoemedia.de>
 	* Changed database field "sourceLangStaticId char(3) NOT NULL default ''," to save "static_countries" with ID's > 99
 	* Move label to external locallang.xml file (cm1)
