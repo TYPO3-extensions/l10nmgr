@@ -36,9 +36,24 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf
  */
 class tx_l10nmgr_CATXMLView {
 
-	var $forcedSourceLanguage=false;
+	/**
+	 * @var	array		$internalMessges		Part of XML with fail logging information content elements
+	 */
+	var $internalMessges = array();
 
+	/**
+	 * @var	integer		$forcedSourceLanguage		Overwrite the default language uid with the desired language to export
+	 */
+	var $forcedSourceLanguage = false;
+
+	/**
+	 * @var	tx_l10nmgr_l10nConfiguration		$l10ncfgObj		The language configuration object
+	 */
 	var $l10ncfgObj;
+
+	/**
+	 * @var	integer		$sysLang		The sys_language_uid of language to export
+	 */
 	var $sysLang;
 
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $sysLang) {
@@ -74,7 +89,7 @@ class tx_l10nmgr_CATXMLView {
 
 			// Traverse the structure and generate XML output:
 		foreach($accum as $pId => $page) {
-			$output[]='<PageGrp id="'.$pId.'">'."\n";
+			$output[] =  "\t" . '<PageGrp id="'.$pId.'">'."\n";
 			foreach($accum[$pId]['items'] as $table => $elements) {
 				foreach($elements as $elementUid => $data) {
 					if (!empty($data['ISOcode'])) {
@@ -118,12 +133,12 @@ class tx_l10nmgr_CATXMLView {
 												$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
 											}
 											else {
-												$errorMessage[] = $this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'), $elementUid.'/'.$table.'/'.$key);
+												$this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'), $elementUid.'/'.$table.'/'.$key);
 											}
 										}
 
 									} else {
-										$errorMessage[] = $this->setInternalMessage($LANG->getLL('export.process.error.empty.message'), $elementUid.'/'.$table.'/'.$key);
+										$this->setInternalMessage($LANG->getLL('export.process.error.empty.message'), $elementUid.'/'.$table.'/'.$key);
 									}
 								}
 							}
@@ -131,7 +146,7 @@ class tx_l10nmgr_CATXMLView {
 					}
 				}
 			}
-			$output[]='</PageGrp>'."\n";
+			$output[] = "\t" . '</PageGrp>'."\r";
 		}
 
 			// get ISO2L code for source language
@@ -141,20 +156,20 @@ class tx_l10nmgr_CATXMLView {
 			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
 		}
 
-		$XML = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+		$XML  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 		$XML .= '<!DOCTYPE TYPO3LOC [ <!ENTITY nbsp " "> ]>'."\n".'<TYPO3LOC l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . ' baseURL="'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'">' . "\n";
-		$XML .= '<head>'."\n";
-		$XML .=	"\t".'<l10ncfg>'.$this->l10ncfgObj->getData('uid').'</l10ncfg>'."\n";
-		$XML .=	"\t".'<sysLang>'.$sysLang.'</sysLang>'."\n";
-		$XML .=	"\t".'<sourceLang>'.$staticLangArr['lg_iso_2'].'</sourceLang>'."\n";
-		$XML .=	"\t".'<targetLang>'.$targetIso.'</targetLang>'."\n";
-		$XML .=	"\t".'<baseURL>'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'</baseURL>'."\n";
-		$XML .=	"\t".'<workspaceId>'.$GLOBALS['BE_USER']->workspace.'</workspaceId>'."\n";
-		$XML .=	"\t".'<count>'.$accumObj->getFieldCount().'</count>'."\n";
-		$XML .=	"\t".'<wordCount>'.$accumObj->getWordCount().'</wordCount>'."\n";
-		$XML .=	"\t".'<Internal>'.implode("\n\t", $errorMessage).'</Internal>'."\n";
-		$XML .=	"\t".'<FormatVersion>'.L10NMGR_FILEVERSION.'</FormatVersion>'."\n";
-		$XML .= '</head>'."\n";
+		$XML .= "\t"   . '<head>'."\n";
+		$XML .= "\t\t" . '<l10ncfg>'.$this->l10ncfgObj->getData('uid').'</l10ncfg>'."\n";
+		$XML .= "\t\t" . '<sysLang>'.$sysLang.'</sysLang>'."\n";
+		$XML .= "\t\t" . '<sourceLang>'.$staticLangArr['lg_iso_2'].'</sourceLang>'."\n";
+		$XML .= "\t\t" . '<targetLang>'.$targetIso.'</targetLang>'."\n";
+		$XML .= "\t\t" . '<baseURL>'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'</baseURL>'."\n";
+		$XML .= "\t\t" . '<workspaceId>'.$GLOBALS['BE_USER']->workspace.'</workspaceId>'."\n";
+		$XML .= "\t\t" . '<count>'.$accumObj->getFieldCount().'</count>'."\n";
+		$XML .= "\t\t" . '<wordCount>'.$accumObj->getWordCount().'</wordCount>'."\n";
+		$XML .= "\t\t" . '<Internal>' . "\r\t" . implode("\n\t", $this->internalMessges) . "\t\t" . '</Internal>' . "\n";
+		$XML .= "\t\t" . '<FormatVersion>'.L10NMGR_FILEVERSION.'</FormatVersion>'."\n";
+		$XML .= "\t"   . '</head>'."\n";
 		$XML .= implode('', $output) . "\n";
 		$XML .= "</TYPO3LOC>"; 
 
@@ -187,10 +202,10 @@ class tx_l10nmgr_CATXMLView {
 	 * @param	string		$message
 	 * @param	string		$key
 	 * @access	private
-	 * @return	string
+	 * @return	void
 	 */
 	function setInternalMessage($message, $key) {
-		return "\t\t" . '<skipedItem><description>' . $message . '</description><key>' . $key . '</key></skipedItem>' . "\n";
+		$this->internalMessges[] = "\t\t" . '<skipedItem>' . "\n\t\t\t\t" . '<description>' . $message . '</description>' . "\n\t\t\t\t" . '<key>' . $key . '</key>' . "\n\t\t\t" . '</skipedItem>' . "\r";
 	}
 
 	/**
