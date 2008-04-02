@@ -1,6 +1,11 @@
 2008-03-28 Michael Klapper <klapper@aoemedia.de>
+	* Changed user interface on mod1
+	** Added some templates (html, css, js)
+
+2008-03-28 Michael Klapper <klapper@aoemedia.de>
 	* Changed internal message handling (export XML)
 	* Changed XML export indention
+	* Move label to external locallang.xml file (class.tx_l10nmgr_CATXMLImportManager.php)
 
 2008-03-27 Michael Klapper <klapper@aoemedia.de>
 	* Changed database field "sourceLangStaticId char(3) NOT NULL default ''," to save "static_countries" with ID's > 99
