@@ -27,8 +27,6 @@
  * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
  */
 
-
-
 	// DEFAULT initialization of a module [BEGIN]
 unset($MCONF);
 require ("conf.php");
@@ -36,15 +34,8 @@ require ($BACK_PATH."init.php");
 require ($BACK_PATH."template.php");
 $LANG->includeLLFile("EXT:l10nmgr/mod1/locallang.xml");
 require_once (PATH_t3lib."class.t3lib_scbase.php");
-$BE_USER->modAccess($MCONF,1);	// This checks permissions and exits if the users has no permission for entry.
-	// DEFAULT initialization of a module [END]
-
-
-
-
-
-
-
+require_once(t3lib_extMgm::extPath('l10nmgr') . 'views/class.tx_l10nmgr_template.php');
+$BE_USER->modAccess($MCONF,1);
 
 /**
  * Translation management tool
@@ -54,7 +45,7 @@ $BE_USER->modAccess($MCONF,1);	// This checks permissions and exits if the users
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_module1 extends t3lib_SCbase {
-
+	
 	var $pageinfo;
 
 	/**
@@ -62,61 +53,51 @@ class tx_l10nmgr_module1 extends t3lib_SCbase {
 	 *
 	 * @return	void
 	 */
-	function init()	{
+	function init() {
 		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
 
 		parent::init();
 	}
 
 	/**
-	 * Adds items to the ->MOD_MENU array. Used for the function menu selector.
-	 *
-	 * @return	void
-	 */
-	function menuConfig()	{
-		global $LANG;
-		$this->MOD_MENU = Array (
-			"function" => Array (
-				"1" => $LANG->getLL("function1"),
-				"2" => $LANG->getLL("function2"),
-				"3" => $LANG->getLL("function3"),
-			)
-		);
-		parent::menuConfig();
-	}
-
-	/**
 	 * Main function of the module. Write the content to $this->content
 	 * If you chose "web" as main module, you will need to consider the $this->id parameter which will contain the uid-number of the page clicked in the page tree
 	 *
-	 * @return	[type]		...
+	 * @return	void
 	 */
-	function main()	{
-		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
+	function main() {
+		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS,$_EXTKEY;
 
 			// Draw the header.
-		$this->doc = t3lib_div::makeInstance("mediumDoc");
-		$this->doc->backPath = $BACK_PATH;
-		$this->doc->form='<form action="" method="POST">';
+		$this->doc            = t3lib_div::makeInstance("bigDoc");
+		$this->doc->backPath  = $BACK_PATH;
+		$this->doc->form      = '<form action="" method="POST">';
+
+		$configurationObjectsArray = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+                        '*',
+			'tx_l10nmgr_cfg',
+                        '1'.t3lib_BEfunc::deleteClause('tx_l10nmgr_cfg')
+                 );
 
 			// JavaScript
 		$this->doc->JScode = '
-			<script language="javascript" type="text/javascript">
-				script_ended = 0;
-				function jumpToUrl(URL)	{
-					document.location = URL;
-				}
-			</script>
+			<link rel="stylesheet" type="text/css" href="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'templates/mod1_list.css') . '" />
+			<link rel="stylesheet" type="text/css" href="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/jquery.tooltip.css') . '" />
+			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/webtoolkit.scrollabletable.js') . '"></script>
+			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/jquery-1.2.3.js') . '"></script>
+			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/jquery.scrollable.js') . '"></script>
+			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/jquery.dimensions.js') . '"></script>
+			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/jquery.tooltip.js') . '"></script>
+			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'templates/mod1_list.js') . '"></script>
 		';
-
-		$this->content.=$this->doc->startPage($LANG->getLL("title"));
-		$this->content.=$this->doc->header($LANG->getLL("title"));
-		$this->content.=$this->doc->divider(5);
-
-		// Render content:
-		$this->moduleContent();
-
-		$this->content.=$this->doc->spacer(10);
+		$TemplateClass = t3lib_div::makeInstanceClassName('tx_l10nmgr_template');
+		$Template = new $TemplateClass(
+							$configurationObjectsArray, 
+							t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'templates/mod1_list.php')
+						);
+		$Template->setDocument($this->doc);
+		$Template->setPageId($this->id);
+		$this->content = $Template->render();
 	}
 
 	/**
@@ -124,63 +105,14 @@ class tx_l10nmgr_module1 extends t3lib_SCbase {
 	 *
 	 * @return	void
 	 */
-	function printContent()	{
-
-		$this->content.=$this->doc->endPage();
-		echo $this->content;
-	}
-
-	/**
-	 * Generates the module content: Renders a list of L10NMGR Configurations,
-	 * is aware of BE-permissions of the current user
-	 *
-	 * @return	void
-	 */
-	function moduleContent()	{
-		$configurations = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'*',
-			'tx_l10nmgr_cfg',
-			'1'.t3lib_BEfunc::deleteClause('tx_l10nmgr_cfg')
-		);
-		
-		$tableRow = '';
-		$tableRow.= '
-			<tr class="bgColor5 tableheader">
-				<td>Title:</td>
-				<td>Path:</td>
-				<td>Depth:</td>
-				<td>Tables:</td>
-				<td>Exclude:</td>
-				<td>Include</td>
-			</tr>
-		
-		';
-		
-		$this->perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
-		
-		foreach($configurations as $cfg)	{
-			if (is_array(t3lib_BEfunc::readPageAccess($cfg['pid'],$this->perms_clause)))	{
-				$tableRow.= '
-					<tr class="bgColor3">
-						<td nowrap="nowrap"><a href="'.htmlspecialchars('../cm1/index.php?id='.$cfg['uid'].'&srcPID='.$this->id).'"><u>'.htmlspecialchars($cfg['title']).'</u></a></td>
-						<td nowrap="nowrap">'.current(t3lib_BEfunc::getRecordPath($cfg['pid'], '1', 20, 50)).'</td>
-						<td>'.htmlspecialchars($cfg['depth']).'</td>
-						<td>'.htmlspecialchars($cfg['tablelist']).'</td>
-						<td>'.htmlspecialchars($cfg['exclude']).'</td>
-						<td>'.htmlspecialchars($cfg['include']).'</td>
-					</tr>
-			
-				';
-			}
-		}
-		
-		$this->content.=$this->doc->section('Task configurations:','<table border="1" cellpadding="1" cellspacing="0">'.$tableRow.'</table>');
+	function printContent() {
+		print $this->content;
 	}
 }
 
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/mod1/index.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/mod1/index.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/mod1/index.php']);
 }
 

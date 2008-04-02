@@ -6,22 +6,37 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="title">L10N Manager</label>
-			<label index="function1">Function #1</label>
-			<label index="function2">Function #2</label>
-			<label index="function3">Function #3</label>
+			<label index="general.title">L10N Manager</label>
+			<label index="general.description.message">Lorem Ipsum is simply dummy text of the printing 
+            and 
+            typesetting industry. Lorem Ipsum has been the industry's 
+            standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</label>
+			<label index="general.list.configuration.title">Available configurations:</label>
+			<label index="general.list.headline.info.title">Info</label>
+			<label index="general.list.headline.title.title">Title</label>
+			<label index="general.list.headline.path.title">Path</label>
+			<label index="general.list.headline.depth.title">Depth</label>
+			<label index="general.list.headline.pid.title">PID</label>
+			<label index="general.list.headline.tables.title">Tables</label>
+			<label index="general.list.headline.exclude.title">Exclude</label>
+			<label index="general.list.headline.include.title">Include</label>
+            
+			<label index="general.list.infodetail.pid.title">Parent page: </label>
+			<label index="general.list.infodetail.title.title">Title: </label>
+			<label index="general.list.infodetail.filenameprefix.title">Filename: </label>
+			<label index="general.list.infodetail.depth.title">Depth: </label>
+			<label index="general.list.infodetail.sourceLangStaticId.title">Language: </label>
+			<label index="general.list.infodetail.tablelist.title">Tables: </label>
+			<label index="general.list.infodetail.exclude.title">Exclude: </label>
+			<label index="general.list.infodetail.include.title">Include: </label>
+			<label index="general.list.infodetail.displaymode.title">displaymode: </label>
+			<label index="general.list.infodetail.incfcewithdefaultlanguage.title">Include FCE width default language: </label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">L10N-Manager</label>
-			<label index="function1">Function #1</label>
-			<label index="function2">Function #2</label>
-			<label index="function3">Function #3</label>
 		</languageKey>
 		<languageKey index="it" type="array">
 			<label index="title">L10N Manager</label>
-			<label index="function1">Function #1</label>
-			<label index="function2">Function #2</label>
-			<label index="function3">Function #3</label>
 		</languageKey>
 	</data>
 	<orig_hash type="array">
