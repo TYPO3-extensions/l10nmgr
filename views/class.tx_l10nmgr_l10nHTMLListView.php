@@ -138,8 +138,11 @@ class tx_l10nmgr_l10nHTMLListView {
 										$fieldCells[] = $edit && $this->modeWithInlineEdit ? ($tData['fieldType']==='text' ? '<textarea name="'.htmlspecialchars('translation['.$table.']['.$elementUid.']['.$key.']').'" cols="60" rows="5">'.t3lib_div::formatForTextarea($tData['translationValue']).'</textarea>' : '<input name="'.htmlspecialchars('translation['.$table.']['.$elementUid.']['.$key.']').'" value="'.htmlspecialchars($tData['translationValue']).'" size="60" />') : nl2br(htmlspecialchars($tData['translationValue']));
 										$fieldCells[] = $diff;
 									
-										reset($tData['previewLanguageValues']);
-										if ($page['header']['prevLang']) $fieldCells[] = nl2br(htmlspecialchars(current($tData['previewLanguageValues'])));
+										
+										if ($page['header']['prevLang']) {
+											reset($tData['previewLanguageValues']);
+											$fieldCells[] = nl2br(htmlspecialchars(current($tData['previewLanguageValues'])));
+										}
 
 										$FtableRows[] = '<tr><td>'.implode('</td><td>',$fieldCells).'</td></tr>';
 									}
