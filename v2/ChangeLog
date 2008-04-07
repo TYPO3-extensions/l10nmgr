@@ -1,3 +1,8 @@
+2008-04-07 Daniel Zielinski <d.zielinski@l10ntech.de>
+	
+	* Now preserving tables during import
+	* Convert <br /> to <br> before import
+
 2008-03-13 Daniel Zielinski <d.zielinski@l10ntech.de>
 	
 	* Fixed import. 
