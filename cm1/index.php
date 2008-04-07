@@ -930,17 +930,18 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 								list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
 								if ($fieldName == "bodytext") { //substitute check with rte enabled fields from TCA
 									$translationValue=$row['XMLvalue'];
+								        $translationValue=preg_replace('/<br( )?\/>/i','<br>',$translationValue);
 
 									//fixed setting of Parser (TO-DO set it via typoscript)	
 									$parseHTML->procOptions['typolist']=FALSE;
 									$parseHTML->procOptions['typohead']=FALSE;
 									$parseHTML->procOptions['keepPDIVattribs']=TRUE;
 									$parseHTML->procOptions['dontConvBRtoParagraph']=TRUE;
+									$parseHTML->procOptions['preserveTables']=TRUE;
 									//$parseHTML->procOptions['preserveTags'].=',br';
 									if (!is_array($parseHTML->procOptions['HTMLparser_db.'])) {
 										$parseHTML->procOptions['HTMLparser_db.']=array();
 									}
-									$parseHTML->procOptions['HTMLparser_db.']['xhtml_cleaning']=TRUE;
 									//trick to preserve strongtags
 									$parseHTML->procOptions['denyTags']='strong';
 									//$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
