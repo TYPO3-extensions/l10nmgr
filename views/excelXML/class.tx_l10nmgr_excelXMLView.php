@@ -22,7 +22,7 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractExportView.php');
 
 /**
  * excelXML: Renders the excel XML
@@ -31,11 +31,7 @@
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
-class tx_l10nmgr_excelXMLView {
-
-	
-	var $l10ncfgObj;	// 
-	var $sysLang;
+class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 	
 	//internal flags:
 	var $modeOnlyChanged=FALSE;
@@ -51,10 +47,6 @@ class tx_l10nmgr_excelXMLView {
 		
 	}
 	
-	function setModeOnlyChanged() {
-		$this->modeOnlyChanged=TRUE;
-	}
-	
 	/**
 	 * Render the excel XML export
 	 *
@@ -65,11 +57,12 @@ class tx_l10nmgr_excelXMLView {
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
 		$accum=$accumObj->getInfoArray();	
-		
+
 		$output = array();
 
 			// Traverse the structure and generate HTML output:
 		foreach($accum as $pId => $page)	{
+						
 			$output[]= '
 			<!-- Page header -->
 		   <Row>
@@ -162,7 +155,9 @@ class tx_l10nmgr_excelXMLView {
 		$excelXML = t3lib_div::getUrl('../views/excelXML/excel_template.xml');
 		$excelXML = str_replace('###INSERT_ROWS###',implode('', $output), $excelXML);
 		$excelXML = str_replace('###INSERT_ROW_COUNT###',count($output), $excelXML);
-
+		
+		
+		$this->saveExportInformation($accumObj,$accum);
 		
 		return $excelXML;
 		exit;
@@ -170,7 +165,6 @@ class tx_l10nmgr_excelXMLView {
 	
 	function getFileName() {
 		return 'excel_export_'.$this->sysLang.'_'.date('dmy-Hi').'.xml';
-		
 	}
 	
 	/**

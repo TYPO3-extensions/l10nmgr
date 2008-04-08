@@ -24,6 +24,7 @@
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_xmltools.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf8tools.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractExportView.php');
 
 /**
  * CATXMLView: Renders the XML for the use for translation agencies
@@ -34,7 +35,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
-class tx_l10nmgr_CATXMLView {
+class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 
 	/**
 	 * @var	array		$internalMessges		Part of XML with fail logging information content elements
@@ -45,16 +46,6 @@ class tx_l10nmgr_CATXMLView {
 	 * @var	integer		$forcedSourceLanguage		Overwrite the default language uid with the desired language to export
 	 */
 	var $forcedSourceLanguage = false;
-
-	/**
-	 * @var	tx_l10nmgr_l10nConfiguration		$l10ncfgObj		The language configuration object
-	 */
-	var $l10ncfgObj;
-
-	/**
-	 * @var	integer		$sysLang		The sys_language_uid of language to export
-	 */
-	var $sysLang;
 
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $sysLang) {
 
@@ -82,7 +73,6 @@ class tx_l10nmgr_CATXMLView {
 			$accumObj->setForcedPreviewLanguage($this->forcedSourceLanguage);
 		}
 		$accum=$accumObj->getInfoArray();
-
 		$errorMessage=array();	
 		$xmlTool= t3lib_div::makeInstance("tx_l10nmgr_xmltools");
 		$output = array();
@@ -189,11 +179,6 @@ class tx_l10nmgr_CATXMLView {
 		// Setting filename:
 		$filename =  $fileNamePrefix . '_' . $staticLangArr['lg_iso_2'] . '_' . date('dmy-His').'.xml';
 		return $filename;
-	}
-
-
-	function setModeOnlyChanged() {
-		$this->modeOnlyChanged=TRUE;
 	}
 
 	/**
