@@ -45,6 +45,22 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 	)
 );
 
+$TCA["tx_l10nmgr_exportdata"] = Array (
+	"ctrl" => Array (
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg',		
+		'label' => 'title',
+		'l10ncfg_id' => 'l10ncfg_id',
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'cruser_id' => 'cruser_id',
+		"default_sortby" => "ORDER BY title",
+		"delete" => "deleted",	
+		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_cfg.gif",
+	),
+	"feInterface" => Array (
+		"fe_admin_fieldList" => "title, l10ncfg_id, crdate, delete",
+	)
+);
 
 if (TYPO3_MODE=="BE")	{
 	$GLOBALS["TBE_MODULES_EXT"]["xMOD_alt_clickmenu"]["extendCMclasses"][]=array(

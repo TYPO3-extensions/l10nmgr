@@ -67,3 +67,24 @@ CREATE TABLE tx_l10nmgr_priorities (
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 );
+
+#
+# Table structure for table 'tx_l10nmgr_exportdata'
+#
+CREATE TABLE tx_l10nmgr_exportdata (
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+	l10ncfg_id int(11) DEFAULT '0' NOT NULL,
+	tstamp int(11) DEFAULT '0' NOT NULL,
+	crdate int(11) DEFAULT '0' NOT NULL,
+	cruser_id int(11) DEFAULT '0' NOT NULL,
+	deleted tinyint(4) DEFAULT '0' NOT NULL,
+	title tinytext NOT NULL,
+	sys_language_uid blob NOT NULL,
+	translation_lang blob NOT NULL,
+	tablelist varchar(80) DEFAULT '' NOT NULL,
+	exportType blob NOT NULL,
+	filename text NOT NULL,
+	
+	PRIMARY KEY (uid),
+);

@@ -1,3 +1,9 @@
+2008-04-07 Fabian Seltmann <fs@marketing-factory.de>
+	* Included views/class.tx_l10nmgr_abstractExportView.php
+	* Added new Table tx_l10nmgr_exportdata
+	* Added new Folder for XML exports
+	* Added new function saveExportInformation() for saving information of an export
+
 2008-03-28 Michael Klapper <klapper@aoemedia.de>
 	* Changed user interface on mod1
 	** Added some templates (html, css, js)
