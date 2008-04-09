@@ -46,6 +46,8 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 * @var	integer		$forcedSourceLanguage		Overwrite the default language uid with the desired language to export
 	 */
 	var $forcedSourceLanguage = false;
+	
+	var $exportType = '1';
 
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $sysLang) {
 		parent::__construct($l10ncfgObj, $sysLang);			
@@ -157,6 +159,8 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		$XML .= implode('', $output) . "\n";
 		$XML .= "</TYPO3LOC>"; 
 
+		$this->saveExportFile($XML);
+		
 		return $XML;
 	}
 

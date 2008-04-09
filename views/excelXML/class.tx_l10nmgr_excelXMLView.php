@@ -33,11 +33,13 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  */
 class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 	
+	//internal flags:
+	var $modeOnlyChanged=FALSE;
 	
+	var $exportType = '0';
 	
 	function tx_l10nmgr_excelXMLView($l10ncfgObj, $sysLang) {
 		parent::__construct($l10ncfgObj, $sysLang);		
-		
 	}
 	
 	/**
@@ -149,8 +151,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 		$excelXML = str_replace('###INSERT_ROWS###',implode('', $output), $excelXML);
 		$excelXML = str_replace('###INSERT_ROW_COUNT###',count($output), $excelXML);
 		
-		
-		$this->saveExportInformation($accumObj,$accum);
+		$this->saveExportFile($excelXML);
 		
 		return $excelXML;
 		exit;

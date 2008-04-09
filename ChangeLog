@@ -1,7 +1,16 @@
+2008-04-09 Fabian Seltmann <fs@marketing-factory.de>
+	* first modifications for a view in the backend, it doesn`t work until now.
+	* call the function checkExports() in cm1/index.php
+
 2008-04-09 Daniel Pötzinger <poetzinger@aoemedia.de>
 	* small modifiktions to abstraktExportView (add constructor)
 	* let HTMLListView also extend abstraktExportView
 	
+2008-04-08 Fabian Seltmann <fs@marketing-factory.de>
+	* Added the function checkExports if an export exists.
+	* Added the function saveExportFile to save the xml files
+	* Added the function getExportType
+	* Added the function getFilename to save the export
 
 2008-04-07 Fabian Seltmann <fs@marketing-factory.de>
 	* Included views/class.tx_l10nmgr_abstractExportView.php

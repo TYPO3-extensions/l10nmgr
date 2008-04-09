@@ -187,4 +187,54 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 		"1" => Array("showitem" => "")
 	)
 );
+
+$TCA["tx_l10nmgr_exportdata"] = Array (
+	"ctrl" => $TCA["tx_l10nmgr_exportdata"]["ctrl"],
+	"interface" => Array (
+		"showRecordFieldList" => "title,sourceLangStaticId,tablelist,exclude,incfcewithdefaultlanguage"
+	),
+	"feInterface" => $TCA["tx_l10nmgr_exportdata"]["feInterface"],
+	"columns" => Array (
+		"title" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.title",
+			"config" => Array (
+				"type" => "input",
+				"size" => "48",
+				"eval" => "required",
+			)
+		),
+		"tablelist" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.tablelist",
+			"config" => Array (
+				"type" => "input",
+				"size" => "48",
+			)
+		),
+		"sourceLangStaticId" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.sourceLang",
+			"displayCond" => "EXT:static_info_tables:LOADED:true",
+			"config" => Array (
+				"type" => "input",
+				"size" => "48",
+			)
+		),
+		"incfcewithdefaultlanguage" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.incfcewithdefaultall",
+			"config" => Array (
+				"type" => "input",
+				"size" => "48",
+			)
+		),
+	),
+	"types" => Array (
+		"0" => Array("showitem" => "title,filenameprefix;;;;2-2-2, depth;;;;3-3-3, sourceLangStaticId, tablelist, exclude, include, displaymode, incfcewithdefaultlanguage")
+	),
+	"palettes" => Array (
+		"1" => Array("showitem" => "")
+	)
+);
 ?>

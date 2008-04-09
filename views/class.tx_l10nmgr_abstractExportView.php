@@ -3,6 +3,9 @@
 *  Copyright notice
 *
 *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
+* 
+*  @author	Fabian Seltmann <fs@marketing-factory.de>
+* 
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -45,21 +48,39 @@ class tx_l10nmgr_abstractExportView {
 	var $modeOnlyNew=FALSE;
 	
 	function __construct($l10ncfgObj, $sysLang) {	
-		$this->sysLang=$sysLang;
-		$this->l10ncfgObj=$l10ncfgObj;		
+		$this->sysLang = $sysLang;
+		$this->l10ncfgObj = $l10ncfgObj;		
 	}
 	
-	function setModeOnlyChanged() {		
+	function getExportType() {
+		return $exportType;
+	}
+
+	function setModeOnlyChanged() {
+		
 		$this->modeOnlyChanged=TRUE;
 	}
 	function setModeOnlyNew() {		
 		$this->modeOnlyNew=TRUE;
 	}
 	
-	// save the information of the export in the database table 'tx_l10nmgr_exportdata'
+	/**
+	 * create a filename to save the File
+	 */ 
+	function getLocalFilename(){
+		if($this->exportType == '0'){
+			$fileType = 'excel_export_'; 
+		}else{
+			$fileType = 'catxml_export_';
+		}
+		return $fileType.$this->sysLang.'_'.date('dmy-Hi').'.xml';
+	}
+	
+	/**
+	 * save the information of the export in the database table 'tx_l10nmgr_sava_data'
+	 */ 
 	function saveExportInformation(){
 			
-		$sysLang = $this->sysLang;
 		// get current date
 		$date = time();
 		
@@ -67,29 +88,47 @@ class tx_l10nmgr_abstractExportView {
 		$sourceLanguageId=0;
 		
 		// query to insert the data in the database
-		$field_values = array('sys_language_uid' => $sourceLanguageId,
-													'translation_lang' => $sysLang,
+		$field_values = array(						'source_lang' => $sourceLanguageId,
+													'translation_lang' => $this->sysLang,
 													'crdate' => $date,
 													'tstamp' => $date,
 													'l10ncfg_id' => $this->l10ncfgObj->getData('uid'),
 													'pid' => $this->l10ncfgObj->getData('pid'),
 													'tablelist' => $this->l10ncfgObj->getData('tablelist'),
 													'title' => $this->l10ncfgObj->getData('title'),
-													'cruser_id' => $this->l10ncfgObj->getData('cruser_id'));
+													'cruser_id' => $this->l10ncfgObj->getData('cruser_id'),
+													'filename' => $this->getLocalFilename(),
+													'exportType' => $this->exportType);
+													
 		$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_l10nmgr_exportdata', $field_values);
-
-		#t3lib_div::debug($GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_l10nmgr_exportdata', $field_values));
+		
+		#t3lib_div::debug();
 		return $res;
 	}
 	
-	// create a filename to save the File
-	function getLocalFilename(){
+	/**
+	 * checks if an export exists
+	 *
+	 */
+	function checkExports(){
 		
+		$sysLang = $this->sysLang;	
+		
+		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery('l10ncfg_id,exportType,translation_lang','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$sysLang);
+		$numRows = mysql_num_rows($result);
+		if ($numRows > 0){
+			return FALSE;
+		}else{
+			return TRUE;
+		}
 	}
 	
-	// save the exported files in the file /uploads/tx_10lnmgr/saved_files/
-	function saveFile(){
-		
+	/**
+	 *  save the exported files in the file /uploads/tx_10lnmgr/saved_files/
+	 */
+	function saveExportFile($fileContent){
+		$fileExportName = '../../../../uploads/tx_l10nmgr/saved_files/'.$this->getLocalFilename();
+		file_put_contents($fileExportName,$fileContent);
 	}
 	
 	/**
