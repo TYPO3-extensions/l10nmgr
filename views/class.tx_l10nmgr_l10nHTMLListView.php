@@ -23,6 +23,7 @@
 ***************************************************************/
 
 
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractExportView.php');
 
 /**
  * l10nHTMLListView:
@@ -36,7 +37,7 @@
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
-class tx_l10nmgr_l10nHTMLListView {
+class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 
 	
 	var $l10ncfgObj;	// 
@@ -44,24 +45,17 @@ class tx_l10nmgr_l10nHTMLListView {
 	
 
 	//internal flags:
-	var $modeOnlyChanged=FALSE;
 	var $modeWithInlineEdit=FALSE;
 	var $modeShowEditLinks=FALSE;
 	
 	function tx_l10nmgr_l10nHTMLListView($l10ncfgObj, $sysLang) {
-		global $BACK_PATH;
-		$this->sysLang=$sysLang;
-		$this->l10ncfgObj=$l10ncfgObj;
-		
+		global $BACK_PATH;		
 		$this->doc = t3lib_div::makeInstance('noDoc');
 		$this->doc->backPath = $BACK_PATH;
+		parent::__construct($l10ncfgObj, $sysLang);				
+	}
+	
 		
-	}
-	
-	function setModeOnlyChanged() {
-		$this->modeOnlyChanged=TRUE;
-	}
-	
 	function setModeWithInlineEdit() {
 		$this->modeWithInlineEdit=TRUE;		
 	}
@@ -196,18 +190,7 @@ class tx_l10nmgr_l10nHTMLListView {
 	}
 	
 	
-	/**
-	 * Diff-compare markup
-	 *
-	 * @param	string		Old content
-	 * @param	string		New content
-	 * @return	string		Marked up string.
-	 */
-	function diffCMP($old, $new)	{
-			// Create diff-result:
-		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
-		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
-	}
+	
 	
 }
 

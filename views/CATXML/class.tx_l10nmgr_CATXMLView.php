@@ -48,13 +48,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	var $forcedSourceLanguage = false;
 
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $sysLang) {
-
-		global $BACK_PATH;
-		$this->sysLang = $sysLang;
-		$this->l10ncfgObj=$l10ncfgObj;
-
-		$this->doc = t3lib_div::makeInstance('noDoc');
-		$this->doc->backPath = $BACK_PATH;
+		parent::__construct($l10ncfgObj, $sysLang);			
 	}
 
 
