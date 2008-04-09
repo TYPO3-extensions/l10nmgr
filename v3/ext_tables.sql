@@ -80,7 +80,7 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	cruser_id int(11) DEFAULT '0' NOT NULL,
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	title tinytext NOT NULL,
-	sys_language_uid blob NOT NULL,
+	source_lang blob NOT NULL,
 	translation_lang blob NOT NULL,
 	tablelist varchar(80) DEFAULT '' NOT NULL,
 	exportType blob NOT NULL,

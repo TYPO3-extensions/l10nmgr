@@ -27,6 +27,7 @@
  * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
  * @author	Daniel Zielinski <d.zielinski@l10ntech.de>
  * @author	Daniel Pötzinger <poetzinger@aoemedia.de>
+ * @author	Fabian Seltmann <fs@marketing-factory.de>
  */
 /**
  * [CLASS/FUNCTION INDEX of SCRIPT]
@@ -62,6 +63,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_l10ncfgDet
 require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_l10nHTMLListView.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'views/excelXML/class.tx_l10nmgr_excelXMLView.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'views/CATXML/class.tx_l10nmgr_CATXMLView.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractExportView.php');
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nConfiguration.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nBaseService.php');
@@ -315,6 +317,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		}
 		// If export of XML is asked for, do that (this will exit and push a file for download)
 		if (t3lib_div::_POST('export_xml')) {
+					
 			// Render the XML
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
 			$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage);
@@ -325,8 +328,16 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			if ($this->MOD_SETTINGS["onlyChangedContent"]) {
 				$viewClass->setModeOnlyChanged();
 			}
-			$this->_downloadXML($viewClass);
+			//Check the export
+			if($viewClass->checkExports() == FALSE){
+				echo('Schon exportiert!');
+				exit;	
+			}else{
+				$viewClass->saveExportInformation();
+				$this->_downloadXML($viewClass);	
+			}
 		}
+				
 		return $info;
 	}
 
@@ -356,10 +367,19 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 			// If export of XML is asked for, do that (this will exit and push a file for download)
 		if (t3lib_div::_POST('export_excel')) {
+			
 			// Render the XML
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
 			$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage);
-			$this->_downloadXML($viewClass);
+			
+			//Check the export
+			if($viewClass->checkExports() == FALSE){
+				echo('Schon exportiert!');
+				exit;	
+			}else{
+				$viewClass->saveExportInformation();
+				$this->_downloadXML($viewClass);	
+			}
 		}
 
 		return $info;
@@ -420,7 +440,6 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 * it is used for excelXML and CATXML
 	 **/
 	function _downloadXML($xmlView) {
-
 		// Setting filename:
 		$filename = $xmlView->getFileName();
 		$mimeType = 'text/xml';

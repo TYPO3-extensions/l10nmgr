@@ -47,18 +47,21 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 
 $TCA["tx_l10nmgr_exportdata"] = Array (
 	"ctrl" => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg',		
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_export',		
 		'label' => 'title',
 		'l10ncfg_id' => 'l10ncfg_id',
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
+		'translation_lang' => 'translation_lang',
+		'source_lang' => 'source_lang',
 		"default_sortby" => "ORDER BY title",
-		"delete" => "deleted",	
+		"delete" => "deleted",
+		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",	
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_cfg.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "title, l10ncfg_id, crdate, delete",
+		"fe_admin_fieldList" => "title, l10ncfg_id, crdate, delete, exclude",
 	)
 );
 

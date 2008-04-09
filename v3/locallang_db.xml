@@ -29,6 +29,7 @@
 			<label index="tx_l10nmgr_cfg.exclude">Exclude elements (comma list of &quot;table:uid&quot; pairs):</label>
 			<label index="tx_l10nmgr_cfg.include">Include elements (comma list of &quot;table:uid&quot; pairs):</label>
 			<label index="tx_l10nmgr_cfg.sourceLang">Source language:</label>
+			<label index="tx_l10nmgr_export">L10N Manager Exports</label>
 			<label index="tx_l10nmgr_priorities">Localization Priority</label>
 			<label index="tx_l10nmgr_priorities.title">Title:</label>
 			<label index="tx_l10nmgr_priorities.description">Description:</label>
@@ -58,6 +59,7 @@
 			<label index="tx_l10nmgr_cfg.exclude">Auszuschließende Elemente (kommagetrennte Werte: &quot;Tabelle:uid, Tabelle:uid&quot;)</label>
 			<label index="tx_l10nmgr_cfg.include">Einzuschließende Elemente (kommagetrennte Werte: &quot;Tabelle:uid, Tabelle:uid&quot;)</label>
 			<label index="tx_l10nmgr_cfg.sourceLang">Ausgangssprache</label>
+			<label index="tx_l10nmgr_export">L10N-Manager exportierte Dateien</label>
 			<label index="tx_l10nmgr_priorities">Priorität</label>
 			<label index="tx_l10nmgr_priorities.title">Titel:</label>
 			<label index="tx_l10nmgr_priorities.description">Beschreibung:</label>
@@ -83,6 +85,7 @@
 			<label index="tx_l10nmgr_cfg.exclude">Elementi da escludere (Lista CSV: &quot;tabella:uid, tabella:uid,...&quot;)</label>
 			<label index="tx_l10nmgr_cfg.include">Elementi da includere (Lista CSV: &quot;tabella:uid, tabella:uid,...&quot;)</label>
 			<label index="tx_l10nmgr_cfg.sourceLang">Lingua di partenza:</label>
+			<label index="tx_l10nmgr_export">L10N Manager Exports</label>
 			<label index="tx_l10nmgr_priorities">Priorità della localizzazione</label>
 			<label index="tx_l10nmgr_priorities.title">Titulo:</label>
 			<label index="tx_l10nmgr_priorities.description">Descrizione:</label>
