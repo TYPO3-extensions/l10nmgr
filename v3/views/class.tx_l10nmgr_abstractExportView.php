@@ -22,6 +22,10 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+
+/**
+* abstrakt Base class for rendering the export or htmllist of a l10ncfg 
+**/
 class tx_l10nmgr_abstractExportView {
 
 	/**
@@ -33,24 +37,45 @@ class tx_l10nmgr_abstractExportView {
 	 * @var	integer		$sysLang		The sys_language_uid of language to export
 	 */
 	var $sysLang;
-
-	function setModeOnlyChanged() {
-		
-		$this->modeOnlyChanged=TRUE;
+	
+	/**
+	*	 flags for controlling the fields which should render in the output:
+	*/	
+	var $modeOnlyChanged=FALSE;
+	var $modeOnlyNew=FALSE;
+	
+	function __construct($l10ncfgObj, $sysLang) {	
+		$this->sysLang=$sysLang;
+		$this->l10ncfgObj=$l10ncfgObj;		
 	}
 	
-	// save the information of the export in the database table 'tx_l10nmgr_sava_data'
-	function saveExportInformation($accumObj,$accum){
+	function setModeOnlyChanged() {		
+		$this->modeOnlyChanged=TRUE;
+	}
+	function setModeOnlyNew() {		
+		$this->modeOnlyNew=TRUE;
+	}
+	
+	// save the information of the export in the database table 'tx_l10nmgr_exportdata'
+	function saveExportInformation(){
 			
-		// information for database 
-		$getInforamtionExportData = array();
-		$getInforamtionExportData = $this->l10ncfgObj->l10ncfg;
 		$sysLang = $this->sysLang;
 		// get current date
 		$date = time();
 		
+		//To-Do get source language if another than default is selected
+		$sourceLanguageId=0;
+		
 		// query to insert the data in the database
-		$field_values = array('sys_language_uid' => $getInforamtionExportData['ncfcewithdefaultlanguage'],'translation_lang' => $sysLang,'crdate' => $date,'tstamp' => $date,'l10ncfg_id' => $getInforamtionExportData['uid'],'pid' => $getInforamtionExportData['pid'],'tablelist' => $getInforamtionExportData['tablelist'],'title' => $getInforamtionExportData['title'],'cruser_id' => $getInforamtionExportData['cruser_id']);
+		$field_values = array('sys_language_uid' => $sourceLanguageId,
+													'translation_lang' => $sysLang,
+													'crdate' => $date,
+													'tstamp' => $date,
+													'l10ncfg_id' => $this->l10ncfgObj->getData('uid'),
+													'pid' => $this->l10ncfgObj->getData('pid'),
+													'tablelist' => $this->l10ncfgObj->getData('tablelist'),
+													'title' => $this->l10ncfgObj->getData('title'),
+													'cruser_id' => $this->l10ncfgObj->getData('cruser_id'));
 		$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_l10nmgr_exportdata', $field_values);
 
 		#t3lib_div::debug($GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_l10nmgr_exportdata', $field_values));
@@ -65,6 +90,19 @@ class tx_l10nmgr_abstractExportView {
 	// save the exported files in the file /uploads/tx_10lnmgr/saved_files/
 	function saveFile(){
 		
+	}
+	
+	/**
+	 * Diff-compare markup
+	 *
+	 * @param	string		Old content
+	 * @param	string		New content
+	 * @return	string		Marked up string.
+	 */
+	function diffCMP($old, $new)	{
+			// Create diff-result:
+		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
+		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
 	}
 	
 }

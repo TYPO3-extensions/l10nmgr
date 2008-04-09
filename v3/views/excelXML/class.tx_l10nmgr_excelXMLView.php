@@ -33,17 +33,10 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  */
 class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 	
-	//internal flags:
-	var $modeOnlyChanged=FALSE;
 	
 	
 	function tx_l10nmgr_excelXMLView($l10ncfgObj, $sysLang) {
-		global $BACK_PATH;
-		$this->sysLang=$sysLang;
-		$this->l10ncfgObj=$l10ncfgObj;
-		
-		$this->doc = t3lib_div::makeInstance('noDoc');
-		$this->doc->backPath = $BACK_PATH;
+		parent::__construct($l10ncfgObj, $sysLang);		
 		
 	}
 	
@@ -167,18 +160,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 		return 'excel_export_'.$this->sysLang.'_'.date('dmy-Hi').'.xml';
 	}
 	
-	/**
-	 * Diff-compare markup
-	 *
-	 * @param	string		Old content
-	 * @param	string		New content
-	 * @return	string		Marked up string.
-	 */
-	function diffCMP($old, $new)	{
-			// Create diff-result:
-		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
-		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
-	}
+	
 	
 }
 
