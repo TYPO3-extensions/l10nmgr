@@ -374,7 +374,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			
 			//Check the export
 			if($viewClass->checkExports() == FALSE){
-				echo('Schon exportiert!');
+				echo('schon exportiert!');
 				exit;	
 			}else{
 				$viewClass->saveExportInformation();

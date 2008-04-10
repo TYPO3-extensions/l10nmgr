@@ -1,3 +1,6 @@
+2008-04-10 Fabian Seltmann <fs@marketing-factory.de>
+	* show now exported data in the backend where the configuration is set.
+
 2008-04-09 Fabian Seltmann <fs@marketing-factory.de>
 	* first modifications for a view in the backend, it doesn`t work until now.
 	* call the function checkExports() in cm1/index.php
