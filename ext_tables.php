@@ -53,6 +53,7 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
+		'source_lang' => 'source_lang',
 		'translation_lang' => 'translation_lang',
 		'source_lang' => 'source_lang',
 		"default_sortby" => "ORDER BY title",
@@ -61,7 +62,7 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_cfg.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "title, l10ncfg_id, crdate, delete, exclude",
+		"fe_admin_fieldList" => "title, source_lang, l10ncfg_id, crdate, delete, exclude",
 	)
 );
 

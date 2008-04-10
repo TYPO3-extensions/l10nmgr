@@ -191,7 +191,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 $TCA["tx_l10nmgr_exportdata"] = Array (
 	"ctrl" => $TCA["tx_l10nmgr_exportdata"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "title,sourceLangStaticId,tablelist,exclude,incfcewithdefaultlanguage"
+		"showRecordFieldList" => "title,crdate, tablelist,translation_lang,source_lang"
 	),
 	"feInterface" => $TCA["tx_l10nmgr_exportdata"]["feInterface"],
 	"columns" => Array (
@@ -202,36 +202,49 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 				"type" => "input",
 				"size" => "48",
 				"eval" => "required",
+				"readOnly" => 1,
+			)
+		),
+		"crdate" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.crdate",
+			"config" => Array (
+				"type" => "input",
+				"eval" => "date",
+				"size" => "48",
+				"readOnly" => 1,
 			)
 		),
 		"tablelist" => Array (
 			"exclude" => 1,
-			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.tablelist",
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.exporttablelist",
 			"config" => Array (
 				"type" => "input",
 				"size" => "48",
+				"readOnly" => 1,
 			)
 		),
-		"sourceLangStaticId" => Array (
+		"translation_lang" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.translationLang",
+			"config" => Array (
+				"type" => "input",
+				"size" => "48",
+				"readOnly" => 1,
+			)
+		),
+		"source_lang" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.sourceLang",
-			"displayCond" => "EXT:static_info_tables:LOADED:true",
 			"config" => Array (
 				"type" => "input",
 				"size" => "48",
-			)
-		),
-		"incfcewithdefaultlanguage" => Array (
-			"exclude" => 1,
-			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.incfcewithdefaultall",
-			"config" => Array (
-				"type" => "input",
-				"size" => "48",
+				"readOnly" => 1,
 			)
 		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "title,filenameprefix;;;;2-2-2, depth;;;;3-3-3, sourceLangStaticId, tablelist, exclude, include, displaymode, incfcewithdefaultlanguage")
+		"0" => Array("showitem" => "title, crdate, translation_lang, tablelist, source_lang")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
