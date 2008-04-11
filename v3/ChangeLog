@@ -1,3 +1,6 @@
+2008-04-11 Michael Klapper <klapper@aoemedia.de>
+	* Avoid wrapping of dead a-Tag with span to highlight dead links (should be only displayed in the RTEeditor)
+
 2008-04-10 Fabian Seltmann <fs@marketing-factory.de>
 	* show now exported data in the backend where the configuration is set.
 
