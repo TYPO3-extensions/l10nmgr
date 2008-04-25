@@ -8,12 +8,12 @@ global $BACK_PATH, $LANG;
 ?>
 
 
-<?php echo $this->getDocument()->startPage($LANG->getLL('general.title')); ?>
-<?php echo $this->getDocument()->header($LANG->getLL('general.title')); ?>
-<?php echo $this->getDocument()->section('', nl2br($LANG->getLL('general.description.message'))); ?>
-<?php echo $this->getDocument()->section($LANG->getLL('general.list.configuration.title'),''); ?>
+<?php $gD1 = $this->getDocument(); echo $gD1->startPage($LANG->getLL('general.title')); ?>
+<?php $gD2 = $this->getDocument(); echo $gD2->header($LANG->getLL('general.title')); ?>
+<?php $gD3 = $this->getDocument(); echo $gD3->section('', nl2br($LANG->getLL('general.description.message'))); ?>
+<?php $gD4 = $this->getDocument(); echo $gD4->section($LANG->getLL('general.list.configuration.title'),''); ?>
 
-<?php echo $this->getDocument()->spacer(5); ?>
+<?php $gD5 = $this->getDocument(); echo $gD5->spacer(5); ?>
 
 <table id="translationObjectList" class="scrollable" border="1">
 	<thead>
@@ -36,7 +36,7 @@ global $BACK_PATH, $LANG;
 		<tr class="bgColor3">
 			<td align="center">
 				<a class="tooltip" href="#<?php echo 'tooltip_' . $configurationElementArray['uid']; ?>">
-					<?php echo $this->getDocument()->icons(1); ?>
+					<?php $gD6 = $this->getDocument(); $gD6->icons(1); ?>
 				</a>
 
 				<?php $parentPageArray = t3lib_BEfunc::getRecord('pages',$configurationElementArray['pid']); ?>
@@ -94,5 +94,5 @@ global $BACK_PATH, $LANG;
 	</tbody>
 </table>
 
-<?php echo $this->getDocument()->spacer(10); ?>
-<?php echo $this->getDocument()->endPage(); ?>
+<?php $gD8 = $this->getDocument(); echo $gD8->spacer(10); ?>
+<?php $gD9 = $this->getDocument(); echo $gD9->endPage(); ?>
