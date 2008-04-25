@@ -128,7 +128,7 @@ class tx_l10nmgr_abstractExportView {
 	 */
 	function saveExportFile($fileContent){
 		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/saved_files/'.$this->getLocalFilename();
-		file_put_contents($fileExportName,$fileContent);
+		t3lib_div::writeFile($fileExportName,$fileContent);
 	}
 
 	/**
