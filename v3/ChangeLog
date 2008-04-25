@@ -1,3 +1,6 @@
+2008-04-25 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Fixed PHP4 issue in templates/mod1_list.php preventing extension from working
+
 2008-04-17 Michael Klapper <klapper@aoemedia.de>
 	* Add PHPUnit tests based on im/export links
 
