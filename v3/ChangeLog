@@ -1,4 +1,9 @@
 2008-04-25 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added translations for German and Spanish
+	* Localization of cm1/index.php
+	* Added option: check for already exported contents
+
+2008-04-25 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Fixed PHP4 issue in views/class.tx_l10nmgr_abstractExportView.php (file_put_contents => t3lib_div::writeFile)
 
 2008-04-25 Daniel Zielinski <d.zielinski@l10ntech.de>

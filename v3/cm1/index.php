@@ -171,7 +171,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
 				$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
 
-				$this->content.=$this->doc->divider(25);
+				$this->content.=$this->doc->divider(15);
 				$this->content.=$this->doc->section($LANG->getLL('general.export.choose.action.title'),
 						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[lang]",$this->sysLanguage,$this->MOD_MENU["lang"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
 						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
@@ -180,7 +180,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 					// Render content:
 				if (!count($this->MOD_MENU['lang'])) {
-					$this->content.= $this->doc->section('ERROR','User has no access to edit any translations');
+					$this->content.= $this->doc->section('ERROR',$LANG->getLL('general.access.error.title'));
 				} else {
 					$this->moduleContent($l10ncfgObj);
 				}
@@ -207,12 +207,13 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	}
 
 	function inlineEditAction($l10ncfgObj) {
+		global $LANG, $BACK_PATH;
 
 		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 		$info='';
 		// Buttons:
-		$info.= '<input type="submit" value="Save" name="saveInline" onclick="return confirm(\'You are about to create/update ALL localizations in this form? Continue?\');" />';
-		$info.= '<input type="submit" value="Cancel" name="_" onclick="return confirm(\'You are about to discard any changes you made. Continue?\');" />';
+		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.save.button.title').'" name="saveInline" onclick="return confirm(\''.$LANG->getLL('inlineedit.save.alert.title').'\');" />';
+		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.cancel.button.title').'" name="_" onclick="return confirm(\''.$LANG->getLL('inlineedit.cancel.alert.title').'\');" />';
 
 		//simple init of translation object:
 		$translationData=t3lib_div::makeInstance('tx_l10nmgr_translationData');
@@ -258,7 +259,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 		// Buttons:
 		// Temporary links to settings files. Should be changed when download of L10N packages is available.
-		$info .= '<br/><br/>' . $this->doc->icons(1) . 
+		$info .= '<br/>';
+		$info .= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" /><br />';
+		$info .= '<br />'.$this->doc->header($LANG->getLL('file.settings.downloads.title'));
+		$info .= $this->doc->icons(1) . 
 			   $LANG->getLL('file.settings.available.title');
 
 		for( reset($allowedSettingFiles); list($settingId, $settingFileName) = each($allowedSettingFiles); ) {
@@ -272,17 +276,16 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			}
 		}
 
-		$info .= '<br/><br/>';
-		$info .= '<input type="submit" value="Refresh" name="_" /><br />';
-		$info .= $this->doc->header($LANG->getLL('export.xml.headline.title'));
+		$info .= '<br /><br />'.$this->doc->header($LANG->getLL('export.xml.headline.title'));
 		$_selectOptions=array('0'=>'-default-');
 		$_selectOptions=$_selectOptions+$this->MOD_MENU["lang"];
+		$info .= '<input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
 		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions);
 		$info .= '<br />';
-		$info .= '<input type="submit" value="Export" name="export_xml" /><br />';
+		$info .= '<input type="submit" value="Export" name="export_xml" /><br /><br /><br/>';
 		$info .= $this->doc->header($LANG->getLL('import.xml.headline.title'));
-		$info .= '<input type="checkbox" value="1" name="import_oldformat" />' . $LANG->getLL('import.xml.old-format.title') . '<br />';
-		$info .= '<input type="file" size="60" name="uploaded_import_file" /><br /><input type="submit" value="Import" name="import_xml" />';
+		$info .= '<input type="checkbox" value="1" name="import_oldformat" /> ' . $LANG->getLL('import.xml.old-format.title') . '<br />';
+		$info .= '<input type="file" size="60" name="uploaded_import_file" /><br /><input type="submit" value="Import" name="import_xml" /><br /><br /> ';
 		$info .= $this->doc->header($LANG->getLL('misc.messages.title'));
 
 		// Read uploaded file:
@@ -329,12 +332,12 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$viewClass->setModeOnlyChanged();
 			}
 			//Check the export
-			if($viewClass->checkExports() == FALSE){
-				echo('Schon exportiert!');
+			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
+				echo($LANG->getLL('export.process.duplicate.message'));
 				exit;	
 			}else{
 				$viewClass->saveExportInformation();
-				$this->_downloadXML($viewClass);	
+				$this->_downloadXML($viewClass);
 			}
 		}
 				
@@ -342,12 +345,14 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	}
 
 	function excelExportImportAction($l10ncfgObj) {
+		global $LANG, $BACK_PATH;
 
 		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 		// Buttons:
-		$info.= '<input type="submit" value="Refresh" name="_" />';
-		$info.= '<input type="submit" value="Export" name="export_excel" />';
-		$info.= '<input type="submit" value="Import" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
+		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" />';
+		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.export.xml.button.title').'" name="export_excel" />';
+		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.import.xml.button.title').'" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
+		$info .= '<br /><br /><input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
 
 			// Read uploaded file:
 		if (t3lib_div::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name'])) {
@@ -362,7 +367,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 			$service->saveTranslation($l10ncfgObj,$translationData);
 
-			$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>';
+			$info.='<br/><br/>'.$this->doc->icons(1).$LANG->getLL('import.success.message').'<br/><br/>';
 		}
 
 			// If export of XML is asked for, do that (this will exit and push a file for download)
@@ -373,8 +378,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage);
 			
 			//Check the export
-			if($viewClass->checkExports() == FALSE){
-				echo('schon exportiert!');
+			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
+				echo($LANG->getLL('export.process.duplicate.message'));
 				exit;	
 			}else{
 				$viewClass->saveExportInformation();
@@ -428,7 +433,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			break;
 
 			DEFAULT:	// Default display:
-				$subcontent = '<input type="submit" value="Refresh" name="_" />';
+				$subcontent = '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" />';
 			break;
 		} //switch block
 
