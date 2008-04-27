@@ -56,6 +56,10 @@
 			<label index="import.manager.error.language.message">'Export was taken from a diffrent language, please select correct language above! current: %s (required: %s)</label>
 
 			<label index="misc.messages.title">Messages:</label>
+
+			<label index="render_overview.nochange.message">No change.</label>
+			<label index="render_overview.new.message">NEW</label>
+			<label index="render_overview.nodiff.message">No diff available.</label>
 		</languageKey>
 
 		<languageKey index="de" type="array">
@@ -109,6 +113,10 @@
 			<label index="import.manager.error.language.message">'Export beinhaltet eine andere Sprache. Bitte wählen Sie die korrekte Sprache aus der obigen Liste aus! Aktuelle Sprache: %s (Erforderlich: %s)</label>
 
 			<label index="misc.messages.title">Meldungen:</label>
+
+			<label index="render_overview.nochange.message">Keine Änderung.</label>
+			<label index="render_overview.new.message">NEU</label>
+			<label index="render_overview.nodiff.message">Kein Diff verfügbar.</label>
 		</languageKey>
 
 		<languageKey index="es" type="array">
@@ -162,6 +170,10 @@
 			<label index="import.manager.error.language.message">'El exporte contiene otro idioma. Por favor, seleccione el idioma correcto en la lista superior! Idioma actual: %s (requerido: %s)</label>
 
 			<label index="misc.messages.title">Mensajes:</label>
+
+			<label index="render_overview.nochange.message">Ninguna modificación.</label>
+			<label index="render_overview.new.message">NUEVO</label>
+			<label index="render_overview.nodiff.message">Ningún Diff disponible.</label>
 		</languageKey>
 
 		<languageKey index="it" type="array">

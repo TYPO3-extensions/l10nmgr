@@ -11,6 +11,12 @@
 		<languageKey index="de" type="array">
 			<label index="title">Priorität der Übersetzungen:</label>
 		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="title">Priorité des traductions:</label>
+		</languageKey>
+		<languageKey index="es" type="array">
+			<label index="title">Prioridad de las traducciones:</label>
+		</languageKey>
 		<languageKey index="it" type="array">
 			<label index="title">Priorità delle traduzioni:</label>
 		</languageKey>
