@@ -29,11 +29,11 @@
 			<label index="tx_l10nmgr_cfg.exclude">Exclude elements (comma list of &quot;table:uid&quot; pairs):</label>
 			<label index="tx_l10nmgr_cfg.include">Include elements (comma list of &quot;table:uid&quot; pairs):</label>
 			<label index="tx_l10nmgr_cfg.sourceLang">Source language:</label>
-			<label index="tx_l10nmgr_cfg.translationLang">Translation language:</label>
+			<label index="tx_l10nmgr_cfg.translationLang">Target language:</label>
 			<label index="tx_l10nmgr_cfg.crdate">Date of export</label>
 			<label index="tx_l10nmgr_cfg.exporttablelist">Exported tables</label>
-			<label index="tx_l10nmgr_export">L10N Manager Exports</label>
-			<label index="tx_l10nmgr_priorities">Localization Priority</label>
+			<label index="tx_l10nmgr_export">L10N Manager exports</label>
+			<label index="tx_l10nmgr_priorities">Localization priority</label>
 			<label index="tx_l10nmgr_priorities.title">Title:</label>
 			<label index="tx_l10nmgr_priorities.description">Description:</label>
 			<label index="tx_l10nmgr_priorities.languages">Priority applies to languages:</label>
@@ -42,7 +42,7 @@
 		<languageKey index="de" type="array">
 			<label index="tx_l10nmgr_cfg">L10N-Manager Konfiguration</label>
 			<label index="tx_l10nmgr_cfg.title">Name:</label>
-			<label index="tx_l10nmgr_cfg.filenameprefix">Export Präfix:</label>
+			<label index="tx_l10nmgr_cfg.filenameprefix">Exportpräfix:</label>
 			<label index="tx_l10nmgr_cfg.depth.I.0">Nur diese Seite</label>
 			<label index="tx_l10nmgr_cfg.depth.I.1">1 Ebene</label>
 			<label index="tx_l10nmgr_cfg.depth.I.2">2 Ebenen</label>
@@ -58,19 +58,53 @@
 			<label index="tx_l10nmgr_cfg.tablelist.I.1">22</label>
 			<label index="tx_l10nmgr_cfg.tablelist.I.2">33</label>
 			<label index="tx_l10nmgr_cfg.tablelist.I.3">44</label>
-			<label index="tx_l10nmgr_cfg.tablelist">Zu exportierende Tabellen</label>
-			<label index="tx_l10nmgr_cfg.exclude">Auszuschließende Elemente (kommagetrennte Werte: &quot;Tabelle:uid, Tabelle:uid&quot;)</label>
-			<label index="tx_l10nmgr_cfg.include">Einzuschließende Elemente (kommagetrennte Werte: &quot;Tabelle:uid, Tabelle:uid&quot;)</label>
-			<label index="tx_l10nmgr_cfg.sourceLang">Ausgangssprache</label>
-			<label index="tx_l10nmgr_cfg.translationLang">Übersetzungssprache</label>
+			<label index="tx_l10nmgr_cfg.tablelist">Zu exportierende Tabellen:</label>
+			<label index="tx_l10nmgr_cfg.exclude">Auszuschließende Elemente (kommagetrennte Werte: &quot;Tabelle:uid, Tabelle:uid&quot;):</label>
+			<label index="tx_l10nmgr_cfg.include">Einzuschließende Elemente (kommagetrennte Werte: &quot;Tabelle:uid, Tabelle:uid&quot;):</label>
+			<label index="tx_l10nmgr_cfg.sourceLang">Ausgangssprache:</label>
+			<label index="tx_l10nmgr_cfg.translationLang">Zielsprache:</label>
 			<label index="tx_l10nmgr_cfg.crdate">Übersetzungsdatum</label>
-			<label index="tx_l10nmgr_cfg.exporttablelist">exportierte Tabellen</label>
-			<label index="tx_l10nmgr_export">L10N-Manager exportierte Dateien</label>
+			<label index="tx_l10nmgr_cfg.exporttablelist">Exportierte Tabellen</label>
+			<label index="tx_l10nmgr_export">Exportierte Dateien</label>
 			<label index="tx_l10nmgr_priorities">Priorität</label>
 			<label index="tx_l10nmgr_priorities.title">Titel:</label>
 			<label index="tx_l10nmgr_priorities.description">Beschreibung:</label>
-			<label index="tx_l10nmgr_priorities.languages">Proiorität für Sprachen:</label>
+			<label index="tx_l10nmgr_priorities.languages">Priorität für Sprachen:</label>
 			<label index="tx_l10nmgr_priorities.element">Element(e):</label>
+		</languageKey>
+		<languageKey index="es" type="array">
+			<label index="tx_l10nmgr_cfg">Configuración L10N Manager</label>
+			<label index="tx_l10nmgr_cfg.title">Título:</label>
+			<label index="tx_l10nmgr_cfg.filenameprefix">Prefijo del archivo de exporte:</label>
+			<label index="tx_l10nmgr_cfg.incfcewithdefaultall">Incluir FCE con idioma estándar:</label>			
+			<label index="tx_l10nmgr_cfg.depth.I.0">Sólo esta página</label>
+			<label index="tx_l10nmgr_cfg.depth.I.1">1 nivel</label>
+			<label index="tx_l10nmgr_cfg.depth.I.2">2 niveles</label>
+			<label index="tx_l10nmgr_cfg.depth.I.3">3 niveles</label>
+			<label index="tx_l10nmgr_cfg.depth.I.4">Infinito</label>
+			<label index="tx_l10nmgr_cfg.depth.I.-1">Página actual</label>
+			<label index="tx_l10nmgr_cfg.depth">Profundidad:</label>
+			<label index="tx_l10nmgr_cfg.displaymode.I.0">Visualizar TODOS los elementos  (lento y pesado)</label>
+			<label index="tx_l10nmgr_cfg.displaymode.I.1">Visualizar visión de conjunto con detalles (lento pero ligero)</label>
+			<label index="tx_l10nmgr_cfg.displaymode.I.2">Visualizar visión de conjunto sin detalles (rápido y ligero)</label>
+			<label index="tx_l10nmgr_cfg.displaymode">Modo diplay:</label>
+			<label index="tx_l10nmgr_cfg.tablelist.I.0">11</label>
+			<label index="tx_l10nmgr_cfg.tablelist.I.1">22</label>
+			<label index="tx_l10nmgr_cfg.tablelist.I.2">33</label>
+			<label index="tx_l10nmgr_cfg.tablelist.I.3">44</label>
+			<label index="tx_l10nmgr_cfg.tablelist">Tablas para exportar:</label>
+			<label index="tx_l10nmgr_cfg.exclude">Excluir elementos (lista de pares &quot;table:uid&quot; separada por comas):</label>
+			<label index="tx_l10nmgr_cfg.include">Incluir elementos (lista de pares &quot;table:uid&quot; separada por comas):</label>
+			<label index="tx_l10nmgr_cfg.sourceLang">Idioma de salida:</label>
+			<label index="tx_l10nmgr_cfg.translationLang">Idioma de llegada:</label>
+			<label index="tx_l10nmgr_cfg.crdate">Fecha del exporte</label>
+			<label index="tx_l10nmgr_cfg.exporttablelist">Tablas exportadas</label>
+			<label index="tx_l10nmgr_export">Exportes de L10N Manager</label>
+			<label index="tx_l10nmgr_priorities">Prioridad de localización</label>
+			<label index="tx_l10nmgr_priorities.title">Titulo:</label>
+			<label index="tx_l10nmgr_priorities.description">Descripción:</label>
+			<label index="tx_l10nmgr_priorities.languages">Prioridad applicada a los idiomas:</label>
+			<label index="tx_l10nmgr_priorities.element">Elemento(s):</label>
 		</languageKey>
 		<languageKey index="it" type="array">
 			<label index="tx_l10nmgr_cfg">Configurazione di L10N Manager</label>

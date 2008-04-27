@@ -11,7 +11,10 @@
 		<languageKey index="de" type="array">
 			<label index="cm1_title">L10N Export/Import</label>
 		</languageKey>
-		<languageKey index="t" type="array">
+		<languageKey index="es" type="array">
+			<label index="cm1_title">L10N exporte/importe</label>
+		</languageKey>
+		<languageKey index="it" type="array">
 			<label index="cm1_title">L10N Esportazione/Importazione</label>
 		</languageKey>
 	</data>

@@ -13,12 +13,17 @@
 		<languageKey index="de" type="array">
 			<label index="mlang_tabs_tab">L10N-Manager</label>
 			<label index="mlang_labels_tabdescr">Lokalisierungs-Manager</label>
-			<label index="mlang_labels_tablabel">Export/Import übersetzbarer Inhalte</label>
+			<label index="mlang_labels_tablabel">Export übersetzbarer Inhalte/Import übersetzter Inhalte</label>
+		</languageKey>
+		<languageKey index="es" type="array">
+			<label index="mlang_tabs_tab">L10N Manager</label>
+			<label index="mlang_labels_tabdescr">Localization Manager</label>
+			<label index="mlang_labels_tablabel">Exporte de los contenidos a traducir/Importe de los contenidos traducidos</label>
 		</languageKey>
 		<languageKey index="it" type="array">
 			<label index="mlang_tabs_tab">L10N Manager</label>
 			<label index="mlang_labels_tabdescr">Localization Manager</label>
-			<label index="mlang_labels_tablabel">Esportazione/Importazione di contenuti da tradurre</label>
+			<label index="mlang_labels_tablabel">Esportazione dei contenuti da tradurre/ Importazione dei contenuti tradotti</label>
 		</languageKey>
 	</data>
 	<orig_hash type="array">

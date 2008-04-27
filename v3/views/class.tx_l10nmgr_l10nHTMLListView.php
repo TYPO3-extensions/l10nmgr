@@ -73,6 +73,8 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 	 */
 	function renderOverview()	{
 		
+		global $LANG;
+
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
 		$accum=$accumObj->getInfoArray();				
@@ -111,13 +113,13 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 									$edit = TRUE;
 									$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
 									if ($uidValue==='NEW')	{
-										$diff = '<em>New value</em>';
+										$diff = '<em>'.$LANG->getLL('render_overview.new.message').'</em>';
 										$flags['new']++;
 									} elseif (!isset($tData['diffDefaultValue'])) {
-										$diff = '<em>No diff available</em>';
+										$diff = '<em>'.$LANG->getLL('render_overview.nodiff.message').'</em>';
 										$flags['unknown']++;
 									} elseif ($noChangeFlag)	{
-										$diff = 'No change.';
+										$diff = $LANG->getLL('render_overview.nochange.message');
 										$edit = TRUE;
 										$flags['noChange']++;
 									} else {
