@@ -81,15 +81,15 @@ class tx_l10nmgr_l10ncfgDetailView {
 						<td colspan="4"><strong>'.htmlspecialchars($this->l10ncfgObj->getData('title')).' ['.$this->l10ncfgObj->getData('uid').']</strong></td>
 					</tr>
 					<tr class="bgColor3">
-						<td><strong>Depth:</strong></td>
+						<td><strong>'.$LANG->getLL('general.list.headline.depth.title').':</strong></td>
 						<td>'.htmlspecialchars($this->l10ncfgObj->getData('depth')).'&nbsp;</td>
-						<td><strong>Tables:</strong></td>
+						<td><strong>'.$LANG->getLL('general.list.headline.tables').':</strong></td>
 						<td>'.htmlspecialchars($this->l10ncfgObj->getData('tablelist')).'&nbsp;</td>
 					</tr>
 					<tr class="bgColor3">
-						<td><strong>Exclude:</strong></td>
+						<td><strong>'.$LANG->getLL('general.list.headline.exclude.title').':</strong></td>
 						<td>'.htmlspecialchars($this->l10ncfgObj->getData('exclude')).'&nbsp;</td>
-						<td><strong>Include:</strong></td>
+						<td><strong>'.$LANG->getLL('general.list.headline.include.title').':</strong></td>
 						<td>'.htmlspecialchars($this->l10ncfgObj->getData('include')).'&nbsp;</td>
 					</tr>
 				</table>';
