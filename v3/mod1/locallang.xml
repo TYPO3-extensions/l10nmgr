@@ -26,7 +26,7 @@
 			<label index="general.list.infodetail.tablelist.title">Tables: </label>
 			<label index="general.list.infodetail.exclude.title">Exclude: </label>
 			<label index="general.list.infodetail.include.title">Include: </label>
-			<label index="general.list.infodetail.displaymode.title">displaymode: </label>
+			<label index="general.list.infodetail.displaymode.title">Display mode: </label>
 			<label index="general.list.infodetail.incfcewithdefaultlanguage.title">Include FCE width default language: </label>
 		</languageKey>
 		<languageKey index="de" type="array">
@@ -53,6 +53,29 @@
 			<label index="general.list.infodetail.displaymode.title">Anzeigemodus: </label>
 			<label index="general.list.infodetail.incfcewithdefaultlanguage.title">FCE mit Standardsprache einschließen: </label>
 		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="general.title">L10N Manager</label>
+			<label index="general.description.message">S'il vous plaît, sélectionnez une des configuration L10N Manager suivantes pour commencer l'exportation/importation.</label>
+			<label index="general.list.configuration.title">Configurations disponibles:</label>
+			<label index="general.list.headline.info.title">Info</label>
+			<label index="general.list.headline.title.title">Titre</label>
+			<label index="general.list.headline.path.title">Chemin</label>
+			<label index="general.list.headline.depth.title">Profondeur</label>
+			<label index="general.list.headline.pid.title">PID</label>
+			<label index="general.list.headline.tables.title">Tableaux</label>
+			<label index="general.list.headline.exclude.title">Exclure</label>
+			<label index="general.list.headline.include.title">Inclure</label>
+			<label index="general.list.infodetail.pid.title">Page parente: </label>
+			<label index="general.list.infodetail.title.title">Titre: </label>
+			<label index="general.list.infodetail.filenameprefix.title">Nom du fichier: </label>
+			<label index="general.list.infodetail.depth.title">Profondeur: </label>
+			<label index="general.list.infodetail.sourceLangStaticId.title">Langue: </label>
+			<label index="general.list.infodetail.tablelist.title">Tableaux: </label>
+			<label index="general.list.infodetail.exclude.title">Exclure: </label>
+			<label index="general.list.infodetail.include.title">Inclure: </label>
+			<label index="general.list.infodetail.displaymode.title">Mode d'affichage: </label>
+			<label index="general.list.infodetail.incfcewithdefaultlanguage.title">Inclure FCE avec langue par défault: </label>
+		</languageKey>
 		<languageKey index="es" type="array">
 			<label index="general.title">L10N Manager</label>
 			<label index="general.description.message">Por favor, seleccione una de las siguientes configuraciones para iniciar el exporte/importe.</label>
@@ -65,8 +88,7 @@
 			<label index="general.list.headline.tables.title">Tablas</label>
 			<label index="general.list.headline.exclude.title">Excluir</label>
 			<label index="general.list.headline.include.title">Incluir</label>
-            
-			<label index="general.list.infodetail.pid.title">Página madre: </label>
+			<label index="general.list.infodetail.pid.title">Página primaria: </label>
 			<label index="general.list.infodetail.title.title">Titulo: </label>
 			<label index="general.list.infodetail.filenameprefix.title">Nombre del archivo: </label>
 			<label index="general.list.infodetail.depth.title">Niveles: </label>
@@ -90,7 +112,7 @@
 			<label index="general.list.headline.exclude.title">Excludere</label>
 			<label index="general.list.headline.include.title">Includere</label>
             
-			<label index="general.list.infodetail.pid.title">Pagina madre: </label>
+			<label index="general.list.infodetail.pid.title">Pagina padre: </label>
 			<label index="general.list.infodetail.title.title">Titolo: </label>
 			<label index="general.list.infodetail.filenameprefix.title">Nome del file: </label>
 			<label index="general.list.infodetail.depth.title">Livelli: </label>

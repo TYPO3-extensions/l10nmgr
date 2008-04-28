@@ -14,6 +14,9 @@
 		<languageKey index="es" type="array">
 			<label index="title">Índice de traducción - Vista de conjunto</label>
 		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="title">Indice de traductions - Vue d'ensemble</label>
+		</languageKey>
 		<languageKey index="it" type="array">
 			<label index="title">Indice delle traduzioni - Vista d'insieme</label>
 		</languageKey>

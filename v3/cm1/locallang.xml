@@ -176,8 +176,118 @@
 			<label index="render_overview.nodiff.message">Ningún Diff disponible.</label>
 		</languageKey>
 
+		<languageKey index="fr" type="array">
+			<label index="general.action.refresh.button.title">Actualiser</label>
+			<label index="general.action.save.button.title">Enregistrer</label>
+			<label index="general.action.cancel.button.title">Annuler</label>
+			<label index="general.action.blank.title">--Sélectionner action--</label>
+			<label index="general.action.edit.link.title">Vue d'ensemble avec liens</label>
+			<label index="general.action.edit.inline.title">Traduction en ligne</label>
+			<label index="general.action.export.excel.title">Exportation/Importation Excel</label>
+			<label index="general.action.export.xml.title">Exportation/Importation XML</label>
+			<label index="general.action.export.xml.button.title">Exporter</label>
+			<label index="general.action.import.xml.button.title">Importer</label>
+			<label index="general.access.error.title">ERREUR: Utilisateur n'a pas d'accès pour éditer cette langue!</label>
+
+			<label index="general.title">L10N Exportation/Importation</label>
+			<label index="general.export.configuration.title">Configuration de l'objet de traduction:</label>
+			<label index="general.export.configuration.error.title">ERREUR: Configuration l10nmgr non valide!</label>
+
+			<label index="general.export.choose.action.title">Que voulez-vous faire?</label>
+
+			<label index="file.settings.downloads.title">Télécharger fichiers avec paramètres des balises:</label>
+			<label index="file.settings.available.title">Fichiers avec paramètres des balises disponibles:</label>
+			<label index="file.settings.across.title">across</label>
+			<label index="file.settings.dejaVu.title">DéjàVu</label>
+			<label index="file.settings.sdltrados.title">SDL Trados</label>
+			<label index="file.settings.sdlpassolo.title">SDL Passolo</label>
+			<label index="file.settings.download.title">Télécharger fichier avec paramètres des balises</label>
+
+			<label index="inlineedit.save.alert.title">Vous êtes en train de créer/actualiser TOUTES les traductions dans ce formulaire! Souhaitez-vous continuer?</label>
+			<label index="inlineedit.cancel.alert.title">Vous êtes en train d'annuler tous les changements. Souhaitez-vous continuer?</label>
+
+			<label index="export.xml.headline.title">Exportation: </label>
+			<label index="export.xml.source-language.title">Forcer langue source: </label>
+			<label index="export.xml.new.title">Traduire seulement contenus nouveaux/changés </label>
+			<label index="export.xml.check_exports.title">Vérification pour contenus déjà exportés</label>
+
+			<label index="export.process.error.empty.message">Elément vide</label>
+			<label index="export.process.error.invalid.message">Caractère invalide dans l'élément</label>
+			<label index="export.process.duplicate.message">Les contenus ont déjà été (partiellement) exportés pour la traduction!</label>
+
+			<label index="import.xml.headline.title">Importation: </label>
+			<label index="import.xml.old-format.title">Importer ancienne format (v2)</label>
+			<label index="import.error.title">Erreurs d'import:</label>
+			<label index="import.success.message">Importation réussie!</label>
+
+			<label index="import.manager.error.parsing.xml2tree.message">Erreur de XML2Tree: </label>
+			<label index="import.manager.error.missing.meta.message">Métadonnées non trouvées dans l'XML!</label>
+			<label index="import.manager.error.version.message">La version du format est incorrecte: %s (requise: %s)</label>
+			<label index="import.manager.error.workspace.message">L'export provient d'un autre espace de travail. S'il vous plaît, importez dans l'espace de trouvail d'où provient l'export pour éviter d'éventuels problèmes. Espace de travail actuel: %s (Requis: %s)</label>
+			<label index="import.manager.error.language.message">'L'export contient une autre langue. S'il vous plaît, choisissez la langue correcte de la liste ci-dessus! Langue actuel: %s (Requise: %s)</label>
+
+			<label index="misc.messages.title">Messages:</label>
+
+			<label index="render_overview.nochange.message">Pas de changement.</label>
+			<label index="render_overview.new.message">NOUVEAU</label>
+			<label index="render_overview.nodiff.message">Aucun Diff disponible.</label>
+		</languageKey>
+
 		<languageKey index="it" type="array">
-			<label index="title">L10N Esportazione/Importazione</label>
+			<label index="general.action.refresh.button.title">Aggiornare</label>
+			<label index="general.action.save.button.title">Salva</label>
+			<label index="general.action.cancel.button.title">Annulla</label>
+			<label index="general.action.blank.title">--Seleziona l'azione--</label>
+			<label index="general.action.edit.link.title">Panoramica con collegamenti</label>
+			<label index="general.action.edit.inline.title">Traduzione in linea</label>
+			<label index="general.action.export.excel.title">Esportazione/Importazione Excel</label>
+			<label index="general.action.export.xml.title">Esportazione/Importazione XML</label>
+			<label index="general.action.export.xml.button.title">Esporta</label>
+			<label index="general.action.import.xml.button.title">Importa</label>
+			<label index="general.access.error.title">ERRORE: Utilizzatore non a accesso per modificare i contenuti in questa lingua!</label>
+
+			<label index="general.title">L10N Esportazione/Importazione</label>
+			<label index="general.export.configuration.title">Configurazione dell'oggetto di traduzione:</label>
+			<label index="general.export.configuration.error.title">ERRORE: Configurazione l10nmgr non valida!</label>
+
+			<label index="general.export.choose.action.title">Che cosa vuole fare?</label>
+
+			<label index="file.settings.downloads.title">Scarica i file di configurazione:</label>
+			<label index="file.settings.available.title">File di configurazione disponibili:</label>
+			<label index="file.settings.across.title">across</label>
+			<label index="file.settings.dejaVu.title">DéjàVu</label>
+			<label index="file.settings.sdltrados.title">SDL Trados</label>
+			<label index="file.settings.sdlpassolo.title">SDL Passolo</label>
+			<label index="file.settings.download.title">Scarica file di configurazione</label>
+
+			<label index="inlineedit.save.alert.title">Sta per creare/aggiornare TUTTE le traduzioni in questo modulo! Continuare?</label>
+			<label index="inlineedit.cancel.alert.title">Sta per annullare tutte le modificazioni in questo modulo! Continuare?</label>
+
+			<label index="export.xml.headline.title">Esportazione: </label>
+			<label index="export.xml.source-language.title">Imponi lingua di partenza: </label>
+			<label index="export.xml.new.title">Tradurre solamente contenuti nuovi/modificati </label>
+			<label index="export.xml.check_exports.title">Verificazione di contenuti già esportati</label>
+
+			<label index="export.process.error.empty.message">Elemento vuoto</label>
+			<label index="export.process.error.invalid.message">Carattere non valido nell'elemento</label>
+			<label index="export.process.duplicate.message">Contenuti già esportati per la traduzione! </label>
+
+			<label index="import.xml.headline.title">Importazione: </label>
+			<label index="import.xml.old-format.title">Importare formato precedente (v2)</label>
+			<label index="import.error.title">Errore di importazione:</label>
+			<label index="import.success.message">Importzione riuscita!</label>
+
+			<label index="import.manager.error.parsing.xml2tree.message">Errore XML2Tree: </label>
+			<label index="import.manager.error.missing.meta.message">Metadati non trovati nell'XML!</label>
+			<label index="import.manager.error.version.message">Versione errata del formato: %s (richiesto: %s)</label>
+			<label index="import.manager.error.workspace.message">L'esportazione proviene di un'altra area di lavoro. Per favore, importa nell'area di lavoro di dove proviene l'exportazione per evitare problemi. Area di lavoro corrente: %s (richiesta: %s)</label>
+			<label index="import.manager.error.language.message">L'esportzione contiene un'altra lingua. Per favore, seleziona la lingua correcta della lista! Lingua corrente: %s (richiesta: %s)</label>
+
+			<label index="misc.messages.title">Messaggi:</label>
+
+			<label index="render_overview.nochange.message">Nessuna modificazione.</label>
+			<label index="render_overview.new.message">NUOVO</label>
+			<label index="render_overview.nodiff.message">Nessun Diff disponible.</label>
 		</languageKey>
 	</data>
 	<orig_hash type="array">
