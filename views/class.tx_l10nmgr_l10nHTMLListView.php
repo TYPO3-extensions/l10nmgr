@@ -154,11 +154,11 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 								list(,$uidString) = explode(':',key($data['fields']));
 								if (substr($uidString,0,3)!=='NEW')	{
 									$editId = is_array($data['translationInfo']['translations'][$sysLang]) ? $data['translationInfo']['translations'][$sysLang]['uid'] : $data['translationInfo']['uid'];
-									$editLink = ' - <a href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::editOnClick('&edit['.$data['translationInfo']['translation_table'].']['.$editId.']=edit',$this->doc->backPath)).'"><em>[Click to edit]</em></a>';
+									$editLink = ' - <a href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::editOnClick('&edit['.$data['translationInfo']['translation_table'].']['.$editId.']=edit',$this->doc->backPath)).'"><em>['.$LANG->getLL('render_overview.clickedit.message').']</em></a>';
 								} else {
 									$editLink = ' - <a href="'.htmlspecialchars($this->doc->issueCommand(
 													'&cmd['.$table.']['.$data['translationInfo']['uid'].'][localize]='.$sysLang
-													)).'"><em>[Click to localize]</em></a>';
+													)).'"><em>['.$LANG->getLL('render_overview.clicklocalize.message').']</em></a>';
 								}
 							} else $editLink = '';
 

@@ -24,6 +24,11 @@
 
 			<label index="general.export.choose.action.title">Choose your action</label>
 
+			<label index="general.list.headline.depth.title">Depth</label>
+			<label index="general.list.headline.tables">Tables</label>
+			<label index="general.list.headline.exclude.title">Exclude</label>
+			<label index="general.list.headline.include.title">Include</label>
+
 			<label index="file.settings.downloads.title">Download settings files:</label>
 			<label index="file.settings.available.title">Available settings files:</label>
 			<label index="file.settings.across.title">across</label>
@@ -60,6 +65,8 @@
 			<label index="render_overview.nochange.message">No change.</label>
 			<label index="render_overview.new.message">NEW</label>
 			<label index="render_overview.nodiff.message">No diff available.</label>
+			<label index="render_overview.clickedit.message">Click to edit</label>
+			<label index="render_overview.clicklocalize.message">Click to localize</label>
 		</languageKey>
 
 		<languageKey index="de" type="array">
@@ -80,6 +87,11 @@
 			<label index="general.export.configuration.error.title">FEHLER: Keine gültige l10nmgr-Konfiguration!</label>
 
 			<label index="general.export.choose.action.title">Was möchten Sie tun?</label>
+
+			<label index="general.list.headline.depth.title">Ebenen</label>
+			<label index="general.list.headline.tables">Tabellen</label>
+			<label index="general.list.headline.exclude.title">Einschließen</label>
+			<label index="general.list.headline.include.title">Ausschließen</label>
 
 			<label index="file.settings.downloads.title">Einstellungsdateien herunterladen:</label>
 			<label index="file.settings.available.title">Verfügbare Einstellungsdateien:</label>
@@ -138,6 +150,11 @@
 
 			<label index="general.export.choose.action.title">Qué quiere hacer?</label>
 
+			<label index="general.list.headline.depth.title">Profundidad</label>
+			<label index="general.list.headline.tables">Tablas</label>
+			<label index="general.list.headline.exclude.title">Excluir</label>
+			<label index="general.list.headline.include.title">Incluir</label>
+
 			<label index="inlineedit.save.alert.title">Está a punto de crear/actualizar las traducciones en este formulario. Desea continuar?</label>
 			<label index="inlineedit.cancel.alert.title">Está a punto de descartar los cambios realizados en este formulario. Desea continuar?</label>
 
@@ -195,6 +212,11 @@
 
 			<label index="general.export.choose.action.title">Que voulez-vous faire?</label>
 
+			<label index="general.list.headline.depth.title">Profondeur</label>
+			<label index="general.list.headline.tables">Tableaux</label>
+			<label index="general.list.headline.exclude.title">Exclure</label>
+			<label index="general.list.headline.include.title">Inclure</label>
+
 			<label index="file.settings.downloads.title">Télécharger fichiers avec paramètres des balises:</label>
 			<label index="file.settings.available.title">Fichiers avec paramètres des balises disponibles:</label>
 			<label index="file.settings.across.title">across</label>
@@ -251,6 +273,11 @@
 			<label index="general.export.configuration.error.title">ERRORE: Configurazione l10nmgr non valida!</label>
 
 			<label index="general.export.choose.action.title">Che cosa vuole fare?</label>
+
+			<label index="general.list.headline.depth.title">Profondità</label>
+			<label index="general.list.headline.tables">Tabelle</label>
+			<label index="general.list.headline.exclude.title">Excludere</label>
+			<label index="general.list.headline.include.title">Includere</label>
 
 			<label index="file.settings.downloads.title">Scarica i file di configurazione:</label>
 			<label index="file.settings.available.title">File di configurazione disponibili:</label>
