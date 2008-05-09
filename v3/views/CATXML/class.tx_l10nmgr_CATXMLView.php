@@ -30,8 +30,10 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  * CATXMLView: Renders the XML for the use for translation agencies
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @author	Daniel Pötzinger <development@aoemedia.de>
+ * @author	Daniel Poetzinger <development@aoemedia.de>
  * @author	Daniel Zielinski <d.zielinski@L10Ntech.de>
+ * @author	Fabian Seltmann <fs@marketing-factory.de>
+ * @author	Andreas Otto <andreas.otto@dkd.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
@@ -75,7 +77,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 
 			// Traverse the structure and generate XML output:
 		foreach($accum as $pId => $page) {
-			$output[] =  "\t" . '<PageGrp id="'.$pId.'">'."\n";
+			$output[] =  "\t" . '<pageGrp id="'.$pId.'">'."\n";
 			foreach($accum[$pId]['items'] as $table => $elements) {
 				foreach($elements as $elementUid => $data) {
 					if (!empty($data['ISOcode'])) {
@@ -93,6 +95,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 
 								if (!$this->modeOnlyChanged || !$noChangeFlag)	{
 
+									// @DP: Why this check?
 									if ( ($this->forcedSourceLanguage && isset($tData['previewLanguageValues'][$this->forcedSourceLanguage])) || $this->forcedSourceLanguage === false) {
 
 										if ($this->forcedSourceLanguage) {
@@ -103,6 +106,8 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 										}
 										// Substitutions for XML conformity here
 										$_isTranformedXML=FALSE;
+									// Following checks are not enough! Fields that could be transformed to be XML conform are not transformed! textpic fields are not isRTE=1!!! No idea why...
+									print_r($tData); 
 										if ($tData['fieldType']=='text' &&  $tData['isRTE']) { 
 											$dataForTranslationTranformed=$xmlTool->RTE2XML($dataForTranslation);
 											if ($dataForTranslationTranformed!==false) {
@@ -111,12 +116,12 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 											}
 										}
 										if ($_isTranformedXML) {
-											$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</Data>'."\n";
+											$output[]= "\t\t".'<data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</data>'."\n";
 										}
 										else {
 											$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
 											if ($xmlTool->isValidXMLString($dataForTranslation)) {
-												$output[]= "\t\t".'<Data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></Data>'."\n";
+												$output[]= "\t\t".'<data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></data>'."\n";
 											}
 											else {
 												$this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'), $elementUid.'/'.$table.'/'.$key);
@@ -132,7 +137,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 					}
 				}
 			}
-			$output[] = "\t" . '</PageGrp>'."\r";
+			$output[] = "\t" . '</pageGrp>'."\r";
 		}
 
 			// get ISO2L code for source language
@@ -143,21 +148,21 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		}
 
 		$XML  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-		$XML .= '<!DOCTYPE TYPO3LOC [ <!ENTITY nbsp " "> ]>'."\n".'<TYPO3LOC l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . ' baseURL="'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'">' . "\n";
+		$XML .= '<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp " "> ]>'."\n".'<TYPO3L10N l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . ' baseURL="'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'">' . "\n";
 		$XML .= "\t"   . '<head>'."\n";
-		$XML .= "\t\t" . '<l10ncfg>'.$this->l10ncfgObj->getData('uid').'</l10ncfg>'."\n";
-		$XML .= "\t\t" . '<sysLang>'.$sysLang.'</sysLang>'."\n";
-		$XML .= "\t\t" . '<sourceLang>'.$staticLangArr['lg_iso_2'].'</sourceLang>'."\n";
-		$XML .= "\t\t" . '<targetLang>'.$targetIso.'</targetLang>'."\n";
-		$XML .= "\t\t" . '<baseURL>'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'</baseURL>'."\n";
-		$XML .= "\t\t" . '<workspaceId>'.$GLOBALS['BE_USER']->workspace.'</workspaceId>'."\n";
-		$XML .= "\t\t" . '<count>'.$accumObj->getFieldCount().'</count>'."\n";
-		$XML .= "\t\t" . '<wordCount>'.$accumObj->getWordCount().'</wordCount>'."\n";
-		$XML .= "\t\t" . '<Internal>' . "\r\t" . implode("\n\t", $this->internalMessges) . "\t\t" . '</Internal>' . "\n";
-		$XML .= "\t\t" . '<FormatVersion>'.L10NMGR_FILEVERSION.'</FormatVersion>'."\n";
+		$XML .= "\t\t" . '<t3_l10ncfg>'.$this->l10ncfgObj->getData('uid').'</t3_l10ncfg>'."\n";
+		$XML .= "\t\t" . '<t3_sysLang>'.$sysLang.'</t3_sysLang>'."\n";
+		$XML .= "\t\t" . '<t3_sourceLang>'.$staticLangArr['lg_iso_2'].'</t3_sourceLang>'."\n";
+		$XML .= "\t\t" . '<t3_targetLang>'.$targetIso.'</t3_targetLang>'."\n";
+		$XML .= "\t\t" . '<t3_baseURL>'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'</t3_baseURL>'."\n";
+		$XML .= "\t\t" . '<t3_workspaceId>'.$GLOBALS['BE_USER']->workspace.'</t3_workspaceId>'."\n";
+		$XML .= "\t\t" . '<t3_count>'.$accumObj->getFieldCount().'</t3_count>'."\n";
+		$XML .= "\t\t" . '<t3_wordCount>'.$accumObj->getWordCount().'</t3_wordCount>'."\n";
+		$XML .= "\t\t" . '<t3_internal>' . "\r\t" . implode("\n\t", $this->internalMessges) . "\t\t" . '</t3_internal>' . "\n";
+		$XML .= "\t\t" . '<t3_formatVersion>'.L10NMGR_FILEVERSION.'</t3_formatVersion>'."\n";
 		$XML .= "\t"   . '</head>'."\n";
 		$XML .= implode('', $output) . "\n";
-		$XML .= "</TYPO3LOC>"; 
+		$XML .= "</TYPO3L10N>"; 
 
 		$this->saveExportFile($XML);
 		
@@ -188,7 +193,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 * @return	void
 	 */
 	function setInternalMessage($message, $key) {
-		$this->internalMessges[] = "\t\t" . '<skipedItem>' . "\n\t\t\t\t" . '<description>' . $message . '</description>' . "\n\t\t\t\t" . '<key>' . $key . '</key>' . "\n\t\t\t" . '</skipedItem>' . "\r";
+		$this->internalMessges[] = "\t\t" . '<t3_skippedItem>' . "\n\t\t\t\t" . '<t3_description>' . $message . '</t3_description>' . "\n\t\t\t\t" . '<t3_key>' . $key . '</t3_key>' . "\n\t\t\t" . '</t3_skippedItem>' . "\r";
 	}
 
 	/**

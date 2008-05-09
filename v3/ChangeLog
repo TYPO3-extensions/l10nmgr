@@ -1,3 +1,8 @@
+2008-05-09 Daniel Zielinski & Fabian Seltmann @ T3DD08
+	* Changed XML format to be consistent (header->t3_XXX elements)
+	* Adapted settings for Trados and Passolo
+	* Fixed bug with broken tags (e.g. link tags)
+
 2008-04-27 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added translations for German, Spanish, Italian, French (to be continued)
 

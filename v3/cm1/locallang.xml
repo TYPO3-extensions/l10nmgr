@@ -44,6 +44,8 @@
 			<label index="export.xml.source-language.title">Force source language: </label>
 			<label index="export.xml.new.title">New/Changed content only </label>
 			<label index="export.xml.check_exports.title">Check for already exported content</label>
+			<label index="export.xml.checkXml.title">Check XML</label>
+			<label index="export.xml.checkUtf8.title">Check UTF-8</label>
             
 			<label index="export.process.error.empty.message">Empty element</label>
 			<label index="export.process.error.invalid.message">Detected invalid characters in element</label>

@@ -28,6 +28,7 @@
  * @author	Daniel Zielinski <d.zielinski@l10ntech.de>
  * @author	Daniel Pötzinger <poetzinger@aoemedia.de>
  * @author	Fabian Seltmann <fs@marketing-factory.de>
+ * @author	Andreas Otto <andreas.otto@dkd.de>
  */
 /**
  * [CLASS/FUNCTION INDEX of SCRIPT]
@@ -247,7 +248,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	}
 
 	function catXMLExportImportAction($l10ncfgObj) {
-		global $LANG, $BACK_PATH;
+		global $LANG, $BACK_PATH, $BE_USER;
 		$allowedSettingFiles = array(
 			'across'     => 'acrossL10nmgrConfig.dst',
 			'dejaVu'     => 'dejaVuL10nmgrConfig.dvflt',
@@ -280,6 +281,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$_selectOptions=array('0'=>'-default-');
 		$_selectOptions=$_selectOptions+$this->MOD_MENU["lang"];
 		$info .= '<input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="check_utf8" /> ' . $LANG->getLL('export.xml.checkUtf8.title') . '<br />';
 		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions);
 		$info .= '<br />';
 		$info .= '<input type="submit" value="Export" name="export_xml" /><br /><br /><br/>';
@@ -320,6 +322,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		}
 		// If export of XML is asked for, do that (this will exit and push a file for download)
 		if (t3lib_div::_POST('export_xml')) {
+			// Save user prefs
+			$BE_USER->pushModuleData('l10nmgr/cm1/checkUTF8',t3lib_div::_POST('check_utf8'));
 					
 			// Render the XML
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
@@ -335,7 +339,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
 				echo($LANG->getLL('export.process.duplicate.message'));
 				exit;	
-			}else{
+			} else {
 				$viewClass->saveExportInformation();
 				$this->_downloadXML($viewClass);
 			}
