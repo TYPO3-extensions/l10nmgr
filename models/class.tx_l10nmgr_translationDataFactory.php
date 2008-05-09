@@ -83,6 +83,7 @@ class tx_l10nmgr_translationDataFactory {
 	**/
 	function _getParsedExcelXML( $fileContent ) {
 			// Parse XML in a rude fashion:
+			// Check if &nbsp; has to be substituted -> DOCTYPE -> entity?
 		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML!
 		$translation = array();
 		
@@ -114,7 +115,7 @@ class tx_l10nmgr_translationDataFactory {
 	
 
 	/**
-	*	Parses XML String and returns translationData
+	* Parses XML String and returns translationData
 	* @param Array with XMLNodes
 	* @return array with translated informations
 	**/
@@ -125,10 +126,10 @@ class tx_l10nmgr_translationDataFactory {
 		$translation = array();
 
 			// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
-		if (is_array($xmlNodes['TYPO3LOC'][0]['ch']['PageGrp']))	{
-		   	foreach($xmlNodes['TYPO3LOC'][0]['ch']['PageGrp'] as $pageGrp)	{
-				if (is_array($pageGrp['ch']['Data'])) {
-					foreach($pageGrp['ch']['Data'] as $row)	{
+		if (is_array($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp']))	{
+		   	foreach($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'] as $pageGrp)	{
+				if (is_array($pageGrp['ch']['data'])) {
+					foreach($pageGrp['ch']['data'] as $row)	{
 						$attrs=$row['attrs'];						
 						list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
 						if ($attrs['transformations']=='1') { 
@@ -183,8 +184,8 @@ class tx_l10nmgr_translationDataFactory {
 				$translation = array();
 	
 					// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
-				if (is_array($xmlNodes['TYPO3LOC'][0]['ch']['Data']))	{
-					foreach($xmlNodes['TYPO3LOC'][0]['ch']['Data'] as $row)	{
+				if (is_array($xmlNodes['TYPO3L10N'][0]['ch']['Data']))	{
+					foreach($xmlNodes['TYPO3L10N'][0]['ch']['Data'] as $row)	{
 						$attrs=$row['attrs'];
 						
 						list(,$uidString,$fieldName) = explode(':',$attrs['key']); 

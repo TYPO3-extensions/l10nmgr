@@ -62,16 +62,20 @@ class tx_l10nmgr_xmltools {
 	 * @param	string		HTML String which should be transformed
 	 * @return	mixed		false if transformation failed, string with XML if all fine
 	 */
-	function RTE2XML($content,$withStripBadUTF8=TRUE) {
+	function RTE2XML($content,$withStripBadUTF8=0) {
+	//function RTE2XML($content,$withStripBadUTF8=$GLOBALS['BE_USER']->getModuleData('l10nmgr/cm1/checkUTF8', '')) {
+		//if (!$withStripBadUTF8) {
+		//	$withStripBadUTF8 = $GLOBALS['BE_USER']->getModuleData('l10nmgr/cm1/checkUTF8', '');
+		//}
+		//echo '###'.$withStripBadUTF8;
 		$content_org=$content;
 		$content = $this->parseHTML->TS_images_rte($content);
 		$content = $this->parseHTML->TS_links_rte($content);
-		$content = $this->parseHTML->TS_links_db($content);
 		$content = $this->parseHTML->TS_transform_rte($content,$css=1);
 		//substitute & with &amp;
 		$content=str_replace('&','&amp;',$content);
 		$content=t3lib_div::deHSCentities($content);
-		if ($withStripBadUTF8) {
+		if ($withStripBadUTF8==1) {
 			$content=tx_l10nmgr_utf8tools::utf8_bad_strip($content);
 		}
 		if ($this->isValidXMLString($content)) {

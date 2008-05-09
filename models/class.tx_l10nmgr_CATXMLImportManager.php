@@ -76,7 +76,7 @@ class tx_l10nmgr_CATXMLImportManager {
 			return false;
 		}
 
-		$headerInformationNodes = $this->xmlNodes['TYPO3LOC'][0]['ch']['head'][0]['ch'];
+		$headerInformationNodes = $this->xmlNodes['TYPO3L10N'][0]['ch']['head'][0]['ch'];
 		if (!is_array($headerInformationNodes)) {
 			$this->_errorMsg[] = $LANG->getLL('import.manager.error.missing.head.message');
 			return false;
@@ -99,26 +99,26 @@ class tx_l10nmgr_CATXMLImportManager {
 	function _isIncorrectXMLFile() {
 		$error = array();
 
-		if (!isset($this->headerData['FormatVersion']) || $this->headerData['FormatVersion'] != L10NMGR_FILEVERSION) {
+		if (!isset($this->headerData['t3_formatVersion']) || $this->headerData['t3_formatVersion'] != L10NMGR_FILEVERSION) {
 			$error[] = sprintf(
 							$LANG->getLL('import.manager.error.version.message'),
-							$this->headerData['FormatVersion'],
+							$this->headerData['t3_formatVersion'],
 							L10NMGR_FILEVERSION
 						);
 		}
-		if (!isset($this->headerData['workspaceId']) || $this->headerData['workspaceId'] != $GLOBALS['BE_USER']->workspace) {
+		if (!isset($this->headerData['t3_workspaceId']) || $this->headerData['t3_workspaceId'] != $GLOBALS['BE_USER']->workspace) {
 			$error[] = sprintf(
 							$LANG->getLL('import.manager.error.workspace.message'),
 							$GLOBALS['BE_USER']->workspace,
-							$this->headerData['workspaceId']
+							$this->headerData['t3_workspaceId']
 						);
 		}
-		if (!isset($this->headerData['sysLang']) || $this->headerData['sysLang'] != $this->sysLang) {
+		if (!isset($this->headerData['t3_sysLang']) || $this->headerData['t3_sysLang'] != $this->sysLang) {
 
 			$error[] = sprintf(
 							$LANG->getLL('import.manager.error.language.message'),
 							$this->sysLang,
-							$this->headerData['sysLang']
+							$this->headerData['t3_sysLang']
 						);
 		}
 		if (count($error)>0) {
