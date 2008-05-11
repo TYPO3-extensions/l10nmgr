@@ -107,7 +107,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 										// Substitutions for XML conformity here
 										$_isTranformedXML=FALSE;
 									// Following checks are not enough! Fields that could be transformed to be XML conform are not transformed! textpic fields are not isRTE=1!!! No idea why...
-									print_r($tData); 
+									//print_r($tData); 
 										if ($tData['fieldType']=='text' &&  $tData['isRTE']) { 
 											$dataForTranslationTranformed=$xmlTool->RTE2XML($dataForTranslation);
 											if ($dataForTranslationTranformed!==false) {
