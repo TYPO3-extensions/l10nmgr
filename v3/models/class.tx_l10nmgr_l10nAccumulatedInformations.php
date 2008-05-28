@@ -45,7 +45,7 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 
 	var $tree=array();
 	var $l10ncfg=array();
-	var $disallowDoktypes = array('--div--','3','6','255');
+	var $disallowDoktypes = array('--div--','3','255');
 	var $sysLang;
 	var $forcedPreviewLanguage;
 
