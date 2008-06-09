@@ -1,5 +1,11 @@
-2008-04-17 Michael Klapper <klapper@aoemedia.de>
+2008-06-09 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Updated settings for across and SDL Passolo
+
+2008-05-17 Michael Klapper <klapper@aoemedia.de>
 	* Allow doktype 6 (external url) to folow the tree used by the export models/class.tx_l10nmgr_l10nAccumulatedInformations.php
+
+2008-05-13 Daniel Zielinski 
+	* Removed attribs from root element in CATXML
 
 2008-05-09 Daniel Zielinski & Fabian Seltmann @ T3DD08
 	* Changed XML format to be consistent (header->t3_XXX elements)

@@ -148,7 +148,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		}
 
 		$XML  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-		$XML .= '<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp " "> ]>'."\n".'<TYPO3L10N l10ncfg="' . $this->l10ncfgObj->getData('uid') . '" sysLang="' . $sysLang . '"' . $sourceIso2L . $targetIso2L . ' baseURL="'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'">' . "\n";
+		$XML .= '<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp " "> ]>'."\n".'<TYPO3L10N>' . "\n";
 		$XML .= "\t"   . '<head>'."\n";
 		$XML .= "\t\t" . '<t3_l10ncfg>'.$this->l10ncfgObj->getData('uid').'</t3_l10ncfg>'."\n";
 		$XML .= "\t\t" . '<t3_sysLang>'.$sysLang.'</t3_sysLang>'."\n";
