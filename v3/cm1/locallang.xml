@@ -44,6 +44,7 @@
 			<label index="export.xml.source-language.title">Force source language: </label>
 			<label index="export.xml.new.title">New/Changed content only </label>
 			<label index="export.xml.check_exports.title">Check for already exported content</label>
+			<label index="export.xml.no_check_xml.title">Do not check XML</label>
 			<label index="export.xml.checkXml.title">Check XML</label>
 			<label index="export.xml.checkUtf8.title">Check UTF-8</label>
             
@@ -110,6 +111,7 @@
 			<label index="export.xml.source-language.title">Ausgangssprache erzwingen: </label>
 			<label index="export.xml.new.title">Nur neue/geänderte Inhalte übersetzen </label>
 			<label index="export.xml.check_exports.title">Überprüfung auf bereits exportierte Inhalte</label>
+			<label index="export.xml.no_check_xml.title">Überspringe XML-Überprüfung</label>
 
 			<label index="export.process.error.empty.message">Leeres Element</label>
 			<label index="export.process.error.invalid.message">Ungültige Zeichen in Element entdeckt</label>

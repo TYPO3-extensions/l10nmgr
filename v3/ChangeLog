@@ -1,4 +1,5 @@
 2008-06-09 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Skip XML check, Check UTF-8 checkbox
 	* Updated settings for across and SDL Passolo
 
 2008-05-17 Michael Klapper <klapper@aoemedia.de>
