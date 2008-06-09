@@ -63,7 +63,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 * @return	string		HTML content
 	 */
 	function render() {
-		global $LANG;
+		global $LANG,$BE_USER;
 
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
@@ -119,12 +119,21 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 											$output[]= "\t\t".'<data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</data>'."\n";
 										}
 										else {
-											$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
+											$params = $BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');
+										print_r($params);
+											if ($params['utf8'] =='1') {
+print "HERE";
+												$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
+											}
 											if ($xmlTool->isValidXMLString($dataForTranslation)) {
 												$output[]= "\t\t".'<data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></data>'."\n";
 											}
 											else {
-												$this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'), $elementUid.'/'.$table.'/'.$key);
+												if ($params['noxmlcheck'] =='1') {
+													$output[]= "\t\t".'<data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></data>'."\n";
+												} else {
+													$this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'), $elementUid.'/'.$table.'/'.$key);
+												}
 											}
 										}
 

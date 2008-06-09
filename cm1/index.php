@@ -281,6 +281,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$_selectOptions=array('0'=>'-default-');
 		$_selectOptions=$_selectOptions+$this->MOD_MENU["lang"];
 		$info .= '<input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="no_check_xml" /> ' . $LANG->getLL('export.xml.no_check_xml.title') . '<br />';
 		$info .= '<input type="checkbox" value="1" name="check_utf8" /> ' . $LANG->getLL('export.xml.checkUtf8.title') . '<br />';
 		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions);
 		$info .= '<br />';
@@ -401,7 +402,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function moduleContent($l10ncfgObj) {
-		global $TCA,$LANG;
+		global $TCA,$LANG,$BE_USER;
 
 		switch ($this->MOD_SETTINGS["action"]) {
 			case 'inlineEdit': case 'link':
@@ -432,6 +433,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			break;
 
 			case 'export_xml':		// XML import/export
+				$prefs['utf8']=t3lib_div::_POST('check_utf8');
+				$prefs['noxmlcheck']=t3lib_div::_POST('no_check_xml');
+				$BE_USER->pushModuleData('l10nmgr/cm1/prefs', $prefs);
+
 				$subheader  = $LANG->getLL('export_xml');
 				$subcontent = $this->catXMLExportImportAction($l10ncfgObj);
 			break;
