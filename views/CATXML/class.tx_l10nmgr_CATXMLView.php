@@ -48,11 +48,11 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 * @var	integer		$forcedSourceLanguage		Overwrite the default language uid with the desired language to export
 	 */
 	var $forcedSourceLanguage = false;
-	
+
 	var $exportType = '1';
 
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $sysLang) {
-		parent::__construct($l10ncfgObj, $sysLang);			
+		parent::__construct($l10ncfgObj, $sysLang);
 	}
 
 
@@ -71,7 +71,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 			$accumObj->setForcedPreviewLanguage($this->forcedSourceLanguage);
 		}
 		$accum=$accumObj->getInfoArray();
-		$errorMessage=array();	
+		$errorMessage=array();
 		$xmlTool= t3lib_div::makeInstance("tx_l10nmgr_xmltools");
 		$output = array();
 
@@ -88,7 +88,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 						$fieldsForRecord = array();
 						foreach($data['fields'] as $key => $tData) {
 							if (is_array($tData)) {
-								list(,$uidString,$fieldName) = explode(':',$key); 
+								list(,$uidString,$fieldName) = explode(':',$key);
 								list($uidValue) = explode('/',$uidString);
 
 								$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
@@ -107,8 +107,8 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 										// Substitutions for XML conformity here
 										$_isTranformedXML=FALSE;
 									// Following checks are not enough! Fields that could be transformed to be XML conform are not transformed! textpic fields are not isRTE=1!!! No idea why...
-									//print_r($tData); 
-										if ($tData['fieldType']=='text' &&  $tData['isRTE']) { 
+									//print_r($tData);
+										if ($tData['fieldType']=='text' &&  $tData['isRTE']) {
 											$dataForTranslationTranformed=$xmlTool->RTE2XML($dataForTranslation);
 											if ($dataForTranslationTranformed!==false) {
 												$_isTranformedXML=TRUE;
@@ -120,9 +120,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 										}
 										else {
 											$params = $BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');
-										print_r($params);
 											if ($params['utf8'] =='1') {
-print "HERE";
 												$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
 											}
 											if ($xmlTool->isValidXMLString($dataForTranslation)) {
@@ -171,14 +169,16 @@ print "HERE";
 		$XML .= "\t\t" . '<t3_formatVersion>'.L10NMGR_FILEVERSION.'</t3_formatVersion>'."\n";
 		$XML .= "\t"   . '</head>'."\n";
 		$XML .= implode('', $output) . "\n";
-		$XML .= "</TYPO3L10N>"; 
+		$XML .= "</TYPO3L10N>";
 
 		$this->saveExportFile($XML);
-		
+
 		return $XML;
 	}
 
 	function getFilename() {
+		$sourceLang = '';
+		$targetLang = '';
 
 		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
 			$sourceIso2L = '';
@@ -186,10 +186,28 @@ print "HERE";
 			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
 		}
 
+		if ($this->sysLang && t3lib_extMgm::isLoaded('static_info_tables'))        {
+			$targetLangSysLangArr = t3lib_BEfunc::getRecord('sys_language',$this->sysLang);
+			$targetLangArr = t3lib_BEfunc::getRecord('static_languages',$targetLangSysLangArr['static_lang_isocode']);
+		}
+
+			// Set sourceLang for filename
+		if (isset( $staticLangArr['lg_iso_2'] ) && !empty( $staticLangArr['lg_iso_2'] )) {
+			$sourceLang = $staticLangArr['lg_iso_2'];
+		}
+
+			// Use locale for targetLang in filename if available
+		if (isset( $targetLangArr['lg_collate_locale'] ) && !empty( $targetLangArr['lg_collate_locale'] )) {
+			$targetLang = $targetLangArr['lg_collate_locale'];
+			// Use two letter ISO code if locale is not available
+		}else if (isset( $targetLangArr['lg_iso_2'] ) && !empty( $targetLangArr['lg_iso_2'] )) {
+			$targetLang = $targetLangArr['lg_iso_2'];
+		}
+
 		$fileNamePrefix = (trim( $this->l10ncfgObj->getData('filenameprefix') )) ? $this->l10ncfgObj->getData('filenameprefix') : 'export_language' ;
 
 		// Setting filename:
-		$filename =  $fileNamePrefix . '_' . $staticLangArr['lg_iso_2'] . '_' . date('dmy-His').'.xml';
+		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
 		return $filename;
 	}
 
