@@ -309,14 +309,14 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
 				$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage);
 				if ($importManager->parseAndCheckXMLFile()===false) {
-					$info.='<br/><br/>' . $this->doc->header($LANG->getLL('import.error.title')) .$importManager->getErrorMessages();
+					$info.='<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
 				}
 				else {
 					$translationData=$factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
 					$translationData->setLanguage($this->sysLanguage);
 					unset($importManager);
 					$service->saveTranslation($l10ncfgObj,$translationData);
-					$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>(command-count:'.$service->lastTCEMAINCommandsCount.')';
+					$info.='<br/><br/>'.$this->doc->icons(-1).'Import done<br/><br/>(command-count:'.$service->lastTCEMAINCommandsCount.')';
 				}
 			}
 			t3lib_div::unlink_tempfile($uploadedTempFile);
@@ -338,8 +338,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			}
 			//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
-				echo($LANG->getLL('export.process.duplicate.message'));
-				exit;	
+				$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
 			} else {
 				$viewClass->saveExportInformation();
 				$this->_downloadXML($viewClass);

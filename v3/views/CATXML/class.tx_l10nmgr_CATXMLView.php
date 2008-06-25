@@ -106,8 +106,8 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 										}
 										// Substitutions for XML conformity here
 										$_isTranformedXML=FALSE;
-									// Following checks are not enough! Fields that could be transformed to be XML conform are not transformed! textpic fields are not isRTE=1!!! No idea why...
-									//print_r($tData);
+										// Following checks are not enough! Fields that could be transformed to be XML conform are not transformed! textpic fields are not isRTE=1!!! No idea why...
+										// print_r($tData);
 										if ($tData['fieldType']=='text' &&  $tData['isRTE']) {
 											$dataForTranslationTranformed=$xmlTool->RTE2XML($dataForTranslation);
 											if ($dataForTranslationTranformed!==false) {
@@ -180,6 +180,12 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		$sourceLang = '';
 		$targetLang = '';
 
+		if($this->exportType == '0'){
+			$fileType = 'excel_export';
+		}else{
+			$fileType = 'catxml_export';
+		}
+
 		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
 			$sourceIso2L = '';
 			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
@@ -204,7 +210,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 			$targetLang = $targetLangArr['lg_iso_2'];
 		}
 
-		$fileNamePrefix = (trim( $this->l10ncfgObj->getData('filenameprefix') )) ? $this->l10ncfgObj->getData('filenameprefix') : 'export_language' ;
+		$fileNamePrefix = (trim( $this->l10ncfgObj->getData('filenameprefix') )) ? $this->l10ncfgObj->getData('filenameprefix') : $fileType ;
 
 		// Setting filename:
 		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
