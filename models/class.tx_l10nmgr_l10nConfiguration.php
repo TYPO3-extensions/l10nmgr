@@ -26,7 +26,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nAccum
 
 
 /**
- * l10nConfiguration 
+ * l10nConfiguration
  *  Capsulate a 10ncfg record.
  *	Has factory method to get a relevant AccumulatedInformationsObject
  *
@@ -37,10 +37,10 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nAccum
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_l10nConfiguration {
-	
-	
+
+
 	var $l10ncfg=array();
-	
+
 	/**
 	* loads internal array with l10nmgrcfg record
 	* @param int	$id		Id of the cfg record
@@ -49,10 +49,10 @@ class tx_l10nmgr_l10nConfiguration {
 	function load($id) {
 		$this->l10ncfg = t3lib_BEfunc::getRecord('tx_l10nmgr_cfg', $id);
 	}
-	
+
 	/**
-	* checkes if configuration is valid
-	* 
+	* checks if configuration is valid
+	*
 	* @return boolean
 	**/
 	function isLoaded() {
@@ -63,7 +63,7 @@ class tx_l10nmgr_l10nConfiguration {
 			return false;
 		}
 	}
-	
+
 	/**
 	* get a field of the current cfgr record
 	* @param string	$key		Key of the field. E.g. title,uid...
@@ -72,10 +72,10 @@ class tx_l10nmgr_l10nConfiguration {
 	function getData($key) {
 		return $this->l10ncfg[$key];
 	}
-	
+
 	/**
 	* get uid field
-	* 
+	*
 	* @return Int
 	**/
 	function getId() {

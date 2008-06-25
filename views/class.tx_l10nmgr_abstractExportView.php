@@ -68,12 +68,44 @@ class tx_l10nmgr_abstractExportView {
 	 * create a filename to save the File
 	 */
 	function getLocalFilename(){
+		$sourceLang = '';
+		$targetLang = '';
+
 		if($this->exportType == '0'){
-			$fileType = 'excel_export_';
+			$fileType = 'excel_export';
 		}else{
-			$fileType = 'catxml_export_';
+			$fileType = 'catxml_export';
 		}
-		return $fileType.$this->sysLang.'_'.date('dmy-Hi').'.xml';
+
+		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
+			$sourceIso2L = '';
+			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
+			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
+		}
+
+		if ($this->sysLang && t3lib_extMgm::isLoaded('static_info_tables'))        {
+			$targetLangSysLangArr = t3lib_BEfunc::getRecord('sys_language',$this->sysLang);
+			$targetLangArr = t3lib_BEfunc::getRecord('static_languages',$targetLangSysLangArr['static_lang_isocode']);
+		}
+
+			// Set sourceLang for filename
+		if (isset( $staticLangArr['lg_iso_2'] ) && !empty( $staticLangArr['lg_iso_2'] )) {
+			$sourceLang = $staticLangArr['lg_iso_2'];
+		}
+
+			// Use locale for targetLang in filename if available
+		if (isset( $targetLangArr['lg_collate_locale'] ) && !empty( $targetLangArr['lg_collate_locale'] )) {
+			$targetLang = $targetLangArr['lg_collate_locale'];
+			// Use two letter ISO code if locale is not available
+		}else if (isset( $targetLangArr['lg_iso_2'] ) && !empty( $targetLangArr['lg_iso_2'] )) {
+			$targetLang = $targetLangArr['lg_iso_2'];
+		}
+
+		$fileNamePrefix = (trim( $this->l10ncfgObj->getData('filenameprefix') )) ? $this->l10ncfgObj->getData('filenameprefix') : $fileType ;
+
+		// Setting filename:
+		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
+		return $filename;
 	}
 
 	/**
@@ -114,9 +146,17 @@ class tx_l10nmgr_abstractExportView {
 
 		$sysLang = $this->sysLang;
 
-		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery('l10ncfg_id,exportType,translation_lang','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$sysLang);
-		$numRows = mysql_num_rows($result);
-		if ($numRows > 0){
+		$result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('l10ncfg_id,exportType,translation_lang','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$sysLang);
+
+		debug($result);
+
+		if ( is_array( $result ) ) {
+			$numRows = count($result);
+		}else{
+			$numRows = 0;
+		}
+
+		if ( $numRows > 0){
 			return FALSE;
 		}else{
 			return TRUE;
