@@ -148,8 +148,6 @@ class tx_l10nmgr_abstractExportView {
 
 		$result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('l10ncfg_id,exportType,translation_lang','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$sysLang);
 
-		debug($result);
-
 		if ( is_array( $result ) ) {
 			$numRows = count($result);
 		}else{
