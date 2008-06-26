@@ -1,5 +1,6 @@
 2008-06-26 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added textpic to the list of RTE-enabled fields 
+	* Corrected bug with CATXML. Now no CDATA left in XML. Only when disabling XML-check :-)
 
 2008-06-09 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Skip XML check, Check UTF-8 checkbox
