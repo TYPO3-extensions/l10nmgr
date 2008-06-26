@@ -166,7 +166,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 					// Header:
 				$this->content.=$this->doc->startPage($LANG->getLL('general.title'));
 				$this->content.=$this->doc->header($LANG->getLL('general.title'));
-				
+
 				//create and render view to show details for the current l10nmgrcfg
 				$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
 				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
@@ -263,7 +263,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$info .= '<br/>';
 		$info .= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" /><br />';
 		$info .= '<br />'.$this->doc->header($LANG->getLL('file.settings.downloads.title'));
-		$info .= $this->doc->icons(1) . 
+		$info .= $this->doc->icons(1) .
 			   $LANG->getLL('file.settings.available.title');
 
 		for( reset($allowedSettingFiles); list($settingId, $settingFileName) = each($allowedSettingFiles); ) {
@@ -325,7 +325,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		if (t3lib_div::_POST('export_xml')) {
 			// Save user prefs
 			$BE_USER->pushModuleData('l10nmgr/cm1/checkUTF8',t3lib_div::_POST('check_utf8'));
-					
+
 			// Render the XML
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
 			$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage);
@@ -339,12 +339,13 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
 				$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
+				debug($viewClass->listExports());
 			} else {
 				$viewClass->saveExportInformation();
 				$this->_downloadXML($viewClass);
 			}
 		}
-				
+
 		return $info;
 	}
 
@@ -376,18 +377,17 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 			// If export of XML is asked for, do that (this will exit and push a file for download)
 		if (t3lib_div::_POST('export_excel')) {
-			
+
 			// Render the XML
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
 			$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage);
-			
+
 			//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
-				echo($LANG->getLL('export.process.duplicate.message'));
-				exit;	
+				$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
 			}else{
 				$viewClass->saveExportInformation();
-				$this->_downloadXML($viewClass);	
+				$this->_downloadXML($viewClass);
 			}
 		}
 
