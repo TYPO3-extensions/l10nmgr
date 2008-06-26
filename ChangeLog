@@ -1,3 +1,6 @@
+2008-06-26 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added textpic to the list of RTE-enabled fields 
+
 2008-06-09 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Skip XML check, Check UTF-8 checkbox
 	* Updated settings for across and SDL Passolo
