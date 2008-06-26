@@ -1,6 +1,7 @@
 2008-06-26 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added textpic to the list of RTE-enabled fields 
 	* Corrected bug with CATXML. Now no CDATA left in XML. Only when disabling XML-check :-)
+	* Fixed bug with inline and empty elements in fieldsi like header, subtitle etc. Seems to be due to error in xml2tree function. To be considered as workaround.
 
 2008-06-09 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Skip XML check, Check UTF-8 checkbox

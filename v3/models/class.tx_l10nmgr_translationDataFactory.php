@@ -136,7 +136,15 @@ class tx_l10nmgr_translationDataFactory {
 							$translationValue=$xmlTool->XML2RTE($row['XMLvalue']);									
 							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
 						} else {
-							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
+							//check if $row['values'][0] is beginning of $row['XMLvalue']
+							$pattern = preg_replace('/\//i','\/',$row['values'][0]);
+							$pattern = '/^'.$pattern.'/';
+							if (preg_match($pattern, $row['XMLvalue'],$treffer)) {
+								$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['XMLvalue'];
+							} else {
+								$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0].$row['XMLvalue'];
+							}
+							
 						}
 					}
 				}
