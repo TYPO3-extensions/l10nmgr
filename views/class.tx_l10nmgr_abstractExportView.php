@@ -143,22 +143,41 @@ class tx_l10nmgr_abstractExportView {
 	 *
 	 */
 	function checkExports(){
+		$ret = FALSE;
 
-		$sysLang = $this->sysLang;
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('l10ncfg_id,exportType,translation_lang','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$this->sysLang);
 
-		$result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('l10ncfg_id,exportType,translation_lang','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$sysLang);
-
-		if ( is_array( $result ) ) {
-			$numRows = count($result);
+		if ( !$GLOBALS['TYPO3_DB']->sql_error() ) {
+			$numRows = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
 		}else{
 			$numRows = 0;
 		}
 
 		if ( $numRows > 0){
-			return FALSE;
+			$ret = FALSE;
 		}else{
-			return TRUE;
+			$ret = TRUE;
 		}
+
+		return $ret;
+	}
+
+	/**
+	 * Lists saved exports based on configuration, export format and target language.
+	 *
+	 * @author Andreas Otto <andreas.otto@dkd.de>
+	 * @return array Information about exports.
+	 */
+	function listExports() {
+		$exports = array();
+
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('crdate,l10ncfg_id,exportType,translation_lang,filename','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$this->sysLang);
+
+		if ( is_array( $res ) ) {
+			$exports = $res;
+		}
+
+		return $exports;
 	}
 
 	/**
