@@ -124,7 +124,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 												$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
 											}
 											if ($xmlTool->isValidXMLString($dataForTranslation)) {
-												$output[]= "\t\t".'<data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'"><![CDATA['.$dataForTranslation.']]></data>'."\n";
+												$output[]= "\t\t".'<data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'">'.$dataForTranslation.'</data>'."\n";
 											}
 											else {
 												if ($params['noxmlcheck'] =='1') {
