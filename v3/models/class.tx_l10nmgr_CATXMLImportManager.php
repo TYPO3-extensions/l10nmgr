@@ -97,6 +97,7 @@ class tx_l10nmgr_CATXMLImportManager {
 	}
 
 	function _isIncorrectXMLFile() {
+		global $LANG;
 		$error = array();
 
 		if (!isset($this->headerData['t3_formatVersion']) || $this->headerData['t3_formatVersion'] != L10NMGR_FILEVERSION) {
