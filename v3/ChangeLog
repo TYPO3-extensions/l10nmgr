@@ -1,3 +1,7 @@
+2008-07-15 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added example in ext_tables.php how to exclude table fields from L10N
+	* Added bullets content element for RTE transformations
+
 2008-07-10 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Fixed bug with XML Import error message
 
