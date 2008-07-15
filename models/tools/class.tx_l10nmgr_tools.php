@@ -516,7 +516,7 @@ class tx_l10nmgr_tools {
 			}
 		}
 		//TODO: check richtext settings depeding on type value (TCA based)
-		if (($contentRow['CType']=='text') || ($contentRow['CType']=='textpic')) {
+		if (($contentRow['CType']=='text') || ($contentRow['CType']=='textpic') || ($contentRow['CType']=='bullets')) {
 			list(,,$kFieldName) = explode(':',$key);
 			if ($kFieldName=='bodytext') {				
 				return true;

@@ -8,6 +8,12 @@ if (TYPO3_MODE=="BE")    {
 t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_cfg");
 t3lib_extMgm::addLLrefForTCAdescr('tx_l10nmgr_cfg','EXT:l10nmgr/locallang_csh_l10nmgr.php');
 
+// Example for disabling localization of specific fields in tables like tt_content
+// Add as many fields as you need
+
+//t3lib_div::loadTCA('tt_content');
+//$TCA['tt_content']['columns']['imagecaption']['l10n_mode'] = 'exclude';
+
 $TCA["tx_l10nmgr_cfg"] = Array (
 	"ctrl" => Array (
 		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg',		
