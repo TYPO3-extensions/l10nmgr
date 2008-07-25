@@ -1,3 +1,7 @@
+2008-07-25 Andreas Otto <andreas.otto@dkd.de>
+	* XML exports contain source and target lang iso-code in filename.
+	* A list of exports will be displayed if checkExports() has detected existing exports.
+
 2008-07-15 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added example in ext_tables.php how to exclude table fields from L10N
 	* Added bullets content element for RTE transformations
@@ -6,7 +10,7 @@
 	* Fixed bug with XML Import error message
 
 2008-06-26 Daniel Zielinski <d.zielinski@l10ntech.de>
-	* Added textpic to the list of RTE-enabled fields 
+	* Added textpic to the list of RTE-enabled fields
 	* Corrected bug with CATXML. Now no CDATA left in XML. Only when disabling XML-check :-)
 	* Fixed bug with inline and empty elements in fieldsi like header, subtitle etc. Seems to be due to error in xml2tree function. To be considered as workaround.
 
@@ -17,7 +21,7 @@
 2008-05-17 Michael Klapper <klapper@aoemedia.de>
 	* Allow doktype 6 (external url) to folow the tree used by the export models/class.tx_l10nmgr_l10nAccumulatedInformations.php
 
-2008-05-13 Daniel Zielinski 
+2008-05-13 Daniel Zielinski
 	* Removed attribs from root element in CATXML
 
 2008-05-09 Daniel Zielinski & Fabian Seltmann @ T3DD08
@@ -55,7 +59,7 @@
 2008-04-09 Daniel Pötzinger <poetzinger@aoemedia.de>
 	* small modifiktions to abstraktExportView (add constructor)
 	* let HTMLListView also extend abstraktExportView
-	
+
 2008-04-08 Fabian Seltmann <fs@marketing-factory.de>
 	* Added the function checkExports if an export exists.
 	* Added the function saveExportFile to save the xml files

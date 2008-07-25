@@ -339,7 +339,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
 				$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
-				debug($viewClass->listExports());
+				$info .= $viewClass->renderExports();
 			} else {
 				$viewClass->saveExportInformation();
 				$this->_downloadXML($viewClass);
@@ -385,7 +385,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
 				$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
-			}else{
+				$info .= $viewClass->renderExports();
+			} else {
 				$viewClass->saveExportInformation();
 				$this->_downloadXML($viewClass);
 			}
