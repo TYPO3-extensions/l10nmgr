@@ -163,12 +163,12 @@ class tx_l10nmgr_abstractExportView {
 	}
 
 	/**
-	 * Lists saved exports based on configuration, export format and target language.
+	 * Fetches saved exports based on configuration, export format and target language.
 	 *
 	 * @author Andreas Otto <andreas.otto@dkd.de>
 	 * @return array Information about exports.
 	 */
-	function listExports() {
+	function fetchExports() {
 		$exports = array();
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('crdate,l10ncfg_id,exportType,translation_lang,filename','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$this->sysLang);
@@ -178,6 +178,60 @@ class tx_l10nmgr_abstractExportView {
 		}
 
 		return $exports;
+	}
+
+	/**
+	 * Renders a list of saved exports as HTML table.
+	 *
+	 * @return string HTML table
+	 */
+	function renderExports() {
+		global $LANG;
+		$out = '';
+		$content = array();
+		$exports = $this->fetchExports();
+
+		foreach( $exports AS $export => $exportData ) {
+			$content[$export] = sprintf('
+<tr class="bgColor3">
+	<td>%s</td>
+	<td>%s</td>
+	<td>%s</td>
+	<td>%s</td>
+	<td>%s</td>
+</tr>',
+				t3lib_BEfunc::datetime($exportData['crdate']),
+				$exportData['l10ncfg_id'],
+				$exportData['exportType'],
+				$exportData['translation_lang'],
+				sprintf('<a href="%suploads/tx_l10nmgr/saved_files/%s">%s</a>', t3lib_div::getIndpEnv('TYPO3_SITE_URL'), $exportData['filename'], $exportData['filename'])
+			);
+		}
+
+		$out = sprintf('
+<table>
+	<thead>
+		<tr class="bgColor5 tableheader">
+			<th>%s</th>
+			<th>%s</th>
+			<th>%s</th>
+			<th>%s</th>
+			<th>%s</th>
+		</tr>
+	</thead>
+	<tbody>
+%s
+	</tbody>
+</table>',
+			$LANG->getLL('export.overview.date.label'),
+			$LANG->getLL('export.overview.configuration.label'),
+			$LANG->getLL('export.overview.type.label'),
+			$LANG->getLL('export.overview.targetlanguage.label'),
+			$LANG->getLL('export.overview.filename.label'),
+			implode( chr(10), $content )
+		);
+
+		return $out;
 	}
 
 	/**

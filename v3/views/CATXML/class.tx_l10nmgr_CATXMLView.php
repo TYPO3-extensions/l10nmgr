@@ -177,43 +177,45 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	}
 
 	function getFilename() {
-		$sourceLang = '';
-		$targetLang = '';
+//		$sourceLang = '';
+//		$targetLang = '';
+//
+//		if($this->exportType == '0'){
+//			$fileType = 'excel_export';
+//		}else{
+//			$fileType = 'catxml_export';
+//		}
+//
+//		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
+//			$sourceIso2L = '';
+//			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
+//			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
+//		}
+//
+//		if ($this->sysLang && t3lib_extMgm::isLoaded('static_info_tables'))        {
+//			$targetLangSysLangArr = t3lib_BEfunc::getRecord('sys_language',$this->sysLang);
+//			$targetLangArr = t3lib_BEfunc::getRecord('static_languages',$targetLangSysLangArr['static_lang_isocode']);
+//		}
+//
+//			// Set sourceLang for filename
+//		if (isset( $staticLangArr['lg_iso_2'] ) && !empty( $staticLangArr['lg_iso_2'] )) {
+//			$sourceLang = $staticLangArr['lg_iso_2'];
+//		}
+//
+//			// Use locale for targetLang in filename if available
+//		if (isset( $targetLangArr['lg_collate_locale'] ) && !empty( $targetLangArr['lg_collate_locale'] )) {
+//			$targetLang = $targetLangArr['lg_collate_locale'];
+//			// Use two letter ISO code if locale is not available
+//		}else if (isset( $targetLangArr['lg_iso_2'] ) && !empty( $targetLangArr['lg_iso_2'] )) {
+//			$targetLang = $targetLangArr['lg_iso_2'];
+//		}
+//
+//		$fileNamePrefix = (trim( $this->l10ncfgObj->getData('filenameprefix') )) ? $this->l10ncfgObj->getData('filenameprefix') : $fileType ;
+//
+//		// Setting filename:
+//		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
+		$filename = $this->getLocalFilename();
 
-		if($this->exportType == '0'){
-			$fileType = 'excel_export';
-		}else{
-			$fileType = 'catxml_export';
-		}
-
-		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
-			$sourceIso2L = '';
-			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
-			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
-		}
-
-		if ($this->sysLang && t3lib_extMgm::isLoaded('static_info_tables'))        {
-			$targetLangSysLangArr = t3lib_BEfunc::getRecord('sys_language',$this->sysLang);
-			$targetLangArr = t3lib_BEfunc::getRecord('static_languages',$targetLangSysLangArr['static_lang_isocode']);
-		}
-
-			// Set sourceLang for filename
-		if (isset( $staticLangArr['lg_iso_2'] ) && !empty( $staticLangArr['lg_iso_2'] )) {
-			$sourceLang = $staticLangArr['lg_iso_2'];
-		}
-
-			// Use locale for targetLang in filename if available
-		if (isset( $targetLangArr['lg_collate_locale'] ) && !empty( $targetLangArr['lg_collate_locale'] )) {
-			$targetLang = $targetLangArr['lg_collate_locale'];
-			// Use two letter ISO code if locale is not available
-		}else if (isset( $targetLangArr['lg_iso_2'] ) && !empty( $targetLangArr['lg_iso_2'] )) {
-			$targetLang = $targetLangArr['lg_iso_2'];
-		}
-
-		$fileNamePrefix = (trim( $this->l10ncfgObj->getData('filenameprefix') )) ? $this->l10ncfgObj->getData('filenameprefix') : $fileType ;
-
-		// Setting filename:
-		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
 		return $filename;
 	}
 
