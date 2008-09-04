@@ -11,8 +11,10 @@ t3lib_extMgm::addLLrefForTCAdescr('tx_l10nmgr_cfg','EXT:l10nmgr/locallang_csh_l1
 // Example for disabling localization of specific fields in tables like tt_content
 // Add as many fields as you need
 
-//t3lib_div::loadTCA('tt_content');
+t3lib_div::loadTCA('tt_content');
 //$TCA['tt_content']['columns']['imagecaption']['l10n_mode'] = 'exclude';
+//$TCA['tt_content']['columns']['image']['l10n_mode'] = 'prefixLangTitle';
+//$TCA['tt_content']['columns']['image']['l10n_display'] = 'defaultAsReadonly';
 
 $TCA["tx_l10nmgr_cfg"] = Array (
 	"ctrl" => Array (

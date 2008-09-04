@@ -136,14 +136,31 @@ class tx_l10nmgr_translationDataFactory {
 							$translationValue=$xmlTool->XML2RTE($row['XMLvalue']);									
 							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
 						} else {
+							//Substitute &amp; with & and <br/> with <br>
+							$row['XMLvalue']=str_replace('&amp;','&',$row['XMLvalue']);
+							$row['XMLvalue']=str_replace('<br/>','<br>',$row['XMLvalue']);
+							$row['values'][0]=str_replace('&amp;','&',$row['values'][0]);
+							$row['values'][0]=str_replace('<br/>','<br>',$row['values'][0]);
+
 							//check if $row['values'][0] is beginning of $row['XMLvalue']
+							//print "V0: ".$row['values'][0]."<br>";
+							//print "XML:".$row['XMLvalue']." |<br>";
 							$pattern = preg_replace('/\//i','\/',$row['values'][0]);
 							$pattern = '/^'.$pattern.'/';
 							if (preg_match($pattern, $row['XMLvalue'],$treffer)) {
+								//print "No TAG found!!!<br>";
+								//print $row['XMLvalue']."<br>";
 								$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['XMLvalue'];
-							} else {
+							} elseif (preg_match('/<[^>]+>/i', $row['XMLvalue'])) {
+								//print "TAG found!!!<br>";
+								//print $row['XMLvalue']."<br>";
 								$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0].$row['XMLvalue'];
+							} else {
+								//print "No TAG found!!!<br>";
+								//print $row['XMLvalue']."<br>";
+								$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['XMLvalue'];
 							}
+							//print "---<br>";
 							
 						}
 					}
