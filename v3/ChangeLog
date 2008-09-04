@@ -1,3 +1,12 @@
+2008-09-02 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Subsitute <br/> with <br> during import of transformed XML
+	* Added preserve tables on import
+	* Fixed bug with duplicate import of translation of nonRTE fields
+
+2008-09-01 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Subsitute & with &amp; in export when not an RTE-field
+	* Substitute &amp; with & on import when not an RTE-field and <br/> with <br> as import of <br/> doesn't work
+
 2008-07-25 Andreas Otto <andreas.otto@dkd.de>
 	* XML exports contain source and target lang iso-code in filename.
 	* A list of exports will be displayed if checkExports() has detected existing exports.

@@ -104,10 +104,8 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 										else {
 											$dataForTranslation=$tData['defaultValue'];
 										}
-										// Substitutions for XML conformity here
 										$_isTranformedXML=FALSE;
 										// Following checks are not enough! Fields that could be transformed to be XML conform are not transformed! textpic fields are not isRTE=1!!! No idea why...
-										// print_r($tData);
 										if ($tData['fieldType']=='text' &&  $tData['isRTE']) {
 											$dataForTranslationTranformed=$xmlTool->RTE2XML($dataForTranslation);
 											if ($dataForTranslationTranformed!==false) {
@@ -119,6 +117,10 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 											$output[]= "\t\t".'<data table="'.$table.'" elementUid="'.$elementUid.'" key="'.$key.'" transformations="1">'.$dataForTranslation.'</data>'."\n";
 										}
 										else {
+											//Substitute & with &amp; in non-RTE fields
+											$dataForTranslation=str_replace('&','&amp;',$dataForTranslation);
+											//$dataForTranslation = t3lib_div::deHSCentities($dataForTranslation);
+
 											$params = $BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');
 											if ($params['utf8'] =='1') {
 												$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);

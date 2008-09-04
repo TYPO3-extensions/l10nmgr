@@ -94,6 +94,11 @@ class tx_l10nmgr_xmltools {
 	 */
 	function XML2RTE($xmlstring) {
 		//fixed setting of Parser (TO-DO set it via typoscript)
+			
+			//Added because import failed
+			$xmlstring=str_replace('<br/>','<br>',$xmlstring);
+			$xmlstring=str_replace('<br />','<br>',$xmlstring);
+
 			$this->parseHTML->procOptions['typolist']=FALSE;
 			$this->parseHTML->procOptions['typohead']=FALSE;
 			$this->parseHTML->procOptions['keepPDIVattribs']=TRUE;
@@ -106,6 +111,7 @@ class tx_l10nmgr_xmltools {
 			$this->parseHTML->procOptions['HTMLparser_db.']['xhtml_cleaning']=TRUE;
 				//trick to preserve strong tags
 			$this->parseHTML->procOptions['denyTags']='strong';
+			$this->parseHTML->procOptions['preserveTables']=TRUE;
 			//$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
 			$this->parseHTML->procOptions['dontRemoveUnknownTags_db']=TRUE;
 
