@@ -1,3 +1,6 @@
+2008-09-09 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Fixed bug with tags in non RTE fields (to be revised)
+
 2008-09-02 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Subsitute <br/> with <br> during import of transformed XML
 	* Added preserve tables on import
