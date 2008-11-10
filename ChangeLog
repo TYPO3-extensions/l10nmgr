@@ -1,3 +1,9 @@
+2008-11-10 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added optional BEenableFields to record selection
+
+2008-10-21 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added image, shortcut, templavoila_pi1 to the list of RTE-enabled fields
+
 2008-09-09 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Fixed bug with tags in non RTE fields (to be revised)
 

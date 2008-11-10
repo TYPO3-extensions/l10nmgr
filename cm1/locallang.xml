@@ -43,6 +43,7 @@
 			<label index="export.xml.headline.title">Export: </label>
 			<label index="export.xml.source-language.title">Force source language: </label>
 			<label index="export.xml.new.title">New/Changed content only </label>
+			<label index="export.xml.noHidden.title">No hidden content </label>
 			<label index="export.xml.check_exports.title">Check for already exported content</label>
 			<label index="export.xml.no_check_xml.title">Do not check XML</label>
 			<label index="export.xml.checkXml.title">Check XML</label>
@@ -60,6 +61,7 @@
 
 			<label index="import.xml.headline.title">Import: </label>
 			<label index="import.xml.old-format.title">Import old format (v2)</label>
+			<label index="import.xml.delL10N.title">Delete localizations before import</label>
 			<label index="import.error.title">Error in Import:</label>
 			<label index="import.success.message">Import done!</label>
 

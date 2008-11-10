@@ -117,6 +117,14 @@ class tx_l10nmgr_tools {
 
 		if ($this->t8Tools->isTranslationInOwnTable($table))	{
 
+			// Check for disabled field settings
+			//print "###".$GLOBALS['BE_USER']->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden']."---";
+			if (!empty($GLOBALS['BE_USER']->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden'])) {
+				$hiddenClause = t3lib_BEfunc::BEenableFields($table,$inv=0);
+			} else {
+				$hiddenClause = "";
+			}
+
 				// First, select all records that are default language OR international:
 			$allRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 				'*',
@@ -124,9 +132,11 @@ class tx_l10nmgr_tools {
 				'pid='.intval($pageId).
 					' AND '.$TCA[$table]['ctrl']['languageField'].'<=0'.
 					($GLOBALS['TCA'][$table]['ctrl']['versioningWS'] ? ' AND '.$table.'.t3ver_state<=0' : '').
+					$hiddenClause.
 					t3lib_BEfunc::deleteClause($table).
 					t3lib_BEfunc::versioningPlaceholderClause($table)
 			);
+
 
 			return $allRows;
 		}
@@ -516,7 +526,7 @@ class tx_l10nmgr_tools {
 			}
 		}
 		//TODO: check richtext settings depeding on type value (TCA based)
-		if (($contentRow['CType']=='text') || ($contentRow['CType']=='textpic') || ($contentRow['CType']=='bullets')) {
+		if (($contentRow['CType']=='text') || ($contentRow['CType']=='textpic') || ($contentRow['CType']=='bullets') || ($contentRow['CType']=='image') || ($contentRow['CType']=='templavoila_pi1') || ($contentRow['CType']=='shortcut')) {
 			list(,,$kFieldName) = explode(':',$key);
 			if ($kFieldName=='bodytext') {				
 				return true;
@@ -691,6 +701,8 @@ class tx_l10nmgr_tools {
 	function flushIndexOfWorkspace($ws)	{
 		$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_l10nmgr_index','workspace='.intval($ws));
 	}
+
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/cm1/class.tx_l10nmgr_tools.php'])	{
