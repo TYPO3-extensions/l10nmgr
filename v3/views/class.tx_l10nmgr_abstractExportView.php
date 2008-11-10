@@ -45,6 +45,7 @@ class tx_l10nmgr_abstractExportView {
 	*	 flags for controlling the fields which should render in the output:
 	*/
 	var $modeOnlyChanged=FALSE;
+	var $modeNoHidden=FALSE;
 	var $modeOnlyNew=FALSE;
 
 	function __construct($l10ncfgObj, $sysLang) {
@@ -56,6 +57,10 @@ class tx_l10nmgr_abstractExportView {
 		return $exportType;
 	}
 
+	function setModeNoHidden() {
+
+		$this->modeNoHidden=TRUE;
+	}
 	function setModeOnlyChanged() {
 
 		$this->modeOnlyChanged=TRUE;

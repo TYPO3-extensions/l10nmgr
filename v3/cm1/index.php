@@ -108,7 +108,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				'export_xml'   => $LANG->getLL('general.action.export.xml.title'),
 			),
 			'lang' => array(),
-			'onlyChangedContent' => ''
+			'onlyChangedContent' => '',
+			'noHidden' => ''
 		);
 
 			// Load system languages into menu:
@@ -176,7 +177,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$this->content.=$this->doc->section($LANG->getLL('general.export.choose.action.title'),
 						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[lang]",$this->sysLanguage,$this->MOD_MENU["lang"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
 						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
-						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[onlyChangedContent]",$this->MOD_SETTINGS["onlyChangedContent"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.new.title') . '</br>'
+						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[onlyChangedContent]",$this->MOD_SETTINGS["onlyChangedContent"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.new.title') . 
+						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[noHidden]",$this->MOD_SETTINGS["noHidden"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.noHidden.title'). '</br>'
 					);
 
 					// Render content:
@@ -288,6 +290,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$info .= '<input type="submit" value="Export" name="export_xml" /><br /><br /><br/>';
 		$info .= $this->doc->header($LANG->getLL('import.xml.headline.title'));
 		$info .= '<input type="checkbox" value="1" name="import_oldformat" /> ' . $LANG->getLL('import.xml.old-format.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="import_delL10N" /> ' . $LANG->getLL('import.xml.delL10N.title') . '<br />';
 		$info .= '<input type="file" size="60" name="uploaded_import_file" /><br /><input type="submit" value="Import" name="import_xml" /><br /><br /> ';
 		$info .= $this->doc->header($LANG->getLL('misc.messages.title'));
 
@@ -296,6 +299,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
 			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
+			if (t3lib_div::_POST('import_delL10N')=='1') {
+				$info.='Previous localizations will be deleted before importing new ones!';
+				//$status = 
+			}
 			if (t3lib_div::_POST('import_oldformat')=='1') {
 				//Support for the old Format of XML Import (without pagegrp element)
 				$info.='Import uses the old Format without pagegrp element and checks!';
@@ -335,6 +342,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			}
 			if ($this->MOD_SETTINGS["onlyChangedContent"]) {
 				$viewClass->setModeOnlyChanged();
+			}
+			if ($this->MOD_SETTINGS["noHidden"]) {
+				$viewClass->setModeNoHidden();
 			}
 			//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
@@ -420,6 +430,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 				if ($this->MOD_SETTINGS["onlyChangedContent"]) {
 					$htmlListView->setModeOnlyChanged();
+				}
+				if ($this->MOD_SETTINGS["noHidden"]) {
+					$htmlListView->setModeNoHidden();
 				}
 				if ($this->MOD_SETTINGS["action"]=='link') {
 					$htmlListView->setModeShowEditLinks();
