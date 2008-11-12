@@ -1,4 +1,7 @@
-2008-11-10 Daniel Zielinski <d.zielinski@l10ntech.de>
+2008-11-11 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added option to delete previous localizations before 2nd import (only NEW elements)
+
+2008-10-21 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added optional BEenableFields to record selection
 
 2008-10-21 Daniel Zielinski <d.zielinski@l10ntech.de>

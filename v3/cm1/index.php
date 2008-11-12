@@ -299,17 +299,13 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
 			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
-			if (t3lib_div::_POST('import_delL10N')=='1') {
-				$info.='Previous localizations will be deleted before importing new ones!';
-				//$status = 
-			}
 			if (t3lib_div::_POST('import_oldformat')=='1') {
-				//Support for the old Format of XML Import (without pagegrp element)
-				$info.='Import uses the old Format without pagegrp element and checks!';
+				//Support for the old Format of XML Import (without pageGrp element)
+				$info.=$LANG->getLL('import.xml.old-format.message');
 				$translationData=$factory->getTranslationDataFromOldFormatCATXMLFile($uploadedTempFile);
 				$translationData->setLanguage($sysLang);
 				$service->saveTranslation($l10ncfgObj,$translationData);
-				$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>(command-count:'.$service->lastTCEMAINCommandsCount.')';
+				$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
 			}
 			else {
 				// Relevant processing of XML Import with the help of the Importmanager
@@ -319,11 +315,17 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 					$info.='<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
 				}
 				else {
+					if (t3lib_div::_POST('import_delL10N')=='1') {
+						$info.=$LANG->getLL('import.xml.delL10N.message').'<br/>';
+						$delL10NData = $importManager->getDelL10NDataFromCATXMLNodes($importManager->getXMLNodes()); 
+						$delCount = $importManager->delL10N($delL10NData);
+						$info.='Deleted '.$delCount.' localizations.'.'<br/>';
+					}
 					$translationData=$factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
 					$translationData->setLanguage($this->sysLanguage);
 					unset($importManager);
 					$service->saveTranslation($l10ncfgObj,$translationData);
-					$info.='<br/><br/>'.$this->doc->icons(-1).'Import done<br/><br/>(command-count:'.$service->lastTCEMAINCommandsCount.')';
+					$info.='<br/><br/>'.$this->doc->icons(-1).'Import done<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
 				}
 			}
 			t3lib_div::unlink_tempfile($uploadedTempFile);

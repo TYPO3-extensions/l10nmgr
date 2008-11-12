@@ -22,7 +22,13 @@
 		</languageKey>
 	</data>
 	<orig_hash type="array">
+		<languageKey index="de" type="array">
+			<label index="title" type="integer">116914990</label>
+		</languageKey>
 	</orig_hash>
 	<orig_text type="array">
+		<languageKey index="de" type="array">
+			<label index="title">L10N Translation Index Overview</label>
+		</languageKey>
 	</orig_text>
 </T3locallang>

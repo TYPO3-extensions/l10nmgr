@@ -138,6 +138,70 @@ class tx_l10nmgr_CATXMLImportManager {
 			$this->headerData[$k]=$v[0]['values'][0];
 		}
 	}
+
+	/**
+	 * Get pageGrp IDs for preview link generation
+	 *
+	 * @param	array		XML nodes from CATXML
+	 * @return	array		Page IDs for preview
+	 */
+	function getPidsFromCATXMLNodes(&$xmlNodes) {
+		$pids = array();
+
+		if (is_array($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp']))	{
+		   	foreach($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'] as $pageGrp)	{
+				$pids[]=$pageGrp[attrs][id];
+			}
+		}
+		return $pids;
+	}
+
+	/**
+	 * Get uids for which localizations shall be removed on 2nd import if option checked
+	 *
+	 * @param	array		XML nodes from CATXML
+	 * @return	array		Uids for which localizations shall be removed
+	 */
+	function getDelL10NDataFromCATXMLNodes(&$xmlNodes) {
+		//get L10Ns to be deleted before import
+
+		$delL10NUids = array();
+		if (is_array($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp']))	{
+		   	foreach($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'] as $pageGrp)	{
+				if (is_array($pageGrp['ch']['data'])) {
+					foreach($pageGrp['ch']['data'] as $row)	{
+						if (preg_match('/NEW/',$row['attrs']['key'])){
+							$delL10NUids[] = $row['attrs']['table'].':'.$row['attrs']['elementUid'];
+						}
+					}
+				}
+			}
+		}
+		return array_unique($delL10NUids);
+	}
+
+	/**
+	 * Delete previous localisations
+	 *
+	 * @param	array		table:id combinations to be deleted
+	 * @return	int		Number of deleted elements		
+	 */
+	function delL10N($delL10NData) {
+
+		//delete previous L10Ns
+		$cmdCount = 0;
+		foreach ($delL10NData as $element) {
+			list($table,$elementUid) = split(":", $element);
+			$where = "l18n_parent = $elementUid AND sys_language_uid = ".$this->headerData['t3_sysLang']." AND t3ver_wsid = ".$this->headerData['t3_workspaceId'];
+			if ($table == 'pages') {
+				$table = 'pages_language_overlay';
+				$where = "pid = $elementUid AND sys_language_uid = ".$this->headerData['t3_sysLang']." AND t3ver_wsid = ".$this->headerData['t3_workspaceId'];
+			}
+			$delDataQuery = $GLOBALS['TYPO3_DB']->exec_DELETEquery($table,$where);
+			$cmdCount++;
+		}
+		return $cmdCount;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/class.tx_l10nmgr_translationDataFactory.php']) {
