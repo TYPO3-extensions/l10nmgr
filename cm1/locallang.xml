@@ -25,7 +25,7 @@
 			<label index="general.list.headline.tables">Tables</label>
 			<label index="general.list.headline.exclude.title">Exclude</label>
 			<label index="general.list.headline.include.title">Include</label>
-			<label index="file.settings.downloads.title">Download settings files:</label>
+			<label index="file.settings.downloads.title">Download settings files</label>
 			<label index="file.settings.available.title">Available settings files:</label>
 			<label index="file.settings.across.title">across</label>
 			<label index="file.settings.dejaVu.title">DéjàVu</label>
@@ -34,7 +34,7 @@
 			<label index="file.settings.download.title">Download settings file</label>
 			<label index="inlineedit.save.alert.title">You are about to create/update ALL localizations in this form? Continue?</label>
 			<label index="inlineedit.cancel.alert.title">You are about to discard any changes you made. Continue?</label>
-			<label index="export.xml.headline.title">Export: </label>
+			<label index="export.xml.headline.title">Export</label>
 			<label index="export.xml.source-language.title">Force source language: </label>
 			<label index="export.xml.new.title">New/Changed content only </label>
 			<label index="export.xml.noHidden.title">No hidden content </label>
@@ -50,7 +50,7 @@
 			<label index="export.overview.type.label">Type</label>
 			<label index="export.overview.targetlanguage.label">Target language</label>
 			<label index="export.overview.filename.label">Filename</label>
-			<label index="import.xml.headline.title">Import: </label>
+			<label index="import.xml.headline.title">Import</label>
 			<label index="import.xml.old-format.title">Import old format (v2)</label>
 			<label index="import.xml.old-format.message">Import uses the old format without pageGrp element and checks!</label>
 			<label index="import.xml.delL10N.title">Delete localizations before import</label>
@@ -72,6 +72,7 @@
 			<label index="render_overview.nodiff.message">No diff available.</label>
 			<label index="render_overview.clickedit.message">Click to edit</label>
 			<label index="render_overview.clicklocalize.message">Click to localize</label>
+			<label index="l10nmgr.documentation.title">Documentation</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="general.action.refresh.button.title">Aktualisieren</label>
@@ -102,7 +103,7 @@
 			<label index="file.settings.download.title">Einstellungsdatei herunterladen</label>
 			<label index="inlineedit.save.alert.title">Sie sind dabei, ALLE Übersetzungen in diesem Formular zu erstellen/aktualisieren! Möchten Sie fortfahren?</label>
 			<label index="inlineedit.cancel.alert.title">Sie sind dabei, alle Änderungen zu verwerfen. Möchten Sie fortfahren?</label>
-			<label index="export.xml.headline.title">Export:</label>
+			<label index="export.xml.headline.title">Export</label>
 			<label index="export.xml.source-language.title">Ausgangssprache erzwingen:</label>
 			<label index="export.xml.new.title">Nur neue/geänderte Inhalte übersetzen</label>
 			<label index="export.xml.noHidden.title">Keine versteckten Inhalte</label>
@@ -118,7 +119,7 @@
 			<label index="export.overview.type.label">Typ</label>
 			<label index="export.overview.targetlanguage.label">Zielsprache</label>
 			<label index="export.overview.filename.label">Dateiname</label>
-			<label index="import.xml.headline.title">Import:</label>
+			<label index="import.xml.headline.title">Import</label>
 			<label index="import.xml.old-format.title">Altes Format importieren (v2)</label>
 			<label index="import.xml.old-format.message">Import verwendet Format ohne pageGrp-Elemente und Prüfmechanismen!</label>
 			<label index="import.xml.delL10N.title">Lösche Lokalisierungen vor Import</label>
@@ -609,7 +610,7 @@
 			<label index="general.list.headline.tables">Tables</label>
 			<label index="general.list.headline.exclude.title">Exclude</label>
 			<label index="general.list.headline.include.title">Include</label>
-			<label index="file.settings.downloads.title">Download settings files:</label>
+			<label index="file.settings.downloads.title">Download settings files</label>
 			<label index="file.settings.available.title">Available settings files:</label>
 			<label index="file.settings.across.title">across</label>
 			<label index="file.settings.dejaVu.title">DéjàVu</label>
@@ -673,7 +674,7 @@
 			<label index="general.list.headline.tables">Tables</label>
 			<label index="general.list.headline.exclude.title">Exclude</label>
 			<label index="general.list.headline.include.title">Include</label>
-			<label index="file.settings.downloads.title">Download settings files:</label>
+			<label index="file.settings.downloads.title">Download settings files</label>
 			<label index="file.settings.available.title">Available settings files:</label>
 			<label index="file.settings.across.title">across</label>
 			<label index="file.settings.dejaVu.title">DéjàVu</label>
