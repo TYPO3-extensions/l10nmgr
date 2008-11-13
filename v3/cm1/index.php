@@ -149,7 +149,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 					document.location = URL;
 				}
 			</script>
-		';
+			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/tabs.js') . '"></script>
+			<link rel="stylesheet" type="text/css" href="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/tabs.css') . '" />';
 
 
 			// Find l10n configuration record:
@@ -261,11 +262,37 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 
-		// Buttons:
-		// Temporary links to settings files. Should be changed when download of L10N packages is available.
 		$info .= '<br/>';
-		$info .= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" /><br />';
-		$info .= '<br />'.$this->doc->header($LANG->getLL('file.settings.downloads.title'));
+		$info .= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" /><br /><br/>';
+		
+		$info .= '<div id="ddtabs" class="basictab" style="border:0px solid gray;margin:0px;">
+                                <ul style="border:0px solid #999999; ">
+                                <li><a onClick="expandcontent(\'sc1\', this)" style="margin:0px;">'.$LANG->getLL('export.xml.headline.title').'</a></li>
+                                <li><a onClick="expandcontent(\'sc2\', this)" style="margin:0px;">'.$LANG->getLL('import.xml.headline.title').'</a></li>
+                                <li><a onClick="expandcontent(\'sc3\', this)" style="margin:0px;">'.$LANG->getLL('file.settings.downloads.title').'</a></li>
+                                <li><a onClick="expandcontent(\'sc4\', this)" style="margin:0px;">'.$LANG->getLL('l10nmgr.documentation.title').'</a></li>
+				</ul></div>';
+
+		$info .= '<div id="tabcontentcontainer" style="height:120px;border:1px solid gray;padding-right:5px;width:100%;">';
+
+		$info .= '<div id="sc1" class="tabcontent">';
+		//$info .= '<div id="sc1" class="tabcontent">';
+		$_selectOptions=array('0'=>'-default-');
+		$_selectOptions=$_selectOptions+$this->MOD_MENU["lang"];
+		$info .= '<input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="no_check_xml" /> ' . $LANG->getLL('export.xml.no_check_xml.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="check_utf8" /> ' . $LANG->getLL('export.xml.checkUtf8.title') . '<br />';
+		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions);
+		$info .= '<br /><br/>';
+		$info .= '<input type="submit" value="Export" name="export_xml" /><br /><br /><br/>';
+		$info .= '</div>';
+		$info .= '<div id="sc2" class="tabcontent">';
+		$info .= '<input type="checkbox" value="1" name="make_preview_link" /> ' . $LANG->getLL('import.xml.make_preview_link.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="import_delL10N" /> ' . $LANG->getLL('import.xml.delL10N.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="import_oldformat" /> ' . $LANG->getLL('import.xml.old-format.title') . '<br /><br />';
+		$info .= '<input type="file" size="60" name="uploaded_import_file" /><br /><br /><input type="submit" value="Import" name="import_xml" /><br /><br /> ';
+		$info .= '</div>';
+		$info .= '<div id="sc3" class="tabcontent">';
 		$info .= $this->doc->icons(1) .
 			   $LANG->getLL('file.settings.available.title');
 
@@ -276,24 +303,14 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			if ( is_file($currentFile) && is_readable($currentFile) ) {
 
 				$size = t3lib_div::formatSize((int)filesize($currentFile), ' Bytes| KB| MB| GB');
-				$info .= ' <a href="' . t3lib_div::rawUrlEncodeFP($currentFile) . '" title="' . $LANG->getLL('file.settings.download.title') . '" target="_blank">' . $LANG->getLL('file.settings.' . $settingId . '.title') . ' (' . $size . ')' . '</a> | ';
+				$info .= '<br/><a href="' . t3lib_div::rawUrlEncodeFP($currentFile) . '" title="' . $LANG->getLL('file.settings.download.title') . '" target="_blank">' . $LANG->getLL('file.settings.' . $settingId . '.title') . ' (' . $size . ')' . '</a> ';
 			}
 		}
-
-		$info .= '<br /><br />'.$this->doc->header($LANG->getLL('export.xml.headline.title'));
-		$_selectOptions=array('0'=>'-default-');
-		$_selectOptions=$_selectOptions+$this->MOD_MENU["lang"];
-		$info .= '<input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
-		$info .= '<input type="checkbox" value="1" name="no_check_xml" /> ' . $LANG->getLL('export.xml.no_check_xml.title') . '<br />';
-		$info .= '<input type="checkbox" value="1" name="check_utf8" /> ' . $LANG->getLL('export.xml.checkUtf8.title') . '<br />';
-		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions);
-		$info .= '<br />';
-		$info .= '<input type="submit" value="Export" name="export_xml" /><br /><br /><br/>';
-		$info .= $this->doc->header($LANG->getLL('import.xml.headline.title'));
-		$info .= '<input type="checkbox" value="1" name="make_preview_link" /> ' . $LANG->getLL('import.xml.make_preview_link.title') . '<br />';
-		$info .= '<input type="checkbox" value="1" name="import_delL10N" /> ' . $LANG->getLL('import.xml.delL10N.title') . '<br />';
-		$info .= '<input type="checkbox" value="1" name="import_oldformat" /> ' . $LANG->getLL('import.xml.old-format.title') . '<br />';
-		$info .= '<input type="file" size="60" name="uploaded_import_file" /><br /><input type="submit" value="Import" name="import_xml" /><br /><br /> ';
+		$info .= '</div>';
+		$info .= '<div id="sc4" class="tabcontent">';
+		$info .= '<a href="'.t3lib_extMgm::extRelPath('l10nmgr').'doc/manual.sxw" target="_new">Download</a>';
+		$info .= '</div>';
+		$info .= '</div>';
 		$info .= $this->doc->header($LANG->getLL('misc.messages.title'));
 
 		// Read uploaded file:
@@ -365,6 +382,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$this->_downloadXML($viewClass);
 			}
 		}
+		$info .= '</div>';
 
 		return $info;
 	}
