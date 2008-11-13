@@ -59,9 +59,18 @@ class tx_l10nmgr_mkPreviewLink {
 			$ttlHours = intval($GLOBALS['BE_USER']->getTSConfigVal('options.workspaces.previewLinkTTLHours'));
 			$ttlHours = ($ttlHours ? $ttlHours : 24*2);
 			$params = 'id='.$pageId.'&L='.$this->sysLang.'&ADMCMD_previewWS='.$this->workspaceId;
-			$previewUrls[] = t3lib_div::getIndpEnv('TYPO3_SITE_URL').'index.php?ADMCMD_prev='.t3lib_BEfunc::compilePreviewKeyword($params, $GLOBALS['BE_USER']->user['uid'],60*60*$ttlHours);
+			$previewUrls[$pageId] = t3lib_div::getIndpEnv('TYPO3_SITE_URL').'index.php?ADMCMD_prev='.t3lib_BEfunc::compilePreviewKeyword($params, $GLOBALS['BE_USER']->user['uid'],60*60*$ttlHours);
 		}	
 		return $previewUrls;
+	}
+
+	function renderPreviewLinks($previewLinks) {
+		$out='<ol>';
+		foreach ($previewLinks as $key => $previewLink) {
+			$out.='<li>'.$key.': <a href="'.$previewLink.'" target="_new">'.$previewLink.'</a></li>';
+		}
+		$out.='</ol>';
+		return $out;
 	}
 
 }

@@ -56,6 +56,8 @@
 			<label index="import.xml.delL10N.title">Delete localizations before import</label>
 			<label index="import.xml.make_preview_link.title">Generate preview links</label>
 			<label index="import.xml.preview_links.title">Preview links</label>
+			<label index="import.xml.done.message">Import done!</label>
+			<label index="import.xml.delL10N.count.message">Deleted %s localizations.</label>
 			<label index="import.xml.delL10N.message">Previous localizations will be deleted before importing new ones!</label>
 			<label index="import.error.title">Error in Import:</label>
 			<label index="import.success.message">Import done!</label>

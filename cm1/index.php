@@ -319,27 +319,21 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				else {
 					if (t3lib_div::_POST('import_delL10N')=='1') {
 						$info.=$LANG->getLL('import.xml.delL10N.message').'<br/>';
-						$delL10NData = $importManager->getDelL10NDataFromCATXMLNodes($importManager->getXMLNodes()); 
-						$delCount = $importManager->delL10N($delL10NData);
-						$info.='Deleted '.$delCount.' localizations.'.'<br/><br/>';
+						$delCount = $importManager->delL10N($importManager->getDelL10NDataFromCATXMLNodes($importManager->xmlNodes));
+						$info.= sprintf($LANG->getLL('import.xml.delL10N.count.message'),$delCount).'<br/><br/>'; 
 					}
 					if (t3lib_div::_POST('make_preview_link')=='1') {
-						$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->getXMLNodes());
+						$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
 						$info.='<b>'.$LANG->getLL('import.xml.preview_links.title').'</b><br/>';
 						$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLink');
-						$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=0, $t3_sysLang=1, $pageIds);
-						$previewLinks=$mkPreviewLinks->mkPreviewLinks();
-						$info.='<ol>';
-						foreach ($previewLinks as $previewLink) {
-							$info.='<li><a href="'.$previewLink.'" target="_new">'.$previewLink.'</a></li>';
-						}
-						$info.='</ol>';
+						$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
+						$info.=$mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
 					}
 					$translationData=$factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
 					$translationData->setLanguage($this->sysLanguage);
 					unset($importManager);
 					$service->saveTranslation($l10ncfgObj,$translationData);
-					$info.='<br/>'.$this->doc->icons(-1).'Import done<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
+					$info.='<br/>'.$this->doc->icons(-1).$LANG->getLL('import.xml.done.message').'<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
 				}
 			}
 			t3lib_div::unlink_tempfile($uploadedTempFile);
