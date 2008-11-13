@@ -72,6 +72,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translati
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translationDataFactory.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nBaseService.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_CATXMLImportManager.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_mkPreviewLinkService.php');
 
 require_once(PATH_t3lib.'class.t3lib_parsehtml_proc.php');
 
@@ -289,8 +290,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$info .= '<br />';
 		$info .= '<input type="submit" value="Export" name="export_xml" /><br /><br /><br/>';
 		$info .= $this->doc->header($LANG->getLL('import.xml.headline.title'));
-		$info .= '<input type="checkbox" value="1" name="import_oldformat" /> ' . $LANG->getLL('import.xml.old-format.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="make_preview_link" /> ' . $LANG->getLL('import.xml.make_preview_link.title') . '<br />';
 		$info .= '<input type="checkbox" value="1" name="import_delL10N" /> ' . $LANG->getLL('import.xml.delL10N.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="import_oldformat" /> ' . $LANG->getLL('import.xml.old-format.title') . '<br />';
 		$info .= '<input type="file" size="60" name="uploaded_import_file" /><br /><input type="submit" value="Import" name="import_xml" /><br /><br /> ';
 		$info .= $this->doc->header($LANG->getLL('misc.messages.title'));
 
@@ -319,13 +321,25 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 						$info.=$LANG->getLL('import.xml.delL10N.message').'<br/>';
 						$delL10NData = $importManager->getDelL10NDataFromCATXMLNodes($importManager->getXMLNodes()); 
 						$delCount = $importManager->delL10N($delL10NData);
-						$info.='Deleted '.$delCount.' localizations.'.'<br/>';
+						$info.='Deleted '.$delCount.' localizations.'.'<br/><br/>';
+					}
+					if (t3lib_div::_POST('make_preview_link')=='1') {
+						$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->getXMLNodes());
+						$info.='<b>'.$LANG->getLL('import.xml.preview_links.title').'</b><br/>';
+						$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLink');
+						$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=0, $t3_sysLang=1, $pageIds);
+						$previewLinks=$mkPreviewLinks->mkPreviewLinks();
+						$info.='<ol>';
+						foreach ($previewLinks as $previewLink) {
+							$info.='<li><a href="'.$previewLink.'" target="_new">'.$previewLink.'</a></li>';
+						}
+						$info.='</ol>';
 					}
 					$translationData=$factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
 					$translationData->setLanguage($this->sysLanguage);
 					unset($importManager);
 					$service->saveTranslation($l10ncfgObj,$translationData);
-					$info.='<br/><br/>'.$this->doc->icons(-1).'Import done<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
+					$info.='<br/>'.$this->doc->icons(-1).'Import done<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
 				}
 			}
 			t3lib_div::unlink_tempfile($uploadedTempFile);
