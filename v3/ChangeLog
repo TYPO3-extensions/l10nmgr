@@ -1,3 +1,6 @@
+2008-11-13 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added page preview link generation on import.
+
 2008-11-11 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added option to delete previous localizations before 2nd import (only NEW elements)
 
