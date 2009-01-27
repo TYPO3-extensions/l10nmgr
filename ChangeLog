@@ -1,3 +1,7 @@
+2009-01-27 Kasper Skårhøj
+
+	* Various modifications.
+	
 2008-02-01 Kasper Skårhøj
 
 	* Added --noFlush flag to command line cleaner tool, extended --pid to accept comma separated list of PIDs

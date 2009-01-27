@@ -84,6 +84,7 @@ class tx_l10nmgr_index extends tx_lowlevel_cleaner_core {
 		$this->cli_options[] = array('--workspace id', 'Setting workspace uid for the session. Default is "0" for live workspace. The translation index depends on the workspace.');
 		$this->cli_options[] = array('--depth int', 'Setting traversal depth. 0 (zero) will only analyse start page (see --pid), 1 will traverse one level of subpages etc.');
 		$this->cli_options[] = array('--noFlush', 'If set, the index for the workspace will not be flushed. Normally you want to flush the index as a part of the process to make sure the rebuild of the index is empty before building it. But in cases you build individual parts of the tree you may like to use this option.');
+		$this->cli_options[] = array('--bypassFilter', 'If set, the external filter will not be called. The external filter allows other extensions to block certain records from getting processed. For instance TemplaVoila provides such a filter than will make sure records which are not used on a page are not indexed.');
 
 		$this->cli_help['name'] = 'tx_l10nmgr_index -- Building translation index';
 		$this->cli_help['description'] = trim('
@@ -150,6 +151,7 @@ Traversing page tree and building an index of translation needs
 					// Init:
 				$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
 				$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
+				$t8Tools->bypassFilter = $this->cli_isArg('--bypassFilter') ? TRUE : FALSE;
 
 				$pageRecord = t3lib_BEfunc::getRecord('pages',$uid);
 				if (($pageRecord['l18n_cfg']&2)!=2 && $pageRecord['doktype']<200 && !isset($excludeIndex['pages:'.$pageId]))	{
@@ -175,7 +177,7 @@ Traversing page tree and building an index of translation needs
 	function main_autoFix($resultArray)	{
 			// Init:
 		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
-		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
+		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable
 
 		if (!$this->cli_isArg('--noFlush'))	{
 			echo 'Flushing translation index for workspace '.$GLOBALS['BE_USER']->workspace.chr(10);

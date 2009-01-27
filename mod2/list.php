@@ -146,9 +146,8 @@ class tx_l10nmgr_module1 extends t3lib_SCbase {
 		$tRows = array();
 		$c=0;
 		foreach($priorities as $priorityRecord)	{
-			$c++;
-
 			if ($lTable = $this->languageRows($priorityRecord['languages'],$priorityRecord['element']))	{
+				$c++;
 				$tRows[] = '
 				<tr>
 					<td class="bgColor5"><strong>#'.($c).': '.htmlspecialchars($priorityRecord['title']).'</strong><br>'.htmlspecialchars($priorityRecord['description']).'</td>
@@ -156,7 +155,7 @@ class tx_l10nmgr_module1 extends t3lib_SCbase {
 				<tr>
 					<td>'.$lTable.'</td>
 				</tr>';
-		}
+			}
 		}
 			
 		$content.='<table border="0" cellpadding="4" cellspacing="2">'.implode('',$tRows).'</table>';
@@ -198,11 +197,22 @@ class tx_l10nmgr_module1 extends t3lib_SCbase {
 				$icon = t3lib_iconWorks::getIconImage($el[0], $rec_on, $this->doc->backPath,' align="top" title="'.t3lib_BEfunc::getRecordIconAltText($rec_on,$el[0]).'"');
 				$icon = $this->doc->wrapClickMenuOnIcon($icon, $el[0], $rec_on['uid'],2);
 
+				$linkToIt = '<a href="#" onclick="'.htmlspecialchars('parent.list_frame.location.href="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'cm2/index.php?table='.$el[0].'&uid='.$el[1].'"; return false;').'" target="listframe">
+					'.t3lib_BEfunc::getRecordTitle($el[0],$rec_on,TRUE).'
+						</a>';
 
-				$cells = '<td>'.$icon.'
-							<a href="#" onclick="'.htmlspecialchars('parent.list_frame.location.href="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'cm2/index.php?table='.$el[0].'&uid='.$el[1].'"; return false;').'" target="listframe">
-							'.t3lib_BEfunc::getRecordTitle($el[0],$rec_on,TRUE).'
-							</a></td>';
+				if ($el[0]=='pages')	{	
+						// If another page module was specified, replace the default Page module with the new one
+					$newPageModule = trim($GLOBALS['BE_USER']->getTSConfigVal('options.overridePageModule'));
+					$pageModule = t3lib_BEfunc::isModuleSetInTBE_MODULES($newPageModule) ? $newPageModule : 'web_layout';
+				
+					$path_module_path = t3lib_div::resolveBackPath($GLOBALS['BACK_PATH'].'../'.substr($GLOBALS['TBE_MODULES']['_PATHS'][$pageModule],strlen(PATH_site)));
+					$onclick = 'parent.list_frame.location.href="'.$path_module_path.'?id='.$el[1].'"; return false;';
+					$pmLink = '<a href="#" onclick="'.htmlspecialchars($onclick).'" target="listframe"><i>[Edit page]</i></a>';
+				} else {$pmLink = '';}
+					
+				$cells = '<td>'.$icon.$linkToIt.$pmLink.'</td>';
+							
 				foreach($languages as $l)	{
 					if ($l>=1) $cells.= '<td align="center">'.$hookObj->calcStat(array($el[0],$el[1]), $l).'</td>';
 				}
