@@ -199,8 +199,8 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/tx_l10nmgr_l10nmgrconfiguration_detail.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/tx_l10nmgr_l10nmgrconfiguration_detail.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_l10nHTMLListView.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_l10nHTMLListView.php']);
 }
 
 
