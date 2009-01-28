@@ -1,3 +1,9 @@
+2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added option to enable/disable FTP upload via extension configuration
+
+2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added option to hide/display hidden system languages via extension configuration 
+
 2009-01-24 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added options to CLI export script (only changed content, skip hidden, multiple target languages & l10ncfgs, FTP upload!)
 	* Revision 3.1 now

@@ -100,6 +100,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	function menuConfig() {
 		global $LANG;
 
+		$this->loadExtConf();
 		$this->MOD_MENU = Array (
 			'action' => array(
 				''             => $LANG->getLL('general.action.blank.title'),
@@ -116,9 +117,14 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			// Load system languages into menu:
 		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
 		$sysL = $t8Tools->getSystemLanguages();
+
 		foreach($sysL as $sL)	{
 			if ($sL['uid']>0 && $GLOBALS['BE_USER']->checkLanguageAccess($sL['uid']))	{
-				$this->MOD_MENU['lang'][$sL['uid']] = $sL['title'];
+				if ($this->lConf['enable_hidden_languages'] == 1) {
+					$this->MOD_MENU['lang'][$sL['uid']] = $sL['title'];
+				} elseif ($sL['hidden'] == 0) {
+					$this->MOD_MENU['lang'][$sL['uid']] = $sL['title'];
+				}
 			}
 		}
 
@@ -526,6 +532,16 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			// Create diff-result:
 		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
 		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
+	}
+
+	/**
+	 * The function loadExtConf loads the extension configuration.
+	 * @return      void
+	 *
+	*/
+	function loadExtConf() {
+		// Load the configuration
+		$this->lConf = unserialize( $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr'] );
 	}
 }
 

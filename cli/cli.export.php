@@ -145,6 +145,7 @@ class tx_cliexport_cli extends t3lib_cli {
         } elseif ($format == 'EXCEL') {
             $msg.= "Not yet implemented!";
         } 
+	// Send email notification if set
 
 	$time_end = microtime(true);
 	$time = $time_end - $time_start;
@@ -185,15 +186,19 @@ class tx_cliexport_cli extends t3lib_cli {
 		//} else {
 			//$viewClass->saveExportInformation();
 		//}
-		$xmlFileName = PATH_site . 'uploads/tx_l10nmgr/jobs/' . $l10nmgrGetXML->getFileName();
+		$xmlFileName = PATH_site . 'uploads/tx_l10nmgr/jobs/out/' . $l10nmgrGetXML->getFileName();
 		$xmlContent = $l10nmgrGetXML->render();
 		$writeXmlFile = t3lib_div::writeFile($xmlFileName, $xmlContent );
 
 		// If FTP option is set upload files to remote server
-		if (file_exists($xmlFileName)) {
-			$error.= $this->ftpUpload($xmlFileName,$l10nmgrGetXML->getFileName());
+		if ($this->lConf['enable_ftp'] == 1) {
+			if (file_exists($xmlFileName)) {
+				$error.= $this->ftpUpload($xmlFileName,$l10nmgrGetXML->getFileName());
+			} else {
+				$error.= "FTP upload error: File does not exist";
+			}
 		} else {
-			$error.= "FTP upload error: File does not exist";
+			print "FTP upload disabled";
 		}
 
 		//$removeXmlFile = t3lib_div::unlink_tempfile($xmlFileName);
