@@ -61,6 +61,7 @@
 			<label index="import.xml.delL10N.message">Previous localizations will be deleted before importing new ones!</label>
 			<label index="import.error.title">Error in Import:</label>
 			<label index="import.success.message">Import done!</label>
+			<label index="import.manager.error.parsing.xmlstring.message">Error parsing XML string</label>
 			<label index="import.manager.error.parsing.xml2tree.message">XML2Tree parsing error: </label>
 			<label index="import.manager.error.missing.meta.message">Could not find meta data in XML!</label>
 			<label index="import.manager.error.version.message">Incorrect Version of the format: %s (required: %s)</label>
@@ -92,8 +93,8 @@
 			<label index="general.export.choose.action.title">Was möchten Sie tun?</label>
 			<label index="general.list.headline.depth.title">Ebenen</label>
 			<label index="general.list.headline.tables">Tabellen</label>
-			<label index="general.list.headline.exclude.title">Einschließen</label>
-			<label index="general.list.headline.include.title">Ausschließen</label>
+			<label index="general.list.headline.exclude.title">Ausschließen</label>
+			<label index="general.list.headline.include.title">Einschließen</label>
 			<label index="file.settings.downloads.title">Einstellungsdateien herunterladen:</label>
 			<label index="file.settings.available.title">Verfügbare Einstellungsdateien:</label>
 			<label index="file.settings.across.title">across</label>

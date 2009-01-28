@@ -240,7 +240,7 @@ class tx_l10nmgr_abstractExportView {
 	}
 
 	/**
-	 *  save the exported files in the file /uploads/tx_10lnmgr/saved_files/
+	 *  save the exported files in the file /uploads/tx_l10nmgr/saved_files/
 	 */
 	function saveExportFile($fileContent){
 		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/saved_files/'.$this->getLocalFilename();

@@ -149,8 +149,8 @@ class tx_l10nmgr_translationDataFactory {
 							//print "XML:".$row['XMLvalue']." |<br>\n";
 							$pattern = preg_replace('/\//i','\/',$row['values'][0]);
 							//print "Pattern: \"".$pattern."\"<br>\n";
-							$pattern2 = '/'.$pattern.'/';
-							$pattern = '/^'.$pattern.'/';
+							$pattern2 = '/'.preg_quote($pattern).'/';
+							$pattern = '/^'.preg_quote($pattern).'/';
 							//print "Pattern: \"".$pattern."\"<br>\n";
 							//print "Pattern 2: \"".$pattern2."\"<br>\n";
 							if (preg_match($pattern, $row['XMLvalue'],$treffer)) {

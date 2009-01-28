@@ -56,7 +56,8 @@ class tx_l10nmgr_l10nConfiguration {
 	* @return boolean
 	**/
 	function isLoaded() {
-		if (is_array($this->l10ncfg)) {
+		// array must have values also!
+		if (is_array($this->l10ncfg) && (!empty($this->l10ncfg))) {
 			return true;
 		}
 		else {

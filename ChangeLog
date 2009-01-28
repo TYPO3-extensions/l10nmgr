@@ -1,4 +1,29 @@
+2009-01-24 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added options to CLI export script (only changed content, skip hidden, multiple target languages & l10ncfgs, FTP upload!)
+	* Revision 3.1 now
+
+2009-01-23 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added serverlink param to POST interface for back link generation
+	* Modified CLI preview link generation (append serverlink)
+	* Added CLI for export of CATXML (l10nmgr_export)
+	* Renamed CLI l10nmgr to l10nmgr_import
+
+2009-01-22 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Fixed bug in CLI script related to workspaces
+	* Performance tuning in CLI import script
+
+2008-12-16 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Changed l10ncfg->isLoaded. Check for empty array!
+
+2008-12-05 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Changed localization of exclude/inlude elements in Config of translation object (was switched)
+
+2008-12-03 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Integrated patch from Wolfgang Klinger for models/class.tx_l10nmgr_translationDataFactory.php
+
 2008-11-13 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added POST interface for external calls
+	* Added dummy CLI script for import of XML
 	* Added page preview link generation on import.
 	* Added tabbed dialogue for XML export/import
 

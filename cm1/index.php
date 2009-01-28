@@ -318,6 +318,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
 			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
+		//print "<pre>";
+		//var_dump($GLOBALS['BE_USER']->user);
+		//print "</pre>";
 			if (t3lib_div::_POST('import_oldformat')=='1') {
 				//Support for the old Format of XML Import (without pageGrp element)
 				$info.=$LANG->getLL('import.xml.old-format.message');
@@ -348,6 +351,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 					}
 					$translationData=$factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
 					$translationData->setLanguage($this->sysLanguage);
+					//$info.="<pre>".var_export($GLOBALS['BE_USER'],true)."</pre>";
 					unset($importManager);
 					$service->saveTranslation($l10ncfgObj,$translationData);
 					$info.='<br/>'.$this->doc->icons(-1).$LANG->getLL('import.xml.done.message').'<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';

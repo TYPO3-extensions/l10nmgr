@@ -5,6 +5,11 @@ t3lib_extMgm::addUserTSConfig('
 	options.saveDocNew.tx_l10nmgr_priorities=1
 ');
 
+if (TYPO3_MODE=='BE')    {
+    // Setting up scripts that can be run from the cli_dispatch.phpsh script.
+    $TYPO3_CONF_VARS['SC_OPTIONS']['GLOBAL']['cliKeys']['l10nmgr_import'] = array('EXT:'.$_EXTKEY.'/cli/cli.import.php','_CLI_user');
+    $TYPO3_CONF_VARS['SC_OPTIONS']['GLOBAL']['cliKeys']['l10nmgr_export'] = array('EXT:'.$_EXTKEY.'/cli/cli.export.php','_CLI_user');
+}
 
 //! increase with every change to XML Format
 define('L10NMGR_FILEVERSION','1.1');
