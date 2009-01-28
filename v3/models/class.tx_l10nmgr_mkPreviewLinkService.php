@@ -30,7 +30,7 @@
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
-class tx_l10nmgr_mkPreviewLink {
+class tx_l10nmgr_mkPreviewLinkService {
 
 	var $_errorMsg = array();
 
@@ -86,7 +86,7 @@ class tx_l10nmgr_mkPreviewLink {
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/class.tx_l10nmgr_translationDataFactory.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/class.tx_l10nmgr_translationDataFactory.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/class.tx_l10nmgr_mkPreviewLinkService.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/class.tx_l10nmgr_mkPreviewLinkService.php']);
 }
 ?>

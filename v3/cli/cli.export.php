@@ -251,4 +251,9 @@ class tx_cliexport_cli extends t3lib_cli {
 $cleanerObj = t3lib_div::makeInstance('tx_cliexport_cli');
 $cleanerObj->cli_main($_SERVER['argv']);
 
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/cli/cli.export.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/cli/cli.export.php']);
+}
+
 ?>

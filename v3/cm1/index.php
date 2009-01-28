@@ -351,7 +351,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 					if (t3lib_div::_POST('make_preview_link')=='1') {
 						$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
 						$info.='<b>'.$LANG->getLL('import.xml.preview_links.title').'</b><br/>';
-						$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLink');
+						$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
 						$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
 						$info.=$mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
 					}

@@ -144,7 +144,7 @@ class tx_cliimport_cli extends t3lib_cli {
 		//Make preview links
 		if ($preview == 1){
 			$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
-			$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLink');
+			$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
 			$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
 			$previewLink=$mkPreviewLinks->mkSinglePreviewLink($importManager->headerData['t3_baseURL'],$serverlink);
 			$out.= $previewLink;
@@ -197,7 +197,7 @@ class tx_cliimport_cli extends t3lib_cli {
     		$this->cli_echo($error);
         } else {
 		$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
-		$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLink');
+		$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
 		$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
 		//Only valid if source language = default language (id=0)
 		$previewLink=$mkPreviewLinks->mkSingleSrcPreviewLink($importManager->headerData['t3_baseURL'],$srcLang=0);
@@ -212,5 +212,9 @@ class tx_cliimport_cli extends t3lib_cli {
 // Call the functionality
 $cleanerObj = t3lib_div::makeInstance('tx_cliimport_cli');
 $cleanerObj->cli_main($_SERVER['argv']);
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/cli/cli.import.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/cli/cli.import.php']);
+}
 
 ?>
