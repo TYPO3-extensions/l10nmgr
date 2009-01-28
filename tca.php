@@ -175,7 +175,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 				"prepend_tname" => TRUE,
 				"size" => 10,
 				"minitems" => 0,
-				"maxitems" => 10,
+				"maxitems" => 100,
 				"show_thumbs" => 1
 			)
 		),

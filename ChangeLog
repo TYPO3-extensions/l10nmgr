@@ -1,4 +1,7 @@
 2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Merged changes from Kasper from trunk to v3 ;-)
+
+2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added option to enable/disable FTP upload via extension configuration
 
 2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
