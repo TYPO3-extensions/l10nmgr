@@ -41,6 +41,11 @@ class tx_l10nmgr_CATXMLImportManager {
 	var $file = '';
 
 	/**
+	 * @var	string		$xml		CATXML
+	 */
+	var $xml = '';
+
+	/**
 	 * @var	string		$xmlNodes		parsed XML
 	 */
 	var $xmlNodes = '';
@@ -60,9 +65,14 @@ class tx_l10nmgr_CATXMLImportManager {
 	 */
 	var $_errorMsg = array();
 
-	function tx_l10nmgr_CATXMLImportManager($file, $sysLang) {
+	function tx_l10nmgr_CATXMLImportManager($file, $sysLang, $xmlString) {
 		$this->sysLang = $sysLang;
-		$this->file    = $file;
+		if (!empty($file)) {
+			$this->file    = $file;
+		}
+		if (!empty($xmlString)) {
+			$this->xmlString    = $xmlString;
+		}
 	}
 
 	function parseAndCheckXMLFile() {
@@ -88,6 +98,30 @@ class tx_l10nmgr_CATXMLImportManager {
 		}
 	}
 
+	function parseAndCheckXMLString() {
+		global $LANG;
+
+		$catXmlString   = $this->xmlString;
+		$this->xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$catXmlString),3);	// For some reason PHP chokes on incoming &nbsp; in XML!
+
+		if (!is_array($this->xmlNodes)) {
+			$this->_errorMsg[] = $LANG->getLL('import.manager.error.parsing.xml2tree.message') . $this->xmlNodes;
+			return false;
+		}
+
+		$headerInformationNodes = $this->xmlNodes['TYPO3L10N'][0]['ch']['head'][0]['ch'];
+		if (!is_array($headerInformationNodes)) {
+			$this->_errorMsg[] = $LANG->getLL('import.manager.error.missing.head.message');
+			return false;
+		}
+
+		$this->_setHeaderData($headerInformationNodes);
+		if ($this->_isIncorrectXMLString()) {
+			return false;
+		}
+
+	}
+
 	function getErrorMessages() {
 		return implode('<br />', $this->_errorMsg);
 	}
@@ -108,6 +142,7 @@ class tx_l10nmgr_CATXMLImportManager {
 						);
 		}
 		if (!isset($this->headerData['t3_workspaceId']) || $this->headerData['t3_workspaceId'] != $GLOBALS['BE_USER']->workspace) {
+		$GLOBALS['BE_USER']->workspace=$this->headerData['t3_workspaceId'];
 			$error[] = sprintf(
 							$LANG->getLL('import.manager.error.workspace.message'),
 							$GLOBALS['BE_USER']->workspace,
@@ -115,7 +150,42 @@ class tx_l10nmgr_CATXMLImportManager {
 						);
 		}
 		if (!isset($this->headerData['t3_sysLang']) || $this->headerData['t3_sysLang'] != $this->sysLang) {
+		
 
+			$error[] = sprintf(
+							$LANG->getLL('import.manager.error.language.message'),
+							$this->sysLang,
+							$this->headerData['t3_sysLang']
+						);
+		}
+		if (count($error)>0) {
+			$this->_errorMsg = array_merge($this->_errorMsg, $error);
+			return true;
+		}
+		return false;
+	}
+
+	function _isIncorrectXMLString() {
+		global $LANG;
+		$error = array();
+
+		if (!isset($this->headerData['t3_formatVersion']) || $this->headerData['t3_formatVersion'] != L10NMGR_FILEVERSION) {
+			$error[] = sprintf(
+							$LANG->getLL('import.manager.error.version.message'),
+							$this->headerData['t3_formatVersion'],
+							L10NMGR_FILEVERSION
+						);
+		}
+		if (!isset($this->headerData['t3_workspaceId']) || $this->headerData['t3_workspaceId'] != $GLOBALS['BE_USER']->workspace) {
+			$error[] = sprintf(
+							$LANG->getLL('import.manager.error.workspace.message'),
+							$GLOBALS['BE_USER']->workspace,
+							$this->headerData['t3_workspaceId']
+						);
+		}
+		if (!isset($this->headerData['t3_sysLang'])) {
+		//if (!isset($this->headerData['t3_sysLang']) || $this->headerData['t3_sysLang'] != $this->sysLang) {
+		
 			$error[] = sprintf(
 							$LANG->getLL('import.manager.error.language.message'),
 							$this->sysLang,

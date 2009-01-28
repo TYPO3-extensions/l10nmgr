@@ -175,6 +175,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 
 		$this->saveExportFile($XML);
 
+		//DZ: why return XML here
 		return $XML;
 	}
 
