@@ -2,8 +2,14 @@
 
 # Enable hooks
 #
-# cat=basic/enable/10; type=boolean[1]; label=Enable email notifications.
+# cat=basic/enable/10; type=boolean[1]; label=Enable hidden languages: Decide whether to make available hidden system languages for export/import.
+enable_hidden_languages = 0
+
+# cat=basic/enable/20; type=boolean[1]; label=Enable email notifications: Send email upon completion of export/import via CLI.
 enable_notification = 0
+
+# cat=basic/enable/30; type=boolean[1]; label=Enable FTP upload: Use this for uploading exports to translation agencies' FTP server. Provide login credentials below.
+enable_ftp = 0
 
 # Load L10N manager configration
 #
