@@ -25,6 +25,7 @@
 			<label index="general.list.headline.tables">Tables</label>
 			<label index="general.list.headline.exclude.title">Exclude</label>
 			<label index="general.list.headline.include.title">Include</label>
+			<label index="general.list.headline.incfcewithdefaultlanguage.title">Default FCE</label>
 			<label index="file.settings.downloads.title">Download settings files</label>
 			<label index="file.settings.available.title">Available settings files:</label>
 			<label index="file.settings.across.title">across</label>
@@ -95,6 +96,7 @@
 			<label index="general.list.headline.tables">Tabellen</label>
 			<label index="general.list.headline.exclude.title">Ausschließen</label>
 			<label index="general.list.headline.include.title">Einschließen</label>
+			<label index="general.list.headline.incfcewithdefaultlanguage.title">Default FCE</label>
 			<label index="file.settings.downloads.title">Einstellungsdateien herunterladen:</label>
 			<label index="file.settings.available.title">Verfügbare Einstellungsdateien:</label>
 			<label index="file.settings.across.title">across</label>

@@ -26,6 +26,7 @@
 			<label index="general.list.infodetail.tablelist.title">Tables: </label>
 			<label index="general.list.infodetail.exclude.title">Exclude: </label>
 			<label index="general.list.infodetail.include.title">Include: </label>
+			<label index="general.list.headline.incfcewithdefaultlanguage.title">Default FCE</label>
 			<label index="general.list.infodetail.displaymode.title">Display mode: </label>
 			<label index="general.list.infodetail.incfcewithdefaultlanguage.title">Include FCE width default language: </label>
 		</languageKey>
@@ -41,6 +42,7 @@
 			<label index="general.list.headline.tables.title">Tabellen</label>
 			<label index="general.list.headline.exclude.title">Auszuschließen</label>
 			<label index="general.list.headline.include.title">Einzuschließen</label>
+			<label index="general.list.headline.incfcewithdefaultlanguage.title">Default FCE</label>
             
 			<label index="general.list.infodetail.pid.title">Übergeordnete Seite: </label>
 			<label index="general.list.infodetail.title.title">Titel: </label>

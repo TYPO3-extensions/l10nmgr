@@ -21,6 +21,11 @@ global $BACK_PATH, $LANG;
 			<th><?php echo $LANG->getLL('general.list.headline.info.title'); ?></th>
 			<th><?php echo $LANG->getLL('general.list.headline.title.title'); ?></th>
 			<th><?php echo $LANG->getLL('general.list.headline.path.title'); ?></th>
+			<th><?php echo $LANG->getLL('general.list.headline.depth.title'); ?></th>
+			<th><?php echo $LANG->getLL('general.list.headline.tables.title'); ?></th>
+			<th><?php echo $LANG->getLL('general.list.headline.exclude.title'); ?></th>
+			<th><?php echo $LANG->getLL('general.list.headline.include.title'); ?></th>
+			<th><?php echo $LANG->getLL('general.list.headline.incfcewithdefaultlanguage.title'); ?></th>
 		</tr>
 	</thead>
 
@@ -45,7 +50,7 @@ global $BACK_PATH, $LANG;
 				<div style="display:none;" id="<?php echo 'tooltip_' . $configurationElementArray['uid'] ;?>" class="infotip">
 					<table class="infodetail" cellspacing="0" cellpadding="0">
 						<tr>
-							<td><?php echo $LANG->getLL('general.list.infodetail.pid.title'); ?></td>
+							<td>mmm<?php echo $LANG->getLL('general.list.infodetail.pid.title'); ?></td>
 							<td><?php echo $parentPageArray['title']; echo ' (' . $parentPageArray['uid'] . ')'?></td>
 						</tr>
 						<tr>
@@ -89,6 +94,11 @@ global $BACK_PATH, $LANG;
 			</td>
 			<td><?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '">' . $configurationElementArray['title']  . '</a>'; ?></td>
 			<td><?php echo current(t3lib_BEfunc::getRecordPath($configurationElementArray['pid'], '1', 20, 50)); ?></td>
+			<td><?php echo $configurationElementArray['depth']; ?></td>
+			<td><?php echo $configurationElementArray['tablelist']; ?></td>
+			<td><?php echo $configurationElementArray['exclude']; ?></td>
+			<td><?php echo $configurationElementArray['include']; ?></td>
+			<td><?php echo $configurationElementArray['incfcewithdefaultlanguage']; ?></td>
 		</tr>
 		<?php } ?>
 	</tbody>

@@ -52,7 +52,7 @@ require ($BACK_PATH.'init.php');
 require ($BACK_PATH.'template.php');
 $LANG->includeLLFile('EXT:l10nmgr/cm2/locallang.xml');
 require_once (PATH_t3lib.'class.t3lib_scbase.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'cm1/class.tx_l10nmgr_tools.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_tools.php'); 
 
 
 /**
@@ -134,8 +134,17 @@ class tx_l10nmgr_cm2 extends t3lib_SCbase {
 
 			$this->l10nMgrTools = t3lib_div::makeInstance('tx_l10nmgr_tools');
 			$this->l10nMgrTools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
+			
+			$output = '';
+			if (t3lib_div::_POST('_updateIndex'))	{
+				$output.=$this->l10nMgrTools->updateIndexForRecord($table,$uid);
+				t3lib_BEfunc::getSetUpdateSignal('updatePageTree');
+			}
+
 
 			$inputRecord = t3lib_BEfunc::getRecord($table,$uid,'pid');
+			
+			$pathShown = t3lib_BEfunc::getRecordPath($table=='pages'?$uid:$inputRecord['pid'], '', 20);
 
 			$this->sysLanguages = $this->l10nMgrTools->t8Tools->getSystemLanguages($table=='pages' ? $uid : $inputRecord['pid']);
 			$languageListArray = explode(',',$GLOBALS['BE_USER']->groupData['allowed_languages'] ? $GLOBALS['BE_USER']->groupData['allowed_languages'] : implode(',',array_keys($this->sysLanguages)));
@@ -198,7 +207,17 @@ class tx_l10nmgr_cm2 extends t3lib_SCbase {
 				if ($rec['tablename']!='pages') $tRows[] = $this->makeTableRow($rec);
 			}
 
-			return '<table border="0" cellpadding="1" cellspacing="1">'.implode('',$tRows).'</table>';
+			$output.= 'Path: <i>'.$pathShown.'</i><br><table border="0" cellpadding="1" cellspacing="1">'.implode('',$tRows).'</table>';
+			
+				// Updating index
+			if ($GLOBALS['BE_USER']->isAdmin())	{
+				$output.='<br><br>Functions for "'.$table.':'.$uid.'":<br/>
+					<input type="submit" name="_updateIndex" value="Update Index" /><br>
+					<input type="submit" name="_" value="Flush Translations" onclick="'.htmlspecialchars('document.location="../cm3/index.php?table='.htmlspecialchars($table).'&id='.intval($uid).'&cmd=flushTranslations";return false;').'"/><br>
+					<input type="submit" name="_" value="Create priority" onclick="'.htmlspecialchars('document.location="'.$GLOBALS['BACK_PATH'].'alt_doc.php?returnUrl='.rawurlencode('db_list.php?id=0&table=tx_l10nmgr_priorities').'&edit[tx_l10nmgr_priorities][0]=new&defVals[tx_l10nmgr_priorities][element]='.rawurlencode($table.'_'.$uid).'";return false;').'"/><br>
+					';
+			}
+			return $output;
 		}
 	}
 
