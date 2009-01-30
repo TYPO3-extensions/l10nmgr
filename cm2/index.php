@@ -167,7 +167,7 @@ class tx_l10nmgr_cm2 extends t3lib_SCbase {
 						' AND workspace='.intval($GLOBALS['BE_USER']->workspace).
 						' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
 					'',
-					'translation_lang, tablename'
+					'translation_lang, tablename, recuid'
 				);
 			} else {
 				$records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
@@ -178,7 +178,7 @@ class tx_l10nmgr_cm2 extends t3lib_SCbase {
 						' AND workspace='.intval($GLOBALS['BE_USER']->workspace).
 						' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
 					'',
-					'translation_lang, tablename'
+					'translation_lang, tablename, recuid'
 				);
 			}
 
