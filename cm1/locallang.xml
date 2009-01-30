@@ -30,6 +30,7 @@
 			<label index="file.settings.available.title">Available settings files:</label>
 			<label index="file.settings.across.title">across</label>
 			<label index="file.settings.dejaVu.title">DéjàVu</label>
+			<label index="file.settings.memoq.title">MemoQ</label>
 			<label index="file.settings.sdltrados.title">SDL Trados</label>
 			<label index="file.settings.sdlpassolo.title">SDL Passolo</label>
 			<label index="file.settings.download.title">Download settings file</label>
@@ -101,6 +102,7 @@
 			<label index="file.settings.available.title">Verfügbare Einstellungsdateien:</label>
 			<label index="file.settings.across.title">across</label>
 			<label index="file.settings.dejaVu.title">DéjàVu</label>
+			<label index="file.settings.memoq.title">MemoQ</label>
 			<label index="file.settings.sdltrados.title">SDL Trados</label>
 			<label index="file.settings.sdlpassolo.title">SDL Passolo</label>
 			<label index="file.settings.download.title">Einstellungsdatei herunterladen</label>
@@ -165,6 +167,7 @@
 			<label index="file.settings.available.title">Archivos de configuración disponibles:</label>
 			<label index="file.settings.across.title">across</label>
 			<label index="file.settings.dejaVu.title">DéjàVu</label>
+			<label index="file.settings.memoq.title">MemoQ</label>
 			<label index="file.settings.sdltrados.title">SDL Trados</label>
 			<label index="file.settings.sdlpassolo.title">SDL Passolo</label>
 			<label index="file.settings.download.title">Descargar archivo de configuración</label>
@@ -229,6 +232,7 @@
 			<label index="file.settings.available.title">Fichiers avec paramètres des balises disponibles:</label>
 			<label index="file.settings.across.title">across</label>
 			<label index="file.settings.dejaVu.title">DéjàVu</label>
+			<label index="file.settings.memoq.title">MemoQ</label>
 			<label index="file.settings.sdltrados.title">SDL Trados</label>
 			<label index="file.settings.sdlpassolo.title">SDL Passolo</label>
 			<label index="file.settings.download.title">Télécharger fichier avec paramètres des balises</label>
@@ -293,6 +297,7 @@
 			<label index="file.settings.available.title">File di configurazione disponibili:</label>
 			<label index="file.settings.across.title">across</label>
 			<label index="file.settings.dejaVu.title">DéjàVu</label>
+			<label index="file.settings.memoq.title">MemoQ</label>
 			<label index="file.settings.sdltrados.title">SDL Trados</label>
 			<label index="file.settings.sdlpassolo.title">SDL Passolo</label>
 			<label index="file.settings.download.title">Scarica file di configurazione</label>
