@@ -262,6 +262,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$allowedSettingFiles = array(
 			'across'     => 'acrossL10nmgrConfig.dst',
 			'dejaVu'     => 'dejaVuL10nmgrConfig.dvflt',
+			'memoq'     => 'MemoQ.xml',
 			'sdltrados'  => 'SDLTradosTagEditor.ini',
 			'sdlpassolo' => 'SDLPassolo.xfg',
 		);
