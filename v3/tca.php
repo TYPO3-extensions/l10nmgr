@@ -159,7 +159,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 			"config" => Array (
 				"type" => "select",
 				"foreign_table" => "sys_language",
-				"foreign_table_where" => "AND sys_language.pid=###SITEROOT### ORDER BY sys_language.uid",
+				"foreign_table_where" => "AND sys_language.pid=###SITEROOT### AND sys_language.hidden=0 ORDER BY sys_language.uid",
 				"size" => 5,
 				"minitems" => 0,
 				"maxitems" => 100,

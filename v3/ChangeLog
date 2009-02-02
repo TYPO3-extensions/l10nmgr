@@ -1,3 +1,9 @@
+2009-02-02 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Merged last changes from trunk into v3
+
+2009-01-30 Kasper Skarhoj
+	* Added "recUid" to sorting in translation task index list.
+
 2009-01-30 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added settings file for MemoQ
 	* Revision 3.2.2 now
@@ -14,6 +20,9 @@
 
 2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added option to hide/display hidden system languages via extension configuration 
+
+2009-01-27 Kasper Skarhoj
+	* Various modifications.
 
 2009-01-24 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added options to CLI export script (only changed content, skip hidden, multiple target languages & l10ncfgs, FTP upload!)
@@ -195,6 +204,10 @@
 	* add transformation attribut to CATXML (to flag if a transformation is required)
 	* fix import of CATXML with xml data (no cdata): new function _getXMLFromTreeArray in translationdatafactory
 
+2008-02-01 Kasper Sk¿rh¿j
+	* Added --noFlush flag to command line cleaner tool, extended --pid to accept comma separated list of PIDs
+	* Added Context Sensitive Item "L10Nmgr tools" which expands to a submenu with items 'Create priority', 'Manage priorities','Update Index','Flush Translations'. These functions were requested by Dassault.
+	* For flushing to really work for flexforms (clearing the vDEFbase value) it needs the latest TYPO3 core for a modication to tcemain (clear_flexFormData_vDEFbase)
 
 2008-01-18 Daniel Pötzinger
 	* restructuring the main BE-Modul (cm1) and splitting it in a Domainmodel + MVC (description and UML is provided in doc)
