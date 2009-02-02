@@ -44,7 +44,7 @@ class tx_cliimport_cli extends t3lib_cli {
         $this->cli_help['synopsis'] = '###OPTIONS###';
         $this->cli_help['description'] = 'Class with import functionality for l10nmgr';
         $this->cli_help['examples'] = '/.../cli_dispatch.phpsh l10nmgr import|importPreview|preview CATXML serverlink';
-        $this->cli_help['author'] = 'Daniel Zielinski, (c) 2008';
+        $this->cli_help['author'] = 'Daniel Zielinski - L10Ntech.de, (c) 2008';
     }
 
     /**
