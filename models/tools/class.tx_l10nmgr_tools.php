@@ -78,6 +78,7 @@ class tx_l10nmgr_tools {
 
 	var $previewLanguages = array();	// Array of sys_language_uids, eg. array(1,2)
 	var $verbose = TRUE;		// If TRUE, when fields are not included there will be shown a detailed explanation.
+	var $bypassFilter = FALSE;        // If TRUE, do not call filter function
 	var $includeFceWithDefaultLanguage = FALSE; 	//if set to true also FCE with language setting default will be included (not only All)
 
 		// Internal:
@@ -86,6 +87,7 @@ class tx_l10nmgr_tools {
 	var $sysLanguages = array();		// System languages initialized
 	var $flexFormDiff = array();		// FlexForm diff data
 	var $sys_languages = array();		// System languages records, loaded by constructor
+	var $indexFilterObjects = array();
 
 
 	/**
@@ -103,6 +105,34 @@ class tx_l10nmgr_tools {
 			'sys_language',
 			''
 		);
+	}
+
+	/**
+	 * Returns true if the record can be included in index.
+	 */
+	function filterIndex($table,$uid,$pageId)	{
+
+			// Initialize (only first time)
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['indexFilter']) && !is_array($this->indexFilterObjects[$pageId]))	{
+			$this->indexFilterObjects[$pageId] = array();
+			$c=0;
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['indexFilter'] as $objArray)	{
+				$this->indexFilterObjects[$pageId][$c] = &t3lib_div::getUserObj($objArray[0]);
+				$this->indexFilterObjects[$pageId][$c]->init($pageId);
+				$c++;
+			}
+		}
+
+			// Check record:
+		if (is_array($this->indexFilterObjects[$pageId]))	{
+			foreach($this->indexFilterObjects[$pageId] as $obj)	{
+				if (!$obj->filter($table,$uid))	{
+					return FALSE;
+				}
+			}
+		}
+
+		return TRUE;
 	}
 
 	/**
@@ -547,13 +577,15 @@ class tx_l10nmgr_tools {
 
 		if (is_array($rec) && $rec['pid']!=-1)	{
 			$pid = $table=='pages' ? $rec['uid'] : $rec['pid'];
-			t3lib_BEfunc::workspaceOL($table,$rec);
-			$items = array();
-			foreach ($this->sys_languages as $r)	{
-				$items['fullDetails'][$r['uid']] = $this->translationDetails($table,$rec,$r['uid']);
-				$items['indexRecord'][$r['uid']] = $this->compileIndexRecord($table,$items['fullDetails'][$r['uid']],$r['uid'],$pid);
- 			}
-			return $items;
+			if ($this->bypassFilter || $this->filterIndex($table,$uid,$pid))	{
+				t3lib_BEfunc::workspaceOL($table,$rec);
+				$items = array();
+				foreach ($this->sys_languages as $r)	{
+					$items['fullDetails'][$r['uid']] = $this->translationDetails($table,$rec,$r['uid']);
+					$items['indexRecord'][$r['uid']] = $this->compileIndexRecord($table,$items['fullDetails'][$r['uid']],$r['uid'],$pid);
+	 			}
+				return $items;
+			} else return FALSE;
 		} else return FALSE;
 	}
 
@@ -580,7 +612,7 @@ class tx_l10nmgr_tools {
 					if (count($allRows))	{
 							// Now, for each record, look for localization:
 						foreach($allRows as $row)	{
-							if (is_array($row) && !isset($excludeIndex[$table.':'.$row['uid']]))	{
+							if (is_array($row))        {
 								$items[$table][$row['uid']] = $this->indexDetailsRecord($table,$row['uid']);
 							}
 						}
