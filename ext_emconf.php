@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Module for managing localization import and export',
 	'category' => 'module',
 	'shy' => 0,
-	'version' => '3.2.2',
+	'version' => '3.3.0',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
@@ -29,11 +29,12 @@ $EM_CONF[$_EXTKEY] = array(
 	'lockType' => '',
 	'author' => 'Kasper Skårhøj, Daniel Zielinski, Daniel Pötzinger, Fabian Seltmann, Andreas Otto',
 	'author_email' => 'kasperYYYY@typo3.com, info@L10Ntech.de',
-	'author_company' => '',
+	'author_company' => 'Localization Manager Team',
 	'CGLcompliance' => '',
 	'CGLcompliance_note' => '',
 	'constraints' => array(
 		'depends' => array(
+			'static_info_tables' => '',
 		),
 		'conflicts' => array(
 		),
