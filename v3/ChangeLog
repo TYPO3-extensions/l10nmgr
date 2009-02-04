@@ -1,3 +1,6 @@
+2009-02-03 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Bug fix in preview link generation service
+
 2009-02-02 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added email notification to CLI export (with/without attachment)
 	* Added dependency static_info_tables

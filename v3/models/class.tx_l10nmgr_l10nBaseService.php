@@ -125,12 +125,10 @@ class tx_l10nmgr_l10nBaseService {
 			}
 //debug($TCEmain_cmd,'$TCEmain_cmd');
 //debug($TCEmain_data,'$TCEmain_data');
-//CLI ok until here DZ
 
 				// Execute CMD array: Localizing records:
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
 			$tce->stripslashes_values = FALSE;
-//debug($tce,'$tce'); //CLI OK
 			if (count($TCEmain_cmd))	{
 				$tce->start(array(),$TCEmain_cmd);
 				$tce->process_cmdmap();
@@ -138,10 +136,8 @@ class tx_l10nmgr_l10nBaseService {
 					debug($tce->errorLog,'TCEmain localization errors:');
 				}
 			}
-//debug($tce,'$tce'); //CLI OK
 //debug($tce->copyMappingArray_merged,'$tce->copyMappingArray_merged');
 //debug($TCEmain_data,'==> $TCEmain_data');
-//exit;
 				// Remapping those elements which are new:
 			$this->lastTCEMAINCommandsCount=0;
 			foreach($TCEmain_data as $table => $items)	{
@@ -162,7 +158,6 @@ class tx_l10nmgr_l10nBaseService {
 				}
 			}
 //debug($TCEmain_data,'$TCEmain_data');
-//CLI breaks here (pages_language_overlay:207:title:Interface between TYPO3 and Ontram) im BE allerdings 206!
 
 				// Now, submitting translation data:
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
