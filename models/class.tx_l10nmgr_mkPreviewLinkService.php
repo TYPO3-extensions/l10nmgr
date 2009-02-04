@@ -34,7 +34,7 @@ class tx_l10nmgr_mkPreviewLinkService {
 
 	var $_errorMsg = array();
 
-	function tx_l10nmgr_mkPreviewLink($t3_workspaceId, $t3_sysLang, $pageIds) {
+	function tx_l10nmgr_mkPreviewLinkService($t3_workspaceId, $t3_sysLang, $pageIds) {
 		$this->sysLang = $t3_sysLang;
 		$this->pageIds  = $pageIds;
 		$this->workspaceId  = $t3_workspaceId;
