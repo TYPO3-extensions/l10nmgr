@@ -339,7 +339,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			else {
 				// Relevant processing of XML Import with the help of the Importmanager
 				$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
-				$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage);
+				$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage, $xmlString="");
 				if ($importManager->parseAndCheckXMLFile()===false) {
 					$info.='<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
 				}
