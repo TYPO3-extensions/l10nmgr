@@ -1,3 +1,12 @@
+2009-03-30 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* CLI import file XML or ZIP (local file) TODO: If http:// or ftp://...
+	* Unzip file (not Win compatible)
+	* Generate preview link via CLI if t3_previewId present takes precendemce over first pageGrp id
+	* New calls for cli import script: modes 1 = import string, 2 = import file, 3 = source preview.
+	* Example: cli.import.php MODE PREVIEW XML FILEPATH SERVERLINK
+	* Preview param is now passed as additional argument
+	* Revision 3.3.2
+
 2009-02-03 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Bug fix in preview link generation service
 
