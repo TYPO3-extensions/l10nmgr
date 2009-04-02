@@ -138,7 +138,8 @@ class tx_l10nmgr_l10nConfiguration {
 		
 		//$tree->tree contains pages of the tree
 		foreach($tree->tree as $treeitem){
-			$this->exportPageIdCollection->append($treeitem['uid']);
+			$treerow = $treeitem['row'];
+			$this->exportPageIdCollection->append(intval($treerow['uid']));
 		}
 		
 		return $this->exportPageIdCollection;
@@ -170,9 +171,16 @@ class tx_l10nmgr_l10nConfiguration {
 			
 			$depth 	= $this->l10ncfg['depth'];
 			$pid	= $this->l10ncfg['pid'];
-	
+
 			// Initialize starting point of page tree:
-			$treeStartingPoint = intval($depth==-1 ? t3lib_div::_GET('srcPID') : $pid);
+			if(!isset($pid)){
+				throw new Exception('no export start page configured.');
+			}
+	
+			//@todo is t3lib_div::_GET('srcPID') needed anymore?
+			//$treeStartingPoint = intval($depth==-1 ? t3lib_div::_GET('srcPID') : $pid);
+			
+			$treeStartingPoint 	= intval($pid);
 			$treeStartingRecord = t3lib_BEfunc::getRecordWSOL('pages', $treeStartingPoint);
 	
 			// Initialize tree object:
@@ -181,6 +189,7 @@ class tx_l10nmgr_l10nConfiguration {
 			$this->tree->addField('l18n_cfg');
 	
 			// Creating top icon; the current page
+			// @todo why icon?
 			$HTML = t3lib_iconWorks::getIconImage('pages', $treeStartingRecord, $GLOBALS['BACK_PATH'],'align="top"');
 			$this->tree->tree[] = array(
 				'row' => $treeStartingRecord,
