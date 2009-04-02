@@ -39,7 +39,13 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nAccum
 class tx_l10nmgr_l10nConfiguration {
 
 
-	var $l10ncfg=array();
+	/**
+	 * @todo refactorm needs to be private
+	 * @var unknown_type
+	 */
+	public 	$l10ncfg=array();
+	private $tree;
+	private $exportPageIdCollection;
 
 	/**
 	* loads internal array with l10nmgrcfg record
@@ -88,8 +94,9 @@ class tx_l10nmgr_l10nConfiguration {
 	*
 	* @param int	$overrideStartingPoint		optional override startingpoint  TODO!
 	* @return tx_l10nmgr_l10nAccumulatedInformations
+	* @deprecated 
 	**/
-	function getL10nAccumulatedInformationsObjectForLanguage($sysLang,$overrideStartingPoint='') {
+	public function getL10nAccumulatedInformationsObjectForLanguage($sysLang,$overrideStartingPoint='') {
 
 		$l10ncfg=$this->l10ncfg;
 		// Showing the tree:
@@ -118,8 +125,79 @@ class tx_l10nmgr_l10nConfiguration {
 
 		return $accumObj;
 	}
+	
+	/**
+	 * Returns a collection of pageids which need to be exported
+	 *
+	 * @return ArrayObject
+	 */
+	public function getExportPageIdCollection(){
+		
+		$this->exportPageIdCollection = new ArrayObject();
+		$tree = $this->getExportTree();
+		
+		//$tree->tree contains pages of the tree
+		foreach($tree->tree as $treeitem){
+			$this->exportPageIdCollection->append($treeitem['uid']);
+		}
+		
+		return $this->exportPageIdCollection;
+	}
 
-	function updateFlexFormDiff($sysLang,$flexFormDiffArray)	{
+	/**
+	 * An l10nConfiguration consists of a startingpoint an a depth. Internally the pagetree is used to determine
+	 * a set of pages wich should be exported.
+	 * 
+	 * @param void 
+	 *
+	 */
+	protected function getExportTree(){
+		$this->buildExportTree();
+		return $this->tree;
+	}
+	
+	/**
+	 * Internal function to build the pagetree, if it has note been builded yet.
+	 * 
+	 * @param void
+	 * @return void
+	 *
+	 */
+	protected function buildExportTree(){
+		if(!isset($this->tree)){
+			//ensure tree is empty
+			unset($this->tree);
+			
+			$depth 	= $this->l10ncfg['depth'];
+			$pid	= $this->l10ncfg['pid'];
+	
+			// Initialize starting point of page tree:
+			$treeStartingPoint = intval($depth==-1 ? t3lib_div::_GET('srcPID') : $pid);
+			$treeStartingRecord = t3lib_BEfunc::getRecordWSOL('pages', $treeStartingPoint);
+	
+			// Initialize tree object:
+			$this->tree = t3lib_div::makeInstance('t3lib_pageTree');
+			$this->tree->init('AND '.$GLOBALS['BE_USER']->getPagePermsClause(1));
+			$this->tree->addField('l18n_cfg');
+	
+			// Creating top icon; the current page
+			$HTML = t3lib_iconWorks::getIconImage('pages', $treeStartingRecord, $GLOBALS['BACK_PATH'],'align="top"');
+			$this->tree->tree[] = array(
+				'row' => $treeStartingRecord,
+				'HTML'=> $HTML
+			);
+	
+			// Create the tree from starting point:
+			if ($depth>0)	$this->tree->getTree($treeStartingPoint, $depth, '');
+		}
+	}	
+	
+	/**
+	 * 
+	 *
+	 * @deprecated 
+	 */
+	public function updateFlexFormDiff($sysLang,$flexFormDiffArray)	{
 		$l10ncfg=$this->l10ncfg;
 			// Updating diff-data:
 			// First, unserialize/initialize:
