@@ -40,6 +40,7 @@ class tx_l10nmgr_translateableInformationsFactory_testcase extends tx_phpunit_da
 		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureL10NConfig.xml');
 		
 		$fixtureConfig = $this->getFixtureL10NConfig();
+
 		$this->assertEquals($fixtureConfig->getId(),4711,'Fixture l10nConfig can not be loaded');
 		
 	}
