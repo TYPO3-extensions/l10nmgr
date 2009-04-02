@@ -82,7 +82,7 @@ class tx_l10nmgr_cm1 {
 					$GLOBALS["LANG"]->getLLL("cm1_title",$LL),
 					$backRef->excludeIcon('<img src="'.t3lib_extMgm::extRelPath("l10nmgr").'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
 					$backRef->urlRefForCM($url),
-					1	// Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
+					0	// Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
 				);
 			}
 
