@@ -98,6 +98,7 @@
 			<label index="general.list.headline.exclude.title">Ausschließen</label>
 			<label index="general.list.headline.include.title">Einschließen</label>
 			<label index="general.list.headline.incfcewithdefaultlanguage.title">Default FCE</label>
+			<label index="general.list.headline.action.title">Action</label>
 			<label index="file.settings.downloads.title">Einstellungsdateien herunterladen:</label>
 			<label index="file.settings.available.title">Verfügbare Einstellungsdateien:</label>
 			<label index="file.settings.across.title">across</label>

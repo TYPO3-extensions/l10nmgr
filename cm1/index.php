@@ -325,45 +325,32 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
 			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
-		//print "<pre>";
-		//var_dump($GLOBALS['BE_USER']->user);
-		//print "</pre>";
-			if (t3lib_div::_POST('import_oldformat')=='1') {
-				//Support for the old Format of XML Import (without pageGrp element)
-				$info.=$LANG->getLL('import.xml.old-format.message');
-				$translationData=$factory->getTranslationDataFromOldFormatCATXMLFile($uploadedTempFile);
-				$translationData->setLanguage($sysLang);
-				$service->saveTranslation($l10ncfgObj,$translationData);
-				$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
+			// Relevant processing of XML Import with the help of the Importmanager
+			$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
+			$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage, $xmlString="");
+			if ($importManager->parseAndCheckXMLFile()===false) {
+				$info.='<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
 			}
 			else {
-				// Relevant processing of XML Import with the help of the Importmanager
-				$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
-				$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage, $xmlString="");
-				if ($importManager->parseAndCheckXMLFile()===false) {
-					$info.='<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
+				if (t3lib_div::_POST('import_delL10N')=='1') {
+					$info.=$LANG->getLL('import.xml.delL10N.message').'<br/>';
+					$delCount = $importManager->delL10N($importManager->getDelL10NDataFromCATXMLNodes($importManager->xmlNodes));
+					$info.= sprintf($LANG->getLL('import.xml.delL10N.count.message'),$delCount).'<br/><br/>'; 
 				}
-				else {
-					if (t3lib_div::_POST('import_delL10N')=='1') {
-						$info.=$LANG->getLL('import.xml.delL10N.message').'<br/>';
-						$delCount = $importManager->delL10N($importManager->getDelL10NDataFromCATXMLNodes($importManager->xmlNodes));
-						$info.= sprintf($LANG->getLL('import.xml.delL10N.count.message'),$delCount).'<br/><br/>'; 
-					}
-					if (t3lib_div::_POST('make_preview_link')=='1') {
-						$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
-						$info.='<b>'.$LANG->getLL('import.xml.preview_links.title').'</b><br/>';
-						$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
-						$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
-						$info.=$mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
-					}
-					$translationData=$factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
-					$translationData->setLanguage($this->sysLanguage);
-					//$info.="<pre>".var_export($GLOBALS['BE_USER'],true)."</pre>";
-					unset($importManager);
-					$service->saveTranslation($l10ncfgObj,$translationData);
-					$info.='<br/>'.$this->doc->icons(-1).$LANG->getLL('import.xml.done.message').'<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
+				if (t3lib_div::_POST('make_preview_link')=='1') {
+					$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
+					$info.='<b>'.$LANG->getLL('import.xml.preview_links.title').'</b><br/>';
+					$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
+					$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
+					$info.=$mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
 				}
+				$translationData=$factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
+				$translationData->setLanguage($this->sysLanguage);
+				unset($importManager);
+				$service->saveTranslation($l10ncfgObj,$translationData);
+				$info.='<br/>'.$this->doc->icons(-1).$LANG->getLL('import.xml.done.message').'<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
 			}
+			
 			t3lib_div::unlink_tempfile($uploadedTempFile);
 		}
 		// If export of XML is asked for, do that (this will exit and push a file for download)

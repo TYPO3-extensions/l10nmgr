@@ -13,6 +13,7 @@
 			<label index="general.list.headline.title.title">Title</label>
 			<label index="general.list.headline.path.title">Path</label>
 			<label index="general.list.headline.depth.title">Depth</label>
+			<label index="general.list.headline.action.title">Action</label>
 			<label index="general.list.headline.pid.title">PID</label>
 			<label index="general.list.headline.tables.title">Tables</label>
 			<label index="general.list.headline.exclude.title">Exclude</label>
