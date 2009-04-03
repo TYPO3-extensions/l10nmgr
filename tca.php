@@ -149,7 +149,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities.description",
 			"config" => Array (
 				"type" => "text",
-				"cols" => "30",	
+				"cols" => "30",
 				"rows" => "5",
 			)
 		),
@@ -191,7 +191,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 $TCA["tx_l10nmgr_exportdata"] = Array (
 	"ctrl" => $TCA["tx_l10nmgr_exportdata"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "title,crdate, tablelist,translation_lang,source_lang"
+		"showRecordFieldList" => "title, crdate, tablelist,translation_lang,source_lang"
 	),
 	"feInterface" => $TCA["tx_l10nmgr_exportdata"]["feInterface"],
 	"columns" => Array (
@@ -250,4 +250,99 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		"1" => Array("showitem" => "")
 	)
 );
+
+
+
+$TCA['tx_l10nmgr_exportstates'] = Array (
+	'ctrl' => $TCA['tx_l10nmgr_exportstates']['ctrl'],
+	'interface' => Array (
+		'showRecordFieldList' => 'exportdata_id, crdate, state'
+	),
+	'feInterface' => $TCA['tx_l10nmgr_exportstates']['feInterface'],
+	'columns' => Array (
+		'exportdata_id' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates.exportdata_id',
+			'config' => Array (
+				'type' => 'group',
+				'internal_type' => 'db',
+				'allowed' => 'tx_l10nmgr_exportdata',
+				'size' => 1,
+				'minitems' => 0,
+				'maxitems' => 1,
+			)
+		),
+		'crdate' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates.crdate',
+			'config' => Array (
+				'type' => 'input',
+				'eval' => 'date',
+				'size' => '48',
+				'readOnly' => 1,
+			)
+		),
+		'state' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates.state',
+			'config' => Array (
+				'type' => 'input',
+				'size' => '48',
+				'eval' => 'required',
+				'readOnly' => 1,
+			)
+		),
+	),
+	'types' => Array (
+		'0' => Array('showitem' => 'exportdata_id, crdate, state')
+	),
+);
+
+
+
+$TCA['tx_l10nmgr_exportfiles'] = Array (
+	'ctrl' => $TCA['tx_l10nmgr_exportstates']['ctrl'],
+	'interface' => Array (
+		'showRecordFieldList' => 'exportdata_id, crdate, filename'
+	),
+	'feInterface' => $TCA['tx_l10nmgr_exportstates']['feInterface'],
+	'columns' => Array (
+		'exportdata_id' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates.exportdata_id',
+			'config' => Array (
+				'type' => 'group',
+				'internal_type' => 'db',
+				'allowed' => 'tx_l10nmgr_exportdata',
+				'size' => 1,
+				'minitems' => 0,
+				'maxitems' => 1,
+			)
+		),
+		'crdate' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates.crdate',
+			'config' => Array (
+				'type' => 'input',
+				'eval' => 'date',
+				'size' => '48',
+				'readOnly' => 1,
+			)
+		),
+		'state' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates.state',
+			'config' => Array (
+				'type' => 'input',
+				'size' => '48',
+				'eval' => 'required',
+				'readOnly' => 1,
+			)
+		),
+	),
+	'types' => Array (
+		'0' => Array('showitem' => 'exportdata_id, crdate, filename')
+	),
+);
+
 ?>

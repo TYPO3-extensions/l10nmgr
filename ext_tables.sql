@@ -84,6 +84,37 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	translation_lang blob NOT NULL,
 	tablelist varchar(80) DEFAULT '' NOT NULL,
 	exportType blob NOT NULL,
+	
+	PRIMARY KEY (uid),
+);
+
+#
+# Table structure for table 'tx_l10nmgr_exportstates'
+#
+CREATE TABLE tx_l10nmgr_exportstates (
+uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+	exportdata_id int(11) DEFAULT '0' NOT NULL,
+	tstamp int(11) DEFAULT '0' NOT NULL,
+	crdate int(11) DEFAULT '0' NOT NULL,
+	cruser_id int(11) DEFAULT '0' NOT NULL,
+	deleted tinyint(4) DEFAULT '0' NOT NULL,
+	state int(11) DEFAULT '0' NOT NULL,
+		
+	PRIMARY KEY (uid),
+);
+
+#
+# Table structure for table 'tx_l10nmgr_exportfiles'
+#
+CREATE TABLE tx_l10nmgr_exportfiles (
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+	exportdata_id int(11) DEFAULT '0' NOT NULL,
+	tstamp int(11) DEFAULT '0' NOT NULL,
+	crdate int(11) DEFAULT '0' NOT NULL,
+	cruser_id int(11) DEFAULT '0' NOT NULL,
+	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	filename text NOT NULL,
 	
 	PRIMARY KEY (uid),
