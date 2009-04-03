@@ -85,13 +85,9 @@
         <hidden>0</hidden>
         <sorting>100</sorting>
         <CType>text</CType>
-        <header>ewqeqweq</header>
+        <header>this is the header</header>
         <header_position></header_position>
-        <bodytext>&lt;h1&gt;fsdfdsf&lt;/h1&gt;
-&lt;h2&gt;sdfsdfsdfsd&lt;/h2&gt;
-fsdfsdf sdafasdf
-asdfsadfsadfsad
-&lt;u&gt;fsadfasf&lt;/u&gt;</bodytext>
+        <bodytext>i like typo3</bodytext>
         <deleted>0</deleted>
         <cols>0</cols>
         <records></records>

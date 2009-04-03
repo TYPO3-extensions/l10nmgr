@@ -47,7 +47,6 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 * @var string
 	 */
 	protected $identity_key;
-	
 
 	/**
 	 * @var string
@@ -97,6 +96,13 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 		$this->identity_key = $identity_key;
 	}
 
+	/**
+	 * @return string identity string
+	 */
+	public function getIdentityKey(){
+		return $this->identity_key;
+	}
+	
 	/**
 	 * @param string $default_value
 	 */
@@ -166,7 +172,7 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 * @return int
 	 */
 	public function countWords(){
-		return str_word_count($this->default_value);
+		return str_word_count(trim($this->default_value));
 	}
 }
 

@@ -129,10 +129,13 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$translateableInformations 	= $factory->create($fixtureL10NConfig,$fixtureLimitToPageIds,$fixtureTargetLanguage,$fixturePreviewLanguage);
 		$pageGroups					= $translateableInformations->getPageGroups();
 		
-		echo "Debug".__FILE__." ".__LINE__;
-		print('<pre>');
-		print_r($pageGroups);					
-		print('</pre>');
+		$firstField 				= $pageGroups->offsetGet(0)->getTranslateableElements()->offsetGet(0)->getTranslateableFields()->offsetGet(0);
+		
+		$this->assertEquals($firstField->getIdentityKey(),'pages_language_overlay:NEW/999/4711:title');
+		$this->assertEquals(1,$firstField->countWords());
+		
+		$wordCountOfFirstContentElement = $pageGroups->offsetGet(0)->getTranslateableElements()->offsetGet(1)->countWords();
+		$this->assertEquals($wordCountOfFirstContentElement,7,'Determined wrong word count');
 	}
 	
 	/**
