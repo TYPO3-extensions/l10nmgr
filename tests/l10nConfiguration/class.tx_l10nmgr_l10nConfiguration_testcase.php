@@ -1,6 +1,6 @@
 <?php
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nConfiguration.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nLanguage.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_Language.php');
 
 /**
  * This class is used to test the functionallity of the l10nAccumulatedInformationsFactory class.
@@ -35,7 +35,7 @@ class tx_l10nmgr_l10nConfiguration_testcase extends tx_phpunit_database_testcase
 	 * @return tx_l10nmgr_l10nConfiguration
 	 */
 	protected function getFixtureL10NConfig(){
-		$fixtureConfig = new tx_l10nmgr_l10nConfiguration();
+		$fixtureConfig = new tx_l10nmgr_models_language_Language();
 		$fixtureConfig->load(32);
 		
 		return $fixtureConfig;
