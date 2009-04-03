@@ -74,6 +74,40 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 	)
 );
 
+$TCA['tx_l10nmgr_exportstates'] = Array (
+	'ctrl' => Array (
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates',		
+		'label' => 'title',
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'cruser_id' => 'cruser_id',
+		'default_sortby' => 'ORDER BY title',
+		'delete' => 'deleted',
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',	
+		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_exportstates.gif',
+	),
+	'feInterface' => Array (
+		'fe_admin_fieldList' => 'crdate, state',
+	)
+);
+
+$TCA['tx_l10nmgr_exportfiles'] = Array (
+	'ctrl' => Array (
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles',		
+		'label' => 'title',
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'cruser_id' => 'cruser_id',
+		'default_sortby' => 'ORDER BY title',
+		'delete' => 'deleted',
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',	
+		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_exportfiles.gif',
+	),
+	'feInterface' => Array (
+		'fe_admin_fieldList' => 'filename',
+	)
+);
+
 if (TYPO3_MODE=="BE")	{
 	$GLOBALS["TBE_MODULES_EXT"]["xMOD_alt_clickmenu"]["extendCMclasses"][]=array(
 		"name" => "tx_l10nmgr_cm1",
