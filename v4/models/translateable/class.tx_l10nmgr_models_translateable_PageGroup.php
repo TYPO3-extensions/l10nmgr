@@ -90,6 +90,15 @@ class tx_l10nmgr_models_translateable_PageGroup {
 	public function addTranslateableElement(tx_l10nmgr_models_translateable_translateableElement $translateableElement){
 		$this->translateableElements->append($translateableElement);
 	}
+	
+	/**
+	 * Returns the collection of translateableElements
+	 *
+	 * @return ArrayObject
+	 */
+	public function getTranslateableElements(){
+		return $this->translateableElements;
+	}
 }
 
 ?>

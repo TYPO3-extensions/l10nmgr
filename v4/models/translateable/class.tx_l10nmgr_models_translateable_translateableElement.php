@@ -46,7 +46,7 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	 * Holds the translateableFields of the translateableElement
 	 * @var ArrayObject
 	 */
-	protected $tranlateableFields;
+	protected $translateableFields;
 	
 	/**
 	 * @var int
@@ -94,7 +94,7 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	 *
 	 */
 	public function __construct(){
-		$this->tranlateableFields = new ArrayObject();
+		$this->translateableFields = new ArrayObject();
 	}
 
 	/**
@@ -104,7 +104,16 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	 */
 	public function addTranslateableField(tx_l10nmgr_models_translateable_translateableField $translateableField){
 		unset($this->countedWords);
-		$this->tranlateableFields->append($translateableField);	
+		$this->translateableFields->append($translateableField);	
+	}
+	
+	/**
+	 * Returns the collection of translateableFields of the translateabeElement
+	 *
+	 * @return ArrayObject
+	 */
+	public function getTranslateableFields(){
+		return $this->translateableFields;
 	}
 	
 	/**
@@ -174,9 +183,10 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	public function countWords(){
 		//the words should only be counted once
 		if(!isset($this->countedWords)){
+			$this->countedWords = 0;
 			//the word count of the elements is the sum of the wordcount of all fields
-			for($it = $this->tranlateableFields->getIterator(); $it->valid(); $it->next()){
-				$this->countedWord += $it->current()->countWords();
+			for($it = $this->translateableFields->getIterator(); $it->valid(); $it->next()){
+				$this->countedWords +=  (int)$it->current()->countWords();
 			}
 		}
 		
