@@ -32,7 +32,8 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nAccum
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  * @author	Daniel Pötzinger <ext@aoemedia.de>
- *
+ * @author  Timo Schmidt <schmidt@aoemedia.de>
+ * 
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
@@ -52,7 +53,7 @@ class tx_l10nmgr_l10nConfiguration {
 	* @param int	$id		Id of the cfg record
 	* @return void
 	**/
-	function load($id) {
+	public function load($id) {
 		$this->l10ncfg = t3lib_BEfunc::getRecord('tx_l10nmgr_cfg', $id);
 	}
 
@@ -61,7 +62,7 @@ class tx_l10nmgr_l10nConfiguration {
 	*
 	* @return boolean
 	**/
-	function isLoaded() {
+	public function isLoaded() {
 		// array must have values also!
 		if (is_array($this->l10ncfg) && (!empty($this->l10ncfg))) {
 			return true;
@@ -85,10 +86,67 @@ class tx_l10nmgr_l10nConfiguration {
 	*
 	* @return Int
 	**/
-	function getId() {
+	public function getId() {
 		return $this->getData('uid');
 	}
+	
+	/**
+	 * Returns the Flexformdiff stored in the configuration record
+	 *
+	 * @return string
+	 */
+	public function getFlexFormDiff(){
+		return $this->getData('flexformdiff');
+	}
+	
+	/**
+	 * Returns the configurationoption to include FCEs with defaultLanguage or not
+	 *
+	 * @return boolean
+	 */
+	public function getIncludeFCEWithDefaultLanguage(){
+		return $this->getData('incfcewithdefaultlanguage'); 
+	}
+	
+	/**
+	 * Returns a list of relavant tables for this export
+	 *
+	 * @return string commaseperated list of tables
+	 */
+	public function getTableList(){
+		return $this->getData('tablelist');
+	}
 
+	/**
+	 * Returns the list of configured tables as array
+	 *
+	 * @return array of tables
+	 */
+	public function getTableArray(){
+		return explode(',',$this->getTableList());
+	}
+	
+	/**
+	 * Each l10nconfig can define an include and exclude list. This method returns the excludeList as arrayM
+	 *
+	 * @return array 
+	 */
+	public function getExcludeArray(){
+		$excludeArray = array_flip(array_unique(t3lib_div::trimExplode(',',$this->getData('exclude'),1)));
+		
+		return $excludeArray;
+	}
+	
+	/**
+	 * Each l10nconfig can define an includeList this method returns the includeList as array.
+	 *
+	 * @return array
+	 */
+	public function getIncludeArray(){
+		$includeArray = array_flip(array_unique(t3lib_div::trimExplode(',',$this->getData('include'),1)));		
+		return $includeArray;
+	}
+	
 	/**
 	* Factory method to create AccumulatedInformations Object (e.g. build tree etc...) (Factorys should have all dependencies passed as parameter)
 	*
@@ -223,9 +281,6 @@ class tx_l10nmgr_l10nConfiguration {
 		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg','uid='.intval($l10ncfg['uid']),array('flexformdiff' => $l10ncfg['flexformdiff']));
 	}
 }
-
-
-
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/class.tx_l10nmgr_l10nConfiguration.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/class.tx_l10nmgr_l10nConfiguration.php']);

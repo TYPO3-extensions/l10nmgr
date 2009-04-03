@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ts_webex>
+  <!-- Tabelle tx_l10nmgr_cfg -->
+    <tx_l10nmgr_cfg>
+        <uid>4711</uid>
+        <pid>4711</pid>
+        <tstamp>1227229316</tstamp>
+        <crdate>1227229316</crdate>
+        <cruser_id>23</cruser_id>
+        <title>Homepage</title>
+        <depth>0</depth>
+        <displaymode>2</displaymode>
+        <tablelist>pages,tt_content</tablelist>
+        <exclude></exclude>
+        <include></include>
+        <flexformdiff></flexformdiff>
+        <sourceLangStaticId></sourceLangStaticId>
+        <incfcewithdefaultlanguage>1</incfcewithdefaultlanguage>
+        <filenameprefix></filenameprefix>
+    </tx_l10nmgr_cfg>
+</ts_webex>

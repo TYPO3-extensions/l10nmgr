@@ -496,7 +496,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		// Setting filename:
 		$filename = $xmlView->getFileName();
 		$mimeType = 'text/xml';
-		$this->_sendDownloadHeader($mimeType,$filename);
+		//$this->_sendDownloadHeader($mimeType,$filename);
 		echo $xmlView->render();
 		exit;
 	}
