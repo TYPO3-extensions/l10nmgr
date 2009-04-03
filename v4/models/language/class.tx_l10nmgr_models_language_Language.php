@@ -1,5 +1,4 @@
 <?php
-
 /***************************************************************
  *  Copyright notice
  *
@@ -26,31 +25,40 @@
  ***************************************************************/
 
 /**
- * Testclass used to test the functionallity of the exporter. The exporter
- * is used to export a set of pages as xml structure.
- *  *
- * class.tx_l10nmgr_l10nExporter_testcase.php
+ * description
+ *
+ * {@inheritdoc }
+ *
+ * class.class_name.php
  *
  * @author	 Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.tx_l10nmgr_l10nExporter_testcase.php $
- * @date 01.04.2009 - 15:03:35
+ * @version $Id: class.class_name.php $
+ * @date 01.04.2009 - 11:44:31
  * @package	TYPO3
  * @subpackage	l10nmgr
  * @access public
  */
-class tx_l10nmgr_Exporter_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_models_language_Language  {
 
-	public function setUp(){
-		
-	}
+	protected $row;
 	
-	public function tearDown(){
-		
+	/**
+	* loads internal array with sys_language record
+	* @param int	$id		Id of the cfg record
+	* @return void
+	**/
+	function load($id) {
+		$this->row = t3lib_BEfunc::getRecord('sys_language', $id);
 	}
-	
 
+	public function getId(){
+		return $this->row['uid'];
+	}
 }
 
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext//l10nmgr/models/class.tx_l10nmgr_l10nLanguage.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext//l10nmgr/models/class.tx_l10nmgr_l10nLanguage.php']);
+}
 ?>

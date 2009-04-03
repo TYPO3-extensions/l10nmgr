@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
@@ -27,50 +28,68 @@
 /**
  * description
  *
- * {@inheritdoc }
- *
- * class.class_name.php
+ * class.tx_l10nmgr_models_translateable_PageGroup.php
  *
  * @author	 Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.class_name.php $
- * @date 01.04.2009 - 11:44:31
+ * @date 03.04.2009 - 10:06:51
  * @package	TYPO3
  * @subpackage	l10nmgr
  * @access public
  */
-class tx_l10nmgr_l10nLanguage implements ArrayAccess {
-
-	protected $row;
+class tx_l10nmgr_models_translateable_PageGroup {
 	
 	/**
-	* loads internal array with sys_language record
-	* @param int	$id		Id of the cfg record
-	* @return void
-	**/
-	function load($id) {
-		$this->row = t3lib_BEfunc::getRecord('sys_language', $id);
+	 * Holds the assigned translateableElements
+	 * @var ArrayObject
+	 */
+	protected $translateableElements;
+	
+	/**
+	 * Hold the page_row of the pageGroup
+	 *
+	 * @var array
+	 */
+	protected $page_row;
+	
+	
+
+	
+	/**
+	 * Constructor 
+	 * 
+	 * @param void
+	 */
+	public function __construct(){
+		$this->translateableElements = new ArrayObject();
+	
 	}
 
-	public function offsetExists($key){
-		return array_key_exists($this->row,$key);
+	
+	/**
+	 * Method to initialize the pageGroup from a page row of the database.
+	 *
+	 * @param array $row
+	 */
+	public function setPageRow($row){
+		$this->page_row = $row;
 	}
 	
-	public function offsetGet($key){
-		return $this->row[$key];
+	public function getPageId(){
+		return $this->page_row['uid'];
 	}
 	
-	public function offsetSet($key, $value){
-		$this->row[$key] = $value;
-	}
 	
-	public function offsetUnset($key){
-		unset($this->row[$key]);
+	/**
+	 * Method to add a translateableElement to the PageGroup.
+	 * 
+	 * @param tx_l10nmgr_models_translateable_translateableElement
+	 */
+	public function addTranslateableElement(tx_l10nmgr_models_translateable_translateableElement $translateableElement){
+		$this->translateableElements->append($translateableElement);
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext//l10nmgr/models/class.tx_l10nmgr_l10nLanguage.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext//l10nmgr/models/class.tx_l10nmgr_l10nLanguage.php']);
-}
 ?>

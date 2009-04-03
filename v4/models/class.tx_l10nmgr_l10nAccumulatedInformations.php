@@ -88,6 +88,8 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 		$flexFormDiff = $flexFormDiff[$sysLang];
 
 		$excludeIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg['exclude'],1));
+		
+		// @todo what is tableUidConstaint? it is no db fields of the configuration and never set from outsid
 		$tableUidConstraintIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg['tableUidConstraint'],1));
 
 			// Init:
@@ -138,6 +140,12 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 										t3lib_BEfunc::workspaceOL($table,$row);
 										if (is_array($row) && count($tableUidConstraintIndex) > 0) {
 											if (is_array($row) && isset($tableUidConstraintIndex[$table.':'.$row['uid']]))	{
+												ob_start();
+												echo 'test';		
+												$content = ob_get_contents();
+												ob_end_clean();
+												mail('schmidt@aoemedia.de','debug',$content);
+												
 												$accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
 												$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);
 											}

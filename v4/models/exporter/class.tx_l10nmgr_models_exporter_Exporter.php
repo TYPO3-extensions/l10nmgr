@@ -28,7 +28,7 @@
 /**
  * The exporter is responsible to export a set of pages as xml files
  *
- * class.tx_l10nmgr_Exporter.php
+ * class.tx_l10nmgr_models_exporter_Exporter.php
  *
  * @author	 Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -39,7 +39,7 @@
  * @subpackage	extensionkey
  * @access public
  */
-class tx_l10nmgr_Exporter {
+class tx_l10nmgr_models_exporter_Exporter {
 
 	
 	public function initialBuild(tx_l10nmgr_l10nConfiguration $l10nConfiguration,$settings){
