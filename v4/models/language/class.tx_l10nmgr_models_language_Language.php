@@ -25,7 +25,7 @@
  ***************************************************************/
 
 /**
- * description
+ * Language class
  *
  * {@inheritdoc }
  *
@@ -40,23 +40,21 @@
  * @subpackage	l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_language_Language  {
+class tx_l10nmgr_models_language_language extends tx_mvc_ddd_typo3_abstractTCAObject {
 
-	protected $row;
-	
 	/**
-	* loads internal array with sys_language record
-	* @param int	$id		Id of the cfg record
-	* @return void
-	**/
-	function load($id) {
-		$this->row = t3lib_BEfunc::getRecord('sys_language', $id);
+	 * Initialize the database object with
+	 * the table name of current object
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public static function getTableName() {
+		return 'sys_language';
 	}
 
-	public function getId(){
-		return $this->row['uid'];
-	}
 }
+
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext//l10nmgr/models/class.tx_l10nmgr_l10nLanguage.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext//l10nmgr/models/class.tx_l10nmgr_l10nLanguage.php']);
