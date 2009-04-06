@@ -23,11 +23,11 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nConfiguration.php';
-require_once t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_exportStateRepository.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_exporter_exportStateRepository.php';
 
 
 
-class tx_l10nmgr_exportData extends /* tx_mvc_ddd_abstractDbObject */ tx_mvc_ddd_typo3_abstractTCAObject {
+class tx_l10nmgr_exporter_exportData extends /* tx_mvc_ddd_abstractDbObject */ tx_mvc_ddd_typo3_abstractTCAObject {
 
 	/**
 	 * Initialize the database object with
@@ -72,7 +72,7 @@ class tx_l10nmgr_exportData extends /* tx_mvc_ddd_abstractDbObject */ tx_mvc_ddd
 		}
 
 		if (empty($this->row['statescollection'])) {
-			$statesRepository = new tx_l10nmgr_exportStateRepository();
+			$statesRepository = new tx_l10nmgr_exporter_exportStateRepository();
 			$this->row['statescollection'] = $statesRepository->findByexportdata_id($this->row['uid']);
 		}
 		return $this->row['statescollection'];
