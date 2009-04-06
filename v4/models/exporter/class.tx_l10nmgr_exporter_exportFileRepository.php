@@ -22,15 +22,15 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_exportFile.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_exporter_exportFile.php';
 
 
-class tx_l10nmgr_exportFileRepository extends tx_mvc_ddd_typo3_abstractTCAObjectRepository {
+class tx_l10nmgr_exporter_exportFileRepository extends tx_mvc_ddd_typo3_abstractTCAObjectRepository {
 
 	/**
 	 * @var string The name of the objectclass for that this repository s responsible
 	 */
-	protected $objectClassName = 'tx_l10nmgr_exportFile';
+	protected $objectClassName = 'tx_l10nmgr_exporter_exportFile';
 
 }
 

@@ -22,19 +22,11 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once t3lib_extMgm::extPath('mvc').'mvc/presentation/class.tx_mvc_presentation_abstract.php';
 
-class tx_l10nmgr_exportFile extends tx_mvc_ddd_abstractDbObject {
 
-	/**
-	 * Initialisize the database object with
-	 * the table name of current object
-	 *
-	 * @access     public
-	 * @return     string
-	 */
-	public static function getTableName() {
-		return 'tx_l10nmgr_exportfiles';
-	}
+
+class tx_l10nmgr_exporter_exportDataPresentator extends tx_mvc_presentation_abstract {
 
 }
 
