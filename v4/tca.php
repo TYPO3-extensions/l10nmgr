@@ -309,7 +309,7 @@ $TCA['tx_l10nmgr_exportfiles'] = Array (
 	'columns' => Array (
 		'exportdata_id' => Array (
 			'exclude' => 1,
-			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates.exportdata_id',
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles.exportdata_id',
 			'config' => Array (
 				'type' => 'group',
 				'internal_type' => 'db',
@@ -321,7 +321,7 @@ $TCA['tx_l10nmgr_exportfiles'] = Array (
 		),
 		'crdate' => Array (
 			'exclude' => 1,
-			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates.crdate',
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles.crdate',
 			'config' => Array (
 				'type' => 'input',
 				'eval' => 'date',
@@ -329,9 +329,9 @@ $TCA['tx_l10nmgr_exportfiles'] = Array (
 				'readOnly' => 1,
 			)
 		),
-		'state' => Array (
+		'filename' => Array (
 			'exclude' => 1,
-			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates.state',
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles.filename',
 			'config' => Array (
 				'type' => 'input',
 				'size' => '48',
