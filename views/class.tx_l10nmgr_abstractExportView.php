@@ -24,22 +24,23 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+require_once (t3lib_extMgm::extPath ( "mvc" ) . 'mvc/view/class.tx_mvc_view_phpTemplate.php');
 
 
 /**
 * abstrakt Base class for rendering the export or htmllist of a l10ncfg
 **/
-class tx_l10nmgr_abstractExportView {
+class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 
 	/**
 	 * @var	tx_l10nmgr_l10nConfiguration		$l10ncfgObj		The language configuration object
 	 */
-	var $l10ncfgObj;
+	protected $l10ncfgObj;
 
 	/**
-	 * @var	integer		$sysLang		The sys_language_uid of language to export
+	 * @var tx_l10nmgr_models_translateable_translateableInformation
 	 */
-	var $sysLang;
+	protected $translateableInformation;
 
 	/**
 	*	 flags for controlling the fields which should render in the output:
@@ -48,11 +49,29 @@ class tx_l10nmgr_abstractExportView {
 	var $modeNoHidden=FALSE;
 	var $modeOnlyNew=FALSE;
 
-	function __construct($l10ncfgObj, $sysLang) {
-		$this->sysLang = $sysLang;
+	function __construct($l10ncfgObj, $translateableInformation) {
+		$this->translateableInformation = $translateableInformation;
 		$this->l10ncfgObj = $l10ncfgObj;
 	}
 
+	/**
+	 * Returns the translateableInformation
+	 *
+	 * @return tx_l10nmgr_models_translateable_translateableInformation
+	 */
+	protected function getTranslateableInformation(){
+		return $this->translateableInformation;
+	}
+	
+	/**
+	 * Returns the id of the targetLanguage
+	 *
+	 * @return int
+	 */
+	protected function getTargetLanguageId(){
+		return $this->translateableInformation->getTargetLanguage()->getId();
+	}
+	
 	function getExportType() {
 		return $exportType;
 	}
@@ -88,8 +107,8 @@ class tx_l10nmgr_abstractExportView {
 			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
 		}
 
-		if ($this->sysLang && t3lib_extMgm::isLoaded('static_info_tables'))        {
-			$targetLangSysLangArr = t3lib_BEfunc::getRecord('sys_language',$this->sysLang);
+		if ($this->getTargetLanguageId() && t3lib_extMgm::isLoaded('static_info_tables'))        {
+			$targetLangSysLangArr = t3lib_BEfunc::getRecord('sys_language', $this->getTargetLanguageId());
 			$targetLangArr = t3lib_BEfunc::getRecord('static_languages',$targetLangSysLangArr['static_lang_isocode']);
 		}
 

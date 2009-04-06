@@ -39,7 +39,7 @@
  * @subpackage	l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translateable_PageGroup {
+class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces_wordsCountable{
 	
 	/**
 	 * Holds the assigned translateableElements
@@ -54,7 +54,17 @@ class tx_l10nmgr_models_translateable_PageGroup {
 	 */
 	protected $page_row;
 	
+	/**
+	 * Number of fields of all translateableElements
+	 *
+	 * @var int
+	 */
+	protected $countedFields;
 	
+	/**
+	 * @var int
+	 */
+	protected $countedWords;
 
 	
 	/**
@@ -64,7 +74,8 @@ class tx_l10nmgr_models_translateable_PageGroup {
 	 */
 	public function __construct(){
 		$this->translateableElements = new ArrayObject();
-	
+		$this->countedFields = 0;
+		$this->countedWords = 0;
 	}
 
 	
@@ -98,6 +109,36 @@ class tx_l10nmgr_models_translateable_PageGroup {
 	 */
 	public function getTranslateableElements(){
 		return $this->translateableElements;
+	}
+	
+	/**
+	 * Counts the number of fields of all translateableElements in the pageGroup
+	 *
+	 * @return int
+	 */
+	public function countFields(){
+		if($this->countedFields == 0 && $this->translateableElements instanceof  ArrayObject ){
+			foreach($this->translateableElements as $translateableElement){
+				$this->countedFields  += $translateableElement->countFields();
+			}
+		}
+		
+		return $this->countedFields;
+	}
+	
+	/**
+	 * Counts all words within the pagegroup.
+	 *
+	 * @return int
+	 */
+	public function countWords(){
+		if($this->countedWords == 0 && $this->translateableElements instanceof  ArrayObject ){
+			foreach($this->translateableElements as $translateableElement){
+				$this->countedWords += $translateableElement->countWords();
+			}
+		}
+		
+		return $this->countedWords;
 	}
 }
 
