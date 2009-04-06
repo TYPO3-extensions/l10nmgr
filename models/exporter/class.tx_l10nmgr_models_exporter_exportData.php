@@ -25,6 +25,8 @@
 require_once t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nConfiguration.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportStateRepository.php';
 
+require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php';
+
 
 
 class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObject */ tx_mvc_ddd_typo3_abstractTCAObject {
@@ -87,6 +89,30 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 */
 	public function getFiles() {
 
+	}
+
+	public function getSourceLanguageObject() {
+		if (!empty($this->row['source_language'])) {
+
+			if (empty($this->row['sourcelanguageobject'])) {
+				$languageRepository = new tx_l10nmgr_models_language_LanguageRepository();
+				$this->row['sourcelanguageobject'] = $languageRepository->findById($this->row['source_language']);
+			}
+			return $this->row['sourcelanguageobject'];
+		}
+	}
+
+	public function getTranslationLanguageObject() {
+		if (!empty($this->row['translation_language'])) {
+			if (empty($this->row['translationlanguageobject'])) {
+				$languageRepository = new tx_l10nmgr_models_language_LanguageRepository();
+				$this->row['translationlanguageobject'] = $languageRepository->findById($this->row['translation_language']);
+				if (!$this->row['translationlanguageobject'] instanceof tx_l10nmgr_models_language_Language) {
+					throw new Exception('Object is not an instance of "tx_l10nmgr_models_language_Language"');
+				}
+			}
+			return $this->row['translationlanguageobject'];
+		}
 	}
 
 }
