@@ -22,19 +22,15 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportState.php';
 
-class tx_l10nmgr_exporter_exportFile extends tx_mvc_ddd_abstractDbObject {
+
+class tx_l10nmgr_models_exporter_exportStateRepository extends tx_mvc_ddd_typo3_abstractTCAObjectRepository {
 
 	/**
-	 * Initialisize the database object with
-	 * the table name of current object
-	 *
-	 * @access     public
-	 * @return     string
+	 * @var string The name of the objectclass for that this repository s responsible
 	 */
-	public static function getTableName() {
-		return 'tx_l10nmgr_exportfiles';
-	}
+	protected $objectClassName = 'tx_l10nmgr_models_exporter_exportState';
 
 }
 
