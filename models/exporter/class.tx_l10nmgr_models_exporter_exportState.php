@@ -39,6 +39,10 @@ class tx_l10nmgr_models_exporter_exportState extends tx_mvc_ddd_abstractDbObject
 		return 'tx_l10nmgr_exportstates';
 	}
 
+	public function getStateLabel() {
+		return 'dfdf';
+	}
+
 }
 
 ?>
