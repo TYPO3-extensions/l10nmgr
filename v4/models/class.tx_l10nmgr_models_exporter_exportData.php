@@ -91,41 +91,41 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 
 	}
 
-
+	
 	/**
-	 * Get the source language object
-	 *
+	 * Get the source lange object
+	 * 
 	 * @param void
-	 * @return tx_l10nmgr_models_language_language|NULL
-	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-	 * @since 2009-04-06
+	 * @return tx_l10nmgr_models_language_language
+	 * 
 	 */
 	public function getSourceLanguageObject() {
-		if (!empty($this->row['source_lang'])) {
+		if (!empty($this->row['source_language'])) {
 			if (empty($this->row['sourcelanguageobject'])) {
 				$languageRepository = new tx_l10nmgr_models_language_LanguageRepository();
-				$this->row['sourcelanguageobject'] = $languageRepository->findById($this->row['source_lang']);
+				$this->row['sourcelanguageobject'] = $languageRepository->findById($this->row['source_language']);
 			}
-			return $this->row['sourcelanguageobject'];
+		} else {
+			// create empty dummy object
+			$this->row['sourcelanguageobject'] = new tx_l10nmgr_models_language_language();
 		}
+		return $this->row['sourcelanguageobject'];
 	}
 
-	/**
-	 * Get the translation language object
-	 *
-	 * @param void
-	 * @return tx_l10nmgr_models_language_language|NULL
-	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-	 * @since 2009-04-06
-	 */
 	public function getTranslationLanguageObject() {
-		if (!empty($this->row['translation_lang'])) {
+		if (!empty($this->row['translation_language'])) {
 			if (empty($this->row['translationlanguageobject'])) {
 				$languageRepository = new tx_l10nmgr_models_language_LanguageRepository();
-				$this->row['translationlanguageobject'] = $languageRepository->findById($this->row['translation_lang']);
+				$this->row['translationlanguageobject'] = $languageRepository->findById($this->row['translation_language']);
+				if (!$this->row['translationlanguageobject'] instanceof tx_l10nmgr_models_language_Language) {
+					throw new Exception('Object is not an instance of "tx_l10nmgr_models_language_Language"');
+				}
 			}
-			return $this->row['translationlanguageobject'];
+		} else {
+			// create empty dummy object
+			$this->row['translationlanguageobject'] = new tx_l10nmgr_models_language_language();
 		}
+		return $this->row['translationlanguageobject'];
 	}
 
 }
