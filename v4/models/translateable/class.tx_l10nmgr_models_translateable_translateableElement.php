@@ -90,6 +90,11 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	protected $countedWords;
 	
 	/**
+	 * @var int
+	 */
+	protected $countedFields;
+	
+	/**
 	 * Constructor
 	 *
 	 */
@@ -193,6 +198,20 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 		return $this->countedWords;
 	}
 	
+	/**
+	 * Returns the number of translateableFields
+	 * 
+	 * @return int
+	 */
+	public function countFields(){
+		if($this->countedFields == 0 && $this->getTranslateableFields() instanceof ArrayObject ){
+			$this->countedFields = $this->getTranslateableFields()->count();
+		}else{
+			$this->countedFields = 0;
+		}
+		
+		return $this->countedFields;
+	}
 }
 
 ?>

@@ -24,6 +24,7 @@
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_xmltools.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf8tools.php');
+
 require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractExportView.php');
 
 /**
@@ -39,6 +40,8 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  */
 class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 
+	protected $defaultTemplate = 'EXT:l10nmgr/templates/catxml/catxml.php';
+	
 	/**
 	 * @var	array		$internalMessges		Part of XML with fail logging information content elements
 	 */
@@ -51,8 +54,8 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 
 	var $exportType = '1';
 
-	function tx_l10nmgr_CATXMLView($l10ncfgObj, $sysLang) {
-		parent::__construct($l10ncfgObj, $sysLang);
+	function tx_l10nmgr_CATXMLView($l10ncfgObj, $translateableInformation) {
+		parent::__construct($l10ncfgObj, $translateableInformation);
 	}
 
 
@@ -62,14 +65,14 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 * @param	array		Translation data for configuration
 	 * @return	string		HTML content
 	 */
-	function render() {
+	function renderOld() {
 		global $LANG,$BE_USER;
-
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
 		if ($this->forcedSourceLanguage) {
 			$accumObj->setForcedPreviewLanguage($this->forcedSourceLanguage);
 		}
+
 		$accum=$accumObj->getInfoArray();
 		$errorMessage=array();
 		$xmlTool= t3lib_div::makeInstance("tx_l10nmgr_xmltools");
@@ -178,45 +181,10 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		//DZ: why return XML here
 		return $XML;
 	}
+	
+	
 
 	function getFilename() {
-//		$sourceLang = '';
-//		$targetLang = '';
-//
-//		if($this->exportType == '0'){
-//			$fileType = 'excel_export';
-//		}else{
-//			$fileType = 'catxml_export';
-//		}
-//
-//		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
-//			$sourceIso2L = '';
-//			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
-//			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
-//		}
-//
-//		if ($this->sysLang && t3lib_extMgm::isLoaded('static_info_tables'))        {
-//			$targetLangSysLangArr = t3lib_BEfunc::getRecord('sys_language',$this->sysLang);
-//			$targetLangArr = t3lib_BEfunc::getRecord('static_languages',$targetLangSysLangArr['static_lang_isocode']);
-//		}
-//
-//			// Set sourceLang for filename
-//		if (isset( $staticLangArr['lg_iso_2'] ) && !empty( $staticLangArr['lg_iso_2'] )) {
-//			$sourceLang = $staticLangArr['lg_iso_2'];
-//		}
-//
-//			// Use locale for targetLang in filename if available
-//		if (isset( $targetLangArr['lg_collate_locale'] ) && !empty( $targetLangArr['lg_collate_locale'] )) {
-//			$targetLang = $targetLangArr['lg_collate_locale'];
-//			// Use two letter ISO code if locale is not available
-//		}else if (isset( $targetLangArr['lg_iso_2'] ) && !empty( $targetLangArr['lg_iso_2'] )) {
-//			$targetLang = $targetLangArr['lg_iso_2'];
-//		}
-//
-//		$fileNamePrefix = (trim( $this->l10ncfgObj->getData('filenameprefix') )) ? $this->l10ncfgObj->getData('filenameprefix') : $fileType ;
-//
-//		// Setting filename:
-//		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
 		$filename = $this->getLocalFilename();
 
 		return $filename;

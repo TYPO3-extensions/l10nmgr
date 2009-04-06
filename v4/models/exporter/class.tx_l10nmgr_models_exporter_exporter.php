@@ -39,7 +39,7 @@
  * @subpackage	extensionkey
  * @access public
  */
-class tx_l10nmgr_models_exporter_Exporter {
+class tx_l10nmgr_models_exporter_exporter {
 
 	
 	public function initialBuild(tx_l10nmgr_l10nConfiguration $l10nConfiguration,$settings){

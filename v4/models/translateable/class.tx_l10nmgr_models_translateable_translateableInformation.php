@@ -61,6 +61,16 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 	 * @var tx_l10nmgr_models_language_Language
 	 * 	 */
 	protected $targetLanguage;
+
+	/**
+	 * @var int
+	 */
+	protected $countedFields;
+	
+	/**
+	 * @var int
+	 */
+	protected $countedWords;
 	
 	/**
 	 * @return ArrayObject
@@ -112,7 +122,35 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 		$this->pageGroups->append($pageGroup);
 	}
 	
+	/**
+	 * Counts all fields of all pagegroups 
+	 *
+	 * @return int
+	 */
+	public function countFields(){
+		if($this->countedFields == 0 && $this->pageGroups instanceof ArrayObject ){
+			foreach($this->pageGroups as $pageGroup){
+				$this->countedFields += $pageGroup->countFields();	
+			}
+		}
+		
+		return $this->countedFields;
+	}
 	
+	/**
+	 * Counts all words within the translateableInformation
+	 * 
+	 * @return int
+	 */
+	public function countWords(){
+		if($this->countedWords == 0 && $this->pageGroups instanceof ArrayObject ){
+			foreach ($this->pageGroups as $pageGroup){
+				$this->countedWords += $pageGroup->countWords();
+			}
+		}
+		
+		return $this->countedWords;
+	}
 }
 
 ?>

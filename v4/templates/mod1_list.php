@@ -88,11 +88,11 @@ global $BACK_PATH, $LANG;
 					</table>
 				</div>
 			</td>
-			<td><?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'export/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '">' . $configurationElementArray['title']  . '</a>'; ?></td>
+			<td><?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '">' . $configurationElementArray['title']  . '</a>'; ?></td>
 			<td><?php echo current(t3lib_BEfunc::getRecordPath($configurationElementArray['pid'], '1', 20, 50)); ?></td>
-			<td><?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'export/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=export_xml">';?><img src="" alt="Export" /></a>
-			<?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'import/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=export_xml">';?><img src="" alt="Import" /></a>
-			<?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'translate/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=inlineEdit">';?><img src="" alt="Translate" /></a>
+			<td><?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=export_xml">';?><img src="" alt="Export" /></a>
+			<?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=export_xml">';?><img src="" alt="Import" /></a>
+			<?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=inlineEdit">';?><img src="" alt="Translate" /></a>
 			</td>
 		</tr>
 		<?php } ?>

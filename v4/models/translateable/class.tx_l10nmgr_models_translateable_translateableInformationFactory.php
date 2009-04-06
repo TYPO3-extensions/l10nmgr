@@ -62,7 +62,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	public function create(	tx_l10nmgr_l10nConfiguration $l10ncfg, 
 							ArrayObject $pageIdCollection, 
 							tx_l10nmgr_models_language_Language $targetLanguage, 
-							tx_l10nmgr_models_language_Language $previewLanguage){
+							tx_l10nmgr_models_language_Language $previewLanguage = NULL){
 
 		$translateableInformation 	= new tx_l10nmgr_models_translateable_translateableInformation();
 		$translateableInformation->setPreviewLanguage($previewLanguage);
@@ -198,7 +198,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 * @param tx_l10nmgr_models_language_Language $previewLanguage
 	 * @return tx_l10nmgr_tools
 	 */
-	protected function getInitializedt8Tools($l10ncfg,$previewLanguage){
+	protected function getInitializedt8Tools($l10ncfg,$previewLanguage = NULL){
 		// Init:
 		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
 		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
