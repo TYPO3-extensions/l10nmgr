@@ -1,7 +1,7 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 if (TYPO3_MODE=="BE")    {
-        
+
     t3lib_extMgm::addModule("web","txl10nmgrM1","",t3lib_extMgm::extPath($_EXTKEY)."mod1/");
 	t3lib_extMgm::addModule("user","txl10nmgrM2","top",t3lib_extMgm::extPath($_EXTKEY)."mod2/");
 }
@@ -18,12 +18,12 @@ t3lib_div::loadTCA('tt_content');
 
 $TCA["tx_l10nmgr_cfg"] = Array (
 	"ctrl" => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg',		
-		'label' => 'title',	
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg',
+		'label' => 'title',
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
-		"default_sortby" => "ORDER BY title",	
+		"default_sortby" => "ORDER BY title",
 		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_cfg.gif",
 	),
@@ -34,15 +34,15 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 
 $TCA["tx_l10nmgr_priorities"] = Array (
 	"ctrl" => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities',		
-		'label' => 'title',	
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_priorities',
+		'label' => 'title',
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
-		"sortby" => "sorting",	
-		"delete" => "deleted",	
+		"sortby" => "sorting",
+		"delete" => "deleted",
 		"rootLevel" => 1,
-		"enablecolumns" => Array (		
+		"enablecolumns" => Array (
 			"disabled" => "hidden",
 		),
 		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
@@ -53,9 +53,11 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 	)
 );
 
+t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_exportdata");
+
 $TCA["tx_l10nmgr_exportdata"] = Array (
 	"ctrl" => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_export',		
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_export',
 		'label' => 'title',
 		'l10ncfg_id' => 'l10ncfg_id',
 		'tstamp' => 'tstamp',
@@ -66,7 +68,7 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		'source_lang' => 'source_lang',
 		"default_sortby" => "ORDER BY title",
 		"delete" => "deleted",
-		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",	
+		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_cfg.gif",
 	),
 	"feInterface" => Array (
@@ -74,16 +76,18 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 	)
 );
 
+t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_exportstates");
+
 $TCA['tx_l10nmgr_exportstates'] = Array (
 	'ctrl' => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates',		
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates',
 		'label' => 'title',
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
 		'default_sortby' => 'ORDER BY title',
 		'delete' => 'deleted',
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',	
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
 		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_exportstates.gif',
 	),
 	'feInterface' => Array (
@@ -91,16 +95,18 @@ $TCA['tx_l10nmgr_exportstates'] = Array (
 	)
 );
 
+t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_exportfiles");
+
 $TCA['tx_l10nmgr_exportfiles'] = Array (
 	'ctrl' => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles',		
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles',
 		'label' => 'title',
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
 		'default_sortby' => 'ORDER BY title',
 		'delete' => 'deleted',
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',	
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
 		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_exportfiles.gif',
 	),
 	'feInterface' => Array (
