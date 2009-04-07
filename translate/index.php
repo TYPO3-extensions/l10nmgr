@@ -66,7 +66,8 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/excelXML/class.tx_l10nmgr_e
 require_once(t3lib_extMgm::extPath('l10nmgr').'views/CATXML/class.tx_l10nmgr_CATXMLView.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractExportView.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nConfiguration.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_Configuration.php');
+
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nBaseService.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translationData.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translationDataFactory.php');
@@ -160,7 +161,7 @@ class tx_l10nmgr_translate extends t3lib_SCbase {
 
 
 			// Find l10n configuration record:
-		$l10ncfgObj=t3lib_div::makeInstance('tx_l10nmgr_l10nConfiguration');
+		$l10ncfgObj=t3lib_div::makeInstance('tx_l10nmgr_models_configuration_Configuration');
 		$l10ncfgObj->load($this->id);
 
 		if ($l10ncfgObj->isLoaded()) {

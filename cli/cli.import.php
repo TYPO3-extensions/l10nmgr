@@ -19,7 +19,15 @@ require_once(PATH_t3lib.'class.t3lib_cli.php');
 require_once(PATH_typo3.'init.php');
 require_once(PATH_typo3.'template.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nConfiguration.php');
+	// autoload the mvc 
+if (t3lib_extMgm::isLoaded('mvc')) {
+	require_once(t3lib_extMgm::extPath('mvc').'common/class.tx_mvc_common_classloader.php');
+	tx_mvc_common_classloader::loadAll();
+} else {
+	exit('Framework "mvc" not loaded!');
+}
+
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nBaseService.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translationData.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translationDataFactory.php');
@@ -134,10 +142,12 @@ class tx_cliimport_cli extends t3lib_cli {
         } else {
 
 		// Find l10n configuration record:
-		$l10ncfgObj=t3lib_div::makeInstance('tx_l10nmgr_l10nConfiguration');
-		$l10ncfgObj->load($importManager->headerData['t3_l10ncfg']);
-		$status = $l10ncfgObj->isLoaded();
-		if ($status === false) {
+
+		$l10nmgrCfgRepository = t3lib_div::makeInstance( 'tx_l10nmgr_models_configuration_configurationRepository' );
+		$l10ncfgObj = $l10nmgrCfgRepository->findById($importManager->headerData['t3_l10ncfg']);
+	
+		
+		if (!($l10ncfgObj instanceof tx_l10nmgr_models_configuration_configuration)) {
 			$this->cli_echo("l10ncfg not loaded! Exiting...\n");
 			exit;
 		}
@@ -261,10 +271,10 @@ class tx_cliimport_cli extends t3lib_cli {
 			$out.='<br/><br/>'.$importManager->getErrorMessages();
 		} else {
 			// Find l10n configuration record:
-			$l10ncfgObj=t3lib_div::makeInstance('tx_l10nmgr_l10nConfiguration');
-			$l10ncfgObj->load($importManager->headerData['t3_l10ncfg']);
-			$status = $l10ncfgObj->isLoaded();
-			if ($status === false) {
+			$l10nmgrCfgRepository = t3lib_div::makeInstance( 'tx_l10nmgr_models_configuration_configurationRepository' );
+			$l10ncfgObj = $l10nmgrCfgRepository->findById($importManager->headerData['t3_l10ncfg']);
+	
+			if (!($l10ncfgObj instanceof tx_l10nmgr_models_configuration_configuration)) {
 				$this->cli_echo("l10ncfg not loaded! Exiting...\n");
 				exit;
 			}

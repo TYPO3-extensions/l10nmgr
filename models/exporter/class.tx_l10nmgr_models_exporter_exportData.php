@@ -22,7 +22,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nConfiguration.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportStateRepository.php';
 
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php';
@@ -55,8 +55,8 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		}
 
 		if (empty($this->row['l10nconfiguration'])) {
-			$this->row['l10nconfiguration'] = new tx_l10nmgr_l10nConfiguration();
-			$this->row['l10nconfiguration']->load($this->row['l10ncfg_id']);
+			$l10nconfigurationRepository = new tx_l10nmgr_models_configuration_configurationRepository();
+			$this->row['l10nconfiguration'] = $l10nconfigurationRepository->findById($this->row['l10ncfg_id']);
 		}
 		return $this->row['l10nconfiguration'];
 	}

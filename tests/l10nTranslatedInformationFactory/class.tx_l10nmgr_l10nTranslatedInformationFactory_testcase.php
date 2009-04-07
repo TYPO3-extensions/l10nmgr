@@ -1,10 +1,21 @@
 <?php
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nConfiguration.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_Language.php');
+	// autoload the mvc 
+if (t3lib_extMgm::isLoaded('mvc')) {
+	require_once(t3lib_extMgm::extPath('mvc').'common/class.tx_mvc_common_classloader.php');
+	tx_mvc_common_classloader::loadAll();
+} else {
+	exit('Framework "mvc" not loaded!');
+}
+
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php');
+
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php');
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'interfaces/interface.tx_l10nmgr_interfaces_wordsCountable.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_PageGroup.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableElement.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php');
 
@@ -64,7 +75,7 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureTargetLanguage.xml');
 		$fixtureTargetLanguage 	= $this->getFixtureTargetLanguage();
 		
-		$this->assetEquals($fixtureTargetLanguage['uid'],999,'Fixture Targetlanguage can not be loaded');
+		$this->assertEquals($fixtureTargetLanguage['uid'],999,'Fixture Targetlanguage can not be loaded');
 	}
 
 	/**
@@ -141,11 +152,11 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	/**
 	 * This method is used to load a FixtureL10NConfig
 	 *
-	 * @return tx_l10nmgr_l10nConfiguration
+	 * @return tx_l10nmgr_models_configuration_configuration
 	 */
 	protected function getFixtureL10NConfig(){
-		$fixtureConfig = new tx_l10nmgr_l10nConfiguration();
-		$fixtureConfig->load(4711);
+		$fixtureConfigRepository = new tx_l10nmgr_models_configuration_configurationRepository();
+		$fixtureConfig = $fixtureConfigRepository->findById(4711);
 		
 		return $fixtureConfig;
 	}
@@ -156,9 +167,9 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	 * @return tx_l10nmgr_l10nLanguage
 	 */
 	protected function getFixtureTargetLanguage(){
-		$fixtureLanguage = new tx_l10nmgr_models_language_Language();
-		$fixtureLanguage->load(999);
-		
+		$fixtureLanguageRepository = new tx_l10nmgr_models_language_languageRepository();
+		$fixtureLanguage = $fixtureLanguageRepository->findById(999);
+				
 		return $fixtureLanguage;
 	}
 	
@@ -168,8 +179,8 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	 * @return tx_l10nmgr_l10nLanguage
 	 */
 	protected function getFixturePreviewLanguage(){
-		$fixtureLanguage = new tx_l10nmgr_models_language_Language();
-		$fixtureLanguage->load(998);
+		$fixtureLanguageRepository = new tx_l10nmgr_models_language_languageRepository();
+		$fixtureLanguage = $fixtureLanguageRepository->findById(998);
 		
 		return $fixtureLanguage;
 	}

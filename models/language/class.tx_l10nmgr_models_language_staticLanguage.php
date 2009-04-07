@@ -1,12 +1,4 @@
 <?php
-	// autoload the mvc 
-if (t3lib_extMgm::isLoaded('mvc')) {
-	require_once(t3lib_extMgm::extPath('mvc').'common/class.tx_mvc_common_classloader.php');
-	tx_mvc_common_classloader::loadAll();
-} else {
-	exit('Framework "mvc" not loaded!');
-}
-
 /***************************************************************
  *  Copyright notice
  *
@@ -33,31 +25,35 @@ if (t3lib_extMgm::isLoaded('mvc')) {
  ***************************************************************/
 
 /**
- * Testclass used to test the functionallity of the exporter. The exporter
- * is used to export a set of pages as xml structure.
- *  *
- * class.tx_l10nmgr_l10nExporter_testcase.php
+ * This object represents an entry from the static language table.
+ * 
+ * class.tx_l10nmgr_models_language_staticLanguage.php
  *
  * @author	 Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.tx_l10nmgr_l10nExporter_testcase.php $
- * @date 01.04.2009 - 15:03:35
+ * @version $Id: class.tx_l10nmgr_models_language_staticLanguage.php $
+ * @date 01.04.2009 - 11:44:31
  * @package	TYPO3
  * @subpackage	l10nmgr
  * @access public
  */
-class tx_l10nmgr_Exporter_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_models_language_staticLanguage extends tx_mvc_ddd_typo3_abstractTCAObject {
 
-	public function setUp(){
-		
+	/**
+	 * Initialize the database object with
+	 * the table name of current object
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public static function getTableName() {
+		return 'static_languages';
 	}
-	
-	public function tearDown(){
-		
-	}
-	
-
 }
 
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext//l10nmgr/models/class.tx_l10nmgr_l10nLanguage.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext//l10nmgr/models/class.tx_l10nmgr_l10nLanguage.php']);
+}
 ?>

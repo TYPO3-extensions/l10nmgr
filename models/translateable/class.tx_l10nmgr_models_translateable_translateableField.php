@@ -88,6 +88,8 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 * @var boolean
 	 */
 	protected $isRTE;
+	
+	protected $xmlTool;
 
 	/**
 	 * @param string $identity_key
@@ -173,6 +175,90 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 */
 	public function countWords(){
 		return str_word_count(trim($this->default_value));
+	}
+	
+	/**
+	 * This method returns the base data for the translation. In normal cases, this is 
+	 * the content of the record in the default language. 
+	 *
+	 * @param tx_l10nmgr_models_language_language$forcedSourceLanguageId
+	 */
+	public function getFormattedDataForTranslation($skipXMLCheck = false,$useUTF8mode = false,tx_l10nmgr_models_language_language $forcedSourceLanguage = null){
+		//dtermine ssourcefield depending in sourceLanguage
+		$dataForTranslation = $this->determinFieldContentByLanguage($forcedSourceLanguage);
+		
+		if($this->needsTransformation()){
+			$result = $this->findXMLTool()->RTE2XML($dataForTranslation);
+		}else{
+			$result = str_replace('&','&amp;',$dataForTranslation);
+			
+			if($useUTF8mode){
+				$result = tx_l10nmgr_utf8tools::utf8_bad_strip($result);
+			}
+			
+			if($this->findXMLTool()->isValidXMLString($result)){
+				return $result;
+			}else{
+				if($skipXMLCheck){
+					$result = '<![CDATA['.$result.']]>';
+				}else{
+					throw new Exception("Invalid data in tag");
+				}
+			}
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * Searches the internal XML Tool Singleton
+	 *
+	 * @return tx_l10nmgr_xmltools
+	 */
+	protected function findXMLTool(){
+		if(!($this->xmlTool instanceof tx_l10nmgr_xmltools)){
+			$this->xmlTool= t3lib_div::makeInstance("tx_l10nmgr_xmltools");
+		}
+		
+		return $this->xmlTool;
+	}
+	
+	/**
+	 * delivers the data for the translation depending on the sourceLanguage
+	 * 
+	 * @param tx_l10nmgr_models_language_language $forcedSourceLanguage
+	 * @return string
+	 */
+	protected function determinFieldContentByLanguage(tx_l10nmgr_models_language_language $forcedSourceLanguage = null){
+		if ($forcedSourceLanguage) {
+			$dataForTranslation =	$this->previewLanguage_values[$forcedSourceLanguage->getUid()];
+		}
+		else {
+			$dataForTranslation	=	$this->default_value;
+		}
+		
+		return $dataForTranslation;
+	}
+	
+
+	
+	
+	/**
+	 * This method can be used to determin if there is a difference between the diffDefaultValue and the defaultValue
+	 *
+	 * @return boolean
+	 */
+	public function isChanged(){
+		return (strcmp(trim($this->diffDefault_value),trim($this->default_value)) != 0);
+	}
+	
+	/**
+	 * A field with the type text from the RTE needs a Transformation
+	 *
+	 * @return boolean
+	 */
+	public function needsTransformation(){
+		return (($this->fieldType =='text') &&  $this->isRTE);
 	}
 }
 

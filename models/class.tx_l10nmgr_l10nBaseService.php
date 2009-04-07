@@ -55,7 +55,7 @@ class tx_l10nmgr_l10nBaseService {
 	 * @param	array		Array with incoming translation. Must match what is found in $accum
 	 * @return	mixed		False if error - else flexFormDiffArray (if $inputArray was an array and processing was performed.)
 	 */
-	function _submitContentAndGetFlexFormDiff($accum,$inputArray)	{
+	protected function _submitContentAndGetFlexFormDiff($accum,$inputArray)	{
 
 		//CLI $accum and $inputArray OK!
 		//print "<pre>";

@@ -36,7 +36,7 @@
  */
 class tx_l10nmgr_l10ncfgDetailView {
 
-	var $l10ncfgObj = array();	// Internal array (=datarow of config record)
+	protected $l10ncfgObj = array();	// Internal array (=datarow of config record)
 
 	/**
 	 * @var $doc
@@ -45,7 +45,7 @@ class tx_l10nmgr_l10ncfgDetailView {
 	
 	/**
 	* constructor. Set the internal required objects as paramter in constructor (kind of dependency injection, and communicate the dependencies)
-	* @param tx_l10nmgr_l10nConfiguration	
+	* @param tx_l10nmgr_models_configuration_configuration	
 	**/
 	function tx_l10nmgr_l10ncfgDetailView($l10ncfgObj, $doc) {
 		$this->l10ncfgObj=&$l10ncfgObj;
@@ -53,10 +53,10 @@ class tx_l10nmgr_l10ncfgDetailView {
 	}
 	
 	/**
-	* checks if the internal tx_l10nmgr_l10nConfiguration object is valid
+	* checks if the internal tx_l10nmgr_models_configuration_configuration object is valid
 	**/
 	function _hasValidConfig() {
-		if (is_object($this->l10ncfgObj) && $this->l10ncfgObj->isLoaded()) {
+		if ($this->l10ncfgObj instanceof tx_l10nmgr_models_configuration_configuration && $this->l10ncfgObj->getId() != 0) {
 			return true;
 		}
 		else  {

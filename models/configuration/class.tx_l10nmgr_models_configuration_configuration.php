@@ -37,39 +37,19 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nAccum
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
-class tx_l10nmgr_l10nConfiguration {
-
-
+class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abstractTCAObject {
+	protected $tree;
+	protected $exportPageIdCollection;	
+	
 	/**
-	 * @todo refactorm needs to be private
-	 * @var unknown_type
+	 * Initialize the database object with
+	 * the table name of current object
+	 *
+	 * @access public
+	 * @return string
 	 */
-	public 	$l10ncfg=array();
-	private $tree;
-	private $exportPageIdCollection;
-
-	/**
-	* loads internal array with l10nmgrcfg record
-	* @param int	$id		Id of the cfg record
-	* @return void
-	**/
-	public function load($id) {
-		$this->l10ncfg = t3lib_BEfunc::getRecord('tx_l10nmgr_cfg', $id);
-	}
-
-	/**
-	* checks if configuration is valid
-	*
-	* @return boolean
-	**/
-	public function isLoaded() {
-		// array must have values also!
-		if (is_array($this->l10ncfg) && (!empty($this->l10ncfg))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	public static function getTableName() {
+		return 'tx_l10nmgr_cfg';
 	}
 
 	/**
@@ -78,7 +58,7 @@ class tx_l10nmgr_l10nConfiguration {
 	* @return string	Value of the field
 	**/
 	function getData($key) {
-		return $this->l10ncfg[$key];
+		return $this->row[$key];
 	}
 
 	/**
@@ -156,12 +136,11 @@ class tx_l10nmgr_l10nConfiguration {
 	**/
 	public function getL10nAccumulatedInformationsObjectForLanguage($sysLang,$overrideStartingPoint='') {
 
-		$l10ncfg=$this->l10ncfg;
 		// Showing the tree:
 		// Initialize starting point of page tree:
-		$treeStartingPoint = intval($l10ncfg['depth']==-1 ? t3lib_div::_GET('srcPID') : $l10ncfg['pid']);
+		$treeStartingPoint = intval($this->getData('depth')==-1 ? t3lib_div::_GET('srcPID') : $this->getData('pid'));
 		$treeStartingRecord = t3lib_BEfunc::getRecordWSOL('pages', $treeStartingPoint);
-		$depth = $l10ncfg['depth'];
+		$depth = $this->getData('depth');
 
 		// Initialize tree object:
 		$tree = t3lib_div::makeInstance('t3lib_pageTree');
@@ -179,7 +158,7 @@ class tx_l10nmgr_l10nConfiguration {
 
 		//now create and init accum Info object:
 		$accumObjName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10nAccumulatedInformations');
-		$accumObj=new $accumObjName($tree,$l10ncfg,$sysLang);
+		$accumObj=new $accumObjName($tree,$this,$sysLang);
 
 		return $accumObj;
 	}
@@ -227,8 +206,8 @@ class tx_l10nmgr_l10nConfiguration {
 			//ensure tree is empty
 			unset($this->tree);
 			
-			$depth 	= $this->l10ncfg['depth'];
-			$pid	= $this->l10ncfg['pid'];
+			$depth 	= $this->getData('depth');
+			$pid	= $this->getData('pid');
 
 			// Initialize starting point of page tree:
 			if(!isset($pid)){
@@ -265,10 +244,10 @@ class tx_l10nmgr_l10nConfiguration {
 	 * @deprecated 
 	 */
 	public function updateFlexFormDiff($sysLang,$flexFormDiffArray)	{
-		$l10ncfg=$this->l10ncfg;
+	
 			// Updating diff-data:
 			// First, unserialize/initialize:
-		$flexFormDiffForAllLanguages = unserialize($l10ncfg['flexformdiff']);
+		$flexFormDiffForAllLanguages = unserialize($this->getData('flexformdiff'));
 		if (!is_array($flexFormDiffForAllLanguages))	{
 			$flexFormDiffForAllLanguages = array();
 		}
@@ -277,13 +256,32 @@ class tx_l10nmgr_l10nConfiguration {
 		$flexFormDiffForAllLanguages[$sysLang] = array_merge((array)$flexFormDiffForAllLanguages[$sysLang],$flexFormDiffArray);
 
 			// Serialize back and save it to record:
-		$l10ncfg['flexformdiff'] = serialize($flexFormDiffForAllLanguages);
-		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg','uid='.intval($l10ncfg['uid']),array('flexformdiff' => $l10ncfg['flexformdiff']));
+		$this->row['flexformdiff'] = serialize($flexFormDiffForAllLanguages);
+		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg','uid='.intval($this->getData('uid')),array('flexformdiff' => $this->getData('flexformdiff')));
+	}
+	
+	/**
+	 * Returns the static language object
+	 *
+	 * @return tx_l10nmgr_models_language_staticLanguage
+	 */
+	public function getStaticSourceLanguage(){
+		if ($this->getData('sourceLangStaticId') != 0) {
+			if (empty($this->row['sourceLangStaticObject'])) {
+				$languageRepository = new tx_l10nmgr_models_language_staticLanguageRepository();
+				$this->row['sourceLangStaticObject'] = $languageRepository->findById($this->getData('sourceLangStaticId'));
+				
+				if (!$this->row['sourceLangStaticObject'] instanceof tx_l10nmgr_models_language_staticLanguage) {
+					throw new Exception('Object is not an instance of "tx_l10nmgr_models_language_staticLanguage"');
+				}
+			}
+			return $this->row['sourceLangStaticObject'];
+		}
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/class.tx_l10nmgr_l10nConfiguration.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/class.tx_l10nmgr_l10nConfiguration.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/configuration/class.tx_l10nmgr_models_configuration_configuration.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/configuration/class.tx_l10nmgr_models_configuration_configuration.php']);
 }
 
 

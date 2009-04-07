@@ -80,22 +80,23 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 		global $TCA;
 		$tree=$this->tree;
 		$l10ncfg=$this->l10ncfg;
+		
 		$accum = array();
 		$sysLang=$this->sysLang;
 
 			// FlexForm Diff data:
-		$flexFormDiff = unserialize($l10ncfg['flexformdiff']);
+		$flexFormDiff = unserialize($l10ncfg->getData('flexformdiff'));
 		$flexFormDiff = $flexFormDiff[$sysLang];
 
-		$excludeIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg['exclude'],1));
+		$excludeIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg->getData('exclude'),1));
 		
 		// @todo what is tableUidConstaint? it is no db fields of the configuration and never set from outsid
-		$tableUidConstraintIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg['tableUidConstraint'],1));
+		$tableUidConstraintIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg->getData('tableUidConstraint'),1));
 
 			// Init:
 		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
 		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
-		if ($l10ncfg['incfcewithdefaultlanguage']==1) {
+		if ($l10ncfg->getData('incfcewithdefaultlanguage')==1) {
 			$t8Tools->includeFceWithDefaultLanguage=TRUE;
 		}
 
@@ -125,7 +126,7 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 				foreach($TCA as $table => $cfg)	{
 
 						// Only those tables we want to work on:
-					if (t3lib_div::inList($l10ncfg['tablelist'], $table))	{
+					if (t3lib_div::inList($l10ncfg->getData('tablelist'), $table))	{
 
 						if ($table === 'pages')	{
 							$accum[$pageId]['items'][$table][$pageId] = $t8Tools->translationDetails('pages',t3lib_BEfunc::getRecordWSOL('pages',$pageId),$sysLang, $flexFormDiff);
@@ -163,7 +164,7 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 		}
 
 
-		$includeIndex = array_unique(t3lib_div::trimExplode(',',$l10ncfg['include'],1));
+		$includeIndex = array_unique(t3lib_div::trimExplode(',',$l10ncfg->getData('include'),1));
 		foreach($includeIndex as $recId)	{
 			list($table, $uid) = explode(':',$recId);
 			$row = t3lib_BEfunc::getRecordWSOL($table, $uid);

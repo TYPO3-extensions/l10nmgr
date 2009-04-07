@@ -1,5 +1,14 @@
 <?php
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nConfiguration.php');
+	// autoload the mvc 
+if (t3lib_extMgm::isLoaded('mvc')) {
+	require_once(t3lib_extMgm::extPath('mvc').'common/class.tx_mvc_common_classloader.php');
+	tx_mvc_common_classloader::loadAll();
+} else {
+	exit('Framework "mvc" not loaded!');
+}
+
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php');
 
 /**
  * This class is used to test the functionallity of the l10nAccumulatedInformationsFactory class.
@@ -31,12 +40,12 @@ class tx_l10nmgr_l10nConfiguration_testcase extends tx_phpunit_database_testcase
 	/**
 	 * This method is used to load a FixtureL10NConfig
 	 *
-	 * @return tx_l10nmgr_l10nConfiguration
+	 * @return tx_l10nmgr_models_configuration_configuration
 	 */
 	protected function getFixtureL10NConfig(){
-		$fixtureConfig = new tx_l10nmgr_l10nConfiguration();
-		$fixtureConfig->load(32);
-		
+		$fixtureConfigRepository = new tx_l10nmgr_models_configuration_configurationRepository();
+		$fixtureConfig = $fixtureConfigRepository->findById(32);
+				
 		return $fixtureConfig;
 	}
 	
