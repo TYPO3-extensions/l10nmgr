@@ -39,7 +39,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 	var $exportType = '0';
 	
 	function tx_l10nmgr_excelXMLView($l10ncfgObj, $sysLang) {
-		parent::__construct($l10ncfgObj, $sysLang);		
+		parent::__construct($l10ncfgObj, null,$sysLang);		
 	}
 	
 	/**
@@ -105,7 +105,9 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 								$diff.= ($tData['msg']?'[NOTE: '.htmlspecialchars($tData['msg']).']':'');
 								
 								if (!$this->modeOnlyChanged || !$noChangeFlag)	{
-									reset($tData['previewLanguageValues']);
+									if(is_array($tData['previewLanguageValues']) && array_key_exists('previewLanguageValues',$tData)){
+										reset($tData['previewLanguageValues']);
+									}
 									$fieldsForRecord[]= '
 								<!-- Translation row: -->
 								   <Row ss:StyleID="s25">

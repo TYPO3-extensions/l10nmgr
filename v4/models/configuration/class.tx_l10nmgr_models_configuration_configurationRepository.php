@@ -1,11 +1,5 @@
 <?php
-	// autoload the mvc 
-if (t3lib_extMgm::isLoaded('mvc')) {
-	require_once(t3lib_extMgm::extPath('mvc').'common/class.tx_mvc_common_classloader.php');
-	tx_mvc_common_classloader::loadAll();
-} else {
-	exit('Framework "mvc" not loaded!');
-}
+require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php';
 
 /***************************************************************
  *  Copyright notice
@@ -33,31 +27,32 @@ if (t3lib_extMgm::isLoaded('mvc')) {
  ***************************************************************/
 
 /**
- * Testclass used to test the functionallity of the exporter. The exporter
- * is used to export a set of pages as xml structure.
- *  *
- * class.tx_l10nmgr_l10nExporter_testcase.php
+ * description
+ *
+ * {@inheritdoc }
+ *
+ * class.tx_l10nmgr_models_configuration_configurationRepository.php
  *
  * @author	 Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.tx_l10nmgr_l10nExporter_testcase.php $
- * @date 01.04.2009 - 15:03:35
+ * @version $Id: class.tx_l10nmgr_models_configuration_configurationRepository.php $
+ * @date 07.04.2009 - 14:31:34
+ * @see tx_mvc_abstractRepository
+ * @category database
  * @package	TYPO3
  * @subpackage	l10nmgr
  * @access public
  */
-class tx_l10nmgr_Exporter_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_models_configuration_configurationRepository extends tx_mvc_ddd_typo3_abstractTCAObjectRepository {
 
-	public function setUp(){
-		
-	}
-	
-	public function tearDown(){
-		
-	}
-	
-
+	/**
+	 * @var string The name of the objectclass for that this repository s responsible
+	 */
+	protected $objectClassName = 'tx_l10nmgr_models_configuration_configuration';
 }
 
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php']);
+}
 ?>

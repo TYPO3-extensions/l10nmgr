@@ -33,7 +33,7 @@ require_once (t3lib_extMgm::extPath ( "mvc" ) . 'mvc/view/class.tx_mvc_view_phpT
 class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 
 	/**
-	 * @var	tx_l10nmgr_l10nConfiguration		$l10ncfgObj		The language configuration object
+	 * @var	tx_l10nmgr_models_configuration_configuration		$l10ncfgObj		The language configuration object
 	 */
 	protected $l10ncfgObj;
 
@@ -45,13 +45,23 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	/**
 	*	 flags for controlling the fields which should render in the output:
 	*/
-	var $modeOnlyChanged=FALSE;
-	var $modeNoHidden=FALSE;
-	var $modeOnlyNew=FALSE;
+	protected $modeOnlyChanged=FALSE;
+	protected $modeNoHidden=FALSE;
+	protected $modeOnlyNew=FALSE;
+	
+	protected $sysLang;
 
-	function __construct($l10ncfgObj, $translateableInformation) {
+	/**
+	 * This is the base constructor for all exportViews
+	 *
+	 * @param tx_l10nmgr_models_configuration_configuration $l10ncfgObj
+	 * @param tx_l10nmgr_models_configuration_translateableInformation $translateableInformation
+	 * @param int $sysLang (optional) since there are views that still use the accum object, the third parameter is needed
+	 */
+	function __construct($l10ncfgObj, $translateableInformation,$sysLang = null) {
 		$this->translateableInformation = $translateableInformation;
 		$this->l10ncfgObj = $l10ncfgObj;
+		$this->sysLang = $sysLang;
 	}
 
 	/**
@@ -69,7 +79,11 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	 * @return int
 	 */
 	protected function getTargetLanguageId(){
-		return $this->translateableInformation->getTargetLanguage()->getId();
+		if($this->getTranslateableInformation() instanceof tx_l10nmgr_models_translateable_translateableInformation ){
+			return $this->translateableInformation->getTargetLanguage()->getUid();
+		}elseif(isset($this->sysLang)){
+			return $this->sysLang;
+		}
 	}
 	
 	function getExportType() {

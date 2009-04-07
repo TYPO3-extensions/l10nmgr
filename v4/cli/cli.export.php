@@ -24,6 +24,14 @@ $lang = t3lib_div::makeInstance('language');
 $fileRef = 'EXT:l10nmgr/cli/locallang.xml';
 $lang->includeLLFile($fileRef);
 
+	// autoload the mvc 
+if (t3lib_extMgm::isLoaded('mvc')) {
+	require_once(t3lib_extMgm::extPath('mvc').'common/class.tx_mvc_common_classloader.php');
+	tx_mvc_common_classloader::loadAll();
+} else {
+	exit('Framework "mvc" not loaded!');
+}
+
 $extPath = t3lib_extMgm::extPath('l10nmgr');
 
 require_once($extPath.'views/class.tx_l10nmgr_l10ncfgDetailView.php');
@@ -32,7 +40,9 @@ require_once($extPath.'views/excelXML/class.tx_l10nmgr_excelXMLView.php');
 require_once($extPath.'views/CATXML/class.tx_l10nmgr_CATXMLView.php');
 require_once($extPath.'views/class.tx_l10nmgr_abstractExportView.php');
 
-require_once($extPath.'models/class.tx_l10nmgr_l10nConfiguration.php');
+require_once($extPath.'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php');
+require_once($extPath.'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php');
+
 require_once($extPath.'models/class.tx_l10nmgr_l10nBaseService.php');
 require_once($extPath.'models/class.tx_l10nmgr_translationData.php');
 require_once($extPath.'models/class.tx_l10nmgr_translationDataFactory.php');
@@ -174,31 +184,39 @@ class tx_cliexport_cli extends t3lib_cli {
 	// Load the configuration
 	$this->loadExtConf();
 	
-	$l10nmgrCfgObj = t3lib_div::makeInstance( 'tx_l10nmgr_l10nConfiguration' );
-	$l10nmgrCfgObj->load($l10ncfg);
-	if ($l10nmgrCfgObj->isLoaded()) {
+	$l10nmgrCfgRepository = t3lib_div::makeInstance( 'tx_l10nmgr_models_configuration_configurationRepository' );
+	$l10nmgrCfgObj = $l10nmgrCfgRepository->findById($l10ncfg);
+	if ($l10nmgrCfgObj instanceof tx_l10nmgr_models_configuration_configuration) {
 
-		$l10nmgrXML = t3lib_div::makeInstanceClassName( 'tx_l10nmgr_CATXMLView' );
-		$l10nmgrGetXML=new $l10nmgrXML($l10nmgrCfgObj,$tlang);
+###
+			$languageRespository 		= new  tx_l10nmgr_models_language_languageRepository();
+			$targetLanguage 			= $languageRespository->findById($tlang);
+						
+			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
+			$tranlateableInformation 	= $factory->create($l10nmgrCfgObj,$l10nmgrCfgObj->getExportPageIdCollection(),$targetLanguage);	
 
+			$l10nmgrXML 				= t3lib_div::makeInstanceClassName( 'tx_l10nmgr_CATXMLView' );
+			$viewClass					= new $l10nmgrXML($l10nmgrCfgObj,$tranlateableInformation);
+
+			
+	//		$config 	=	$BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');
+	//		$viewClass->setSkipXMLCheck($config['noxmlcheck']);
+	//		$viewClass->setUseUTF8Mode($config['utf8']);
+		
+###			
+		
 		$onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';
 		if ($onlyChanged === "TRUE") {
-			$l10nmgrGetXML->setModeOnlyChanged();
+			$viewClass->setModeOnlyChanged();
 	        }
 		$hidden = isset($this->cli_args['--hidden']) ? $this->cli_args['--hidden'][0] : 'FALSE';
 		if ($hidden === "TRUE") {
 			$GLOBALS['BE_USER']->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden']=TRUE;
-			$l10nmgrGetXML->setModeNoHidden();
+			$viewClass->setModeNoHidden();
 		}
-		//Check the export
-		//if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
-		//	$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
-		//	$info .= $viewClass->renderExports();
-		//} else {
-			//$viewClass->saveExportInformation();
-		//}
-		$xmlFileName = PATH_site . 'uploads/tx_l10nmgr/jobs/out/' . $l10nmgrGetXML->getFileName();
-		$xmlContent = $l10nmgrGetXML->render();
+
+		$xmlFileName = PATH_site . 'uploads/tx_l10nmgr/jobs/out/' . $viewClass->getFileName();
+		$xmlContent = $viewClass->render();
 		$writeXmlFile = t3lib_div::writeFile($xmlFileName, $xmlContent );
 
 		// If email notification is set send export files to responsable translator
@@ -215,7 +233,7 @@ class tx_cliexport_cli extends t3lib_cli {
 		// If FTP option is set upload files to remote server
 		if ($this->lConf['enable_ftp'] == 1) {
 			if (file_exists($xmlFileName)) {
-				$error.= $this->ftpUpload($xmlFileName,$l10nmgrGetXML->getFileName());
+				$error.= $this->ftpUpload($xmlFileName,$viewClass->getFileName());
 			} else {
 				$this->cli_echo($lang->getLL('error.ftp.file_not_found.msg')."\n");
 			}
@@ -241,7 +259,7 @@ class tx_cliexport_cli extends t3lib_cli {
 	global $lang;
 
 	    // Get source & target language ISO codes
-	$sourceStaticLangArr = t3lib_BEfunc::getRecord('static_languages',$l10nmgrCfgObj->l10ncfg['sourceLangStaticId'],'lg_iso_2');
+	$sourceStaticLangArr = t3lib_BEfunc::getRecord('static_languages',$l10nmgrCfgObj->l10ncfg->getData('sourceLangStaticId'),'lg_iso_2');
 	$targetStaticLang = t3lib_BEfunc::getRecord('sys_language',$tlang,'static_lang_isocode');
 	$targetStaticLangArr = t3lib_BEfunc::getRecord('static_languages',$targetStaticLang['static_lang_isocode'],'lg_iso_2');
 	$sourceLang = $sourceStaticLangArr['lg_iso_2'];

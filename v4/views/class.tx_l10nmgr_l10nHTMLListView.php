@@ -48,11 +48,11 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 	var $modeWithInlineEdit=FALSE;
 	var $modeShowEditLinks=FALSE;
 	
-	function tx_l10nmgr_l10nHTMLListView($l10ncfgObj, $sysLang) {
+	function tx_l10nmgr_l10nHTMLListView($l10ncfgObj,$sysLang) {
 		global $BACK_PATH;		
 		$this->doc = t3lib_div::makeInstance('noDoc');
 		$this->doc->backPath = $BACK_PATH;
-		parent::__construct($l10ncfgObj, $sysLang);				
+		parent::__construct($l10ncfgObj, null,$sysLang);				
 	}
 	
 		
@@ -78,16 +78,16 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
 		$accum=$accumObj->getInfoArray();				
-		$l10ncfg=$this->l10ncfg;
+		$l10ncfg = $this->l10ncfgObj;
 		
 
 		$output = '';
 		
 		$showSingle = t3lib_div::_GET('showSingle');
 
-		if ($l10ncfg['displaymode']>0)	{
+		if ($l10ncfg->getData('displaymode')>0)	{
 			$showSingle = $showSingle ? $showSingle : 'NONE';
-			if ($l10ncfg['displaymode']==2)	{ $noAnalysis = TRUE;}
+			if ($l10ncfg->getData('displaymode')==2)	{ $noAnalysis = TRUE;}
 		} else $noAnalysis = FALSE;
 
 			// Traverse the structure and generate HTML output:

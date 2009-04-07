@@ -63,6 +63,16 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 	protected $targetLanguage;
 
 	/**
+	 * @var string
+	 */
+	protected $siteUrl;
+	
+	/**
+	 * @var int
+	 */
+	protected $workspaceId;
+	
+	/**
 	 * @var int
 	 */
 	protected $countedFields;
@@ -123,6 +133,35 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 	}
 	
 	/**
+	 * @return string
+	 */
+	public function getSiteUrl() {
+		return $this->siteUrl;
+	}
+	
+	/**
+	 * @return int
+	 */
+	public function getWorkspaceId() {
+		return $this->workspaceId;
+	}
+	
+	/**
+	 * @param string $siteUrl
+	 */
+	public function setSiteUrl($siteUrl) {
+		$this->siteUrl = $siteUrl;
+	}
+	
+	/**
+	 * @param int $workspaceId
+	 */
+	public function setWorkspaceId($workspaceId) {
+		$this->workspaceId = $workspaceId;
+	}
+
+	
+	/**
 	 * Counts all fields of all pagegroups 
 	 *
 	 * @return int
@@ -151,6 +190,8 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 		
 		return $this->countedWords;
 	}
+	
+	
 }
 
 ?>

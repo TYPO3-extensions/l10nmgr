@@ -41,6 +41,8 @@
  */
 class tx_l10nmgr_models_translateable_translateableInformationFactory {
 
+	protected $disallowDoktypes;
+	
 	/**
 	 * Constructor
 	 * 
@@ -48,18 +50,19 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 * @return void
 	 */
 	public function __construct(){
-		
+		$this->disallowDoktypes = array('--div--','3','255');
 	}
 	
 	/**
 	 * 
 	 *
-	 * @param tx_l10nmgr_l10nConfiguration $l10ncfg
+	 * @param tx_l10nmgr_models_configuration_configuration $l10ncfg
 	 * @param ArrayObject $pageIdCollection
 	 * @param tx_l10nmgr_models_language_Language $targetLanguage
 	 * @param tx_l10nmgr_models_language_Language $previewLanguage
+	 * @todo we need to handle the include index
 	 */
-	public function create(	tx_l10nmgr_l10nConfiguration $l10ncfg, 
+	public function create(	tx_l10nmgr_models_configuration_configuration $l10ncfg, 
 							ArrayObject $pageIdCollection, 
 							tx_l10nmgr_models_language_Language $targetLanguage, 
 							tx_l10nmgr_models_language_Language $previewLanguage = NULL){
@@ -67,6 +70,9 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 		$translateableInformation 	= new tx_l10nmgr_models_translateable_translateableInformation();
 		$translateableInformation->setPreviewLanguage($previewLanguage);
 		$translateableInformation->setTargetLanguage($targetLanguage);
+		$translateableInformation->setSiteUrl(t3lib_div::getIndpEnv("TYPO3_SITE_URL"));
+		$translateableInformation->setWorkspaceId($GLOBALS['BE_USER']->workspace);
+		
 		
 		$t8Tools					= $this->getInitializedt8Tools($l10ncfg,$previewLanguage);
 		$flexFormDiff				= $this->getFlexFormDiffForTargetLanguage($l10ncfg,$targetLanguage);
@@ -79,8 +85,18 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 		
 		//iterate pageId collection
 		foreach($pageIdCollection as $pageId){
-			if(!self::isInIncludeOrExcludeArray($excludeArray,'pages',$pageId)){
-				$pageRow = t3lib_BEfunc::getRecordWSOL('pages',$pageId);
+			$pageRow = t3lib_BEfunc::getRecordWSOL('pages',$pageId);
+			
+			/**
+			 * old check:
+			 * 
+			 *if(!self::isInIncludeOrExcludeArray($excludeArray,'pages',$pageId)  && ($pageRow['l18n_cfg']&2)!=2 && !in_array($pageRow['doktype'], $this->disallowDoktypes)){
+			 * 
+			 * $pageRow['l18n_cfg']&2)!=2 This check meens that the following options should not be checked in the backend:
+			 * "Hide default translation of page" but it should be possible to translate pages where the default translation is hidden, therefore
+			 * this check has been removed.
+			 */
+			if(!self::isInIncludeOrExcludeArray($excludeArray,'pages',$pageId)  && $this->hasAllowedDoctype($pageRow)){
 				
 				if(is_array($pageRow)){	
 					
@@ -115,7 +131,18 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 			}
 		}
 		
+		
 		return $translateableInformation;
+	}
+	
+	/**
+	 * Method to check that the doctype of the page is not an disallowed doctype
+	 *
+	 * @param array $pageRow
+	 * @return boolean
+	 */
+	protected function hasAllowedDoctype($pageRow){
+		return !in_array($pageRow['doktype'], $this->disallowDoktypes);
 	}
 
 	/**
@@ -155,7 +182,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 		/**
 		 * Load the translationDetails from the t8Tools
 		 */
-		$translationDetails = $t8Tools->translationDetails($tableName,$tableRow,$targetLanguage->getId(),$flexFormDiff);
+		$translationDetails = $t8Tools->translationDetails($tableName,$tableRow,$targetLanguage->getUid(),$flexFormDiff);
 		$translationInfo 	= $translationDetails['translationInfo'];
 		
 		$translateableElement = new tx_l10nmgr_models_translateable_translateableElement();
@@ -194,7 +221,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 * The factory uses internally the t8tools to collect informations about a translation.
 	 * This method is used to get an configured intance of the tools object
 	 *
-	 * @param tx_l10nmgr_models_l10nConfiguration $l10ncfg
+	 * @param tx_l10nmgr_models_configuration_configuration $l10ncfg
 	 * @param tx_l10nmgr_models_language_Language $previewLanguage
 	 * @return tx_l10nmgr_tools
 	 */
@@ -207,7 +234,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 		}
 		
 		if($previewLanguage instanceof tx_l10nmgr_models_language_Language ){
-			$previewLanguageIds = $previewLanguage->getId();
+			$previewLanguageIds = $previewLanguage->getUid();
 		}
 		
 		if(!$previewLanguageIds){
@@ -223,14 +250,14 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	/**
 	 * Helpermethod to get the flexform diff
 	 *
-	 * @param tx_l10nmgr_models_l10nConfiguration $l10ncfg
+	 * @param tx_l10nmgr_models_configuration_configuration $l10ncfg
 	 * @param tx_l10nmgr_models_language_Language $targetLanguage
 	 * @return string
 	 */
 	protected function getFlexFormDiffForTargetLanguage($l10ncfg,$targetLanguage){
 		// FlexForm Diff data:
 		$flexFormDiff = unserialize($l10ncfg->getFlexFormDiff());
-		$flexFormDiff = $flexFormDiff[$targetLanguage->getId()];
+		$flexFormDiff = $flexFormDiff[$targetLanguage->getUid()];
 		
 		return $flexFormDiff;
 	}
@@ -242,95 +269,95 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 *
 	 */
 	protected function calculateInternalAccumulatedInformationsArray() {
-		global $TCA;
-		$tree=$this->tree;
-		$l10ncfg=$this->l10ncfg;
-		$accum = array();
-		$sysLang=$this->sysLang;
-
-			// FlexForm Diff data:
-		$flexFormDiff = unserialize($l10ncfg['flexformdiff']);
-		$flexFormDiff = $flexFormDiff[$sysLang];
-
-		$excludeIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg['exclude'],1));
-		$tableUidConstraintIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg['tableUidConstraint'],1));
-
-			// Init:
-		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
-		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
-		if ($l10ncfg['incfcewithdefaultlanguage']==1) {
-			$t8Tools->includeFceWithDefaultLanguage=TRUE;
-		}
-
-			// Set preview language (only first one in list is supported):
-		if ($this->forcedPreviewLanguage!='') {
-			$previewLanguage=$this->forcedPreviewLanguage;
-		}
-		else {
-			$previewLanguage = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
-		}
-		if ($previewLanguage)	{
-			$t8Tools->previewLanguages = array($previewLanguage);
-		}
-
-			// Traverse tree elements:
-		foreach($tree->tree as $treeElement)	{
-
-			$pageId = $treeElement['row']['uid'];
-			if (!isset($excludeIndex['pages:'.$pageId]) && ($treeElement['row']['l18n_cfg']&2)!=2 && !in_array($treeElement['row']['doktype'], $this->disallowDoktypes) )	{
-
-				$accum[$pageId]['header']['title']	= $treeElement['row']['title'];
-				$accum[$pageId]['header']['icon']	= $treeElement['HTML'];
-				$accum[$pageId]['header']['prevLang'] = $previewLanguage;
-				$accum[$pageId]['items'] = array();
-
-					// Traverse tables:
-				foreach($TCA as $table => $cfg)	{
-
-						// Only those tables we want to work on:
-					if (t3lib_div::inList($l10ncfg['tablelist'], $table))	{
-
-						if ($table === 'pages')	{
-							$accum[$pageId]['items'][$table][$pageId] = $t8Tools->translationDetails('pages',t3lib_BEfunc::getRecordWSOL('pages',$pageId),$sysLang, $flexFormDiff);
-							$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$pageId]['fields']);
-						} else {
-							$allRows = $t8Tools->getRecordsToTranslateFromTable($table, $pageId);
-
-							if (is_array($allRows))	{
-								if (count($allRows))	{
-										// Now, for each record, look for localization:
-									foreach($allRows as $row)	{
-										t3lib_BEfunc::workspaceOL($table,$row);
-										if (is_array($row) && count($tableUidConstraintIndex) > 0) {
-											if (is_array($row) && isset($tableUidConstraintIndex[$table.':'.$row['uid']]))	{
-												$accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
-												$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);
-											}
-										}else if (is_array($row) && !isset($excludeIndex[$table.':'.$row['uid']]))	{
-											$accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
-											$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-
-		$includeIndex = array_unique(t3lib_div::trimExplode(',',$l10ncfg['include'],1));
-		foreach($includeIndex as $recId)	{
-			list($table, $uid) = explode(':',$recId);
-			$row = t3lib_BEfunc::getRecordWSOL($table, $uid);
-			if (count($row))	{
-				$accum[-1]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
-				$this->_increaseInternalCounters($accum[-1]['items'][$table][$row['uid']]['fields']);
-			}
-		}
-
-		$this->_accumulatedInformations=$accum;
+//		global $TCA;
+//		$tree=$this->tree;
+//		$l10ncfg=$this->l10ncfg;
+//		$accum = array();
+//		$sysLang=$this->sysLang;
+//
+//			// FlexForm Diff data:
+//		$flexFormDiff = unserialize($l10ncfg['flexformdiff']);
+//		$flexFormDiff = $flexFormDiff[$sysLang];
+//
+//		$excludeIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg['exclude'],1));
+//		$tableUidConstraintIndex = array_flip(t3lib_div::trimExplode(',',$l10ncfg['tableUidConstraint'],1));
+//
+//			// Init:
+//		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
+//		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
+//		if ($l10ncfg['incfcewithdefaultlanguage']==1) {
+//			$t8Tools->includeFceWithDefaultLanguage=TRUE;
+//		}
+//
+//			// Set preview language (only first one in list is supported):
+//		if ($this->forcedPreviewLanguage!='') {
+//			$previewLanguage=$this->forcedPreviewLanguage;
+//		}
+//		else {
+//			$previewLanguage = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
+//		}
+//		if ($previewLanguage)	{
+//			$t8Tools->previewLanguages = array($previewLanguage);
+//		}
+//
+//			// Traverse tree elements:
+//		foreach($tree->tree as $treeElement)	{
+//
+//			$pageId = $treeElement['row']['uid'];
+//			if (!isset($excludeIndex['pages:'.$pageId]) && ($treeElement['row']['l18n_cfg']&2)!=2 && !in_array($treeElement['row']['doktype'], $this->disallowDoktypes) )	{
+//
+//				$accum[$pageId]['header']['title']	= $treeElement['row']['title'];
+//				$accum[$pageId]['header']['icon']	= $treeElement['HTML'];
+//				$accum[$pageId]['header']['prevLang'] = $previewLanguage;
+//				$accum[$pageId]['items'] = array();
+//
+//					// Traverse tables:
+//				foreach($TCA as $table => $cfg)	{
+//
+//						// Only those tables we want to work on:
+//					if (t3lib_div::inList($l10ncfg['tablelist'], $table))	{
+//
+//						if ($table === 'pages')	{
+//							$accum[$pageId]['items'][$table][$pageId] = $t8Tools->translationDetails('pages',t3lib_BEfunc::getRecordWSOL('pages',$pageId),$sysLang, $flexFormDiff);
+//							$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$pageId]['fields']);
+//						} else {
+//							$allRows = $t8Tools->getRecordsToTranslateFromTable($table, $pageId);
+//
+//							if (is_array($allRows))	{
+//								if (count($allRows))	{
+//										// Now, for each record, look for localization:
+//									foreach($allRows as $row)	{
+//										t3lib_BEfunc::workspaceOL($table,$row);
+//										if (is_array($row) && count($tableUidConstraintIndex) > 0) {
+//											if (is_array($row) && isset($tableUidConstraintIndex[$table.':'.$row['uid']]))	{
+//												$accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
+//												$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);
+//											}
+//										}else if (is_array($row) && !isset($excludeIndex[$table.':'.$row['uid']]))	{
+//											$accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
+//											$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			} 
+//		}
+//
+//
+//		$includeIndex = array_unique(t3lib_div::trimExplode(',',$l10ncfg['include'],1));
+//		foreach($includeIndex as $recId)	{
+//			list($table, $uid) = explode(':',$recId);
+//			$row = t3lib_BEfunc::getRecordWSOL($table, $uid);
+//			if (count($row))	{
+//				$accum[-1]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
+//				$this->_increaseInternalCounters($accum[-1]['items'][$table][$row['uid']]['fields']);
+//			}
+//		}
+//
+//		$this->_accumulatedInformations=$accum;
 	}	
 }
 

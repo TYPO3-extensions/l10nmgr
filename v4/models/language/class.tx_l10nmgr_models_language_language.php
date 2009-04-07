@@ -40,6 +40,9 @@
  * @subpackage	l10nmgr
  * @access public
  */
+
+require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_staticLanguageRepository.php';
+
 class tx_l10nmgr_models_language_language extends tx_mvc_ddd_typo3_abstractTCAObject {
 
 	/**
@@ -53,6 +56,23 @@ class tx_l10nmgr_models_language_language extends tx_mvc_ddd_typo3_abstractTCAOb
 		return 'sys_language';
 	}
 
+	/**
+	 * Returns the static language from the static_info_tables
+	 *
+	 * @return tx_l10nmgr_models_language_staticLanguage
+	 */
+	public function getStaticLanguage(){
+		if (!empty($this->row['static_lang_isocode'])) {
+			if (empty($this->row['static_lang_isocode_object'])) {
+				$staticLanguageRepository = new tx_l10nmgr_models_language_staticLanguageRepository();
+				$this->row['static_lang_isocode_object'] = $staticLanguageRepository->findById($this->row['static_lang_isocode']);
+				if (!$this->row['static_lang_isocode_object'] instanceof tx_l10nmgr_models_language_staticLanguage) {
+					throw new Exception('Object is not an instance of "tx_l10nmgr_models_language_staticLanguage"');
+				}
+			}
+			return $this->row['static_lang_isocode_object'];
+		}
+	}
 }
 
 

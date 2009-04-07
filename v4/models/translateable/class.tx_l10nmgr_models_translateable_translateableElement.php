@@ -129,6 +129,15 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	public function setTable($table){
 		$this->table = $table;		
 	}
+	
+	/**
+	 * Returns the name of the table
+	 *
+	 * @return string
+	 */
+	public function getTable(){
+		return $this->table;
+	}
 
 	/**
 	 * Method to set a uid of the translateableElement
@@ -137,6 +146,15 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	 */
 	public function setUid($uid){
 		$this->uid = $uid;
+	}
+	
+	/**
+	 * Returns the uid of the element
+	 *
+	 * @return int
+	 */
+	public function getUid(){
+		return $this->uid;
 	}
 	
 	/**

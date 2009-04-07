@@ -45,17 +45,55 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	/**
 	 * @var	array		$internalMessges		Part of XML with fail logging information content elements
 	 */
-	var $internalMessges = array();
+	protected $internalMessages = array();
 
 	/**
 	 * @var	integer		$forcedSourceLanguage		Overwrite the default language uid with the desired language to export
 	 */
-	var $forcedSourceLanguage = false;
+	protected $forcedSourceLanguage = false;
 
-	var $exportType = '1';
+	protected $exportType = '1';
 
+	/**
+	 * @var boolean
+	 */
+	protected $skipXMLCheck;
+	
+	/**
+	 * @var boolean
+	 */
+	protected $useUTF8Mode;
+	
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $translateableInformation) {
 		parent::__construct($l10ncfgObj, $translateableInformation);
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	protected function getSkipXMLCheck() {
+		return $this->skipXMLCheck;
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	protected function getUseUTF8Mode() {
+		return $this->useUTF8Mode;
+	}
+	
+	/**
+	 * @param boolean $skipXMLCheck
+	 */
+	public function setSkipXMLCheck($skipXMLCheck) {
+		$this->skipXMLCheck = $skipXMLCheck;
+	}
+	
+	/**
+	 * @param boolean $useUTF8Mode
+	 */
+	public function setUseUTF8Mode($useUTF8Mode) {
+		$this->useUTF8Mode = $useUTF8Mode;
 	}
 
 
@@ -65,7 +103,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 * @param	array		Translation data for configuration
 	 * @return	string		HTML content
 	 */
-	function renderOld() {
+/*	function renderOld() {
 		global $LANG,$BE_USER;
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
@@ -180,13 +218,12 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 
 		//DZ: why return XML here
 		return $XML;
-	}
+	}*/
 	
 	
 
 	function getFilename() {
 		$filename = $this->getLocalFilename();
-
 		return $filename;
 	}
 
@@ -199,7 +236,16 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 * @return	void
 	 */
 	function setInternalMessage($message, $key) {
-		$this->internalMessges[] = "\t\t" . '<t3_skippedItem>' . "\n\t\t\t\t" . '<t3_description>' . $message . '</t3_description>' . "\n\t\t\t\t" . '<t3_key>' . $key . '</t3_key>' . "\n\t\t\t" . '</t3_skippedItem>' . "\r";
+		$this->internalMessages[] = "\t\t" . '<t3_skippedItem>' . "\n\t\t\t\t" . '<t3_description>' . $message . '</t3_description>' . "\n\t\t\t\t" . '<t3_key>' . $key . '</t3_key>' . "\n\t\t\t" . '</t3_skippedItem>' . "\r";
+	}
+	
+	
+	protected function getInternalMessagesXML(){
+		return implode("\n\t",$this->internalMessages);
+	}
+	
+	protected function getPageGroupXML(){
+		return $this->pageGroupXML;
 	}
 
 	/**
@@ -212,6 +258,53 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	function setForcedSourceLanguage($id) {
 		$this->forcedSourceLanguage = $id;
 	}
+	
+	/**
+	 * Internal method to build the pageGroupXML structure.
+	 * 
+	 * @param void
+	 * @return void
+	 *
+	 */
+	protected function buildPageGroupXML(){
+		global $LANG;
+		ob_start();
+
+		foreach($this->getTranslateableInformation()->getPageGroups() as $pageGroup){ ?>
+			<pageGrp id="<?= $pageGroup->getPageId(); ?>">
+				<?php foreach($pageGroup->getTranslateableElements() as $translateableElement){ ?>
+					<?php foreach($translateableElement->getTranslateableFields() as $translateableField){ ?>
+						<?php if (!$this->modeOnlyChanged || $translateableField->isChanged()){?>
+							<?php
+								try{				
+									$table 		= $translateableElement->getTable();
+									$uid 		= $translateableElement->getUid();
+									$key 		= $translateableField->getIdentityKey();
+									$data		= $translateableField->getFormattedDataForTranslation($this->getSkipXMLCheck(), $this->getUseUTF8Mode(),$this->forcedSourceLanguage);
+									$needsTrafo = $translateableField->needsTransformation();
+								?>	
+									<data table="<?= $table ?>" elementUid="<?= $uid; ?>" key="<?= $key; ?>" <?= $needsTrafo ? 'transformations="1"' : '' ?>><?= $data ?></data>
+									
+								<?php	
+								}catch(Exception $e){
+									$this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'),$uid.'/'.$table.'/'.$key);
+								}
+							?>
+						<?php } ?>
+					<?php } ?>
+				<?php } ?>
+			</pageGrp>
+		<?php
+		}
+		
+		$this->pageGroupXML = ob_get_contents();
+		ob_end_clean();		
+	}
+	
+	public function preRenderProcessing(){
+		$this->buildPageGroupXML();
+	}
+	
 
 }
 

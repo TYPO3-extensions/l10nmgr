@@ -42,7 +42,7 @@
 class tx_l10nmgr_models_exporter_exporter {
 
 	
-	public function initialBuild(tx_l10nmgr_l10nConfiguration $l10nConfiguration,$settings){
+	public function initialBuild(tx_l10nmgr_models_configuration_configuration $l10nConfiguration,$settings){
 		
 	}
 	
