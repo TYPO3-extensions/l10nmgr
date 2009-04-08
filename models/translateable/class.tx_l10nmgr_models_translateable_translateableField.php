@@ -88,8 +88,6 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 * @var boolean
 	 */
 	protected $isRTE;
-	
-	protected $xmlTool;
 
 	/**
 	 * @param string $identity_key
@@ -183,45 +181,14 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 *
 	 * @param tx_l10nmgr_models_language_language$forcedSourceLanguageId
 	 */
-	public function getFormattedDataForTranslation($skipXMLCheck = false,$useUTF8mode = false,tx_l10nmgr_models_language_language $forcedSourceLanguage = null){
+	public function getDataForTranslation(tx_l10nmgr_models_language_language $forcedSourceLanguage = null){
 		//dtermine ssourcefield depending in sourceLanguage
 		$dataForTranslation = $this->determinFieldContentByLanguage($forcedSourceLanguage);
 		
-		if($this->needsTransformation()){
-			$result = $this->findXMLTool()->RTE2XML($dataForTranslation);
-		}else{
-			$result = str_replace('&','&amp;',$dataForTranslation);
-			
-			if($useUTF8mode){
-				$result = tx_l10nmgr_utf8tools::utf8_bad_strip($result);
-			}
-			
-			if($this->findXMLTool()->isValidXMLString($result)){
-				return $result;
-			}else{
-				if($skipXMLCheck){
-					$result = '<![CDATA['.$result.']]>';
-				}else{
-					throw new Exception("Invalid data in tag");
-				}
-			}
-		}
-		
-		return $result;
+		return $dataForTranslation;
 	}
 	
-	/**
-	 * Searches the internal XML Tool Singleton
-	 *
-	 * @return tx_l10nmgr_xmltools
-	 */
-	protected function findXMLTool(){
-		if(!($this->xmlTool instanceof tx_l10nmgr_xmltools)){
-			$this->xmlTool= t3lib_div::makeInstance("tx_l10nmgr_xmltools");
-		}
-		
-		return $this->xmlTool;
-	}
+
 	
 	/**
 	 * delivers the data for the translation depending on the sourceLanguage
