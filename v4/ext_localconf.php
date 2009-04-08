@@ -18,4 +18,9 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['lowlevel']['cleanerModules']['tx_l10nmgr
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_l10nmgr'] = 'EXT:l10nmgr/class.l10nmgr_tcemain_hook.php:&tx_l10nmgr_tcemain_hook';
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['recStatInfoHooks']['tx_l10nmgr'] = 'EXT:l10nmgr/class.l10nmgr_tcemain_hook.php:&tx_l10nmgr_tcemain_hook->stat';
 
+// define some classes
+
+// This class is used as a exportStateRepository withing the exportData class. The class has to be an instance (or inheriting) from tx_l10nmgr_models_exporter_exportStateRepository
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['classes']['exportData_exportStateRepository'] = 'EXT:l10nmgr/models/exporter/class.tx_l10nmgr_models_exporter_exportStateRepository.php:tx_l10nmgr_models_exporter_exportStateRepository';
+
 ?>

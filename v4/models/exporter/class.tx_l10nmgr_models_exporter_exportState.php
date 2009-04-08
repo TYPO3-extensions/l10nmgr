@@ -25,6 +25,9 @@
 
 class tx_l10nmgr_models_exporter_exportState extends tx_mvc_ddd_abstractDbObject {
 
+	/**
+	 * Constants representing the states
+	 */
 	const EXPORTSTATE_STARTED_EXPORTNG = 1;
 	const EXPORTSTATE_FINISHED_EXPORTING = 2;
 
@@ -37,10 +40,6 @@ class tx_l10nmgr_models_exporter_exportState extends tx_mvc_ddd_abstractDbObject
 	 */
 	public static function getTableName() {
 		return 'tx_l10nmgr_exportstates';
-	}
-
-	public function getStateLabel() {
-		return 'dfdf';
 	}
 
 }
