@@ -51,7 +51,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	/**
 	 * Get l10nConfiguration record
 	 *
-	 * @return tx_l10nmgr_l10nConfiguration
+	 * @return tx_l10nmgr_models_configuration_Configuration
 	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
 	 * @since 2009-04-03
 	 */
@@ -67,6 +67,59 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		return $this->row['l10nconfiguration'];
 	}
 
+	/**
+	 * Returns the remaining pages for the export
+	 *
+	 * @return ArrayObject
+	 */
+	public function getRemainingPages(){
+		if(empty($this->row['remaining_pages'])){
+			//if there are no remaining pages configured, all pages of the configuration are remaining pages
+			$res = $this->getL10nConfiguration()->getExportPageIdCollection();
+		}else{
+			$res = new ArrayObject(unserialize($this->row['remaining_pages']));
+		}
+		
+		if($res->count() == 0){
+			$this->setIsCompletlyProcessed(true);
+		}
+			
+		return $res;
+	}
+	
+	/**
+	 * Method to remove a set of pageIds from the remaining pages
+	 *
+	 * @param ArrayObject $pageIdCollection
+	 */
+	public function removePagesIdsFromRemainingPages($pageIdCollection){	
+		$remainingPagesLeft = array_diff($this->getRemainingPages()->getArrayCopy(),$pageIdCollection->getArrayCopy());
+		
+		if(empty($remainingPagesLeft)){
+			$this->setIsCompletelyProcessed(true);
+		}
+		$this->getRemainingPages()->exchangeArray($remainingPagesLeft); 	
+		$this->row['remaining_pages'] = serialize($remainingPagesLeft);
+	}
+	
+	/**
+	 * Mehtod to mark the export as completely processed
+	 *
+	 * @param boolan $boolean
+	 */
+	protected function setIsCompletelyProcessed($boolean){
+		$this->row['is_compeletly_processed'] = $boolean;
+	}
+	
+	/**
+	 * Method to determine if the export is completly processed.
+	 * 
+	 * @return boolean
+	 */
+	public function getIsCompletelyProcessed(){
+		return $this->row['is_compeletly_processed'];
+	}
+	
 	/**
 	 * Get collection of tx_l10nmgr_exportState objects
 	 *

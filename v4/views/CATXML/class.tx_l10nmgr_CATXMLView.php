@@ -64,6 +64,8 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 */
 	protected $useUTF8Mode;
 	
+	protected $xmlTool;
+	
 	function tx_l10nmgr_CATXMLView($l10ncfgObj, $translateableInformation) {
 		parent::__construct($l10ncfgObj, $translateableInformation);
 	}
@@ -268,44 +270,80 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 */
 	protected function buildPageGroupXML(){
 		global $LANG;
-		ob_start();
 
-		foreach($this->getTranslateableInformation()->getPageGroups() as $pageGroup){ ?>
-			<pageGrp id="<?= $pageGroup->getPageId(); ?>">
-				<?php foreach($pageGroup->getTranslateableElements() as $translateableElement){ ?>
-					<?php foreach($translateableElement->getTranslateableFields() as $translateableField){ ?>
-						<?php if (!$this->modeOnlyChanged || $translateableField->isChanged()){?>
-							<?php
-								try{				
-									$table 		= $translateableElement->getTable();
-									$uid 		= $translateableElement->getUid();
-									$key 		= $translateableField->getIdentityKey();
-									$data		= $translateableField->getFormattedDataForTranslation($this->getSkipXMLCheck(), $this->getUseUTF8Mode(),$this->forcedSourceLanguage);
-									$needsTrafo = $translateableField->needsTransformation();
-								?>	
-									<data table="<?= $table ?>" elementUid="<?= $uid; ?>" key="<?= $key; ?>" <?= $needsTrafo ? 'transformations="1"' : '' ?>><?= $data ?></data>
-									
-								<?php	
-								}catch(Exception $e){
-									$this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'),$uid.'/'.$table.'/'.$key);
-								}
-							?>
-						<?php } ?>
-					<?php } ?>
-				<?php } ?>
-			</pageGrp>
-		<?php
+		foreach($this->getTranslateableInformation()->getPageGroups() as $pageGroup){
+			$pageStartTag = sprintf('<pageGrp id="%d">',$pageGroup->getPageId());
+			$this->pageGroupXML .= $pageStartTag;
+			
+			foreach($pageGroup->getTranslateableElements() as $translateableElement){
+				 foreach($translateableElement->getTranslateableFields() as $translateableField){
+					if (!$this->modeOnlyChanged || $translateableField->isChanged()){
+
+						try{				
+							$table 		= $translateableElement->getTable();
+							$uid 		= $translateableElement->getUid();
+							$key 		= $translateableField->getIdentityKey();
+							$data		= $this->getTransformedTranslationDataFromTranslateableField($this->getSkipXMLCheck(), $this->getUseUTF8Mode(),$translateableField,$this->forcedSourceLanguage);
+							$needsTrafo = $translateableField->needsTransformation();
+							$transformationAttribute = $needsTrafo ? 'transformations="1"' : '';
+							
+							$dataTag 	= sprintf('<data table="%s" elementUid="%d" key="%s" %s>%s</data>',$table,$uid,$key,$transformationAttribute,$data);
+							$this->pageGroupXML .= $dataTag;
+							
+						}catch(Exception $e){
+							$this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'),$uid.'/'.$table.'/'.$key);
+						}
+
+					 } 
+				 } 
+			 } 
+			$pageEndTag = '</pageGrp>';
+			 $this->pageGroupXML .= $pageEndTag;
+		}
+	}
+	
+	/**
+	 * Searches the internal XML Tool Singleton
+	 *
+	 * @return tx_l10nmgr_xmltools
+	 */
+	protected function findXMLTool(){
+		if(!($this->xmlTool instanceof tx_l10nmgr_xmltools)){
+			$this->xmlTool= t3lib_div::makeInstance("tx_l10nmgr_xmltools");
 		}
 		
-		$this->pageGroupXML = ob_get_contents();
-		ob_end_clean();		
+		return $this->xmlTool;
+	}
+
+	protected function getTransformedTranslationDataFromTranslateableField($skipXMLCheck,$useUTF8mode,$translateableField,$forcedSourceLanguage){
+		$dataForTranslation = $translateableField->getDataForTranslation($forcedSourceLanguage);
+		
+		if($translateableField->needsTransformation()){
+			$result = $this->findXMLTool()->RTE2XML($dataForTranslation);
+		}else{
+			$result = str_replace('&','&amp;',$dataForTranslation);
+			
+			if($useUTF8mode){
+				$result = tx_l10nmgr_utf8tools::utf8_bad_strip($result);
+			}
+			
+			if($this->findXMLTool()->isValidXMLString($result)){
+				return $result;
+			}else{
+				if($skipXMLCheck){
+					$result = '<![CDATA['.$result.']]>';
+				}else{
+					throw new Exception("Invalid data in tag");
+				}
+			}
+		}
+		
+		return $result;
 	}
 	
 	public function preRenderProcessing(){
 		$this->buildPageGroupXML();
 	}
-	
-
 }
 
 

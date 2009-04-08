@@ -18,7 +18,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10
  *
  */
 
-class tx_l10nmgr_l10nConfiguration_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_models_configuration_Configuration_testcase extends tx_phpunit_database_testcase {
 
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
