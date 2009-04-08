@@ -28,7 +28,7 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_
 class tx_l10nmgr_models_exporter_exportStateRepository extends tx_mvc_ddd_typo3_abstractTCAObjectRepository {
 
 	/**
-	 * @var string The name of the objectclass for that this repository s responsible
+	 * @var string The name of the objectclass for that this repository is responsible
 	 */
 	protected $objectClassName = 'tx_l10nmgr_models_exporter_exportState';
 

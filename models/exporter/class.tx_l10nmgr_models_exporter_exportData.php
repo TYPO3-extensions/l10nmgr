@@ -23,13 +23,19 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php';
+
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportState.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportStateRepository.php';
 
+require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php';
 
 
 
 class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObject */ tx_mvc_ddd_typo3_abstractTCAObject {
+
+
 
 	/**
 	 * Initialize the database object with
@@ -74,10 +80,31 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		}
 
 		if (empty($this->row['statescollection'])) {
-			$statesRepository = new tx_l10nmgr_models_exporter_exportStateRepository();
+
+			// load exportStateRepository from based on configuration
+			$statesRepositoryClass = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['classes']['exportData_exportStateRepository'];
+			tx_mvc_validator_factory::getNotEmptyValidator()->setMessage('No "repositoryClass" found!')->isValid($statesRepositoryClass);
+			$statesRepository = t3lib_div::getUserObj($statesRepositoryClass);
+			tx_mvc_validator_factory::getInstanceValidator()->setClassOrInterface('tx_l10nmgr_models_exporter_exportStateRepository')->isValid($statesRepository);
+
 			$this->row['statescollection'] = $statesRepository->findByexportdata_id($this->row['uid']);
 		}
 		return $this->row['statescollection'];
+	}
+
+
+	public function getCurrentState() {
+		$statesCollection = $this->getStatesCollection();
+		$currentState = NULL;
+
+		// loop through all states to get tha newest one
+		foreach ($statesCollection as $state) { /* @var $state tx_l10nmgr_models_exporter_exportState */
+			if (empty($currentState['tstamp']) || ($state['tstamp'] > $currentState['tstamp'])) {
+				$currentState = $state;
+			}
+		}
+
+		return $currentState;
 	}
 
 	/**
@@ -88,7 +115,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 * @since 2009-04-03
 	 */
 	public function getFiles() {
-
+		throw new Exception('Not implemented yet');
 	}
 
 
