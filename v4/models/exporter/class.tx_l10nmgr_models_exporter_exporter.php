@@ -45,17 +45,17 @@ class tx_l10nmgr_models_exporter_exporter {
 	 * @var tx_l10nmgr_models_exporter_exportData
 	 */
 	protected $exportData;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $numberOfPagesPerChunck;
-	
+
 	/**
 	 * @var boolean
 	 */
 	protected $isChunkProcessed;
-	
+
 
 	/**
 	 * Constructor to create an instance of the exporter object
@@ -67,32 +67,32 @@ class tx_l10nmgr_models_exporter_exporter {
 		$this->numberOfPagesPerChunk  	= $numberOfPagesPerChunk;
 		$this->isChunkProcessed			= false;
 	}
-	
+
 	public function run(){
-		
+
 		if(!$this->exportData->getIsCompletelyProcessed()){
 			$pagesForChunk 				= $this->getNextPagesChunk();
-					
-			$l10ncfgObj					= $this->exportData->getL10nConfiguration();		
+
+			$l10ncfgObj					= $this->exportData->getL10nConfigurationObject();
 			$targetLanguage				= $this->exportData->getTranslationLanguageObject();
 			$sourceLanguage				= $this->exportData->getSourceLanguageObject();
-			
+
 			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-			$tranlateableInformation 	= $factory->create($l10ncfgObj,$pagesForChunk,$targetLanguage,$sourceLanguage);	
-				
+			$tranlateableInformation 	= $factory->create($l10ncfgObj,$pagesForChunk,$targetLanguage,$sourceLanguage);
+
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
 			$viewClass=new $viewClassName($l10ncfgObj,$tranlateableInformation);
-			$viewClass->setForcedSourceLanguage($sourceLanguage);	
-			
+			$viewClass->setForcedSourceLanguage($sourceLanguage);
+
 			echo $viewClass->render();
-			
+
 			$this->removeProcessedChunkPages($pagesForChunk);
 			$this->setIsChunkProcessed(true);
-					
+
 			return true;
 		}else{
 			return false;
-		}		
+		}
 	}
 
 	/**
@@ -101,14 +101,14 @@ class tx_l10nmgr_models_exporter_exporter {
 	protected function getIsChunkProcessed() {
 		return $this->isChunkProcessed;
 	}
-	
+
 	/**
 	 * @param boolean $isChunkProcessed
 	 */
 	protected function setIsChunkProcessed($isChunkProcessed) {
 		$this->isChunkProcessed = $isChunkProcessed;
 	}
-		
+
 	/**
 	 * Retuns the internal exportDataObject
 	 *
@@ -121,9 +121,9 @@ class tx_l10nmgr_models_exporter_exporter {
 			return $this->exportData;
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Builds a chunck of pageIds from the set of remaining pages of an export
 	 *
@@ -132,27 +132,27 @@ class tx_l10nmgr_models_exporter_exporter {
 	protected function getNextPagesChunk(){
 		$allPages 			= $this->exportData->getRemainingPages();
 		$chunk				= new ArrayObject();
-		
+
 		$allPagesIterator 	= $allPages->getIterator();
 		for($pagesInChunk = 0; $pagesInChunk < $this->getNumberOfPagesPerChunk(); $pagesInChunk++){
 			if($allPagesIterator->valid()){
 				$chunk->append($allPagesIterator->current());
-				$allPagesIterator->next();	
+				$allPagesIterator->next();
 			}
 		}
-		
+
 		return $chunk;
 	}
-	
+
 	/**
 	 * Returns the configuration option for the number of pages per chunck.
-	 * 
+	 *
 	 * @return int
 	 */
 	protected function getNumberOfPagesPerChunk(){
 		return $this->numberOfPagesPerChunk;
 	}
-	
+
 	/**
 	 * Method removes a set of pages from the remaining pages in the exportData
 	 *

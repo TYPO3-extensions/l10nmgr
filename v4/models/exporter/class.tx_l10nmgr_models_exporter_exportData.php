@@ -49,22 +49,39 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	}
 
 	/**
+	 * Overwrite getDatabaseFieldNames to remove the "virtual files" that should not be stored in the database
+	 *
+	 * @return array array of field names to store in the database
+	 * @see ddd/tx_mvc_ddd_abstractDbObject#getDatabaseFieldNames()
+	 */
+	public function getDatabaseFieldNames() {
+		$fields = parent::getDatabaseFieldNames();
+
+		// remove some "virtual fields"
+		$key = array_search('l10nconfiguration', $fields);
+		if ($key !== false) {
+			unset($fields[$key]);
+		}
+		return $fields;
+	}
+
+	/**
 	 * Get l10nConfiguration record
 	 *
 	 * @return tx_l10nmgr_models_configuration_Configuration
 	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
 	 * @since 2009-04-03
 	 */
-	public function getL10nConfiguration() {
+	public function getL10nConfigurationObject() {
 		if (empty($this->row['l10ncfg_id'])) {
 			throw new LogicException('No "l10ncfg_id" found!');
 		}
 
-		if (empty($this->row['l10nconfiguration'])) {
+		if (empty($this->row['l10nconfigurationobject'])) {
 			$l10nconfigurationRepository = new tx_l10nmgr_models_configuration_configurationRepository();
-			$this->row['l10nconfiguration'] = $l10nconfigurationRepository->findById($this->row['l10ncfg_id']);
+			$this->row['l10nconfigurationobject'] = $l10nconfigurationRepository->findById($this->row['l10ncfg_id']);
 		}
-		return $this->row['l10nconfiguration'];
+		return $this->row['l10nconfigurationobject'];
 	}
 
 	/**
@@ -75,33 +92,33 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	public function getRemainingPages(){
 		if(empty($this->row['remaining_pages'])){
 			//if there are no remaining pages configured, all pages of the configuration are remaining pages
-			$res = $this->getL10nConfiguration()->getExportPageIdCollection();
+			$res = $this->getL10nConfigurationObject()->getExportPageIdCollection();
 		}else{
 			$res = new ArrayObject(unserialize($this->row['remaining_pages']));
 		}
-		
+
 		if($res->count() == 0){
 			$this->setIsCompletlyProcessed(true);
 		}
-			
+
 		return $res;
 	}
-	
+
 	/**
 	 * Method to remove a set of pageIds from the remaining pages
 	 *
 	 * @param ArrayObject $pageIdCollection
 	 */
-	public function removePagesIdsFromRemainingPages($pageIdCollection){	
+	public function removePagesIdsFromRemainingPages($pageIdCollection){
 		$remainingPagesLeft = array_diff($this->getRemainingPages()->getArrayCopy(),$pageIdCollection->getArrayCopy());
-		
+
 		if(empty($remainingPagesLeft)){
 			$this->setIsCompletelyProcessed(true);
 		}
-		$this->getRemainingPages()->exchangeArray($remainingPagesLeft); 	
+		$this->getRemainingPages()->exchangeArray($remainingPagesLeft);
 		$this->row['remaining_pages'] = serialize($remainingPagesLeft);
 	}
-	
+
 	/**
 	 * Mehtod to mark the export as completely processed
 	 *
@@ -110,16 +127,16 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	protected function setIsCompletelyProcessed($boolean){
 		$this->row['is_compeletly_processed'] = $boolean;
 	}
-	
+
 	/**
 	 * Method to determine if the export is completly processed.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function getIsCompletelyProcessed(){
 		return $this->row['is_compeletly_processed'];
 	}
-	
+
 	/**
 	 * Get collection of tx_l10nmgr_exportState objects
 	 *
