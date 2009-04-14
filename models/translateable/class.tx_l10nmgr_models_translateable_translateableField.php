@@ -118,6 +118,15 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	}
 	
 	/**
+	 * Returns the original value of the default record (which was used to localize this element)
+	 *
+	 * @return string $diffDefault_value
+	 */
+	public function getDiffDefaultValue() {
+		return $this->diffDefault_value;
+	}
+	
+	/**
 	 * @param string $fieldType
 	 */
 	public function setFieldType($fieldType) {

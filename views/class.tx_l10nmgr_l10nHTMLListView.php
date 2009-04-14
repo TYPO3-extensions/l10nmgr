@@ -48,11 +48,10 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 	var $modeWithInlineEdit=FALSE;
 	var $modeShowEditLinks=FALSE;
 	
-	function tx_l10nmgr_l10nHTMLListView($l10ncfgObj,$sysLang) {
+	public function __construct() {
 		global $BACK_PATH;		
 		$this->doc = t3lib_div::makeInstance('noDoc');
-		$this->doc->backPath = $BACK_PATH;
-		parent::__construct($l10ncfgObj, null,$sysLang);				
+		$this->doc->backPath = $BACK_PATH;		
 	}
 	
 		

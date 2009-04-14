@@ -141,11 +141,7 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 										t3lib_BEfunc::workspaceOL($table,$row);
 										if (is_array($row) && count($tableUidConstraintIndex) > 0) {
 											if (is_array($row) && isset($tableUidConstraintIndex[$table.':'.$row['uid']]))	{
-												ob_start();
-												echo 'test';		
-												$content = ob_get_contents();
-												ob_end_clean();
-												mail('schmidt@aoemedia.de','debug',$content);
+
 												
 												$accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,$row,$sysLang,$flexFormDiff);
 												$this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);

@@ -1,26 +1,26 @@
 <?php
-	// autoload the mvc 
-if (t3lib_extMgm::isLoaded('mvc')) {
-	require_once(t3lib_extMgm::extPath('mvc').'common/class.tx_mvc_common_classloader.php');
-	tx_mvc_common_classloader::loadAll();
+// autoload the mvc 
+if (t3lib_extMgm::isLoaded ( 'mvc' )) {
+	require_once (t3lib_extMgm::extPath ( 'mvc' ) . 'common/class.tx_mvc_common_classloader.php');
+	tx_mvc_common_classloader::loadAll ();
 } else {
-	exit('Framework "mvc" not loaded!');
+	exit ( 'Framework "mvc" not loaded!' );
 }
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php');
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php');
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php');
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/language/class.tx_l10nmgr_models_language_language.php');
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/language/class.tx_l10nmgr_models_language_languageRepository.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'interfaces/interface.tx_l10nmgr_interfaces_wordsCountable.php');
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'interfaces/interface.tx_l10nmgr_interfaces_wordsCountable.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableElement.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php');
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php');
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableElement.php');
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
 
 /**
  * This class is used to test the functionallity of the l10nAccumulatedInformationsFactory class.
@@ -31,24 +31,44 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10
  */
 
 class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_database_testcase {
-
+	/**
+	 * Changes current database to test database
+	 *
+	 * @param string $databaseName Overwrite test database name
+	 * @return object
+	 */
+	protected function useTestDatabase($databaseName = null) {
+		$db = $GLOBALS ['TYPO3_DB'];
+		
+		if ($databaseName) {
+			$database = $databaseName;
+		} else {
+			$database = $this->testDatabase;
+		}
+		
+		if (! $db->sql_select_db ( $database )) {
+			die ( "Test Database not available" );
+		}
+		
+		return $db;
+	}
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
 	 *
 	 */
-	public function setUp(){
-		$this->createDatabase();
-		$db = $this->useTestDatabase();
+	public function setUp() {
+		$this->createDatabase ();
+		$db = $this->useTestDatabase ();
 		
-		$this->importExtensions(array('corefake','cms','l10nmgr','static_info_tables','templavoila'));		
+		$this->importExtensions ( array ('corefake', 'cms', 'l10nmgr', 'static_info_tables', 'templavoila' ) );
 	}
 	
-	public function tearDown(){
-		$this->cleanDatabase();
-		$this->dropDatabase();
-		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);		
+	public function tearDown() {
+		$this->cleanDatabase ();
+		$this->dropDatabase ();
+		$GLOBALS ['TYPO3_DB']->sql_select_db ( TYPO3_db );
 	}
-
+	
 	/**
 	 * Method to ensure that the fixtureL10NConfig can be loaded from the testdatabase.
 	 * 
@@ -56,13 +76,13 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	 * @return void
 	 *
 	 */
-	public function test_canLoadFixtureL10NConfig(){
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureL10NConfig.xml');
+	public function test_canLoadFixtureL10NConfig() {
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		
-		$fixtureConfig = $this->getFixtureL10NConfig();
-
-		$this->assertEquals($fixtureConfig->getId(),4711,'Fixture l10nConfig can not be loaded');
+		$fixtureConfig = $this->getFixtureL10NConfig ();
 		
+		$this->assertEquals ( $fixtureConfig->getId (), 4711, 'Fixture l10nConfig can not be loaded' );
+	
 	}
 	
 	/**
@@ -71,13 +91,12 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	 * @param void
 	 * @return void
 	 */
-	public function test_canLoadFixtureTargetLanguage(){
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureTargetLanguage.xml');
-		$fixtureTargetLanguage 	= $this->getFixtureTargetLanguage();
-		
-		$this->assertEquals($fixtureTargetLanguage['uid'],999,'Fixture Targetlanguage can not be loaded');
+	public function test_canLoadFixtureTargetLanguage() {
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();
+		$this->assertEquals ( $fixtureTargetLanguage->getUid(), 999, 'Fixture Targetlanguage can not be loaded' );
 	}
-
+	
 	/**
 	 * Testcase to ensuse that the fixturePreviewLanguage can be loaded from the test database.
 	 * 
@@ -85,12 +104,11 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	 * @return void
 	 *
 	 */
-	public function test_canLoadFixturePreviewLanguage(){
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixturePreviewLanguage.xml');
-		$fixturePreviewLanguage = $this->getFixturePreviewLanguage();
+	public function test_canLoadFixturePreviewLanguage() {
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
 		
-
-		$this->assertEquals($fixturePreviewLanguage['uid'],998,'Fixture Previewlanguage can not be loaded');
+		$this->assertEquals ( $fixturePreviewLanguage->getUid(), 998, 'Fixture Previewlanguage can not be loaded' );
 	}
 	
 	/**
@@ -100,53 +118,155 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	 * @param void
 	 * @return void
 	 */
-	public function test_canCreateTranslateableInformationForPageId(){
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canCreateTranslateableInformationsForPageId.xml');
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixturePreviewLanguage.xml');
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureTargetLanguage.xml');		
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureL10NConfig.xml');
-				
-		$fixtureL10NConfig 			= $this->getFixtureL10NConfig();
-		$fixturePreviewLanguage		= $this->getFixturePreviewLanguage();
-		$fixtureTargetLanguage		= $this->getFixtureTargetLanguage();
-		$fixtureLimitToPageIds		= $this->getFixtureLimitToPageids();
+	public function test_canCreateTranslateableInformationForPageId() {
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canCreateTranslateableInformationsForPageId.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		
-		$ids						= array();
-		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-		$translateableInformations 	= $factory->create($fixtureL10NConfig,$fixtureLimitToPageIds,$fixtureTargetLanguage,$fixturePreviewLanguage);
-		$pageGroups					= $translateableInformations->getPageGroups();
-
-		foreach($pageGroups as $pageGroup){
-			$ids[$pageGroup->getPageId()] = (int)$pageGroup->getPageId();
+		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
+		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
+		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();
+		$fixtureLimitToPageIds = $this->getFixtureLimitToPageids ();
+		
+		$ids = array ();
+		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$translateableInformations = $factory->create ( $fixtureL10NConfig, $fixtureLimitToPageIds, $fixtureTargetLanguage, $fixturePreviewLanguage );
+		$pageGroups = $translateableInformations->getPageGroups ();
+		
+		foreach ( $pageGroups as $pageGroup ) {
+			$ids [$pageGroup->getPageId ()] = ( int ) $pageGroup->getPageId ();
 		}
-						
-		$this->assertTrue(in_array(4711,$ids,'translatedable page could not be found in pageid array'));
-		$this->assertTrue(in_array(4712,$ids,'translatedable page could not be found in pageid array'));
-		$this->assertFalse(in_array(4713,$ids,'page not in limit found in translateable pages'));	
+		
+		$this->assertTrue ( in_array ( 4711, $ids, 'translatedable page could not be found in pageid array' ) );
+		$this->assertTrue ( in_array ( 4712, $ids, 'translatedable page could not be found in pageid array' ) );
+		$this->assertFalse ( in_array ( 4713, $ids, 'page not in limit found in translateable pages' ) );
 	}
 	
-	public function test_canDetermineTranslateableElementsForPageIds(){
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canDetermineTranslateableElementsForPageIds.xml');
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixturePreviewLanguage.xml');
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureTargetLanguage.xml');		
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureL10NConfig.xml');
-				
-		$fixtureL10NConfig 			= $this->getFixtureL10NConfig();
-		$fixturePreviewLanguage		= $this->getFixturePreviewLanguage();
-		$fixtureTargetLanguage		= $this->getFixtureTargetLanguage();
-		$fixtureLimitToPageIds		= $this->getFixtureLimitToPageids();
+	public function test_canDetermineTranslateableElementsForPageIds() {
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canDetermineTranslateableElementsForPageIds.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		
-		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-		$translateableInformations 	= $factory->create($fixtureL10NConfig,$fixtureLimitToPageIds,$fixtureTargetLanguage,$fixturePreviewLanguage);
-		$pageGroups					= $translateableInformations->getPageGroups();
+		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
+		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
+		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();
+		$fixtureLimitToPageIds = $this->getFixtureLimitToPageids ();
 		
-		$firstField 				= $pageGroups->offsetGet(0)->getTranslateableElements()->offsetGet(0)->getTranslateableFields()->offsetGet(0);
+		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$translateableInformations = $factory->create ( $fixtureL10NConfig, $fixtureLimitToPageIds, $fixtureTargetLanguage, $fixturePreviewLanguage );
+		$pageGroups = $translateableInformations->getPageGroups ();
 		
-		$this->assertEquals($firstField->getIdentityKey(),'pages_language_overlay:NEW/999/4711:title');
-		$this->assertEquals(1,$firstField->countWords());
+		$firstField = $pageGroups->offsetGet ( 0 )->getTranslateableElements ()->offsetGet ( 0 )->getTranslateableFields ()->offsetGet ( 0 );
 		
-		$wordCountOfFirstContentElement = $pageGroups->offsetGet(0)->getTranslateableElements()->offsetGet(1)->countWords();
-		$this->assertEquals($wordCountOfFirstContentElement,7,'Determined wrong word count');
+		$this->assertEquals ( $firstField->getIdentityKey (), 'pages_language_overlay:NEW/999/4711:title' );
+		$this->assertEquals ( 1, $firstField->countWords () );
+		
+		$wordCountOfFirstContentElement = $pageGroups->offsetGet ( 0 )->getTranslateableElements ()->offsetGet ( 1 )->countWords ();
+		$this->assertEquals ( $wordCountOfFirstContentElement, 7, 'Determined wrong word count' );
+	}
+	
+	public function test_canGetContentElementFromPageAndReturnCorrectDiffToDefaut() {
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetContentElementFromPageAndReturnCorrectDiffToDefaut.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
+
+		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
+		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
+		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
+
+		//diff must be something like l18n
+		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(4711)), $fixtureTargetLanguage, $fixturePreviewLanguage );
+		
+		$pageGroups = $translateableInformations->getPageGroups ();	
+		
+		$allElements = $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
+		
+		//get second element (first is the page itself).
+		$ttContentElement = $allElements->offsetGet ( 1 );
+		
+		$this->assertEquals(1,$ttContentElement->getTranslateableFields()->count(),'Unexpected number of translateableFields');
+		
+		$headerField = $ttContentElement->getTranslateableFields()->offsetGet(0);
+
+		$this->assertEquals('l18n',$headerField->getDiffDefaultValue(),'Incorrect diffDefaultValue');
+		
+	}
+	
+	public function test_determineCorrectTranslateableFields() {
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/determineCorrectTranslateableFields.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
+
+		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
+		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
+		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
+
+		//diff must be something like l18n
+		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(4711)), $fixtureTargetLanguage, $fixturePreviewLanguage );
+		
+		$pageGroups = $translateableInformations->getPageGroups ();	
+		
+		$allElements = $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
+		
+		//get second element (first is the page itself).
+		$ttContentElement = $allElements->offsetGet ( 1 );
+
+		/**
+		 * should contain header,headerlink and bodytext. The field column is localized but should
+		 * not appear as translateableField because it is an integer.
+		 */
+		$this->assertEquals(3,$ttContentElement->getTranslateableFields()->count(),'Unexpected number of translateableFields');
+		$translateableFields = $ttContentElement->getTranslateableFields();
+		
+		$headerField 		=	$translateableFields->offsetGet(0);
+		$headerLinkField 	=	$translateableFields->offsetGet(1);
+		$bodytextField 		=	$translateableFields->offsetGet(2);
+		
+		
+		$this->assertTrue($headerField->isChanged(),'The header should appear as changed and therefore it needs to be translated again.');
+		$this->assertFalse($headerLinkField->isChanged(),'The header link should not be changed therefore no new translatio is needed.');
+		$this->assertTrue($bodytextField->isChanged(),'The bodytext should appear as changed and therefore it needs to be translated again.');
+	}
+	
+	
+	public function test_canReturnCorrectDiffToDefaultForPage(){
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canReturnCorrectDiffToDefaultForPage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
+
+		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
+		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
+		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
+
+		//diff must be something like l18n
+		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+		
+		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(8888)), $fixtureTargetLanguage, $fixturePreviewLanguage );
+		
+
+		/**
+		 * @todo: there is a bug in TYPO3. There is no correct l18n_diffsource for a new pages_language_overlay.
+		 * When a new pages_language_overlay is created the content of the l18n_diffsource is an empty, serialized array
+		 */
+	}
+	
+	public function test_canGetDiffToDefaultFromLangChildrenFCE(){
+		
+	}
+	
+	public function test_canGetDiffToDefaultFromNonLangChildrenFCE(){
+		
+	}
+	
+	public function test_canGetDiffToDefaultFromDatabaseTranslatedFCE(){
+		
 	}
 	
 	/**
@@ -154,9 +274,9 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	 *
 	 * @return tx_l10nmgr_models_configuration_configuration
 	 */
-	protected function getFixtureL10NConfig(){
-		$fixtureConfigRepository = new tx_l10nmgr_models_configuration_configurationRepository();
-		$fixtureConfig = $fixtureConfigRepository->findById(4711);
+	protected function getFixtureL10NConfig() {
+		$fixtureConfigRepository = new tx_l10nmgr_models_configuration_configurationRepository ( );
+		$fixtureConfig = $fixtureConfigRepository->findById ( 4711 );
 		
 		return $fixtureConfig;
 	}
@@ -166,10 +286,10 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	 *
 	 * @return tx_l10nmgr_l10nLanguage
 	 */
-	protected function getFixtureTargetLanguage(){
-		$fixtureLanguageRepository = new tx_l10nmgr_models_language_languageRepository();
-		$fixtureLanguage = $fixtureLanguageRepository->findById(999);
-				
+	protected function getFixtureTargetLanguage() {
+		$fixtureLanguageRepository = new tx_l10nmgr_models_language_languageRepository ( );
+		$fixtureLanguage = $fixtureLanguageRepository->findById ( 999 );
+		
 		return $fixtureLanguage;
 	}
 	
@@ -178,9 +298,9 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	 *
 	 * @return tx_l10nmgr_l10nLanguage
 	 */
-	protected function getFixturePreviewLanguage(){
-		$fixtureLanguageRepository = new tx_l10nmgr_models_language_languageRepository();
-		$fixtureLanguage = $fixtureLanguageRepository->findById(998);
+	protected function getFixturePreviewLanguage() {
+		$fixtureLanguageRepository = new tx_l10nmgr_models_language_languageRepository ( );
+		$fixtureLanguage = $fixtureLanguageRepository->findById ( 998 );
 		
 		return $fixtureLanguage;
 	}
@@ -191,15 +311,15 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	 *
 	 * @return ArrayObject
 	 */
-	protected function getFixtureLimitToPageids(){
-		$limitPageIdCollection  = new ArrayObject();
-		$limitPageIdCollection->append(4711);
-		$limitPageIdCollection->append(4712);
+	protected function getFixtureLimitToPageids() {
+		$limitPageIdCollection = new ArrayObject ( );
+		$limitPageIdCollection->append ( 4711 );
+		$limitPageIdCollection->append ( 4712 );
 		
 		return $limitPageIdCollection;
-		
+	
 	}
 
 }
-	
+
 ?>

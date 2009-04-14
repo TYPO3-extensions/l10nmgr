@@ -51,19 +51,34 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	
 	protected $sysLang;
 
+	
 	/**
-	 * This is the base constructor for all exportViews
+	 * Method to set the Configuration of this localisation
 	 *
-	 * @param tx_l10nmgr_models_configuration_configuration $l10ncfgObj
-	 * @param tx_l10nmgr_models_configuration_translateableInformation $translateableInformation
-	 * @param int $sysLang (optional) since there are views that still use the accum object, the third parameter is needed
+	 * @param  tx_l10nmgr_models_configuration_configuration $l10ncfg
 	 */
-	function __construct($l10ncfgObj, $translateableInformation,$sysLang = null) {
+	public function setL10NConfiguration($l10ncfg){
+		$this->l10ncfgObj	= $l10ncfg;
+	}
+	
+	/**
+	 * Method to set the Translateable Information
+	 * 
+	 * @param tx_l10nmgr_models_configuration_translateableInformation $translateableInformation
+	 */
+	public function setTranslateableInformation($translateableInformation){
 		$this->translateableInformation = $translateableInformation;
-		$this->l10ncfgObj = $l10ncfgObj;
-		$this->sysLang = $sysLang;
 	}
 
+	/**
+	 * Method to set the id of the targetLanguage
+	 *
+	 * @param int $id
+	 */
+	public function setTargetLanguageId($id){
+		$this->sysLang = $id;
+	}
+	
 	/**
 	 * Returns the translateableInformation
 	 *
@@ -90,15 +105,16 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 		return $exportType;
 	}
 
-	function setModeNoHidden() {
-
+	public function setModeNoHidden() {
 		$this->modeNoHidden=TRUE;
 	}
-	function setModeOnlyChanged() {
-
+	
+	
+	public function setModeOnlyChanged() {
 		$this->modeOnlyChanged=TRUE;
 	}
-	function setModeOnlyNew() {
+	
+	public function setModeOnlyNew() {
 		$this->modeOnlyNew=TRUE;
 	}
 
@@ -148,6 +164,7 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 
 	/**
 	 * save the information of the export in the database table 'tx_l10nmgr_sava_data'
+	 * @deprecated 
 	 */
 	function saveExportInformation(){
 
