@@ -181,6 +181,8 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 		
 		return $this->exportPageIdCollection;
 	}
+	
+
 
 	/**
 	 * An l10nConfiguration consists of a startingpoint an a depth. Internally the pagetree is used to determine

@@ -66,10 +66,6 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	
 	protected $xmlTool;
 	
-	function tx_l10nmgr_CATXMLView($l10ncfgObj, $translateableInformation) {
-		parent::__construct($l10ncfgObj, $translateableInformation);
-	}
-	
 	/**
 	 * @return boolean
 	 */

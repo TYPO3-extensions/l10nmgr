@@ -37,11 +37,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 	var $modeOnlyChanged=FALSE;
 	
 	var $exportType = '0';
-	
-	function tx_l10nmgr_excelXMLView($l10ncfgObj, $sysLang) {
-		parent::__construct($l10ncfgObj, null,$sysLang);		
-	}
-	
+		
 	/**
 	 * Render the excel XML export
 	 *

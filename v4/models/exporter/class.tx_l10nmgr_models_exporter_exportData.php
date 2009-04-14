@@ -58,10 +58,21 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		$fields = parent::getDatabaseFieldNames();
 
 		// remove some "virtual fields"
-		$key = array_search('l10nconfiguration', $fields);
+		$key = array_search('l10nconfigurationobject', $fields);
 		if ($key !== false) {
 			unset($fields[$key]);
 		}
+		
+		$key = array_search('sourcelanguageobject', $fields);
+		if ($key !== false) {
+			unset($fields[$key]);
+		}
+		
+		$key = array_search('translationlanguageobject', $fields);
+		if ($key !== false) {
+			unset($fields[$key]);
+		}
+				
 		return $fields;
 	}
 
@@ -82,6 +93,16 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 			$this->row['l10nconfigurationobject'] = $l10nconfigurationRepository->findById($this->row['l10ncfg_id']);
 		}
 		return $this->row['l10nconfigurationobject'];
+	}
+	
+	/**
+	 * Method to set a configuration for the exportData
+	 *
+	 * @param tx_l10nmgr_models_configuration_configuration $configuration
+	 */
+	public function setL10NConfiguration(tx_l10nmgr_models_configuration_configuration $configuration){
+		$this->row['l10nconfigurationobject'] = $configuration;
+		$this->row['l10ncfg_id'] = $configuration->getUid();
 	}
 
 	/**
@@ -223,6 +244,33 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 			}
 			return $this->row['translationlanguageobject'];
 		}
+	}
+	
+	/**
+	 * Method to attach a translationLanguage to the exportData
+	 *
+	 * @param tx_l10nmgr_models_language_language $translationLanguage
+	 */
+	public function setTranslationLanguageObject($translationLanguage){
+		$this->row['translationlanguageobject'] = $translationLanguage;
+		$this->row['translation_lang'] = $translationLanguage->getUid();
+	}
+	
+	/**
+	 * Method to set a source language id
+	 *
+	 * @param int $id
+	 */
+	public function setSourceLanguageId($id){
+		$this->row['source_lang'] = $id;
+	}
+	
+	public function setResult($result){
+		$this->row['result'] = $result;
+	}
+	
+	public function getResult(){
+		return $this->row['result'];
 	}
 
 }

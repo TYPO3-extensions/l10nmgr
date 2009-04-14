@@ -27,7 +27,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'modify_tables' => '',
 	'clearcacheonload' => 0,
 	'lockType' => '',
-	'author' => 'Kasper Skårhøj, Daniel Zielinski, Daniel Pötzinger, Fabian Seltmann, Andreas Otto',
+	'author' => 'Kasper Skï¿½rhï¿½j, Daniel Zielinski, Daniel Pï¿½tzinger, Fabian Seltmann, Andreas Otto',
 	'author_email' => 'kasperYYYY@typo3.com, info@L10Ntech.de',
 	'author_company' => 'Localization Manager Team',
 	'CGLcompliance' => '',
@@ -35,6 +35,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'constraints' => array(
 		'depends' => array(
 			'static_info_tables' => '',
+			'mvc' => '',
 		),
 		'conflicts' => array(
 		),

@@ -39,8 +39,16 @@ class tx_l10nmgr_l10nBaseService {
 	function saveTranslation($l10ncfgObj,$translationObj) {
 		$sysLang=$translationObj->getLanguage();
 		$accumObj=$l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
+		
+		//@todo: accum object is created here for the import this is quite expensive
 		$flexFormDiffArray=$this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray($sysLang),$translationObj->getTranslationData());
 
+		echo "Debug".__FILE__." ".__LINE__;
+		print('<pre>');
+		print_r($flexFormDiffArray);					
+		print('</pre>');
+		die();
+		
 		if ($flexFormDiffArray !== false) {
 			$l10ncfgObj->updateFlexFormDiff($sysLang,$flexFormDiffArray);
 		}
@@ -62,6 +70,12 @@ class tx_l10nmgr_l10nBaseService {
 		//print_r($accum);
 		//print_r($inputArray);
 		//print "</pre>";
+		
+		echo "Debug".__FILE__." ".__LINE__;
+		print('<pre>');
+		print_r($inputArray);					
+		print('</pre>');
+		
 		if (is_array($inputArray))	{
 
 				// Initialize:
@@ -70,6 +84,11 @@ class tx_l10nmgr_l10nBaseService {
 			$TCEmain_cmd = array();
 			
 			$_flexFormDiffArray = array();
+			
+			/**
+			 * Tranversing the accum array (same array as for export and reading 
+			 * the data from the import array.
+			 */
 				// Traverse:
 			foreach($accum as $pId => $page)	{
 				foreach($accum[$pId]['items'] as $table => $elements)	{
@@ -77,7 +96,11 @@ class tx_l10nmgr_l10nBaseService {
 						if (is_array($data['fields']))	{
 								
 							foreach($data['fields'] as $key => $tData)	{	
-														
+								/**
+								 * Getting data from input array with keys from accum traversation:
+								 * The next if clause means: has data to tranlate AND has a translation in the import
+								 */
+								
 								if ( is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {									
 									
 									list($Ttable,$TuidString,$Tfield,$Tpath) = explode(':',$key);
@@ -102,6 +125,8 @@ class tx_l10nmgr_l10nBaseService {
 										}
 										//TCEMAINDATA is passed as refernece here:
 										$flexToolObj->setArrayValueByPath($Tpath,$TCEmain_data[$Ttable][$TuidString][$Tfield],$inputArray[$table][$elementUid][$key]);
+
+										//flexFormDiffArray is the value before the translation ($tData['defaultValue']) and the translated Value ($inputArray[$table][$elementUid][$key])
 										$_flexFormDiffArray[$key] = array('translated' => $inputArray[$table][$elementUid][$key], 'default' => $tData['defaultValue']);
 									} else {
 										$TCEmain_data[$Ttable][$TuidString][$Tfield] = $inputArray[$table][$elementUid][$key];

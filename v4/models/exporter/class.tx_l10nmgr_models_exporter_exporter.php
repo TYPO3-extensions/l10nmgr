@@ -58,14 +58,26 @@ class tx_l10nmgr_models_exporter_exporter {
 
 
 	/**
+	 * @var string
+	 */
+	protected $resultForChunk;
+	
+	
+	
+	/**
 	 * Constructor to create an instance of the exporter object
 	 *
 	 * @param tx_l10nmgr_models_exporter_exportData $exportData
 	 */
-	public function __construct(tx_l10nmgr_models_exporter_exportData $exportData, $numberOfPagesPerChunk){
+	public function __construct(	tx_l10nmgr_models_exporter_exportData $exportData, 
+									$numberOfPagesPerChunk,
+									tx_l10nmgr_abstractExportView $exportView){
+										
 		$this->exportData 				= $exportData;
 		$this->numberOfPagesPerChunk  	= $numberOfPagesPerChunk;
 		$this->isChunkProcessed			= false;
+		$this->exportView				= $exportView;
+		$this->resultForChunk			= '';
 	}
 
 	public function run(){
@@ -78,14 +90,13 @@ class tx_l10nmgr_models_exporter_exporter {
 			$sourceLanguage				= $this->exportData->getSourceLanguageObject();
 
 			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-			$tranlateableInformation 	= $factory->create($l10ncfgObj,$pagesForChunk,$targetLanguage,$sourceLanguage);
+			$tranlateableInformation 	= $factory->create($l10ncfgObj,$pagesForChunk,$targetLanguage,$sourceLanguage);	
 
-			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
-			$viewClass=new $viewClassName($l10ncfgObj,$tranlateableInformation);
-			$viewClass->setForcedSourceLanguage($sourceLanguage);
+			$this->exportView->setTranslateableInformation($tranlateableInformation);
+	
+			$this->resultForChunk 		= $this->exportView->render();
 
-			echo $viewClass->render();
-
+			
 			$this->removeProcessedChunkPages($pagesForChunk);
 			$this->setIsChunkProcessed(true);
 
@@ -102,6 +113,16 @@ class tx_l10nmgr_models_exporter_exporter {
 		return $this->isChunkProcessed;
 	}
 
+	/**
+	 * Returns the result for the current chunk
+	 *
+	 * @return string
+	 */
+	public function getResultForChunk(){
+		return $this->resultForChunk;
+	}
+	
+	
 	/**
 	 * @param boolean $isChunkProcessed
 	 */
