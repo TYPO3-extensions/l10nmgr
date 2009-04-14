@@ -37,7 +37,7 @@ global $BACK_PATH, $LANG;
 		<tr class="bgColor3">
 			<td align="center">
 				<a class="tooltip" href="#<?php echo 'tooltip_' . $configurationElementArray['uid']; ?>">
-					-<?php $gD6 = $this->getDocument(); $gD6->icons(1); ?>
+					<img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>cog.png" />
 				</a>
 
 				<?php $parentPageArray = t3lib_BEfunc::getRecord('pages',$configurationElementArray['pid']); ?>
@@ -88,11 +88,13 @@ global $BACK_PATH, $LANG;
 					</table>
 				</div>
 			</td>
-			<td><?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '">' . $configurationElementArray['title']  . '</a>'; ?></td>
-			<td><?php echo current(t3lib_BEfunc::getRecordPath($configurationElementArray['pid'], '1', 20, 50)); ?></td>
-			<td><?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=export_xml">';?><img src="" alt="Export" /></a>
-			<?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=export_xml">';?><img src="" alt="Import" /></a>
-			<?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=inlineEdit">';?><img src="" alt="Translate" /></a>
+			<td><?php echo $configurationElementArray['title']; ?></td>
+			<td class="l10ncfgPath"><?php echo current(t3lib_BEfunc::getRecordPath($configurationElementArray['pid'], '1', 200, 50)); ?></td>
+			<td><?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=export_xml">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>xml_export.png" alt="Export XML" /></a>
+			<?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=import_xml">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>xml_import.png" alt="Import XML" /></a> | 
+			<?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=export_xls">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>xls_export.png" alt="Export XLS" /></a>
+			<?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=import_xls">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>xls_import.png" alt="Import XLS" /></a> | 
+			<?php echo '<a href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' .  t3lib_div::intval_positive($this->getPageId()) . '&SET[action]=inlineEdit">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>pencil_go.png" alt="Translate online" /></a>
 			</td>
 		</tr>
 		<?php } ?>
