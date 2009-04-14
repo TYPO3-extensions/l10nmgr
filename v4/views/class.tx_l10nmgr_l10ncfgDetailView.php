@@ -92,7 +92,8 @@ class tx_l10nmgr_l10ncfgDetailView {
 						<td><strong>'.$LANG->getLL('general.list.headline.include.title').':</strong></td>
 						<td>'.htmlspecialchars($this->l10ncfgObj->getData('include')).'&nbsp;</td>
 					</tr>
-				</table>';
+				</table>
+				';
 
 		$content .= $this->doc->section($LANG->getLL('general.export.configuration.title'), $configurationSettings);
 

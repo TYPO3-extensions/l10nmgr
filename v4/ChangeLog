@@ -1,3 +1,8 @@
+2009-04-14 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added translate mod
+	* Changed main table with configuration overview
+	* Added icons
+
 2009-03-30 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* CLI import file XML or ZIP (local file) TODO: If http:// or ftp://...
 	* Unzip file (not Win compatible)
