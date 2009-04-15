@@ -11,4 +11,16 @@
    <!--     <static_countries_uid>74</static_countries_uid> //-->
 
     </sys_language>
+    <static_languages>
+        <uid>30</uid>
+        <pid>0</pid>
+        <lg_iso_2>EN</lg_iso_2>
+        <lg_name_en>English</lg_name_en>
+        <lg_typo3></lg_typo3>
+        <lg_country_iso_2></lg_country_iso_2>
+        <lg_collate_locale>en_GB</lg_collate_locale>
+        <lg_name_local>English</lg_name_local>
+        <lg_sacred>0</lg_sacred>
+        <lg_constructed>0</lg_constructed>
+    </static_languages>
 </ts_webex>

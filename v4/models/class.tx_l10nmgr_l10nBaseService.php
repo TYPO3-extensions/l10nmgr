@@ -42,12 +42,6 @@ class tx_l10nmgr_l10nBaseService {
 		
 		//@todo: accum object is created here for the import this is quite expensive
 		$flexFormDiffArray=$this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray($sysLang),$translationObj->getTranslationData());
-
-		echo "Debug".__FILE__." ".__LINE__;
-		print('<pre>');
-		print_r($flexFormDiffArray);					
-		print('</pre>');
-		die();
 		
 		if ($flexFormDiffArray !== false) {
 			$l10ncfgObj->updateFlexFormDiff($sysLang,$flexFormDiffArray);
@@ -65,17 +59,6 @@ class tx_l10nmgr_l10nBaseService {
 	 */
 	protected function _submitContentAndGetFlexFormDiff($accum,$inputArray)	{
 
-		//CLI $accum and $inputArray OK!
-		//print "<pre>";
-		//print_r($accum);
-		//print_r($inputArray);
-		//print "</pre>";
-		
-		echo "Debug".__FILE__." ".__LINE__;
-		print('<pre>');
-		print_r($inputArray);					
-		print('</pre>');
-		
 		if (is_array($inputArray))	{
 
 				// Initialize:
