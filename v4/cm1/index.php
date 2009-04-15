@@ -456,8 +456,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 			// Render the XML
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
-			$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage);
-
+			$viewClass=new $viewClassName();
+			$viewClass->setL10NConfiguration($l10ncfgObj);
+			$viewClass->setTargetLanguageId($this->sysLanguage);
+			
 			//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
 				$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
