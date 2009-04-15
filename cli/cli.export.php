@@ -197,6 +197,7 @@ class tx_cliexport_cli extends t3lib_cli {
 
 			$l10nmgrXML 				= t3lib_div::makeInstanceClassName( 'tx_l10nmgr_CATXMLView' );
 			$viewClass					= new $l10nmgrXML($l10nmgrCfgObj,$tranlateableInformation);
+			// viewClass-Aufruf ändern!
 
 			
 	//		$config 	=	$BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');
