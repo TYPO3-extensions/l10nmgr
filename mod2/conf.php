@@ -3,7 +3,7 @@
 	// DO NOT REMOVE OR CHANGE THESE 3 LINES:
 define('TYPO3_MOD_PATH', '../typo3conf/ext/l10nmgr/mod2/');
 $BACK_PATH='../../../../typo3/';
-$MCONF['name']='user_txl10nmgrM2';
+$MCONF['name']='txl10nmgrM3_txl10nmgrM2';
 
 	
 $MCONF['access']='user,group';

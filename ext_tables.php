@@ -1,10 +1,36 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
-if (TYPO3_MODE=="BE")    {
+/* if (TYPO3_MODE=="BE")    {
 
-    t3lib_extMgm::addModule("web","txl10nmgrM1","",t3lib_extMgm::extPath($_EXTKEY)."mod1/");
-	t3lib_extMgm::addModule("user","txl10nmgrM2","top",t3lib_extMgm::extPath($_EXTKEY)."mod2/");
+	t3lib_extMgm::addModule('txl10nmgrM1','','top',t3lib_extMgm::extPath($_EXTKEY).'mod1/');
+	t3lib_extMgm::addModule("txl10nmgrM2",'txl10nmgrM1',"top",t3lib_extMgm::extPath($_EXTKEY)."mod2/");
+}*/
+
+if (TYPO3_MODE=='BE')   {
+        $extPath = t3lib_extMgm::extPath($_EXTKEY);
+
+                // add module before 'Help'
+        if (!isset($TBE_MODULES['txl10nmgrM1']))     {
+                $temp_TBE_MODULES = array();
+                foreach($TBE_MODULES as $key => $val) {
+                        if ($key == 'help') {
+                                $temp_TBE_MODULES['txl10nmgrM3'] = '';
+                                $temp_TBE_MODULES[$key] = $val;
+                        } else {
+                                $temp_TBE_MODULES[$key] = $val;
+                        }
+                }
+
+                $TBE_MODULES = $temp_TBE_MODULES;
+        }
+        t3lib_extMgm::addModule('txl10nmgrM3', '', '', $extPath.'mod3/');
+        t3lib_extMgm::addModule('txl10nmgrM3', 'txl10nmgrM1', 'bottom', $extPath.'mod1/');
+        //t3lib_extMgm::addModule('txl10nmgrM3', 'txl10nmgrM4', 'bottom', $extPath.'translate/');
+        t3lib_extMgm::addModule('txl10nmgrM3', 'txl10nmgrM2', 'bottom', $extPath.'mod2/');
+
+        //t3lib_extMgm::addModule('web','txdirectmailM2','',t3lib_extMgm::extPath($_EXTKEY).'mod1/');
 }
+
 t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_cfg");
 t3lib_extMgm::addLLrefForTCAdescr('tx_l10nmgr_cfg','EXT:l10nmgr/locallang_csh_l10nmgr.php');
 

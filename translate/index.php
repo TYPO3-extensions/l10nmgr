@@ -22,7 +22,7 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
- * l10nmgr module cm1
+ * l10nmgr module translate
  *
  * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
  * @author	Daniel Zielinski <d.zielinski@l10ntech.de>
@@ -59,6 +59,8 @@ require ($BACK_PATH.'init.php');
 require ($BACK_PATH.'template.php');
 $LANG->includeLLFile('EXT:l10nmgr/translate/locallang.xml');
 require_once (PATH_t3lib.'class.t3lib_scbase.php');
+
+//$BE_USER->modAccess($MCONF,1);
 
 	// autoload the mvc 
 if (t3lib_extMgm::isLoaded('mvc')) {
@@ -104,6 +106,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
+//class tx_l10nmgr_module4 extends t3lib_SCbase {
 class tx_l10nmgr_translate extends t3lib_SCbase {
 
 	var $flexFormDiffArray = array();	// Internal
@@ -363,6 +366,7 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr
 
 // Make instance:
 $SOBE = t3lib_div::makeInstance('tx_l10nmgr_translate');
+//$SOBE = t3lib_div::makeInstance('tx_l10nmgr_module4');
 $SOBE->init();
 
 $SOBE->main();
