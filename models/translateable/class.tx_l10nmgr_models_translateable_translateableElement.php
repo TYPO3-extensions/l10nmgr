@@ -163,7 +163,10 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	 * @param array $logs
 	 */
 	public function setLogs($logs){
-		$this->logs = new ArrayObject($logs);
+		
+		if(is_array($logs)){
+			$this->logs = new ArrayObject($logs);
+		}
 	}
 	
 	/**

@@ -111,6 +111,15 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	}
 	
 	/**
+	* Returns the value of the default record. This is the base of all translation.
+	 * 	 *
+	 * @return string
+	 */
+	public function getDefaultValue(){
+		return $this->default_value;
+	}
+	
+	/**
 	 * @param string $diffDefault_value
 	 */
 	public function setDiffDefaultValue($diffDefault_value) {
@@ -166,6 +175,14 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 */
 	public function setTranslationValue($translation_value) {
 		$this->translation_value = $translation_value;
+	}
+	
+	/**
+	 * Returns the translated value of this translateable field.
+	 * @return string translated value
+	 */
+	public function getTranslationValue(){
+		return $this->translation_value;
 	}
 	
 	/**

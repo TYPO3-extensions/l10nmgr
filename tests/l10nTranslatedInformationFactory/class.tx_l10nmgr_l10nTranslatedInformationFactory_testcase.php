@@ -257,12 +257,67 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		 */
 	}
 	
-	public function test_canGetDiffToDefaultFromLangChildrenFCE(){
+	public function test_canGetDiffToDefaultFromLanguageInheritanceFCE(){
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetDiffToDefaultFromLanguageInheritanceFCE.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
+
+		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
+		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
+		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
+
+		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 		
+		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(9999)), $fixtureTargetLanguage, $fixturePreviewLanguage );
+
+		/**
+		 * The TranslateableInformation has 2 translateableElements:
+		 * 
+		 * The first one is the page, the second is the FCE.  The FCE has two fields, a header and a content field.
+		 * The Initial Value of the Header was "Header", after creation it has been translated to UK. After the translation
+		 * the original "Header" has been changed to "Header Changed". As diffDefault we expect "Header", because it was 
+		 * the value a the moment when the translation was started
+		 * 
+		 */
+		$pageGroups = $translateableInformations->getPageGroups ();	
+			
+		$translateableElements 	= $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
+		$fceElement				= $translateableElements->offsetGet(1);
+		
+		$headerField			= $fceElement->getTranslateableFields()->offsetGet(0);
+		
+		$this->assertEquals("Header",$headerField->getDiffDefaultValue());
+		$this->assertEquals("Header Translated",$headerField->getTranslationValue());
+		$this->assertEquals("Header Changed",$headerField->getDefaultValue());
+		
+		
+		$contentField			= $fceElement->getTranslateableFields()->offsetGet(1);
+		$this->assertEquals("Content", $contentField->getDiffDefaultValue());
+		$this->assertEquals("Content Translated",$contentField->getTranslationValue());
+		$this->assertEquals("Content Changed",$contentField->getDefaultValue());		
+
 	}
 	
-	public function test_canGetDiffToDefaultFromNonLangChildrenFCE(){
+	public function test_canGetDiffToDefaultFromLanguageSeparateFCE(){
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetDiffToDefaultFromLanguageSeparateFCE.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
+
+		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
+		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
+		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
+
+		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 		
+		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage );		
+
+		echo "Debug".__FILE__." ".__LINE__;
+		print('<pre>');
+		print_r($translateableInformations);					
+		print('</pre>');
+
 	}
 	
 	public function test_canGetDiffToDefaultFromDatabaseTranslatedFCE(){
