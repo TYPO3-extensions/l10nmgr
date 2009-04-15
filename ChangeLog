@@ -4,6 +4,7 @@
 	* Integrated documentation draft from D. Pötzinger into manual
 	* Added icons to SVN
 	* Moved XLS & XML export functions to export module
+	* Moved XLS & XML import functions to import module
 	
 2009-04-14 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added translate mod

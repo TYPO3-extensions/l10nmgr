@@ -76,6 +76,10 @@ class tx_l10nmgr_l10ncfgDetailView {
 		}
 
 		$configurationSettings = '
+			
+			<a href="javascript:toggle_visibility(\'l10ncfgOverview\')">'.$LANG->getLL('general.export.configuration.show.title').'</a>
+			<div id="l10ncfgOverview" style="display:none;"><h2>'.
+				$LANG->getLL('general.export.configuration.title').'</h2>
 				<table border="1" cellpadding="1" cellspacing="0" width="400">
 					<tr class="bgColor5 tableheader">
 						<td colspan="4"><strong>'.htmlspecialchars($this->l10ncfgObj->getData('title')).' ['.$this->l10ncfgObj->getData('uid').']</strong></td>
@@ -93,9 +97,10 @@ class tx_l10nmgr_l10ncfgDetailView {
 						<td>'.htmlspecialchars($this->l10ncfgObj->getData('include')).'&nbsp;</td>
 					</tr>
 				</table>
+			</div>
 				';
 
-		$content .= $this->doc->section($LANG->getLL('general.export.configuration.title'), $configurationSettings);
+		$content .= $this->doc->section('', $configurationSettings);
 
 		return $content;
 

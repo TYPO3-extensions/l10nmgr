@@ -278,7 +278,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		}
 	}
 
-	function catXMLExportImportAction($l10ncfgObj) {
+	// moved to import and export module
+	/* function catXMLExportImportAction($l10ncfgObj) {
 		global $LANG, $BACK_PATH, $BE_USER;
 		$allowedSettingFiles = array(
 			'across'     => 'acrossL10nmgrConfig.dst',
@@ -301,7 +302,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				</ul></div>';
 
 		$info .= '<div id="tabcontentcontainer" style="height:120px;border:1px solid gray;padding-right:5px;width:100%;">';
-		
+		*/
 		//Please use export module from now on!
 		/* $info .= '<div id="sc1" class="tabcontent">';
 		$_selectOptions=array('0'=>'-default-');
@@ -312,7 +313,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions);
 		$info .= '<br /><br/>';
 		$info .= '<input type="submit" value="Export" name="export_xml" /><br /><br /><br/>';
-		$info .= '</div>'; */
+		$info .= '</div>';
 		$info .= '<div id="sc1" class="tabcontent">';
 		$info .= '<input type="checkbox" value="1" name="make_preview_link" /> ' . $LANG->getLL('import.xml.make_preview_link.title') . '<br />';
 		$info .= '<input type="checkbox" value="1" name="import_delL10N" /> ' . $LANG->getLL('import.xml.delL10N.title') . '<br />';
@@ -373,9 +374,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			
 			t3lib_div::unlink_tempfile($uploadedTempFile);
 		}
-		// Please use export module from now on!
 		// If export of XML is asked for, do that (this will exit and push a file for download)
-		/* if (t3lib_div::_POST('export_xml')) {
+		if (t3lib_div::_POST('export_xml')) {
 			// Save user prefs
 			$BE_USER->pushModuleData('l10nmgr/cm1/checkUTF8',t3lib_div::_POST('check_utf8'));
 
@@ -415,14 +415,14 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$viewClass->saveExportInformation();
 				$this->_downloadXML($viewClass);
 			}
-		} */
+		}
 		$info .= '</div>';
 
 		return $info;
-	}
+	} */
 	
-
-	function excelExportImportAction($l10ncfgObj) {
+	// Please use modules import & export from now on!
+	/* function excelExportImportAction($l10ncfgObj) {
 		global $LANG, $BACK_PATH;
 
 		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
@@ -448,9 +448,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			$info.='<br/><br/>'.$this->doc->icons(1).$LANG->getLL('import.success.message').'<br/><br/>';
 		}
 
-		//Please use export module from now on!
 			// If export of XML is asked for, do that (this will exit and push a file for download)
-		/* if (t3lib_div::_POST('export_excel')) {
+		if (t3lib_div::_POST('export_excel')) {
 
 			// Render the XML
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
@@ -466,10 +465,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$viewClass->saveExportInformation();
 				$this->_downloadXML($viewClass);
 			}
-		} */
+		} 
 
 		return $info;
-	}
+	}*/
 
 	/**
 	 * Creating module content
@@ -508,7 +507,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			break;
 			*/
 
-			case 'export_excel':
+			/* case 'export_excel':
 				$subheader  = $LANG->getLL('export_excel');
 				$subcontent = $this->excelExportImportAction($l10ncfgObj);
 			break;
@@ -520,10 +519,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 				$subheader  = $LANG->getLL('export_xml');
 				$subcontent = $this->catXMLExportImportAction($l10ncfgObj);
-			break;
+			break; */
 
 			DEFAULT:	// Default display:
-				$subcontent = '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" />';
+				$subcontent = 'PLEASE USE NEW MODULES: import, export, translate';
 			break;
 		} //switch block
 

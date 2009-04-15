@@ -12,8 +12,9 @@
 			<label index="general.action.blank.title">--Select Action--</label>
 			<label index="general.action.edit.link.title">Overview with links</label>
 			<label index="general.action.select.format.title">Format:</label>
+			<label index="general.export.configuration.show.title">Localization configuration</label>
 			<label index="export.xml.options.title">XML export options</label>
-			<label index="export.xls.options.title">XLS export options</label>
+			<label index="export.xls.options.title">MS Excel XML export options</label>
 			<label index="general.action.export.xls.title">MS Excel XML</label>
 			<label index="general.action.language.select.title">Target language:</label>
 			<label index="general.action.options.title">Options:</label>

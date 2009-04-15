@@ -7,7 +7,7 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="general.title">L10N Manager</label>
-			<label index="general.description.message">Please select one of the following L10N Manager configurations to start the export/import.</label>
+			<label index="general.description.message">Please select one of the following L10N Manager configurations and choose your action.</label>
 			<label index="general.list.configuration.title">Available configurations:</label>
 			<label index="general.list.headline.info.title">Info</label>
 			<label index="general.list.headline.title.title">Title</label>

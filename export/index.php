@@ -175,6 +175,13 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 				function jumpToUrl(URL)	{
 					document.location = URL;
 				}
+   				function toggle_visibility(id) {
+       				var e = document.getElementById(id);
+       				if(e.style.display == \'block\')
+          				e.style.display = \'none\';
+			       	else
+			          e.style.display = \'block\';
+			    }
 			</script>
 			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/tabs.js') . '"></script>
 			<link rel="stylesheet" type="text/css" href="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/tabs.css') . '" />';
@@ -196,12 +203,7 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 					// Header:
 				$this->content.=$this->doc->startPage($LANG->getLL('general.title'));
 				$this->content.=$this->doc->header($LANG->getLL('general.title'));
-
-				//create and render view to show details for the current l10nmgrcfg
-				$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
-				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
-				//$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
-
+				
 				$this->content.=$this->doc->section($LANG->getLL('general.export.title'),
 						'<table><tr><td><strong>'.$LANG->getLL('general.action.select.format.title').'</strong></td><td><strong>'.$LANG->getLL('general.action.language.select.title').'</strong></td><td><strong>'.$LANG->getLL('general.action.options.title').'</strong></td></tr>'.
 												'<tr><td>'.t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).'</td>'.
@@ -210,13 +212,19 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[noHidden]",$this->MOD_SETTINGS["noHidden"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.noHidden.title'). '</td>'.
 						'</tr></table>'
 					);
-
+					
 					// Render content:
 				if (!count($this->MOD_MENU['lang'])) {
 					$this->content.= $this->doc->section('ERROR',$LANG->getLL('general.access.error.title'));
 				} else {
 					$this->moduleContent($l10ncfgObj);
 				}
+				
+				$this->content.= $this->doc->spacer(10);
+				//create and render view to show details for the current l10nmgrcfg
+				$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
+				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
+				$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());	
 
 				// ShortCut
 				if ($BE_USER->mayMakeShortcut()) {
@@ -288,7 +296,7 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 		// If export of XML is asked for, do that (this will exit and push a file for download)
 		if (t3lib_div::_POST('export_xml')) {
 			// Save user prefs
-			$BE_USER->pushModuleData('l10nmgr/cm1/checkUTF8',t3lib_div::_POST('check_utf8'));
+			$BE_USER->pushModuleData('l10nmgr/export/checkUTF8',t3lib_div::_POST('check_utf8'));
 
 ####			
 			// Render the XML
@@ -343,9 +351,9 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 		$info .= '<h4>'.$LANG->getLL('export.xls.options.title'). '</h4>';
 		$info .= '<input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br /><br />';
 		// Buttons:
-		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" />';
-		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.export.xml.button.title').'" name="export_excel" /><br />';
-
+		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.export.xml.button.title').'" name="export_excel" /> ';
+		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" /><br />';
+		
 		if (t3lib_div::_POST('export_excel')) {
 			// If export of XML is asked for, do that (this will exit and push a file for download)
 			// Render the XML

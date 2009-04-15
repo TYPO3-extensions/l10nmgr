@@ -13,6 +13,7 @@
 			<label index="general.action.edit.link.title">Overview with links</label>
 			<label index="general.action.edit.inline.title">Online translation</label>
 			<label index="general.action.language.select.title">Target language:</label>
+			<label index="general.export.configuration.show.title">Localization configuration</label>
 			<label index="general.action.select.title">Action:</label>
 			<label index="general.action.options.title">Options:</label>
 			<label index="general.action.export.excel.title">Excel export/import</label>
