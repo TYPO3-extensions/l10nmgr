@@ -12,12 +12,12 @@
 			<label index="general.action.blank.title">--Select Action--</label>
 			<label index="general.action.edit.link.title">Overview with links</label>
 			<label index="general.action.edit.inline.title">Online translation</label>
-			<label index="general.action.export.excel.title">Excel export/import</label>
-			<label index="general.action.export.xml.title">XML export/import</label>
+			<label index="general.action.export.excel.title">Excel import</label>
+			<label index="general.action.export.xml.title">XML import</label>
 			<label index="general.action.export.xml.button.title">Export</label>
 			<label index="general.action.import.xml.button.title">Import</label>
 			<label index="general.access.error.title">ERROR: User has no access to edit any translations!</label>
-			<label index="general.title">L10N Export/Import</label>
+			<label index="general.title">Localization Manager</label>
 			<label index="general.export.configuration.title">Configuration of translation object:</label>
 			<label index="general.export.configuration.error.title">ERROR: No valid l10nmgr config!</label>
 			<label index="general.export.choose.action.title">Choose your action</label>

@@ -127,8 +127,8 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 		$this->MOD_MENU = Array (
 			'action' => array(
 				''             => $LANG->getLL('general.action.blank.title'),
-				'export_excel' => $LANG->getLL('general.action.export.excel.title'),
-				'export_xml'   => $LANG->getLL('general.action.export.xml.title'),
+				'xls' => $LANG->getLL('general.action.export.xls.title'),
+				'xml'   => $LANG->getLL('general.action.export.xml.title'),
 			),
 			'lang' => array(),
 			'onlyChangedContent' => '',
@@ -202,12 +202,13 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
 				//$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
 
-				$this->content.=$this->doc->divider(15);
-				$this->content.=$this->doc->section($LANG->getLL('general.export.choose.format.title'),
-						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[lang]",$this->sysLanguage,$this->MOD_MENU["lang"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
-						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
-						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[onlyChangedContent]",$this->MOD_SETTINGS["onlyChangedContent"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.new.title') . 
-						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[noHidden]",$this->MOD_SETTINGS["noHidden"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.noHidden.title'). '</br>'
+				$this->content.=$this->doc->section($LANG->getLL('general.export.title'),
+						'<table><tr><td><strong>'.$LANG->getLL('general.action.select.format.title').'</strong></td><td><strong>'.$LANG->getLL('general.action.language.select.title').'</strong></td><td><strong>'.$LANG->getLL('general.action.options.title').'</strong></td></tr>'.
+												'<tr><td>'.t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).'</td>'.
+												'<td>'.t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[lang]",$this->sysLanguage,$this->MOD_MENU["lang"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).'</td>'.
+						'<td>'.t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[onlyChangedContent]",$this->MOD_SETTINGS["onlyChangedContent"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.new.title') .
+						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[noHidden]",$this->MOD_SETTINGS["noHidden"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.noHidden.title'). '</td>'.
+						'</tr></table>'
 					);
 
 					// Render content:
@@ -257,7 +258,7 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 		}
 	}
 
-	function catXMLExportImportAction($l10ncfgObj) {
+	function catXMLExportAction($l10ncfgObj) {
 		global $LANG, $BACK_PATH, $BE_USER;
 		$allowedSettingFiles = array(
 			'across'     => 'acrossL10nmgrConfig.dst',
@@ -270,20 +271,9 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 
 		$info .= '<br/>';
-		$info .= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" /><br /><br/>';
+		//$info .= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" /><br /><br/>';
 		
-		$info .= '<div id="ddtabs" class="basictab" style="border:0px solid gray;margin:0px;">
-                                <ul style="border:0px solid #999999; ">
-                                <li><a onClick="expandcontent(\'sc1\', this)" style="margin:0px;">'.$LANG->getLL('export.xml.headline.title').'</a></li>
-                                <li><a onClick="expandcontent(\'sc2\', this)" style="margin:0px;">'.$LANG->getLL('import.xml.headline.title').'</a></li>
-                                <li><a onClick="expandcontent(\'sc3\', this)" style="margin:0px;">'.$LANG->getLL('file.settings.downloads.title').'</a></li>
-                                <li><a onClick="expandcontent(\'sc4\', this)" style="margin:0px;">'.$LANG->getLL('l10nmgr.documentation.title').'</a></li>
-				</ul></div>';
-
-		$info .= '<div id="tabcontentcontainer" style="height:120px;border:1px solid gray;padding-right:5px;width:100%;">';
-
-		$info .= '<div id="sc1" class="tabcontent">';
-		//$info .= '<div id="sc1" class="tabcontent">';
+		$info .= '<h4>'.$LANG->getLL('export.xml.options.title'). '</h4>';
 		$_selectOptions=array('0'=>'-default-');
 		$_selectOptions=$_selectOptions+$this->MOD_MENU["lang"];
 		$info .= '<input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
@@ -292,67 +282,9 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions);
 		$info .= '<br /><br/>';
 		$info .= '<input type="submit" value="Export" name="export_xml" /><br /><br /><br/>';
-		$info .= '</div>';
-		$info .= '<div id="sc2" class="tabcontent">';
-		$info .= '<input type="checkbox" value="1" name="make_preview_link" /> ' . $LANG->getLL('import.xml.make_preview_link.title') . '<br />';
-		$info .= '<input type="checkbox" value="1" name="import_delL10N" /> ' . $LANG->getLL('import.xml.delL10N.title') . '<br />';
-		$info .= '<input type="checkbox" value="1" name="import_oldformat" /> ' . $LANG->getLL('import.xml.old-format.title') . '<br /><br />';
-		$info .= '<input type="file" size="60" name="uploaded_import_file" /><br /><br /><input type="submit" value="Import" name="import_xml" /><br /><br /> ';
-		$info .= '</div>';
-		$info .= '<div id="sc3" class="tabcontent">';
-		$info .= $this->doc->icons(1) .
-			   $LANG->getLL('file.settings.available.title');
-
-		for( reset($allowedSettingFiles); list($settingId, $settingFileName) = each($allowedSettingFiles); ) {
-
-			$currentFile = t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'settings/' . $settingFileName);
-
-			if ( is_file($currentFile) && is_readable($currentFile) ) {
-
-				$size = t3lib_div::formatSize((int)filesize($currentFile), ' Bytes| KB| MB| GB');
-				$info .= '<br/><a href="' . t3lib_div::rawUrlEncodeFP($currentFile) . '" title="' . $LANG->getLL('file.settings.download.title') . '" target="_blank">' . $LANG->getLL('file.settings.' . $settingId . '.title') . ' (' . $size . ')' . '</a> ';
-			}
-		}
-		$info .= '</div>';
-		$info .= '<div id="sc4" class="tabcontent">';
-		$info .= '<a href="'.t3lib_extMgm::extRelPath('l10nmgr').'doc/manual.sxw" target="_new">Download</a>';
-		$info .= '</div>';
-		$info .= '</div>';
 		$info .= $this->doc->header($LANG->getLL('misc.messages.title'));
 
-		// Read uploaded file:
-		if (t3lib_div::_POST('import_xml') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
-			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
-			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
-			// Relevant processing of XML Import with the help of the Importmanager
-			$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
-			$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage, $xmlString="");
-			if ($importManager->parseAndCheckXMLFile()===false) {
-				$info.='<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
-			}
-			else {
-				if (t3lib_div::_POST('import_delL10N')=='1') {
-					$info.=$LANG->getLL('import.xml.delL10N.message').'<br/>';
-					$delCount = $importManager->delL10N($importManager->getDelL10NDataFromCATXMLNodes($importManager->xmlNodes));
-					$info.= sprintf($LANG->getLL('import.xml.delL10N.count.message'),$delCount).'<br/><br/>'; 
-				}
-				if (t3lib_div::_POST('make_preview_link')=='1') {
-					$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
-					$info.='<b>'.$LANG->getLL('import.xml.preview_links.title').'</b><br/>';
-					$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
-					$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
-					$info.=$mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
-				}
-				$translationData=$factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
-				$translationData->setLanguage($this->sysLanguage);
-				unset($importManager);
-				$service->saveTranslation($l10ncfgObj,$translationData);
-				$info.='<br/>'.$this->doc->icons(-1).$LANG->getLL('import.xml.done.message').'<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
-			}
-			
-			t3lib_div::unlink_tempfile($uploadedTempFile);
-		}
 		// If export of XML is asked for, do that (this will exit and push a file for download)
 		if (t3lib_div::_POST('export_xml')) {
 			// Save user prefs
@@ -372,10 +304,13 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 			$tranlateableInformation = $factory->create($l10ncfgObj,$l10ncfgObj->getExportPageIdCollection(),$targetLanguage,$previewLanguage);	
 			
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
-			$viewClass=new $viewClassName($l10ncfgObj,$tranlateableInformation);
+			$viewClass=new $viewClassName();
+			$viewClass->setL10NConfiguration($l10ncfgObj);
+			$viewClass->setTargetLanguageId($this->sysLanguage);
 			$viewClass->setForcedSourceLanguage($previewLanguage);
 			
-			$config 	=	$BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');
+			
+			$config 	=	$BE_USER->getModuleData('l10nmgr/export/prefs', 'prefs');
 			$viewClass->setSkipXMLCheck($config['noxmlcheck']);
 			$viewClass->setUseUTF8Mode($config['utf8']);
 			
@@ -401,38 +336,23 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 	}
 	
 
-	function excelExportImportAction($l10ncfgObj) {
+	function excelExportAction($l10ncfgObj) {
 		global $LANG, $BACK_PATH;
 
 		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
+		$info .= '<h4>'.$LANG->getLL('export.xls.options.title'). '</h4>';
+		$info .= '<input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br /><br />';
 		// Buttons:
 		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" />';
-		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.export.xml.button.title').'" name="export_excel" />';
-		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.import.xml.button.title').'" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
-		$info .= '<br /><br /><input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
+		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.export.xml.button.title').'" name="export_excel" /><br />';
 
-			// Read uploaded file:
-		if (t3lib_div::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name'])) {
-			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
-
-			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
-			//TODO: catch exeption
-			$translationData=$factory->getTranslationDataFromExcelXMLFile($uploadedTempFile);
-			$translationData->setLanguage($this->sysLanguage);
-
-			t3lib_div::unlink_tempfile($uploadedTempFile);
-
-			$service->saveTranslation($l10ncfgObj,$translationData);
-
-			$info.='<br/><br/>'.$this->doc->icons(1).$LANG->getLL('import.success.message').'<br/><br/>';
-		}
-
-			// If export of XML is asked for, do that (this will exit and push a file for download)
 		if (t3lib_div::_POST('export_excel')) {
-
+			// If export of XML is asked for, do that (this will exit and push a file for download)
 			// Render the XML
 			$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
-			$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage);
+			$viewClass=new $viewClassName();
+			$viewClass->setL10NConfiguration($l10ncfgObj);
+			$viewClass->setTargetLanguageId($this->sysLanguage);
 
 			//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
@@ -443,7 +363,6 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 				$this->_downloadXML($viewClass);
 			}
 		}
-
 		return $info;
 	}
 
@@ -457,18 +376,18 @@ class tx_l10nmgr_export extends t3lib_SCbase {
 		global $TCA,$LANG,$BE_USER;
 
 		switch ($this->MOD_SETTINGS["action"]) {
-			case 'export_excel':
+			case 'xls':
 				$subheader  = $LANG->getLL('export_excel');
-				$subcontent = $this->excelExportImportAction($l10ncfgObj);
+				$subcontent = $this->excelExportAction($l10ncfgObj);
 			break;
 
-			case 'export_xml':		// XML import/export
+			case 'xml':		// XML import/export
 				$prefs['utf8']=t3lib_div::_POST('check_utf8');
 				$prefs['noxmlcheck']=t3lib_div::_POST('no_check_xml');
-				$BE_USER->pushModuleData('l10nmgr/cm1/prefs', $prefs);
+				$BE_USER->pushModuleData('l10nmgr/export/prefs', $prefs);
 
 				$subheader  = $LANG->getLL('export_xml');
-				$subcontent = $this->catXMLExportImportAction($l10ncfgObj);
+				$subcontent = $this->catXMLExportAction($l10ncfgObj);
 			break;
 
 			DEFAULT:	// Default display:

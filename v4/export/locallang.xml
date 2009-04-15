@@ -11,9 +11,14 @@
 			<label index="general.action.cancel.button.title">Cancel</label>
 			<label index="general.action.blank.title">--Select Action--</label>
 			<label index="general.action.edit.link.title">Overview with links</label>
-			<label index="general.action.edit.inline.title">Online translation</label>
-			<label index="general.action.export.excel.title">Excel export</label>
-			<label index="general.action.export.xml.title">XML export</label>
+			<label index="general.action.select.format.title">Format:</label>
+			<label index="export.xml.options.title">XML export options</label>
+			<label index="export.xls.options.title">XLS export options</label>
+			<label index="general.action.export.xls.title">MS Excel XML</label>
+			<label index="general.action.language.select.title">Target language:</label>
+			<label index="general.action.options.title">Options:</label>
+			<label index="general.export.title">Export content for translation</label>
+			<label index="general.action.export.xml.title">XML</label>
 			<label index="general.action.export.xml.button.title">Export</label>
 			<label index="general.access.error.title">ERROR: User has no access to edit any translations!</label>
 			<label index="general.title">Localization Manager</label>
