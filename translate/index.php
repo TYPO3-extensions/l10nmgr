@@ -104,7 +104,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
-class tx_l10nmgr_cm1 extends t3lib_SCbase {
+class tx_l10nmgr_translate extends t3lib_SCbase {
 
 	var $flexFormDiffArray = array();	// Internal
 
@@ -197,7 +197,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				//create and render view to show details for the current l10nmgrcfg
 				$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
 				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
-				//$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
+				$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
 
 				//$this->content.=$this->doc->divider(15);
 				$this->content.= $this->doc->section($LANG->getLL('general.action.edit.inline.title'), 
@@ -289,7 +289,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		switch ($this->MOD_SETTINGS["action"]) {
 			case 'inlineEdit': case 'link':
 				$htmlListViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10nHTMLListView');
-				$htmlListView=new $htmlListViewClassName($l10ncfgObj,$this->sysLanguage);
+				$htmlListView=new $htmlListViewClassName();
+				$htmlListView->setL10NConfiguration($l10ncfgObj);
+				$htmlListView->setTargetLanguageId($this->sysLanguage);
+				
 				$subheader=$LANG->getLL('inlineEdit');
 
 				if ($this->MOD_SETTINGS["action"]=='inlineEdit') {
@@ -345,13 +348,13 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 }
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/cm1/index.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/cm1/index.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/translate/index.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/translate/index.php']);
 }
 
 
 // Make instance:
-$SOBE = t3lib_div::makeInstance('tx_l10nmgr_cm1');
+$SOBE = t3lib_div::makeInstance('tx_l10nmgr_translate');
 $SOBE->init();
 
 $SOBE->main();
