@@ -35,7 +35,7 @@
  *
  *
  *
- *   68: class tx_l10nmgr_cm1 extends t3lib_SCbase
+ *   68: class tx_l10nmgr_translate extends t3lib_SCbase
  *   75:     function menuConfig()
  *   89:     function main()
  *  101:     function jumpToUrl(URL)
@@ -172,6 +172,13 @@ class tx_l10nmgr_translate extends t3lib_SCbase {
 				function jumpToUrl(URL)	{
 					document.location = URL;
 				}
+				function toggle_visibility(id) {
+       				var e = document.getElementById(id);
+       				if(e.style.display == \'block\')
+          				e.style.display = \'none\';
+			       	else
+			          e.style.display = \'block\';
+			    }				
 			</script>
 			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/tabs.js') . '"></script>
 			<link rel="stylesheet" type="text/css" href="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/tabs.css') . '" />';
@@ -194,11 +201,6 @@ class tx_l10nmgr_translate extends t3lib_SCbase {
 				$this->content.= $this->doc->startPage($LANG->getLL('general.title'));
 				$this->content.= $this->doc->header($LANG->getLL('general.title'));
 
-				//create and render view to show details for the current l10nmgrcfg
-				$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
-				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
-				//$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
-
 				//$this->content.=$this->doc->divider(15);
 				$this->content.= $this->doc->section($LANG->getLL('general.action.edit.inline.title'), 
 						'<table><tr><td><strong>'.$LANG->getLL('general.action.select.title').'</strong></td><td><strong>'.$LANG->getLL('general.action.language.select.title').'</strong></td><td><strong>'.$LANG->getLL('general.action.options.title').'</strong></td></tr>'.
@@ -216,6 +218,12 @@ class tx_l10nmgr_translate extends t3lib_SCbase {
 					$this->moduleContent($l10ncfgObj);
 				}
 
+				$this->content.= $this->doc->spacer(10);
+				//create and render view to show details for the current l10nmgrcfg
+				$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
+				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
+				$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
+				
 				// ShortCut
 				if ($BE_USER->mayMakeShortcut()) {
 					$this->content.=$this->doc->spacer(20).$this->doc->section('',$this->doc->makeShortcutIcon('id',implode(',',array_keys($this->MOD_MENU)),$this->MCONF['name']));
@@ -243,7 +251,7 @@ class tx_l10nmgr_translate extends t3lib_SCbase {
 		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 		$info='';
 		// Buttons:
-		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.save.button.title').'" name="saveInline" onclick="return confirm(\''.$LANG->getLL('inlineedit.save.alert.title').'\');" />';
+		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.save.button.title').'" name="saveInline" onclick="return confirm(\''.$LANG->getLL('inlineedit.save.alert.title').'\');" /> ';
 		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.cancel.button.title').'" name="_" onclick="return confirm(\''.$LANG->getLL('inlineedit.cancel.alert.title').'\');" />';
 
 		//simple init of translation object:

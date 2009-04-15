@@ -169,7 +169,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	}
 	
 	/**
-	 * This method is used to fetch the tranfslationInformation for each field and add it to a translateableElement. At the 
+	 * This method is used to fetch the translationInformation for each field and add it to a translateableElement. At the 
 	 * end the method returns the whole initialzid translateableElement.
 	 * 
 	 * @param string name of the table
