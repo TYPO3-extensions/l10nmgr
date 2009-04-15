@@ -1,3 +1,8 @@
+2009-04-15 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Version 4.0.0 now
+	* Added modules export & import
+	* Integrated documentation draft from D. Pötzinger into manual
+	
 2009-04-14 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Added translate mod
 	* Changed main table with configuration overview
