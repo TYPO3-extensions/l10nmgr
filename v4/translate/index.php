@@ -197,7 +197,7 @@ class tx_l10nmgr_translate extends t3lib_SCbase {
 				//create and render view to show details for the current l10nmgrcfg
 				$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
 				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
-				$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
+				//$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
 
 				//$this->content.=$this->doc->divider(15);
 				$this->content.= $this->doc->section($LANG->getLL('general.action.edit.inline.title'), 
