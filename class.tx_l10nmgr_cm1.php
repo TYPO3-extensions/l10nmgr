@@ -70,22 +70,29 @@ class tx_l10nmgr_cm1 {
 		if (!$backRef->cmLevel)	{
 
 				// Returns directly, because the clicked item was not from the pages table
-			if ($table=="tx_l10nmgr_cfg")   {	
+			if ($table=="tx_l10nmgr_cfg" && t3lib_div::_GET('subname')!=='moreoptions_tx_l10nmgrXX_cm1')   {	
 
 					// Adds the regular item:
 				$LL = $this->includeLL();
 
 					// Repeat this (below) for as many items you want to add!
 					// Remember to add entries in the localconf.php file for additional titles.
-				$url = t3lib_extMgm::extRelPath("l10nmgr")."cm1/index.php?id=".$uid;
-				$localItems[] = $backRef->linkItem(
-					$GLOBALS["LANG"]->getLLL("cm1_title",$LL),
-					$backRef->excludeIcon('<img src="'.t3lib_extMgm::extRelPath("l10nmgr").'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
-					$backRef->urlRefForCM($url),
-					0	// Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
-				);
-			}
+				//$url = t3lib_extMgm::extRelPath("l10nmgr")."cm1/index.php?id=".$uid;
+				//$localItems[] = $backRef->linkItem(
+				//	$GLOBALS["LANG"]->getLLL("cm1_title",$LL),
+				//	$backRef->excludeIcon('<img src="'.t3lib_extMgm::extRelPath("l10nmgr").'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
+				//	$backRef->urlRefForCM($url),
+				//	0	// Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
+				//);
 
+                        	$localItems["moreoptions_tx_l10nmgr_cm1"] = $backRef->linkItem(
+                        	        'L10N Manager',
+                	                '',
+        	                        "top.loadTopMenu('".t3lib_div::linkThisScript()."&cmLevel=1&subname=moreoptions_tx_l10nmgrXX_cm1');return false;",
+  	                       		0,
+                                	1
+                        	);
+			}
                         $localItems["moreoptions_tx_l10nmgr_cm3"] = $backRef->linkItem(
                                 'L10Nmgr tools',
                                 '',
@@ -95,6 +102,16 @@ class tx_l10nmgr_cm1 {
                         );
 
 				// Simply merges the two arrays together and returns ...
+			$menuItems=array_merge($menuItems,$localItems);
+		} elseif (t3lib_div::_GET('subname')=='moreoptions_tx_l10nmgrXX_cm1') {
+
+			$url = t3lib_extMgm::extRelPath("l10nmgr");
+                        $localItems[] = $backRef->linkItem('Export XML','',$backRef->urlRefForCM($url.'export/index.php?l10nmgr[configurationId]='.$uid.'&l10nmgr[selectedExportFormat]=xml'),1);
+                        $localItems[] = $backRef->linkItem('Import XML','',$backRef->urlRefForCM($url.'export/index.php?l10nmgr[configurationId]='.$uid.'&l10nmgr[selectedExportFormat]=xml'),1);
+                        $localItems[] = $backRef->linkItem('Export XLS','',$backRef->urlRefForCM($url.'import/index.php?l10nmgr[configurationId]='.$uid.'&l10nmgr[selectedExportFormat]=xls'),1);
+                        $localItems[] = $backRef->linkItem('Import XLS','',$backRef->urlRefForCM($url.'import/index.php?l10nmgr[configurationId]='.$uid.'&l10nmgr[selectedExportFormat]=xls'),1);
+                        $localItems[] = $backRef->linkItem('Online translation','',$backRef->urlRefForCM($url.'export/index.php?l10nmgr[configurationId]='.$uid.'&l10nmgr[selectedExportFormat]=xml'),1);
+
 			$menuItems=array_merge($menuItems,$localItems);
 		} elseif (t3lib_div::_GET('subname')=='moreoptions_tx_l10nmgrXX_cm3') {
 
