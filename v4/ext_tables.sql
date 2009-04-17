@@ -17,7 +17,7 @@ CREATE TABLE tx_l10nmgr_cfg (
 	sourceLangStaticId char(3) NOT NULL default '',
 	incfcewithdefaultlanguage int(11) DEFAULT '0' NOT NULL,
 	filenameprefix tinytext NOT NULL,
-	
+
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 );
@@ -63,7 +63,7 @@ CREATE TABLE tx_l10nmgr_priorities (
 	description text NOT NULL,
 	languages blob NOT NULL,
 	element blob NOT NULL,
-	
+
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 );
@@ -84,14 +84,14 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	translation_lang blob NOT NULL,
 	tablelist varchar(80) DEFAULT '' NOT NULL,
 	exportType blob NOT NULL,
-	
+
 	PRIMARY KEY (uid),
 );
 
 #
 # Table structure for table 'tx_l10nmgr_exportstates'
 #
-CREATE TABLE tx_l10nmgr_exportstates (
+CREATE TABLE tx_l10nmgr_workflowstates (
 uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
 	exportdata_id int(11) DEFAULT '0' NOT NULL,
@@ -99,8 +99,8 @@ uid int(11) NOT NULL auto_increment,
 	crdate int(11) DEFAULT '0' NOT NULL,
 	cruser_id int(11) DEFAULT '0' NOT NULL,
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
-	state int(11) DEFAULT '0' NOT NULL,
-		
+	state tinytext NOT NULL,
+
 	PRIMARY KEY (uid),
 );
 
@@ -116,6 +116,6 @@ CREATE TABLE tx_l10nmgr_exportfiles (
 	cruser_id int(11) DEFAULT '0' NOT NULL,
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	filename text NOT NULL,
-	
+
 	PRIMARY KEY (uid),
 );

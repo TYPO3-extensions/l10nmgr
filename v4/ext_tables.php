@@ -102,11 +102,11 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 	)
 );
 
-t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_exportstates");
+t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_workflowstates");
 
-$TCA['tx_l10nmgr_exportstates'] = Array (
+$TCA['tx_l10nmgr_workflowstates'] = Array (
 	'ctrl' => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportstates',
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_workflowstates',
 		'label' => 'title',
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
@@ -114,7 +114,7 @@ $TCA['tx_l10nmgr_exportstates'] = Array (
 		'default_sortby' => 'ORDER BY title',
 		'delete' => 'deleted',
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_exportstates.gif',
+		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_workflowstates.gif',
 	),
 	'feInterface' => Array (
 		'fe_admin_fieldList' => 'crdate, state',

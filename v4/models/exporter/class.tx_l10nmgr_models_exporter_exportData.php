@@ -25,8 +25,8 @@
 require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php';
 
-require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportState.php';
-require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportStateRepository.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowState.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php';
 
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php';
@@ -34,8 +34,6 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_
 
 
 class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObject */ tx_mvc_ddd_typo3_abstractTCAObject {
-
-
 
 	/**
 	 * Initialize the database object with
@@ -62,17 +60,17 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		if ($key !== false) {
 			unset($fields[$key]);
 		}
-		
+
 		$key = array_search('sourcelanguageobject', $fields);
 		if ($key !== false) {
 			unset($fields[$key]);
 		}
-		
+
 		$key = array_search('translationlanguageobject', $fields);
 		if ($key !== false) {
 			unset($fields[$key]);
 		}
-				
+
 		return $fields;
 	}
 
@@ -94,7 +92,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		}
 		return $this->row['l10nconfigurationobject'];
 	}
-	
+
 	/**
 	 * Method to set a configuration for the exportData
 	 *
@@ -173,23 +171,28 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		if (empty($this->row['statescollection'])) {
 
 			// load exportStateRepository from based on configuration
-			$statesRepositoryClass = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['classes']['exportData_exportStateRepository'];
+			$statesRepositoryClass = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['classes']['exportData_workflowStateRepository'];
 			tx_mvc_validator_factory::getNotEmptyValidator()->setMessage('No "repositoryClass" found!')->isValid($statesRepositoryClass);
 			$statesRepository = t3lib_div::getUserObj($statesRepositoryClass);
-			tx_mvc_validator_factory::getInstanceValidator()->setClassOrInterface('tx_l10nmgr_models_exporter_exportStateRepository')->isValid($statesRepository);
+			tx_mvc_validator_factory::getInstanceValidator()->setClassOrInterface('tx_l10nmgr_models_exporter_workflowStateRepository')->isValid($statesRepository);
 
 			$this->row['statescollection'] = $statesRepository->findByexportdata_id($this->row['uid']);
 		}
 		return $this->row['statescollection'];
 	}
 
-
+	/**
+	 * Get current state
+	 *
+	 * @param void
+	 * @return tx_l10nmgr_models_exporter_workflowState
+	 */
 	public function getCurrentState() {
 		$statesCollection = $this->getStatesCollection();
 		$currentState = NULL;
 
 		// loop through all states to get tha newest one
-		foreach ($statesCollection as $state) { /* @var $state tx_l10nmgr_models_exporter_exportState */
+		foreach ($statesCollection as $state) { /* @var $state tx_l10nmgr_models_exporter_workflowState */
 			if (empty($currentState['tstamp']) || ($state['tstamp'] > $currentState['tstamp'])) {
 				$currentState = $state;
 			}
@@ -245,7 +248,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 			return $this->row['translationlanguageobject'];
 		}
 	}
-	
+
 	/**
 	 * Method to attach a translationLanguage to the exportData
 	 *
@@ -255,7 +258,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		$this->row['translationlanguageobject'] = $translationLanguage;
 		$this->row['translation_lang'] = $translationLanguage->getUid();
 	}
-	
+
 	/**
 	 * Method to set a source language id
 	 *
@@ -264,11 +267,11 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	public function setSourceLanguageId($id){
 		$this->row['source_lang'] = $id;
 	}
-	
+
 	public function setResult($result){
 		$this->row['result'] = $result;
 	}
-	
+
 	public function getResult(){
 		return $this->row['result'];
 	}
