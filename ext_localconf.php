@@ -20,7 +20,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['recStatInfoHooks']['tx_l10n
 
 // define some classes
 
-// This class is used as a exportStateRepository withing the exportData class. The class has to be an instance (or inheriting) from tx_l10nmgr_models_exporter_exportStateRepository
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['classes']['exportData_exportStateRepository'] = 'EXT:l10nmgr/models/exporter/class.tx_l10nmgr_models_exporter_exportStateRepository.php:tx_l10nmgr_models_exporter_exportStateRepository';
+// This class is used as a exportStateRepository withing the exportData class. The class has to be an instance (or inheriting) from tx_l10nmgr_models_exporter_workflowStateRepository
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['classes']['exportData_workflowStateRepository'] = 'EXT:l10nmgr/models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php:tx_l10nmgr_models_exporter_workflowStateRepository';
 
 ?>

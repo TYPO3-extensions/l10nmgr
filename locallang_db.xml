@@ -34,10 +34,10 @@
 				<label index="tx_l10nmgr_cfg.crdate">Date of export</label>
 				<label index="tx_l10nmgr_cfg.exporttablelist">Exported tables</label>
 			<label index="tx_l10nmgr_export">L10N Manager exports</label>
-			<label index="tx_l10nmgr_exportstates">L10N Manager export states</label>
-				<label index="tx_l10nmgr_exportstates.exportdata_id">Exportdata id</label>
-				<label index="tx_l10nmgr_exportstates.crdate">Creation date</label>
-				<label index="tx_l10nmgr_exportstates.state">State</label>
+			<label index="tx_l10nmgr_workflowstates">L10N Manager export states</label>
+				<label index="tx_l10nmgr_workflowstates.exportdata_id">Exportdata id</label>
+				<label index="tx_l10nmgr_workflowstates.crdate">Creation date</label>
+				<label index="tx_l10nmgr_workflowstates.state">State</label>
 			<label index="tx_l10nmgr_exportfiles">L10N Manager export files</label>
 				<label index="tx_l10nmgr_exportfiles.exportdata_id">Exportdata id</label>
 				<label index="tx_l10nmgr_exportfiles.crdate">Creation date</label>
@@ -75,7 +75,7 @@
 			<label index="tx_l10nmgr_cfg.crdate">Übersetzungsdatum</label>
 			<label index="tx_l10nmgr_cfg.exporttablelist">Exportierte Tabellen</label>
 			<label index="tx_l10nmgr_export">Exporte</label>
-			<label index="tx_l10nmgr_exportstates">Export Stati</label>
+			<label index="tx_l10nmgr_workflowstates">Export Stati</label>
 			<label index="tx_l10nmgr_exportfiles">Export Dateien</label>
 			<label index="tx_l10nmgr_priorities">Priorität</label>
 			<label index="tx_l10nmgr_priorities.title">Titel:</label>

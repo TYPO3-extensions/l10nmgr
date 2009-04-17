@@ -23,13 +23,20 @@
  ***************************************************************/
 
 
-class tx_l10nmgr_models_exporter_exportState extends tx_mvc_ddd_abstractDbObject {
+class tx_l10nmgr_models_exporter_workflowState extends tx_mvc_ddd_abstractDbObject {
 
 	/**
 	 * Constants representing the states
+	 *
+	 * Convention for own states: <extensionkey>_<state>
 	 */
-	const EXPORTSTATE_STARTED_EXPORTNG = 1;
-	const EXPORTSTATE_FINISHED_EXPORTING = 2;
+	const WORKFLOWSTATE_EXPORTING = 'l10nmgr_exporting';
+	const WORKFLOWSTATE_EXPORTED = 'l10nmgr_exported';
+
+	const WORKFLOWSTATE_IMPORTING = 'l10nmgr_importing';
+	const WORKFLOWSTATE_IMPORTED = 'l10nmgr_imported';
+
+	// TODO: feld muss varchar sein
 
 	/**
 	 * Initialisize the database object with
@@ -39,7 +46,7 @@ class tx_l10nmgr_models_exporter_exportState extends tx_mvc_ddd_abstractDbObject
 	 * @return     string
 	 */
 	public static function getTableName() {
-		return 'tx_l10nmgr_exportstates';
+		return 'tx_l10nmgr_workflowstates';
 	}
 
 }
