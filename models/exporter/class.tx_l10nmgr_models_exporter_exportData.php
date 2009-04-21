@@ -106,13 +106,13 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @return ArrayObject
 	 */
-	public function getRemainingPages(){
-		if(empty($this->row['remaining_pages'])){
+	public function getExportRemainingPages(){
+		if($this->getProgress('export_remaining_pages')){
 			//if there are no remaining pages configured, all pages of the configuration are remaining pages
 			$res = $this->getL10nConfigurationObject()->getExportPageIdCollection();
-			$this->row['total_number_of_pages'] = $res->count();
+			$this->setProgress('export_total_number_of_pages',$res->count());
 		}else{
-			$res = new ArrayObject(unserialize($this->row['remaining_pages']));
+			$res = new ArrayObject($this->getProgress('export_remaining_pages'));
 		}
 
 		return $res;
@@ -124,10 +124,10 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @return float
 	 */
-	public function getProgress(){
-		$numberOfProcessedPages = $this->row['total_number_of_pages'] - $this->getRemainingPages()->count();
+	public function getExportProgressPercentage(){
+		$numberOfProcessedPages = $this->getExportTotalNumberOfPages()- $this->getExportRemainingPages()->count();
 		
-		return (100 / $this->row['total_number_of_pages']) * $numberOfProcessedPages;
+		return (100 / $this->getExportTotalNumberOfPages()) * $numberOfProcessedPages;
 	}
 	
 	/**
@@ -135,14 +135,23 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @return int
 	 */
-	public function getTotalNumberOfPages(){
-		if($this->row['total_number_of_pages'] == 0){
-			$this->row['total_number_of_pages'] = $this->getL10nConfigurationObject()->getExportPageIdCollection()->count();
+	public function getExportTotalNumberOfPages(){
+		if($this->getProgress('export_total_number_of_pages') == 0){
+			$this->setProgress('export_total_number_of_pages', $this->getL10nConfigurationObject()->getExportPageIdCollection()->count());
 		}
 		
-		return $this->row['total_number_of_pages'];
+		return $this->getProgress('export_total_number_of_pages');
 	}
 
+	/**
+	 * Method to set the number of pages that are relevant for this export
+	 *
+	 * @param int $numberOfPages
+	 */
+	protected function setExportTotalNumberOfPages($numberOfPages){
+		$this->setProgress('export_total_number_of_pages',$numberOfPages);
+	}
+	
 	/**
 	 * Method to remove a set of pageIds from the remaining pages
 	 *
@@ -152,7 +161,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		$remainingPagesLeft = array_diff($this->getRemainingPages()->getArrayCopy(),$pageIdCollection->getArrayCopy());
 
 		$this->getRemainingPages()->exchangeArray($remainingPagesLeft);
-		$this->row['remaining_pages'] = serialize($remainingPagesLeft);
+		$this->setProgress('export_remaining_pages',$remainingPagesLeft);
 	}
 
 	/**
@@ -169,8 +178,8 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @param boolan $boolean
 	 */
-	public function setIsCompletelyProcessed($boolean){
-		$this->row['is_compeletly_processed'] = $boolean;
+	public function setExportIsCompletelyProcessed($boolean){
+		$this->setProgress('export_is_completely_processed', $boolean);
 	}
 
 	/**
@@ -178,8 +187,8 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @return boolean
 	 */
-	public function getIsCompletelyProcessed(){
-		return $this->row['is_compeletly_processed'];
+	public function getExportIsCompletelyProcessed(){
+		return $this->getProgress('export_is_completely_processed');
 	}
 
 	/**
@@ -189,6 +198,25 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 */
 	public function getIsCompletelyUnprocessed(){
 		return ($this->countRemainingPages() == $this->getTotalNumberOfPages());
+	}
+	
+	protected function setProgress($key,$value){
+		if(!empty($this->row['progress'])){
+			$progress = unserialize($this->row['progress']);
+		}else{
+			$progress = array();
+		}
+		$progress[$key] = $value;
+		$this->row['progress'] = serialize($progress);
+	}
+	
+	protected function getProgress($key){
+		if(!empty($this->row['progress'])){
+			$progress = unserialize($this->row['progress']);
+		}else{
+			$progress = array();
+		}	
+		return $progress[$key];
 	}
 	
 	/**
