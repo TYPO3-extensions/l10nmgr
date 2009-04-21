@@ -10,7 +10,7 @@
 	</tr>
 	<tr>
 		<td></td>
-		<td><?= $exportData->getTotalNumberOfPages(); ?></td>
+		<td><?= $exportData->getExportTotalNumberOfPages(); ?></td>
 	</tr>
 	<tr>
 		<td></td>
