@@ -55,7 +55,7 @@ class tx_l10nmgr_view_export_startExport extends tx_mvc_view_backendModule {
 	 *
 	 * @param tx_l10nmgr_view_export_progress $progressView
 	 */
-	public function setProgressView(tx_l10nmgr_view_export_progress $progressView){
+	public function setProgressView(tx_mvc_view_widget_progress  $progressView){
 		$this->progressView = $progressView;
 	}
 	

@@ -25,8 +25,6 @@
 require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php';
 
-require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowState.php';
-require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php';
 
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php';
@@ -117,10 +115,6 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 			$res = new ArrayObject(unserialize($this->row['remaining_pages']));
 		}
 
-		if($res->count() == 0){
-			$this->setIsCompletlyProcessed(true);
-		}
-
 		return $res;
 	}
 	
@@ -142,7 +136,11 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 * @return int
 	 */
 	public function getTotalNumberOfPages(){
-		$this->row['total_number_of_pages'];
+		if($this->row['total_number_of_pages'] == 0){
+			$this->row['total_number_of_pages'] = $this->getL10nConfigurationObject()->getExportPageIdCollection()->count();
+		}
+		
+		return $this->row['total_number_of_pages'];
 	}
 
 	/**
@@ -153,19 +151,25 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	public function removePagesIdsFromRemainingPages($pageIdCollection){
 		$remainingPagesLeft = array_diff($this->getRemainingPages()->getArrayCopy(),$pageIdCollection->getArrayCopy());
 
-		if(empty($remainingPagesLeft)){
-			$this->setIsCompletelyProcessed(true);
-		}
 		$this->getRemainingPages()->exchangeArray($remainingPagesLeft);
 		$this->row['remaining_pages'] = serialize($remainingPagesLeft);
 	}
 
 	/**
+	 * Returns the number of remaining pages
+	 *
+	 * @return int
+	 */
+	public function countRemainingPages(){
+		return $this->getRemainingPages()->count();
+	}
+	
+	/**
 	 * Mehtod to mark the export as completely processed
 	 *
 	 * @param boolan $boolean
 	 */
-	protected function setIsCompletelyProcessed($boolean){
+	public function setIsCompletelyProcessed($boolean){
 		$this->row['is_compeletly_processed'] = $boolean;
 	}
 
@@ -178,6 +182,15 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		return $this->row['is_compeletly_processed'];
 	}
 
+	/**
+	 * This method can be used to determine, that the export has not been started
+	 *
+	 * @return boolean
+	 */
+	public function getIsCompletelyUnprocessed(){
+		return ($this->countRemainingPages() == $this->getTotalNumberOfPages());
+	}
+	
 	/**
 	 * Get collection of tx_l10nmgr_exportState objects
 	 *
