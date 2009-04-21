@@ -65,32 +65,32 @@ class tx_l10nmgr_models_exporter_exporter {
 	 * @var string
 	 */
 	protected $resultForChunk;
-	
-	
-	
+
+
+
 	/**
 	 * Constructor to create an instance of the exporter object
 	 *
 	 * @param tx_l10nmgr_models_exporter_exportData $exportData
 	 */
-	public function __construct(	tx_l10nmgr_models_exporter_exportData $exportData, 
+	public function __construct(	tx_l10nmgr_models_exporter_exportData $exportData,
 									$numberOfPagesPerChunk,
 									tx_l10nmgr_abstractExportView $exportView){
-										
+
 		$this->exportData 				= $exportData;
 		$this->numberOfPagesPerChunk  	= $numberOfPagesPerChunk;
 		$this->isChunkProcessed			= false;
 		$this->exportView				= $exportView;
 		$this->resultForChunk			= '';
-		
+
 	}
 
 	public function run(){
-		if(!$this->exportData->getIsCompletelyProcessed()){
+		if(!$this->exportData->getExportIsCompletelyProcessed()){
 			if($this->exportData->getIsCompletelyUnprocessed()){
 				$this->createWorksflowStateForCurrentExportData(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTING);
 			}
-			
+
 			$pagesForChunk 				= $this->getNextPagesChunk();
 
 			$l10ncfgObj					= $this->exportData->getL10nConfigurationObject();
@@ -98,17 +98,17 @@ class tx_l10nmgr_models_exporter_exporter {
 			$sourceLanguage				= $this->exportData->getSourceLanguageObject();
 
 			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-			$tranlateableInformation 	= $factory->create($l10ncfgObj,$pagesForChunk,$targetLanguage,$sourceLanguage);	
+			$tranlateableInformation 	= $factory->create($l10ncfgObj,$pagesForChunk,$targetLanguage,$sourceLanguage);
 
 			$this->exportView->setTranslateableInformation($tranlateableInformation);
-	
+
 			$this->resultForChunk 		= $this->exportView->render();
 			$this->removeProcessedChunkPages($pagesForChunk);
 			$this->setIsChunkProcessed(true);
-			
+
 			if($this->exportData->countRemainingPages() <= 0){
-				$this->exportData->setIsCompletelyProcessed(true);
-				$this->createWorksflowStateForCurrentExportData(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);				
+				$this->exportData->setExportIsCompletelyProcessed(true);
+				$this->createWorksflowStateForCurrentExportData(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);
 			}
 
 			return true;
@@ -129,9 +129,9 @@ class tx_l10nmgr_models_exporter_exporter {
 		$workflowState->setState($state);
 
 		$workflowRepository = new tx_l10nmgr_models_exporter_workflowStateRepository();
-		$workflowRepository->add($workflowState);		
+		$workflowRepository->add($workflowState);
 	}
-		
+
 	/**
 	 * @return boolean
 	 */
@@ -147,8 +147,8 @@ class tx_l10nmgr_models_exporter_exporter {
 	public function getResultForChunk(){
 		return $this->resultForChunk;
 	}
-	
-	
+
+
 	/**
 	 * @param boolean $isChunkProcessed
 	 */
@@ -177,7 +177,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	 * @return ArrayObject
 	 */
 	protected function getNextPagesChunk(){
-		$allPages 			= $this->exportData->getRemainingPages();
+		$allPages 			= $this->exportData->getExportRemainingPages();
 		$chunk				= new ArrayObject();
 
 		$allPagesIterator 	= $allPages->getIterator();

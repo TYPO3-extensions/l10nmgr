@@ -33,14 +33,14 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nAccum
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  * @author	Daniel Pötzinger <ext@aoemedia.de>
  * @author  Timo Schmidt <schmidt@aoemedia.de>
- * 
+ *
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abstractTCAObject {
 	protected $tree;
-	protected $exportPageIdCollection;	
-	
+	protected $exportPageIdCollection;
+
 	/**
 	 * Initialize the database object with
 	 * the table name of current object
@@ -69,7 +69,7 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	public function getId() {
 		return $this->getData('uid');
 	}
-	
+
 	/**
 	 * Returns the Flexformdiff stored in the configuration record
 	 *
@@ -78,16 +78,16 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	public function getFlexFormDiff(){
 		return $this->getData('flexformdiff');
 	}
-	
+
 	/**
 	 * Returns the configurationoption to include FCEs with defaultLanguage or not
 	 *
 	 * @return boolean
 	 */
 	public function getIncludeFCEWithDefaultLanguage(){
-		return $this->getData('incfcewithdefaultlanguage'); 
+		return $this->getData('incfcewithdefaultlanguage');
 	}
-	
+
 	/**
 	 * Returns a list of relavant tables for this export
 	 *
@@ -105,34 +105,34 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	public function getTableArray(){
 		return explode(',',$this->getTableList());
 	}
-	
+
 	/**
 	 * Each l10nconfig can define an include and exclude list. This method returns the excludeList as arrayM
 	 *
-	 * @return array 
+	 * @return array
 	 */
 	public function getExcludeArray(){
 		$excludeArray = array_flip(array_unique(t3lib_div::trimExplode(',',$this->getData('exclude'),1)));
-		
+
 		return $excludeArray;
 	}
-	
+
 	/**
 	 * Each l10nconfig can define an includeList this method returns the includeList as array.
 	 *
 	 * @return array
 	 */
 	public function getIncludeArray(){
-		$includeArray = array_flip(array_unique(t3lib_div::trimExplode(',',$this->getData('include'),1)));		
+		$includeArray = array_flip(array_unique(t3lib_div::trimExplode(',',$this->getData('include'),1)));
 		return $includeArray;
 	}
-	
+
 	/**
 	* Factory method to create AccumulatedInformations Object (e.g. build tree etc...) (Factorys should have all dependencies passed as parameter)
 	*
 	* @param int	$overrideStartingPoint		optional override startingpoint  TODO!
 	* @return tx_l10nmgr_l10nAccumulatedInformations
-	* @deprecated 
+	* @deprecated
 	**/
 	public function getL10nAccumulatedInformationsObjectForLanguage($sysLang,$overrideStartingPoint='') {
 
@@ -162,43 +162,43 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 
 		return $accumObj;
 	}
-	
+
 	/**
 	 * Returns a collection of pageids which need to be exported
 	 *
 	 * @return ArrayObject
 	 */
-	public function getExportPageIdCollection(){
-		
+	public function getExportPageIdCollection() {
+
 		$this->exportPageIdCollection = new ArrayObject();
 		$tree = $this->getExportTree();
-		
+
 		//$tree->tree contains pages of the tree
 		foreach($tree->tree as $treeitem){
 			$treerow = $treeitem['row'];
 			$this->exportPageIdCollection->append(intval($treerow['uid']));
 		}
-		
+
 		return $this->exportPageIdCollection;
 	}
-	
+
 
 
 	/**
 	 * An l10nConfiguration consists of a startingpoint an a depth. Internally the pagetree is used to determine
 	 * a set of pages wich should be exported.
-	 * 
-	 * @param void 
+	 *
+	 * @param void
 	 *
 	 */
 	protected function getExportTree(){
 		$this->buildExportTree();
 		return $this->tree;
 	}
-	
+
 	/**
 	 * Internal function to build the pagetree, if it has note been builded yet.
-	 * 
+	 *
 	 * @param void
 	 * @return void
 	 *
@@ -207,7 +207,7 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 		if(!isset($this->tree)){
 			//ensure tree is empty
 			unset($this->tree);
-			
+
 			$depth 	= $this->getData('depth');
 			$pid	= $this->getData('pid');
 
@@ -215,18 +215,18 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 			if(!isset($pid)){
 				throw new Exception('no export start page configured.');
 			}
-	
+
 			//@todo is t3lib_div::_GET('srcPID') needed anymore?
 			//$treeStartingPoint = intval($depth==-1 ? t3lib_div::_GET('srcPID') : $pid);
-			
+
 			$treeStartingPoint 	= intval($pid);
 			$treeStartingRecord = t3lib_BEfunc::getRecordWSOL('pages', $treeStartingPoint);
-	
+
 			// Initialize tree object:
 			$this->tree = t3lib_div::makeInstance('t3lib_pageTree');
 			$this->tree->init('AND '.$GLOBALS['BE_USER']->getPagePermsClause(1));
 			$this->tree->addField('l18n_cfg');
-	
+
 			// Creating top icon; the current page
 			// @todo why icon?
 			$HTML = t3lib_iconWorks::getIconImage('pages', $treeStartingRecord, $GLOBALS['BACK_PATH'],'align="top"');
@@ -234,13 +234,13 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 				'row' => $treeStartingRecord,
 				'HTML'=> $HTML
 			);
-	
+
 			// Create the tree from starting point:
 			if ($depth>0)	$this->tree->getTree($treeStartingPoint, $depth, '');
 		}
-	}	
-	
-	
+	}
+
+
 	/**
 	 * Method to determine if all exports from the configuration are allready finished or not
 	 *
@@ -249,16 +249,16 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	public function hasIncompleteExports(){
 		//@todo determine all exports exports that are currently not finished
 		return false;
-		
+
 	}
-	
+
 	/**
-	 * 
 	 *
-	 * @deprecated 
+	 *
+	 * @deprecated
 	 */
 	public function updateFlexFormDiff($sysLang,$flexFormDiffArray)	{
-	
+
 			// Updating diff-data:
 			// First, unserialize/initialize:
 		$flexFormDiffForAllLanguages = unserialize($this->getData('flexformdiff'));
@@ -273,7 +273,7 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 		$this->row['flexformdiff'] = serialize($flexFormDiffForAllLanguages);
 		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg','uid='.intval($this->getData('uid')),array('flexformdiff' => $this->getData('flexformdiff')));
 	}
-	
+
 	/**
 	 * Returns the static language object
 	 *
@@ -284,7 +284,7 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 			if (empty($this->row['sourceLangStaticObject'])) {
 				$languageRepository = new tx_l10nmgr_models_language_staticLanguageRepository();
 				$this->row['sourceLangStaticObject'] = $languageRepository->findById($this->getData('sourceLangStaticId'));
-				
+
 				if (!$this->row['sourceLangStaticObject'] instanceof tx_l10nmgr_models_language_staticLanguage) {
 					throw new Exception('Object is not an instance of "tx_l10nmgr_models_language_staticLanguage"');
 				}
