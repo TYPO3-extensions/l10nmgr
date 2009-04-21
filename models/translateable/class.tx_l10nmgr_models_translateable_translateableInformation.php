@@ -49,11 +49,11 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 	protected $pageGroups;
 
 	/**
-	 * The forced previewLanguage of the pageGroup
+	 * The forced sourceLanguage of the pageGroup
 	 *
 	 * @var tx_l10nmgr_models_language_Language
 	 */
-	protected $previewLanguage;
+	protected $sourceLanguage;
 
 	/**
 	 * The targetLanguage of the pagegroup
@@ -91,8 +91,8 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 	/**
 	 * @return tx_l10nmgr_models_language_Language
 	 */
-	public function getPreviewLanguage() {
-		return $this->previewLanguage;
+	public function getSourceLanguage() {
+		return $this->sourceLanguage;
 	}
 	
 	/**
@@ -103,10 +103,23 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 	}
 	
 	/**
-	 * @param tx_l10nmgr_models_language_Language $previewLanguage
+	 * @param tx_l10nmgr_models_language_Language $sourceLanguage
 	 */
-	public function setPreviewLanguage($previewLanguage) {
-		$this->previewLanguage = $previewLanguage;
+	public function setSourceLanguage($sourceLanguage) {
+		$this->sourceLanguage = $sourceLanguage;
+	}
+	
+	/**
+	 * Returns the id of the configured source language
+	 *
+	 * @return int
+	 */
+	public function getSourceLanguageId(){
+		if($this->getSourceLanguage() instanceof tx_l10nmgr_models_language_language ){
+			return $this->getSourceLanguage()->getUid();
+		}else{
+			return 0;
+		}
 	}
 	
 	/**

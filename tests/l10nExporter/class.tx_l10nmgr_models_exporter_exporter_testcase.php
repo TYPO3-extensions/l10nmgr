@@ -109,27 +109,28 @@ class tx_l10nmgr_models_exporter_exporter_testcase extends tx_phpunit_database_t
 	}
 
 	public function test_exporterTerminatesAfterExpectedNumberOfRuns(){
-		try{
 			$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureExportConfiguration.xml');
 			$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureExportData.xml');
 			$this->importDataSet(dirname(__FILE__). '/fixtures/exporterTerminatesAfterExpectedNumberOfRuns.xml');
 
 			$exportData = $this->getFixtureExportData();
-
-			$exporter 	= new tx_l10nmgr_models_exporter_exporter($exportData,1);
+			
+			$view 		= new tx_l10nmgr_CATXMLView();
+			$view->setL10NConfiguration($exportData->getL10nConfigurationObject());
+			
+			$exporter 	= new tx_l10nmgr_models_exporter_exporter($exportData,1,$view);
+			
 			$runCount = 0;
 			while($exporter->run()){
 				$exportData = $exporter->getExportData();
-				$exporter 	= new tx_l10nmgr_models_exporter_exporter($exportData,1);
+				$exporter 	= new tx_l10nmgr_models_exporter_exporter($exportData,1,$view);
 				$runCount++;
 			}
-		}catch(Exception $e) {
-
-		}
 
 		$this->assertEquals($runCount,3,'unexpected number of run counts in export');
 	}
 
+	
 	/**
 	 * Method to check that the fixtureExportData can be loaded
 	 *

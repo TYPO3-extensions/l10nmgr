@@ -88,8 +88,13 @@ class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces
 		$this->page_row = $row;
 	}
 	
+
 	public function getPageId(){
 		return $this->page_row['uid'];
+	}
+	
+	public function getPageTitle(){
+		return $this->page_row['title'];
 	}
 	
 	

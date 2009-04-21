@@ -240,6 +240,18 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 		}
 	}	
 	
+	
+	/**
+	 * Method to determine if all exports from the configuration are allready finished or not
+	 *
+	 * @return boolean
+	 */
+	public function hasIncompleteExports(){
+		//@todo determine all exports exports that are currently not finished
+		return false;
+		
+	}
+	
 	/**
 	 * 
 	 *

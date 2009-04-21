@@ -313,15 +313,56 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		
 		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage );		
 
-		echo "Debug".__FILE__." ".__LINE__;
-		print('<pre>');
-		print_r($translateableInformations);					
-		print('</pre>');
-
+		/**
+		 * The FCE on the page is configured with langChildren = 0 AND langDisable = 0. This means, that there
+		 * is a sepperate translation and the translation is indepenedent from the original. Therefore the
+		 * translateable Information should only contain a page and a contentelement. The contentelement should
+		 * not have any translateable field.
+		 */
+		
+		$pageGroups 			= $translateableInformations->getPageGroups ();	
+		$translateableElements 	= $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
+		$ttContentElement 		= $translateableElements ->offsetGet ( 1 );
+		
+		$this->assertEquals($ttContentElement->getTranslateableFields()->count(), 0,'Unexpected number of translateable fields');
 	}
 	
 	public function test_canGetDiffToDefaultFromDatabaseTranslatedFCE(){
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetDiffToDefaultFromDatabaseTranslatedFCE.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
+
+		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
+		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
+		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
+
+		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 		
+		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage );
+
+		$pageGroups = $translateableInformations->getPageGroups ();	
+			
+		$translateableElements 		= $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
+		$contentElement				= $translateableElements->offsetGet(1);
+		
+		$ContentElementHeaderField	= $contentElement->getTranslateableFields()->offsetGet(0);
+		$FCEHeaderField				= $contentElement->getTranslateableFields()->offsetGet(1);
+		$FCEContentField			= $contentElement->getTranslateableFields()->offsetGet(2);
+		
+		$this->assertEquals('Original', $ContentElementHeaderField->getDefaultValue());	
+		$this->assertEquals('Original', $ContentElementHeaderField->getTranslationValue());	
+		$this->assertFalse($ContentElementHeaderField->isChanged());
+		
+		$this->assertEquals('Header Changed',$FCEHeaderField->getDefaultValue());
+		$this->assertEquals('Header Translation',$FCEHeaderField->getTranslationValue());
+		$this->assertEquals('Header',$FCEHeaderField->getDiffDefaultValue());
+		$this->assertTrue($FCEHeaderField->isChanged());
+		
+		$this->assertEquals('Content Changed',$FCEContentField->getDefaultValue());
+		$this->assertEquals('Content Translation',$FCEContentField->getTranslationValue());
+		$this->assertEquals('Content',$FCEContentField->getDiffDefaultValue());
+		$this->assertTrue($FCEContentField->isChanged());
 	}
 	
 	/**

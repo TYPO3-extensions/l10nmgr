@@ -28,8 +28,23 @@ if (TYPO3_MODE=='BE')   {
         //t3lib_extMgm::addModule('txl10nmgrM3', 'txl10nmgrM4', 'bottom', $extPath.'translate/');
         t3lib_extMgm::addModule('txl10nmgrM3', 'txl10nmgrM2', 'bottom', $extPath.'mod2/');
 
-        //t3lib_extMgm::addModule('web','txdirectmailM2','',t3lib_extMgm::extPath($_EXTKEY).'mod1/');
+        //add tsconfig for the export mvc controller
+	t3lib_extMgm::addPageTSConfig('
+plugin.tx_l10nmgr_controller_export.configuration {
+	viewHelper.disable {
+		linkCreator = 0
+		label = 0
+		fieldRenderer = 1
+		tcaFieldRenderer = 1
+		formElementRenderer = 0
+	}
+}'
+	);
+        
+
 }
+
+
 
 t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_cfg");
 t3lib_extMgm::addLLrefForTCAdescr('tx_l10nmgr_cfg','EXT:l10nmgr/locallang_csh_l10nmgr.php');

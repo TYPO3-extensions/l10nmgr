@@ -84,6 +84,9 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	translation_lang blob NOT NULL,
 	tablelist varchar(80) DEFAULT '' NOT NULL,
 	exportType blob NOT NULL,
+	is_compeletly_processed boolean DEFAULT '0' NOT NULL,
+	remaining_pages blob NOT NULL,
+	total_number_of_pages int(11) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),
 );

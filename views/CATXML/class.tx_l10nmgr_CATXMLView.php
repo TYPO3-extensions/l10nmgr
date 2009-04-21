@@ -47,11 +47,6 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 */
 	protected $internalMessages = array();
 
-	/**
-	 * @var	integer		$forcedSourceLanguage		Overwrite the default language uid with the desired language to export
-	 */
-	protected $forcedSourceLanguage = false;
-
 	protected $exportType = '1';
 
 	/**
@@ -220,9 +215,13 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	
 	
 
-	function getFilename() {
-		$filename = $this->getLocalFilename();
-		return $filename;
+	/**
+	 * Implementation of abstract method to deliver a filename prefix
+	 *
+	 * @return string
+	 */
+	public function getFilenamePrefix(){
+		return 'catxml_export';
 	}
 
 	/**
@@ -242,20 +241,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		return implode("\n\t",$this->internalMessages);
 	}
 	
-	protected function getPageGroupXML(){
-		return $this->pageGroupXML;
-	}
 
-	/**
-	* Force a new source language to export the content to translate
-	*
-	* @param	integer		$id
-	* @access	public
-	* @return	void
-	*/
-	function setForcedSourceLanguage($id) {
-		$this->forcedSourceLanguage = $id;
-	}
 	
 	/**
 	 * Internal method to build the pageGroupXML structure.
@@ -264,12 +250,12 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 * @return void
 	 *
 	 */
-	protected function buildPageGroupXML(){
+	protected function buildPageGroup(){
 		global $LANG;
 
 		foreach($this->getTranslateableInformation()->getPageGroups() as $pageGroup){
 			$pageStartTag = sprintf('<pageGrp id="%d">',$pageGroup->getPageId());
-			$this->pageGroupXML .= $pageStartTag;
+			$xml .= $pageStartTag;
 			
 			foreach($pageGroup->getTranslateableElements() as $translateableElement){
 				 foreach($translateableElement->getTranslateableFields() as $translateableField){
@@ -284,7 +270,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 							$transformationAttribute = $needsTrafo ? 'transformations="1"' : '';
 							
 							$dataTag 	= sprintf('<data table="%s" elementUid="%d" key="%s" %s>%s</data>',$table,$uid,$key,$transformationAttribute,$data);
-							$this->pageGroupXML .= $dataTag;
+							$xml .= $dataTag;
 							
 						}catch(Exception $e){
 							$this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'),$uid.'/'.$table.'/'.$key);
@@ -294,8 +280,10 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 				 } 
 			 } 
 			$pageEndTag = '</pageGrp>';
-			 $this->pageGroupXML .= $pageEndTag;
+			 $xml .= $pageEndTag;
 		}
+		
+		$this->setPageGroup($xml);
 	}
 	
 	/**
@@ -337,9 +325,6 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		return $result;
 	}
 	
-	public function preRenderProcessing(){
-		$this->buildPageGroupXML();
-	}
 }
 
 
