@@ -31,7 +31,11 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportDataRepository.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFile.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFileRepository.php');
+
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exporter.php');
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowState.php';
+
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php';
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'interfaces/interface.tx_l10nmgr_interfaces_wordsCountable.php');
 		
@@ -43,7 +47,9 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_showExportForm.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_progress.php');
+
+require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progress.php');
+require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progressAjax.php');
 
 ###
 # OLD VIEWS
@@ -157,12 +163,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		##
 		# HANDLE LANGUAGES
 		##
-		$languageRespository 		= new  tx_l10nmgr_models_language_languageRepository();
-	
-		if ($sourceLanguageId > 0) {			
-			$sourceLanguage 	= $languageRespository->findById($sourceLanguageId);
-		}
-						
+		$languageRespository 	= new  tx_l10nmgr_models_language_languageRepository();			
 		$targetLanguage 		= $languageRespository->findById($this->arguments['targetLanguageId']);	
 	
 		
@@ -181,12 +182,21 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		$exportDataRepository->add($exportData);
 		$this->arguments['exportDataId'] = $exportData->getUid();
 		
-		$progressView = new tx_l10nmgr_view_export_progress();
+		
+		$linkCreator	= $this->getViewHelper('tx_mvc_viewHelper_linkCreator');
+		$ajaxLink 		= $linkCreator->getAjaxActionLink ( 'ajaxDoExportRun' );
+		$progressUrl 	= $ajaxLink->useOverruledParameters()->makeUrl ();
+			
+			
+		$progressView = new tx_mvc_view_widget_progress();
 		$this->initializeView($progressView );
 		$progressView ->setProgress(0);
-		
+		$progressView->setProgressUrl($progressUrl);
+		$progressView->setAjaxEnabled(true);
+				
 		$this->view->setExportData($exportData);
 		$this->view->setProgressView($progressView);
+
 		
 	}
 	
@@ -242,6 +252,8 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 	}
 	
 	
+
+	
 	/**
 	 * This method is used to do an export run via ajax. It internally routes
 	 * the request to the doExportRunAction
@@ -251,11 +263,10 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 	public function ajaxDoExportRunAction(){
 		$exportData = $this->routeToAction('performExportRun');
 		
-		$progressView = new tx_l10nmgr_view_export_progress();
+		$progressView = new tx_mvc_view_widget_progressAjax();
 		$this->initializeView($progressView );
 		$progressView ->setProgress($exportData->getProgress());
 		$progressView->setProgressLabel($exportData->getProgress());
-		$progressView->useJSON();
 		
 		echo $progressView->render();
 		exit();

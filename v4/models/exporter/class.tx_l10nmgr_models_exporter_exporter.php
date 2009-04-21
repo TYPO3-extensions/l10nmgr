@@ -25,6 +25,10 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowState.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php';
+
+
 /**
  * The exporter is responsible to export a set of pages as xml files
  *
@@ -78,11 +82,15 @@ class tx_l10nmgr_models_exporter_exporter {
 		$this->isChunkProcessed			= false;
 		$this->exportView				= $exportView;
 		$this->resultForChunk			= '';
+		
 	}
 
 	public function run(){
-
 		if(!$this->exportData->getIsCompletelyProcessed()){
+			if($this->exportData->getIsCompletelyUnprocessed()){
+				$this->createWorksflowStateForCurrentExportData(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTING);
+			}
+			
 			$pagesForChunk 				= $this->getNextPagesChunk();
 
 			$l10ncfgObj					= $this->exportData->getL10nConfigurationObject();
@@ -95,10 +103,13 @@ class tx_l10nmgr_models_exporter_exporter {
 			$this->exportView->setTranslateableInformation($tranlateableInformation);
 	
 			$this->resultForChunk 		= $this->exportView->render();
-
-			
 			$this->removeProcessedChunkPages($pagesForChunk);
 			$this->setIsChunkProcessed(true);
+			
+			if($this->exportData->countRemainingPages() <= 0){
+				$this->exportData->setIsCompletelyProcessed(true);
+				$this->createWorksflowStateForCurrentExportData(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);				
+			}
 
 			return true;
 		}else{
@@ -106,6 +117,21 @@ class tx_l10nmgr_models_exporter_exporter {
 		}
 	}
 
+
+	/**
+	 * This method is used to create a workflow state for the current export
+	 *
+	 * @param string $state
+	 */
+	protected function createWorksflowStateForCurrentExportData($state){
+		$workflowState = new tx_l10nmgr_models_exporter_workflowState();
+		$workflowState->setExportdata_id($this->exportData->getUid());
+		$workflowState->setState($state);
+
+		$workflowRepository = new tx_l10nmgr_models_exporter_workflowStateRepository();
+		$workflowRepository->add($workflowState);		
+	}
+		
 	/**
 	 * @return boolean
 	 */

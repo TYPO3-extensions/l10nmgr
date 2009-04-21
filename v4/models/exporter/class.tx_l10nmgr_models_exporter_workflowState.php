@@ -23,7 +23,7 @@
  ***************************************************************/
 
 
-class tx_l10nmgr_models_exporter_workflowState extends tx_mvc_ddd_abstractDbObject {
+class tx_l10nmgr_models_exporter_workflowState extends tx_mvc_ddd_typo3_abstractTCAObject {
 
 	/**
 	 * Constants representing the states
