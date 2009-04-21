@@ -142,8 +142,21 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
 			$this->routeToAction('showExportsAction');
 		}
-				
 	}
+	
+	/**
+	 * This method is used to show a list of existing exports
+	 *
+	 */
+	public function showExportsAction(){
+		$configurationId		= $this->arguments['configurationId'];
+
+		$exportDataRepository	= new tx_l10nmgr_models_exporter_workflowStateRepository();
+	
+				
+		
+	}
+	
 	
 	/**
 	 * This method is used to start an export. It creates an exportData object
@@ -195,9 +208,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		$progressView->setAjaxEnabled(true);
 				
 		$this->view->setExportData($exportData);
-		$this->view->setProgressView($progressView);
-
-		
+		$this->view->setProgressView($progressView);		
 	}
 	
 	/**
