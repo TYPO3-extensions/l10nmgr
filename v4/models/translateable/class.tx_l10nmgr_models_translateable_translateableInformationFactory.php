@@ -54,10 +54,13 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	}
 	
 	/**
-	 * 
+	 * This method is used, to create a translateableInformation object structure from a
+	 * configuration, a set of pageIds and a target and a previewLanguage.
+	 * Internally it iterates the pageIdCollection and fetches the information for a translation using the 
+	 * tx_l10nmgr_tools class.
 	 *
 	 * @param tx_l10nmgr_models_configuration_configuration $l10ncfg
-	 * @param ArrayObject $pageIdCollection
+	 * @param ArrayObject $pageIdCollection A set of pageIds. This set of pageIds is used, to create a translateable Information of the contentelments in these pages.
 	 * @param tx_l10nmgr_models_language_Language $targetLanguage
 	 * @param tx_l10nmgr_models_language_Language $previewLanguage
 	 * @todo we need to handle the include index
@@ -65,16 +68,16 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	public function create(	tx_l10nmgr_models_configuration_configuration $l10ncfg, 
 							ArrayObject $pageIdCollection, 
 							tx_l10nmgr_models_language_Language $targetLanguage, 
-							tx_l10nmgr_models_language_Language $previewLanguage = NULL){
+							tx_l10nmgr_models_language_Language $sourceLanguage = NULL){
 
 		$translateableInformation 	= new tx_l10nmgr_models_translateable_translateableInformation();
-		$translateableInformation->setPreviewLanguage($previewLanguage);
+		$translateableInformation->setSourceLanguage($sourceLanguage);
 		$translateableInformation->setTargetLanguage($targetLanguage);
 		$translateableInformation->setSiteUrl(t3lib_div::getIndpEnv("TYPO3_SITE_URL"));
 		$translateableInformation->setWorkspaceId($GLOBALS['BE_USER']->workspace);
 		
 		
-		$t8Tools					= $this->getInitializedt8Tools($l10ncfg,$previewLanguage);
+		$t8Tools					= $this->getInitializedt8Tools($l10ncfg,$sourceLanguage);
 		$flexFormDiff				= $this->getFlexFormDiffForTargetLanguage($l10ncfg,$targetLanguage);
 		
 		//we only need to process tables which are in the TCA AND the configuration
@@ -200,8 +203,14 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 		if(is_array($translationFields)){
 			foreach($translationFields as $key => $translationField){
 				
+				//@todo refactor determination of fieldName
+				list(,$uidString,$fieldName) = explode(':',$key);
+				list($uidValue) = explode('/',$uidString);
+				
 				$translateableField = new tx_l10nmgr_models_translateable_translateableField();
 				$translateableField->setIdentityKey($key);
+				$translateableField->setFieldName($fieldName);
+				$translateableField->setUidValue($uidValue);
 				$translateableField->setDefaultValue($translationField['defaultValue']);
 				$translateableField->setTranslationValue($translationField['translationValue']);
 				$translateableField->setDiffDefaultValue($translationField['diffDefaultValue']);
@@ -226,7 +235,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 * @param tx_l10nmgr_models_language_Language $previewLanguage
 	 * @return tx_l10nmgr_tools
 	 */
-	protected function getInitializedt8Tools($l10ncfg,$previewLanguage = NULL){
+	protected function getInitializedt8Tools($l10ncfg,$sourceLanguage = NULL){
 		// Init:
 		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
 		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
@@ -234,15 +243,15 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 			$t8Tools->includeFceWithDefaultLanguage=TRUE;
 		}
 		
-		if($previewLanguage instanceof tx_l10nmgr_models_language_Language ){
-			$previewLanguageIds = $previewLanguage->getUid();
+		if($sourceLanguage instanceof tx_l10nmgr_models_language_Language ){
+			$sourceLanguageIds = $sourceLanguage->getUid();
 		}
 		
-		if(!$previewLanguageIds){
-			$previewLanguageIds = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
+		if(!$sourceLanguageIds){
+			$sourceLanguageIds = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
 		}
-		if($previewLanguage)	{
-			$t8Tools->previewLanguages = array($previewLanguageIds);
+		if($sourceLanguage){
+			$t8Tools->previewLanguages = array($sourceLanguageIds);
 		}
 				
 		return $t8Tools;

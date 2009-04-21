@@ -193,8 +193,13 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 	}
 	
 	
+	protected function buildPageGroup(){
+		
+	}
 	
-	
+	protected function getFilenamePrefix(){
+		return '';
+	}
 }
 
 

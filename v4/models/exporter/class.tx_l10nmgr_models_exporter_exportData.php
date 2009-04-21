@@ -112,6 +112,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		if(empty($this->row['remaining_pages'])){
 			//if there are no remaining pages configured, all pages of the configuration are remaining pages
 			$res = $this->getL10nConfigurationObject()->getExportPageIdCollection();
+			$this->row['total_number_of_pages'] = $res->count();
 		}else{
 			$res = new ArrayObject(unserialize($this->row['remaining_pages']));
 		}
@@ -121,6 +122,27 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		}
 
 		return $res;
+	}
+	
+
+	/**
+	 * Returns the procress of this export
+	 *
+	 * @return float
+	 */
+	public function getProgress(){
+		$numberOfProcessedPages = $this->row['total_number_of_pages'] - $this->getRemainingPages()->count();
+		
+		return (100 / $this->row['total_number_of_pages']) * $numberOfProcessedPages;
+	}
+	
+	/**
+	 * Returns the total number of pages which will be exported in this export run.
+	 *
+	 * @return int
+	 */
+	public function getTotalNumberOfPages(){
+		$this->row['total_number_of_pages'];
 	}
 
 	/**

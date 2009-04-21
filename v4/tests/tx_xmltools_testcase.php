@@ -80,7 +80,8 @@ class tx_xmltools_testcase extends tx_phpunit_testcase {
 		$fixtureRTE.='test';
 
 		//do the test:
-		$transformed=$this->XMLtools->XML2RTE($this->XMLtools->RTE2XML($fixtureRTE));
+		$transformed=$this->XMLtools->XML2RTE($this->XMLtools->RTE2XML($fixtureRTE));		
+		
 		$this->assertEquals($transformed, $fixtureRTE, "transformationresult:".$transformed." is not equal to source.");
 	}
 
@@ -96,7 +97,10 @@ class tx_xmltools_testcase extends tx_phpunit_testcase {
 
 		//do the test:
 		$transformed=$this->XMLtools->XML2RTE($this->XMLtools->RTE2XML($fixtureRTE));
-
+	
+		echo var_dump($fixtureRTE);
+		echo var_dump($transformed);
+		
 		$this->assertEquals($transformed, $fixtureRTE, "transformationresult:".$transformed." is not equal to source.");
 	}
 

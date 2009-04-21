@@ -90,6 +90,49 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	protected $isRTE;
 
 	/**
+	 * Holds the fieldname of the field
+	 *
+	 * @var string
+	 */
+	protected $fieldName;
+	
+	/**
+	 * Holds the uid value can be an int OR NEW
+	 *
+	 * @var mixed
+	 */
+	protected $uidValue;
+	
+	/**
+	 * @return mixed
+	 */
+	public function getUidValue() {
+		return $this->uidValue;
+	}
+	
+	/**
+	 * @param mixed $uidValue
+	 */
+	public function setUidValue($uidValue) {
+		$this->uidValue = $uidValue;
+	}
+
+	
+	/**
+	 * @return string
+	 */
+	public function getFieldName() {
+		return $this->fieldName;
+	}
+	
+	/**
+	 * @param string $fieldName
+	 */
+	public function setFieldName($fieldName) {
+		$this->fieldName = $fieldName;
+	}
+
+	/**
 	 * @param string $identity_key
 	 */
 	public function setIdentityKey($identity_key) {
@@ -157,10 +200,30 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	}
 	
 	/**
+	 * Returns an internal configured message for this translateable Field
+	 *
+	 * @return string
+	 */
+	public function getMessage(){
+		return $this->message;
+	}
+	
+	/**
 	 * @param array $previewLanguage_values
 	 */
 	public function setPreviewLanguageValues($previewLanguage_values) {
 		$this->previewLanguage_values = $previewLanguage_values;
+	}
+	
+
+	/**
+	 * Returns a value for a preview language for a given language id
+	 *
+	 * @param int $langId
+	 * @return string
+	 */
+	public function getPreviewLanguageValueByLanguageId($langId){
+		return $this->previewLanguage_values[$langId];
 	}
 	
 	/**
@@ -224,7 +287,7 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 */
 	protected function determinFieldContentByLanguage(tx_l10nmgr_models_language_language $forcedSourceLanguage = null){
 		if ($forcedSourceLanguage) {
-			$dataForTranslation =	$this->previewLanguage_values[$forcedSourceLanguage->getUid()];
+			$dataForTranslation =	$this->getPreviewLanguageValueByLanguageId($forcedSourceLanguage->getUid());
 		}
 		else {
 			$dataForTranslation	=	$this->default_value;

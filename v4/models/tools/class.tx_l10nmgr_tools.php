@@ -88,7 +88,10 @@ class tx_l10nmgr_tools {
 	var $flexFormDiff = array();		// FlexForm diff data
 	var $sys_languages = array();		// System languages records, loaded by constructor
 	var $indexFilterObjects = array();
+	
+	var $_callBackParams_translationDiffsourceXMLArray;
 
+	protected $sysLang;
 
 	/**
 	 * Constructor
@@ -98,7 +101,7 @@ class tx_l10nmgr_tools {
 	 */
 	function tx_l10nmgr_tools()	{
 		$this->t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
-
+		$this->sysLang = NULL;
 			// Find all system languages:
 		$this->sys_languages = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'*',
@@ -210,7 +213,9 @@ class tx_l10nmgr_tools {
 	 */
 	function translationDetails($table,$row,$sysLang,$flexFormDiff=array())	{
 		global $TCA;
-
+			// Store language:
+		$this->sysLang = $sysLang;
+		
 			// Initialize:
 		$tInfo = $this->t8Tools->translationInfo($table,$row['uid'],$sysLang);		
 		$this->detailsOutput = array();
@@ -242,6 +247,7 @@ class tx_l10nmgr_tools {
 								$this->detailsOutput['log'][] = 'Mode: translate existing record';
 								$translationUID = $tInfo['translations'][$sysLang]['uid'];
 								$translationRecord = t3lib_BEfunc::getRecordWSOL($tInfo['translation_table'], $tInfo['translations'][$sysLang]['uid']);
+						
 							} else {
 									// Will also suggest to translate a default language record which are in a container block with Inheritance or Separate mode. This might not be something people wish, but there is no way we can prevent it because its a deprecated localization paradigm to use container blocks with localization. The way out might be setting the langauge to "All" for such elements.
 								$this->detailsOutput['log'][] = 'Mode: translate to new record';
@@ -263,24 +269,41 @@ class tx_l10nmgr_tools {
 									$prevLangRec[$prevSysUid] = t3lib_BEfunc::getRecordWSOL($prevLangInfo['translation_table'],$prevLangInfo['translations'][$prevSysUid]['uid']);
 								}
 							}
-			
+		
 							foreach($TCA[$tInfo['translation_table']]['columns'] as $field => $cfg)	{
 								if ($TCA[$tInfo['translation_table']]['ctrl']['languageField']!==$field
 									&& $TCA[$tInfo['translation_table']]['ctrl']['transOrigPointerField']!==$field
 									&& $TCA[$tInfo['translation_table']]['ctrl']['transOrigDiffSourceField']!==$field)	{
-										
+								
 										$key=$tInfo['translation_table'].':'.t3lib_BEfunc::wsMapId($tInfo['translation_table'],$translationUID).':'.$field;
 										if ($cfg['config']['type']=='flex') {											
 											$dataStructArray=$this->_getFlexFormMetaDataForContentElement($table,$row);
 											if ($dataStructArray['meta']['langDisable'] && $dataStructArray['meta']['langDatabaseOverlay']==1) {											
+
 												// Create and call iterator object:
 												$flexObj = t3lib_div::makeInstance('t3lib_flexformtools');
 												$this->_callBackParams_keyForTranslationDetails=$key;
 												$this->_callBackParams_translationXMLArray=t3lib_div::xml2array($translationRecord[$field]);
+												
+												/**
+												 * To get the correct value of the orignal, which was the base for the translation,
+												 * we need to get the value from the flexform of the diffsource, therefore we need to 
+												 * fetch it from the translation record.
+												 * 
+												 * It is used in the callback (translationDetails_flexFormCallBackForOverlay) to determine the diffToDefault
+												 * Value
+												 */
+												if(is_array($translationRecord)){
+													$diffsource = 		 unserialize($translationRecord['l18n_diffsource']);
+													$this->_callBackParams_translationDiffsourceXMLArray = t3lib_div::xml2array($diffsource[$field]);
+												}
+
+												
 												foreach($this->previewLanguages as $prevSysUid)	{
 													$this->_callBackParams_previewLanguageXMLArrays[$prevSysUid] = t3lib_div::xml2array($prevLangRec[$prevSysUid][$field]);
 												}	
 												$this->_callBackParams_currentRow=$row;
+												
 												$flexObj->traverseFlexFormXMLData($table,$field,$row,$this,'translationDetails_flexFormCallBackForOverlay');
 											}
 											$this->detailsOutput['log'][] = 'Mode: useOverlay looking for flexform fields!';
@@ -473,11 +496,14 @@ class tx_l10nmgr_tools {
 	 * @return	void
 	 */
 	function translationDetails_flexFormCallBackForOverlay($dsArr, $dataValue, $PA, $structurePath, &$pObj)	{
-		
+	
 		//echo $dataValue.'<hr>';
 		$translValue=$pObj->getArrayValueByPath($structurePath, $this->_callBackParams_translationXMLArray);
-		//TODO:
-			$diffDefaultValue=$dataValue;
+
+		/**
+		 * 
+		 */
+		$diffDefaultValue=$pObj->getArrayValueByPath($structurePath, $this->_callBackParams_translationDiffsourceXMLArray);	
 		
 		foreach($this->previewLanguages as $prevSysUid)	{			 
 			$previewLanguageValues[$prevSysUid] = $pObj->getArrayValueByPath($structurePath, $this->_callBackParams_previewLanguageXMLArrays[$prevSysUid]);			
@@ -488,7 +514,6 @@ class tx_l10nmgr_tools {
 		$this->translationDetails_addField($key, $dsArr['TCEforms'], $dataValue, $translValue, $diffDefaultValue, $previewLanguageValues,$this->_callBackParams_currentRow);		
 			
 	}
-	
 
 	/**
 	 * Add field to detailsOutput array. First, a lot of checks are done...

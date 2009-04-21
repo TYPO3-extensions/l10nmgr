@@ -30,7 +30,7 @@ require_once (t3lib_extMgm::extPath ( "mvc" ) . 'mvc/view/class.tx_mvc_view_phpT
 /**
 * abstrakt Base class for rendering the export or htmllist of a l10ncfg
 **/
-class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
+abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 
 	/**
 	 * @var	tx_l10nmgr_models_configuration_configuration		$l10ncfgObj		The language configuration object
@@ -52,10 +52,31 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	protected $sysLang;
 
 	
+	public function getPageGroup(){
+		return $this->pageGroup;
+	}
+	
+	protected function setPageGroup($pageGroup){
+		$this->pageGroup = $pageGroup;
+	}
+	
+	public function preRenderProcessing(){
+		$this->buildPageGroup();
+	}
+		
+	abstract protected function buildPageGroup();
+	
+	
+	/**
+	 * @var	integer		$forcedSourceLanguage		Overwrite the default language uid with the desired language to export
+	 */
+	protected $forcedSourceLanguage = false;
+	
 	/**
 	 * Method to set the Configuration of this localisation
 	 *
 	 * @param  tx_l10nmgr_models_configuration_configuration $l10ncfg
+	 * @deprecated 
 	 */
 	public function setL10NConfiguration($l10ncfg){
 		$this->l10ncfgObj	= $l10ncfg;
@@ -101,8 +122,19 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 		}
 	}
 	
+	/**
+	* Force a new source language to export the content to translate
+	*
+	* @param	integer		$id
+	* @access	public
+	* @return	void
+	*/
+	public function setForcedSourceLanguage($id) {
+		$this->forcedSourceLanguage = $id;
+	}
+	
 	function getExportType() {
-		return $exportType;
+		return $this->exportType;
 	}
 
 	public function setModeNoHidden() {
@@ -120,8 +152,9 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 
 	/**
 	 * create a filename to save the File
+	 * @deprecated 
 	 */
-	function getLocalFilename(){
+/*	function getLocalFilename(){
 		$sourceLang = '';
 		$targetLang = '';
 
@@ -160,6 +193,15 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 		// Setting filename:
 		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
 		return $filename;
+	}*/
+	
+	abstract protected function getFilenamePrefix();
+	
+	public function getFilename(){
+		$prefix = $this->getFilenamePrefix();
+		$targetLanguageId = $this->getTranslateableInformation()->getTargetLanguage()->getUid();
+		
+		return $prefix.'_'.$targetLanguageId.'_'.date('dmy-Hi').'.xml';
 	}
 
 	/**
@@ -195,6 +237,7 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 
 	/**
 	 * checks if an export exists
+	 * @deprecated 
 	 *
 	 */
 	function checkExports(){
@@ -220,6 +263,7 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	/**
 	 * Fetches saved exports based on configuration, export format and target language.
 	 *
+	 * @deprecated 
 	 * @author Andreas Otto <andreas.otto@dkd.de>
 	 * @return array Information about exports.
 	 */
@@ -237,7 +281,8 @@ class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 
 	/**
 	 * Renders a list of saved exports as HTML table.
-	 *
+	 * 
+	 * @deprecated 
 	 * @return string HTML table
 	 */
 	function renderExports() {
