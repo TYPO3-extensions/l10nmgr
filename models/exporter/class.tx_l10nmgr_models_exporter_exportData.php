@@ -96,7 +96,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @param tx_l10nmgr_models_configuration_configuration $configuration
 	 */
-	public function setL10NConfiguration(tx_l10nmgr_models_configuration_configuration $configuration){
+	public function setL10NConfiguration(tx_l10nmgr_models_configuration_configuration $configuration) {
 		$this->row['l10nconfigurationobject'] = $configuration;
 		$this->row['l10ncfg_id'] = $configuration->getUid();
 	}
@@ -106,7 +106,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @return ArrayObject
 	 */
-	public function getExportRemainingPages(){
+	public function getExportRemainingPages() {
 		if (!is_array($this->getProgress('export_remaining_pages'))) {
 			//if there are no remaining pages configured, all pages of the configuration are remaining pages
 			$res = $this->getL10nConfigurationObject()->getExportPageIdCollection();
@@ -122,7 +122,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @return float
 	 */
-	public function getExportProgressPercentage(){
+	public function getExportProgressPercentage() {
 		$numberOfProcessedPages = $this->getExportTotalNumberOfPages() - $this->getExportRemainingPages()->count();
 
 		return (100 / $this->getExportTotalNumberOfPages()) * $numberOfProcessedPages;
@@ -133,8 +133,8 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @return int
 	 */
-	public function getExportTotalNumberOfPages(){
-		if($this->getProgress('export_total_number_of_pages') == 0){
+	public function getExportTotalNumberOfPages() {
+		if($this->getProgress('export_total_number_of_pages') == 0) {
 			$this->setProgress('export_total_number_of_pages', $this->getL10nConfigurationObject()->getExportPageIdCollection()->count());
 		}
 
@@ -146,7 +146,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @param int $numberOfPages
 	 */
-	protected function setExportTotalNumberOfPages($numberOfPages){
+	protected function setExportTotalNumberOfPages($numberOfPages) {
 		$this->setProgress('export_total_number_of_pages',$numberOfPages);
 	}
 
@@ -155,7 +155,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @param ArrayObject $pageIdCollection
 	 */
-	public function removePagesIdsFromRemainingPages($pageIdCollection){
+	public function removePagesIdsFromRemainingPages($pageIdCollection) {
 		$remainingPagesLeft = array_diff($this->getExportRemainingPages()->getArrayCopy(),$pageIdCollection->getArrayCopy());
 
 		$this->getExportRemainingPages()->exchangeArray($remainingPagesLeft);
@@ -167,7 +167,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @return int
 	 */
-	public function countRemainingPages(){
+	public function countRemainingPages() {
 		return $this->getExportRemainingPages()->count();
 	}
 
@@ -176,7 +176,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @param boolan $boolean
 	 */
-	public function setExportIsCompletelyProcessed($boolean){
+	public function setExportIsCompletelyProcessed($boolean) {
 		$this->setProgress('export_is_completely_processed', $boolean);
 	}
 
@@ -185,7 +185,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @return boolean
 	 */
-	public function getExportIsCompletelyProcessed(){
+	public function getExportIsCompletelyProcessed() {
 		return $this->getProgress('export_is_completely_processed');
 	}
 
@@ -194,12 +194,19 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @return boolean
 	 */
-	public function getIsCompletelyUnprocessed(){
+	public function getIsCompletelyUnprocessed() {
 		return ($this->countRemainingPages() == $this->getExportTotalNumberOfPages());
 	}
 
-	protected function setProgress($key,$value){
-		if(!empty($this->row['progress'])){
+	/**
+	 * Set progress
+	 *
+	 * @param string key
+	 * @param mixed value
+	 * @return void
+	 */
+	protected function setProgress($key, $value) {
+		if(!empty($this->row['progress'])) {
 			$progress = unserialize($this->row['progress']);
 		}else{
 			$progress = array();
@@ -208,8 +215,14 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		$this->row['progress'] = serialize($progress);
 	}
 
-	protected function getProgress($key){
-		if(!empty($this->row['progress'])){
+	/**
+	 * Get progress
+	 *
+	 * @param string key
+	 * @return mixed value
+	 */
+	protected function getProgress($key) {
+		if(!empty($this->row['progress'])) {
 			$progress = unserialize($this->row['progress']);
 		}else{
 			$progress = array();
@@ -315,7 +328,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @param tx_l10nmgr_models_language_language $translationLanguage
 	 */
-	public function setTranslationLanguageObject($translationLanguage){
+	public function setTranslationLanguageObject($translationLanguage) {
 		$this->row['translationlanguageobject'] = $translationLanguage;
 		$this->row['translation_lang'] = $translationLanguage->getUid();
 	}
@@ -325,15 +338,15 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	 *
 	 * @param int $id
 	 */
-	public function setSourceLanguageId($id){
+	public function setSourceLanguageId($id) {
 		$this->row['source_lang'] = $id;
 	}
 
-	public function setResult($result){
+	public function setResult($result) {
 		$this->row['result'] = $result;
 	}
 
-	public function getResult(){
+	public function getResult() {
 		return $this->row['result'];
 	}
 
