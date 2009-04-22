@@ -32,6 +32,38 @@ class tx_l10nmgr_models_exporter_workflowStateRepository extends tx_mvc_ddd_typo
 	 */
 	protected $objectClassName = 'tx_l10nmgr_models_exporter_workflowState';
 
+	public function findAllWhereLatestState($state,$add_enable_fields = true){
+		//SELECT * FROM tx_l10nmgr_workflowstates s1 WHERE tstamp = ( SELECT MAX( s2.tstamp ) FROM `tx_l10nmgr_workflowstates` s2 WHERE s1.exportdata_id = s2.exportdata_id )	
+		$queryParts = array ();
+
+		$select = '*';
+		$from   = $this->tableName.' s1';
+		$where  = 	'tstamp=(SELECT MAX(s2.tstamp)
+						FROM `tx_l10nmgr_workflowstates` s2
+						WHERE s1.exportdata_id = s2.exportdata_id) '.
+					' AND state ='.tx_mvc_common_typo3::fullQuoteString($state);
+
+		$queryParts = tx_mvc_system_dbtools::buildQueryPartsArray (
+			$select,
+			$from,
+			$where
+		);
+
+		if ($add_enable_fields) {
+			$queryParts ['WHERE'] .= $this->getEnableFieldsWhere();
+		}
+
+		$res = $this->getDatabase ()->exec_SELECT_queryArray($queryParts);
+
+		return $this->getCollectionFromRs($res);
+		
+	}
+	
+	public function findAllWithoutStateInHistory($state){
+		
+	}
+	
 }
+		
 
 ?>

@@ -144,17 +144,20 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		}
 	}
 
+	
 	/**
 	 * This method is used to show a list of existing exports
 	 *
 	 */
 	public function showExportsAction(){
-		$configurationId		= $this->arguments['configurationId'];
 
-		$exportDataRepository	= new tx_l10nmgr_models_exporter_workflowStateRepository();
-
-
-
+		$workflowsStateRepository	= new tx_l10nmgr_models_exporter_workflowStateRepository();
+		$notReimportedExports 		= $workflowsStateRepository->findAllWhereLatestState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);		
+				
+		echo "Debug".__FILE__." ".__LINE__;
+		print('<pre>');
+		print_r($notReimportedExports);					
+		print('</pre>');
 	}
 
 
@@ -227,7 +230,11 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		$checkUTF8				= $this->arguments['checkUTF8'];
 		$exportFormat			= $this->arguments['selectedExportFormat'];
 		$exportDataID			= $this->arguments['exportDataId'];
-
+		//@todo is valid int?
+		
+		$exportPath 			= $this->configuration->get('exportPath');
+		//@todo is correct path?
+		
 		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData 			= $exportDataRepository->findById($exportDataID);
 
@@ -239,25 +246,24 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData,5,$exportView);
 
 		$res 					= $exporter->run();
-
+		
 		if($res){
 			$exportData 	= $exporter->getExportData();
+			$exportData->increaseNumberOfExportRuns();
 			$chunkResult 	= $exporter->getResultForChunk();
 			$exportFile		= new tx_l10nmgr_models_exporter_exportFile();
 
-			//@todo exportView->getFielname ist the wrong place to generate the filename
-			$exportFile->setFilename($exportView->getFilename());
+			$exportFile->setFilename($exportView->getFilename($exportData->getNumberOfExportRuns()));
 			$exportFile->setExportDataObject($exportData);
 			$exportFile->setContent($chunkResult);
 
-			//@todo make configurable
-			$exportFile->setPath('uploads/tx_l10nmgr/saved_files/');
+			$exportFile->setPath($exportPath);
 			$exportFile->write();
 
 			$exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
 			$exportFileRepository->add($exportFile);
-
 			$exportDataRepository->save($exportData);
+		
 		}
 		return $exportData;
 	}
