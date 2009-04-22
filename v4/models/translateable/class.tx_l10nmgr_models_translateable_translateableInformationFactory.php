@@ -61,14 +61,14 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 *
 	 * @param tx_l10nmgr_models_configuration_configuration $l10ncfg
 	 * @param ArrayObject $pageIdCollection A set of pageIds. This set of pageIds is used, to create a translateable Information of the contentelments in these pages.
-	 * @param tx_l10nmgr_models_language_Language $targetLanguage
-	 * @param tx_l10nmgr_models_language_Language $previewLanguage
+	 * @param tx_l10nmgr_models_language_language $targetLanguage
+	 * @param tx_l10nmgr_models_language_language $previewLanguage
 	 * @todo we need to handle the include index
 	 */
 	public function create(	tx_l10nmgr_models_configuration_configuration $l10ncfg, 
 							ArrayObject $pageIdCollection, 
-							tx_l10nmgr_models_language_Language $targetLanguage, 
-							tx_l10nmgr_models_language_Language $sourceLanguage = NULL){
+							tx_l10nmgr_models_language_language $targetLanguage, 
+							tx_l10nmgr_models_language_language $sourceLanguage = NULL){
 
 		$translateableInformation 	= new tx_l10nmgr_models_translateable_translateableInformation();
 		$translateableInformation->setSourceLanguage($sourceLanguage);

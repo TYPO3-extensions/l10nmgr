@@ -56,14 +56,9 @@ class tx_l10nmgr_models_exporter_workflowStateRepository extends tx_mvc_ddd_typo
 		$res = $this->getDatabase ()->exec_SELECT_queryArray($queryParts);
 
 		return $this->getCollectionFromRs($res);
-		
 	}
 	
-	public function findAllWithoutStateInHistory($state){
-		
-	}
+	
 	
 }
-		
-
 ?>

@@ -47,6 +47,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_showExportForm.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_showExportList.php');
 
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progress.php');
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progressAjax.php');
@@ -106,23 +107,14 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 	 */
 	public function showExportFormAction(){
 
-		$doc = t3lib_div::makeInstance('mediumDoc'); /* @var $doc mediumDoc */
-		$doc->backPath = $GLOBALS['BACK_PATH'];
-
-		$content .= $doc->startPage($this->getViewHelper('tx_mvc_viewHelper_label')->get('export_xml'));
-		$content .= $doc->header($this->getViewHelper('tx_mvc_viewHelper_label')->get('export_xml'));
-		$content .= $doc->spacer(5) . $doc->divider(5);
-
 		$this->view->setAvailableSourceLanguages($this->getLanguagesForLanguageMenu(true));
 		$this->view->setAvailableTargetLanguages($this->getLanguagesForLanguageMenu(false));
 		$this->view->setSelectedExportFormat($this->arguments['selectedExportFormat']);
 		$this->view->setRenderAction('generateExport');
 		$this->view->setAvailableExportFormats(array('xml' => 'general.action.export.xml.title', 'xls' => 'general.action.export.xls.title'));
 		$this->view->setConfigurationId($this->arguments['configurationId']);
-
-		//set backend related
-		$this->view->setPrepend($content);
-		$this->view->setAppend($doc->endPage());
+		$this->view->addBackendStylesHeaderData();
+	
 	}
 
 
@@ -140,7 +132,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 			$this->routeToAction('startExportAction');
 		}else{
 
-			$this->routeToAction('showExportsAction');
+			$this->routeToAction('showNotReimportedExportsAction');
 		}
 	}
 
@@ -149,15 +141,31 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 	 * This method is used to show a list of existing exports
 	 *
 	 */
-	public function showExportsAction(){
+	public function showNotReimportedExportsAction(){
+		$configurationId			= $this->arguments['configurationId'];
+		
+		###
+		# LOAD CONFIGURATION
+		##
+		$configurationRepository	= new tx_l10nmgr_models_configuration_configurationRepository();
+		$l10Configuration			= $configurationRepository->findById($configurationId);
 
-		$workflowsStateRepository	= new tx_l10nmgr_models_exporter_workflowStateRepository();
-		$notReimportedExports 		= $workflowsStateRepository->findAllWhereLatestState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);		
+		##
+		# HANDLE LANGUAGES
+		##
+		$languageRespository 	= new  tx_l10nmgr_models_language_languageRepository();
+		$targetLanguage 		= $languageRespository->findById($this->arguments['targetLanguageId']);
 				
-		echo "Debug".__FILE__." ".__LINE__;
-		print('<pre>');
-		print_r($notReimportedExports);					
-		print('</pre>');
+		$exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$notReimportedExports 	= $exportDataRepository->findAllWithoutStateInHistoryByAssigendConfigurationAndTargetLanguage(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED, $l10Configuration, $targetLanguage);
+
+		
+		$this->view = new tx_l10nmgr_view_export_showExportList();
+		$this->initializeView($this->view);
+		
+		$this->view->setExportDataCollection($notReimportedExports);
+		$this->view->addBackendStylesHeaderData();
+		
 	}
 
 
@@ -198,11 +206,9 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		$exportDataRepository->add($exportData);
 		$this->arguments['exportDataId'] = $exportData->getUid();
 
-
 		$linkCreator	= $this->getViewHelper('tx_mvc_viewHelper_linkCreator');
 		$ajaxLink 		= $linkCreator->getAjaxActionLink ( 'ajaxDoExportRun' );
 		$progressUrl 	= $ajaxLink->useOverruledParameters()->makeUrl ();
-
 
 		$progressView = new tx_mvc_view_widget_progress();
 		$this->initializeView($progressView );
@@ -212,6 +218,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
 		$this->view->setExportData($exportData);
 		$this->view->setProgressView($progressView);
+		$this->view->addBackendStylesHeaderData();		
 	}
 
 	/**
