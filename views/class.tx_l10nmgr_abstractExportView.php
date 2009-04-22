@@ -246,7 +246,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	 * @deprecated 
 	 *
 	 */
-	function checkExports(){
+/*	function checkExports(){
 		$ret = FALSE;
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('l10ncfg_id,exportType,translation_lang','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$this->sysLang);
@@ -264,7 +264,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 		}
 
 		return $ret;
-	}
+	}*/
 
 	/**
 	 * Fetches saved exports based on configuration, export format and target language.
@@ -273,7 +273,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	 * @author Andreas Otto <andreas.otto@dkd.de>
 	 * @return array Information about exports.
 	 */
-	function fetchExports() {
+/*	function fetchExports() {
 		$exports = array();
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('crdate,l10ncfg_id,exportType,translation_lang,filename','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$this->sysLang);
@@ -283,7 +283,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 		}
 
 		return $exports;
-	}
+	}*/
 
 	/**
 	 * Renders a list of saved exports as HTML table.
@@ -291,7 +291,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	 * @deprecated 
 	 * @return string HTML table
 	 */
-	function renderExports() {
+/*	function renderExports() {
 		global $LANG;
 		$out = '';
 		$content = array();
@@ -338,15 +338,16 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 		);
 
 		return $out;
-	}
+	}*/
 
 	/**
 	 *  save the exported files in the file /uploads/tx_l10nmgr/saved_files/
+	 * @deprecated 
 	 */
-	function saveExportFile($fileContent){
+	/*function saveExportFile($fileContent){
 		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/saved_files/'.$this->getLocalFilename();
 		t3lib_div::writeFile($fileExportName,$fileContent);
-	}
+	}*/
 
 	/**
 	 * Diff-compare markup
