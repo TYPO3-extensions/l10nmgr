@@ -40,6 +40,7 @@ plugin.tx_l10nmgr_controller_export.configuration {
 	}
 	
 	loadJQuery = 1
+	exportPath = uploads/tx_l10nmgr/saved_files/
 }'
 	);
         

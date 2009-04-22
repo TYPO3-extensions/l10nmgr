@@ -276,6 +276,37 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	}
 
 	/**
+	 * Increases the number of exportruns for this exportData object.
+	 *
+	 * @param void
+	 * @return void
+	 */
+	public function increaseNumberOfExportRuns(){
+		$numRuns = $this->getNumberOfExportRuns();
+		$numRuns++;
+		$this->setNumberOfExportRuns($numRuns);
+	}
+	
+	/**
+	 * Returns the number of runs which have been performed during the export yet.
+	 *
+	 * @return int
+	 */
+	public function getNumberOfExportRuns(){
+		return $this->getProgress('export_number_of_runs');
+	}
+	
+	/**
+	 * Method to save the number of runs during the export
+	 *
+	 * @param int $value
+	 */
+	protected function setNumberOfExportRuns($value){
+		$this->setProgress('export_number_of_runs',$value);
+	}
+	
+	
+	/**
 	 * Get collection of tx_l10nmgr_exportFile objects
 	 *
 	 * @return ArrayObject Collection of tx_l10nmgr_exportFile objects
