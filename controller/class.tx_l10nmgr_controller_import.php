@@ -82,7 +82,6 @@ class tx_l10nmgr_controller_import extends tx_mvc_controller_action {
 		$this->view->setTemplate($this->configuration->get('templates.import.controllPanel.php'));
 
 		//!TODO implement function "controllPanelAction"
-
 		return $this->view->render();
 	}
 
