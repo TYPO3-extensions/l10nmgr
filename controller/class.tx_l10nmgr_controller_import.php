@@ -36,8 +36,9 @@ tx_mvc_common_classloader::loadAll();
  * @author Michael Klapper <klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $$Id: $$
- * @date $$LastChangedDate: $$
+ * @HeadURL $HeadURL$
+ * @version $Id$
+ * @date $LastChangedDate$
  * @since 23.04.2009 - 14:52:35
  * @see tx_mvc_controller_action
  * @category controller
