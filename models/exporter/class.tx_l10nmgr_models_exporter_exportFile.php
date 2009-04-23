@@ -24,6 +24,7 @@
 
 
 class tx_l10nmgr_models_exporter_exportFile extends tx_mvc_ddd_abstractDbObject {
+
 	/**
 	 * Overwrite getDatabaseFieldNames to remove the "virtual files" that should not be stored in the database
 	 *
@@ -32,26 +33,27 @@ class tx_l10nmgr_models_exporter_exportFile extends tx_mvc_ddd_abstractDbObject 
 	 */
 	public function getDatabaseFieldNames() {
 		$fields = parent::getDatabaseFieldNames();
-		
+
 		$key = array_search('exportdata_object', $fields);
 		if ($key !== false) {
 			unset($fields[$key]);
 		}
-		
+
 		$key = array_search('content', $fields);
 		if ($key !== false) {
 			unset($fields[$key]);
 		}
-		
+
 		$key = array_search('path', $fields);
 		if ($key !== false) {
 			unset($fields[$key]);
 		}
-		
+
 		return $fields;
 	}
+
 	/**
-	 * Initialisize the database object with
+	 * Initialize the database object with
 	 * the table name of current object
 	 *
 	 * @access     public
@@ -60,50 +62,49 @@ class tx_l10nmgr_models_exporter_exportFile extends tx_mvc_ddd_abstractDbObject 
 	public static function getTableName() {
 		return 'tx_l10nmgr_exportfiles';
 	}
-	
+
 	/**
 	 * Set the exportdata object that is relevant for this export file.
 	 *
 	 * @param tx_l10nmgr_models_exporter_exportData $exportData
 	 */
-	public function setExportDataObject(tx_l10nmgr_models_exporter_exportData $exportData){
+	public function setExportDataObject(tx_l10nmgr_models_exporter_exportData $exportData) {
 		$this->row['exportdata_object'] 	= $exportData;
 		$this->row['exportdata_id']			= $exportData->getUid();
 	}
-	
-	
+
 	/**
 	 * Method to set the content of the exportfile
 	 *
 	 * @param string $content
 	 */
-	public function setContent($content){
+	public function setContent($content) {
 		$this->row['content'] = $content;
 	}
-	
+
 	/**
 	 * Method to configure a path where the file should be save
 	 *
 	 * @param string $path
 	 */
-	public function setPath($path){
+	public function setPath($path) {
 		$this->row['path'] = $path;
 	}
-	
+
 	/**
 	 * Writes the file to the harddisk
 	 *
 	 * @param void
 	 * @return void
 	 */
-	public function write(){
-		if(empty($this->row['content'])){
+	public function write() {
+		if(empty($this->row['content'])) {
 			throw new LogicException('The exportfile has no content');
 		}
-		$path = t3lib_div::getFileAbsFileName($this->row['path'].$this->row['filename']);
-		t3lib_div::writeFile($path,$this->row['content']);
+		$path = t3lib_div::getFileAbsFileName($this->row['path'] . $this->row['filename']);
+		t3lib_div::writeFile($path, $this->row['content']);
 	}
-	
+
 
 }
 
