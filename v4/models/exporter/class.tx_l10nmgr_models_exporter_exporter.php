@@ -98,7 +98,8 @@ class tx_l10nmgr_models_exporter_exporter {
 			$sourceLanguage				= $this->exportData->getSourceLanguageObject();
 
 			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-			$tranlateableInformation 	= $factory->create($l10ncfgObj,$pagesForChunk,$targetLanguage,$sourceLanguage);
+			$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($l10ncfgObj,$pagesForChunk,$targetLanguage,$sourceLanguage );
+			$tranlateableInformation 	= $factory->create($typo3DataProvider);
 
 			$this->exportView->setTranslateableInformation($tranlateableInformation);
 
