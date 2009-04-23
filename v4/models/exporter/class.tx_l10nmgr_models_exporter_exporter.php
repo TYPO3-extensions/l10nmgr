@@ -75,7 +75,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	 */
 	public function __construct(	tx_l10nmgr_models_exporter_exportData $exportData,
 									$numberOfPagesPerChunk,
-									tx_l10nmgr_abstractExportView $exportView){
+									tx_l10nmgr_abstractExportView $exportView) {
 
 		$this->exportData 				= $exportData;
 		$this->numberOfPagesPerChunk  	= $numberOfPagesPerChunk;
@@ -85,9 +85,9 @@ class tx_l10nmgr_models_exporter_exporter {
 
 	}
 
-	public function run(){
-		if(!$this->exportData->getExportIsCompletelyProcessed()){
-			if($this->exportData->getIsCompletelyUnprocessed()){
+	public function run() {
+		if(!$this->exportData->getExportIsCompletelyProcessed()) {
+			if($this->exportData->getIsCompletelyUnprocessed()) {
 				$this->createWorksflowStateForCurrentExportData(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTING);
 			}
 
@@ -106,13 +106,13 @@ class tx_l10nmgr_models_exporter_exporter {
 			$this->removeProcessedChunkPages($pagesForChunk);
 			$this->setIsChunkProcessed(true);
 
-			if($this->exportData->countRemainingPages() <= 0){
+			if($this->exportData->countRemainingPages() <= 0) {
 				$this->exportData->setExportIsCompletelyProcessed(true);
 				$this->createWorksflowStateForCurrentExportData(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);
 			}
 
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -123,7 +123,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	 *
 	 * @param string $state
 	 */
-	protected function createWorksflowStateForCurrentExportData($state){
+	protected function createWorksflowStateForCurrentExportData($state) {
 		$workflowState = new tx_l10nmgr_models_exporter_workflowState();
 		$workflowState->setExportdata_id($this->exportData->getUid());
 		$workflowState->setState($state);
@@ -144,7 +144,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	 *
 	 * @return string
 	 */
-	public function getResultForChunk(){
+	public function getResultForChunk() {
 		return $this->resultForChunk;
 	}
 
@@ -161,10 +161,10 @@ class tx_l10nmgr_models_exporter_exporter {
 	 *
 	 * @return tx_l10nmgr_models_exporter_exportData
 	 */
-	public function getExportData(){
-		if(!$this->getIsChunkProcessed()){
+	public function getExportData() {
+		if(!$this->getIsChunkProcessed()) {
 			throw new LogicException('it makes no sence to read the export data from an unprocessed run');
-		}else{
+		} else {
 			return $this->exportData;
 		}
 	}
@@ -176,13 +176,13 @@ class tx_l10nmgr_models_exporter_exporter {
 	 *
 	 * @return ArrayObject
 	 */
-	protected function getNextPagesChunk(){
+	protected function getNextPagesChunk() {
 		$allPages 			= $this->exportData->getExportRemainingPages();
 		$chunk				= new ArrayObject();
 
 		$allPagesIterator 	= $allPages->getIterator();
-		for($pagesInChunk = 0; $pagesInChunk < $this->getNumberOfPagesPerChunk(); $pagesInChunk++){
-			if($allPagesIterator->valid()){
+		for($pagesInChunk = 0; $pagesInChunk < $this->getNumberOfPagesPerChunk(); $pagesInChunk++) {
+			if($allPagesIterator->valid()) {
 				$chunk->append($allPagesIterator->current());
 				$allPagesIterator->next();
 			}
@@ -196,7 +196,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	 *
 	 * @return int
 	 */
-	protected function getNumberOfPagesPerChunk(){
+	protected function getNumberOfPagesPerChunk() {
 		return $this->numberOfPagesPerChunk;
 	}
 
@@ -205,7 +205,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	 *
 	 * @param ArrayObject $pageIdCollection
 	 */
-	protected function removeProcessedChunkPages($pageIdCollection){
+	protected function removeProcessedChunkPages($pageIdCollection) {
 		$this->exportData->removePagesIdsFromRemainingPages($pageIdCollection);
 	}
 }

@@ -245,12 +245,12 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData 			= $exportDataRepository->findById($exportDataID);
 
-		$sourceLanguage			= $exportData-> getSourceLanguageObject();
-		$l10Configuration		= $exportData-> getL10nConfigurationObject();
+		$sourceLanguage			= $exportData->getSourceLanguageObject();
+		$l10Configuration		= $exportData->getL10nConfigurationObject();
 
 		//perform Export
 		$exportView				= $this->getInitializedExportView($exportFormat,$sourceLanguage,$l10Configuration,$noXMLCheck,$checkUTF8,$onlyChangedContent,$noHidden);
-		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData,5,$exportView);
+		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, 5, $exportView);
 
 		$res 					= $exporter->run();
 		

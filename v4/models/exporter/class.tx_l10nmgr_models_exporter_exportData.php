@@ -31,7 +31,7 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_
 
 
 
-class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObject */ tx_mvc_ddd_typo3_abstractTCAObject {
+class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCAObject {
 
 	/**
 	 * Initialize the database object with
@@ -65,6 +65,11 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		}
 
 		$key = array_search('translationlanguageobject', $fields);
+		if ($key !== false) {
+			unset($fields[$key]);
+		}
+
+		$key = array_search('exportfiles', $fields);
 		if ($key !== false) {
 			unset($fields[$key]);
 		}
@@ -286,7 +291,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 		$numRuns++;
 		$this->setNumberOfExportRuns($numRuns);
 	}
-	
+
 	/**
 	 * Returns the number of runs which have been performed during the export yet.
 	 *
@@ -295,7 +300,7 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	public function getNumberOfExportRuns(){
 		return $this->getProgress('export_number_of_runs');
 	}
-	
+
 	/**
 	 * Method to save the number of runs during the export
 	 *
@@ -304,19 +309,6 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	protected function setNumberOfExportRuns($value){
 		$this->setProgress('export_number_of_runs',$value);
 	}
-	
-	
-	/**
-	 * Get collection of tx_l10nmgr_exportFile objects
-	 *
-	 * @return ArrayObject Collection of tx_l10nmgr_exportFile objects
-	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-	 * @since 2009-04-03
-	 */
-	public function getFiles() {
-		throw new Exception('Not implemented yet');
-	}
-
 
 	/**
 	 * Get the source language object
@@ -365,20 +357,26 @@ class tx_l10nmgr_models_exporter_exportData extends /* tx_mvc_ddd_abstractDbObje
 	}
 
 	/**
+	 * Get export files
+	 *
+	 * @param void
+	 * @return ArrayObject of tx_l10nmgr_models_exporter_exportFile objects
+	 */
+	public function getExportFiles() {
+		if (empty($this->row['exportfiles'])) {
+			$exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
+			$this->row['exportfiles'] = $exportFileRepository->findByExportdata_id($this->getUid());
+		}
+		return $this->row['exportfiles'];
+	}
+
+	/**
 	 * Method to set a source language id
 	 *
 	 * @param int $id
 	 */
 	public function setSourceLanguageId($id) {
 		$this->row['source_lang'] = $id;
-	}
-
-	public function setResult($result) {
-		$this->row['result'] = $result;
-	}
-
-	public function getResult() {
-		return $this->row['result'];
 	}
 
 }
