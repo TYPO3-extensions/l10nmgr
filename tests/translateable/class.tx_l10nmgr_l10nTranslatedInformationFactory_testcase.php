@@ -19,6 +19,9 @@ require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.
 require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableElement.php');
 require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php');
 
+
+require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider.php');
+
 require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
 require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
 
@@ -131,7 +134,10 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		
 		$ids = array ();
 		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$translateableInformations = $factory->create ( $fixtureL10NConfig, $fixtureLimitToPageIds, $fixtureTargetLanguage, $fixturePreviewLanguage );
+		
+		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, $fixtureLimitToPageIds, $fixtureTargetLanguage, $fixturePreviewLanguage );
+		$translateableInformations 	= $factory->create ( $typo3DataProvider );
+		
 		$pageGroups = $translateableInformations->getPageGroups ();
 		
 		foreach ( $pageGroups as $pageGroup ) {
@@ -154,10 +160,11 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();
 		$fixtureLimitToPageIds = $this->getFixtureLimitToPageids ();
 		
-		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$translateableInformations = $factory->create ( $fixtureL10NConfig, $fixtureLimitToPageIds, $fixtureTargetLanguage, $fixturePreviewLanguage );
-		$pageGroups = $translateableInformations->getPageGroups ();
+		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, $fixtureLimitToPageIds, $fixtureTargetLanguage, $fixturePreviewLanguage );
+		$translateableInformations 	= $factory->create ( $typo3DataProvider );
 		
+		$pageGroups = $translateableInformations->getPageGroups ();
 		$firstField = $pageGroups->offsetGet ( 0 )->getTranslateableElements ()->offsetGet ( 0 )->getTranslateableFields ()->offsetGet ( 0 );
 		
 		$this->assertEquals ( $firstField->getIdentityKey (), 'pages_language_overlay:NEW/999/4711:title' );
@@ -179,10 +186,11 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 
 		//diff must be something like l18n
 		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(4711)), $fixtureTargetLanguage, $fixturePreviewLanguage );
+		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(4711)), $fixtureTargetLanguage, $fixturePreviewLanguage);
+		$translateableInformations 	= $factory->create ( $typo3DataProvider );
+		
 		
 		$pageGroups = $translateableInformations->getPageGroups ();	
-		
 		$allElements = $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
 		
 		//get second element (first is the page itself).
@@ -208,7 +216,10 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 
 		//diff must be something like l18n
 		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(4711)), $fixtureTargetLanguage, $fixturePreviewLanguage );
+		
+		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(4711)), $fixtureTargetLanguage, $fixturePreviewLanguage);
+		$translateableInformations 	= $factory->create ( $typo3DataProvider );
+		
 		
 		$pageGroups = $translateableInformations->getPageGroups ();	
 		
@@ -248,8 +259,8 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		//diff must be something like l18n
 		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 		
-		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(8888)), $fixtureTargetLanguage, $fixturePreviewLanguage );
-		
+		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage);
+		$translateableInformations 	= $factory->create ( $typo3DataProvider );
 
 		/**
 		 * @todo: there is a bug in TYPO3. There is no correct l18n_diffsource for a new pages_language_overlay.
@@ -269,8 +280,9 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 
 		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 		
-		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(9999)), $fixtureTargetLanguage, $fixturePreviewLanguage );
-
+		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(9999)), $fixtureTargetLanguage, $fixturePreviewLanguage);
+		$translateableInformations 	= $factory->create ( $typo3DataProvider );
+		
 		/**
 		 * The TranslateableInformation has 2 translateableElements:
 		 * 
@@ -311,8 +323,9 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 
 		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 		
-		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage );		
-
+		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage);
+		$translateableInformations 	= $factory->create ( $typo3DataProvider );
+		
 		/**
 		 * The FCE on the page is configured with langChildren = 0 AND langDisable = 0. This means, that there
 		 * is a sepperate translation and the translation is indepenedent from the original. Therefore the
@@ -339,7 +352,8 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 
 		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 		
-		$translateableInformations = $factory->create ( $fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage );
+		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage);
+		$translateableInformations 	= $factory->create ( $typo3DataProvider );
 
 		$pageGroups = $translateableInformations->getPageGroups ();	
 			
@@ -364,6 +378,22 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$this->assertEquals('Content',$FCEContentField->getDiffDefaultValue());
 		$this->assertTrue($FCEContentField->isChanged());
 	}
+	
+	public function test_canFactoryCreateTranslateableInformationFromXML(){
+
+		//the data provider implements an interface that is understood by the factory
+		$dataProvider 				= new tx_l10nmgr_catxmlFactoryDataProvider('import.xml');
+		
+		
+		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
+		$tranlateableInformation 	= $factory->create($dataProvider);
+		
+		$pageIdCcollection			= $tranlateableInformation->getPageIdCollection();
+		
+		$this->assertEquals($pageIdCcollection->offsetGet(0),4711,'First page ist not correct');
+		
+	}
+	
 	
 	/**
 	 * This method is used to load a FixtureL10NConfig
