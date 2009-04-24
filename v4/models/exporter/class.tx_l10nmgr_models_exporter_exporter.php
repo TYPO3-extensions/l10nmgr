@@ -88,7 +88,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	public function run() {
 		if(!$this->exportData->getExportIsCompletelyProcessed()) {
 			if($this->exportData->getIsCompletelyUnprocessed()) {
-				$this->createWorksflowStateForCurrentExportData(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTING);
+				$this->exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTING);
 			}
 
 			$pagesForChunk 				= $this->getNextPagesChunk();
@@ -109,7 +109,7 @@ class tx_l10nmgr_models_exporter_exporter {
 
 			if($this->exportData->countRemainingPages() <= 0) {
 				$this->exportData->setExportIsCompletelyProcessed(true);
-				$this->createWorksflowStateForCurrentExportData(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);
+				$this->exportData->addWorkflowStat(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);
 			}
 
 			return true;
@@ -118,20 +118,6 @@ class tx_l10nmgr_models_exporter_exporter {
 		}
 	}
 
-
-	/**
-	 * This method is used to create a workflow state for the current export
-	 *
-	 * @param string $state
-	 */
-	protected function createWorksflowStateForCurrentExportData($state) {
-		$workflowState = new tx_l10nmgr_models_exporter_workflowState();
-		$workflowState->setExportdata_id($this->exportData->getUid());
-		$workflowState->setState($state);
-
-		$workflowRepository = new tx_l10nmgr_models_exporter_workflowStateRepository();
-		$workflowRepository->add($workflowState);
-	}
 
 	/**
 	 * @return boolean

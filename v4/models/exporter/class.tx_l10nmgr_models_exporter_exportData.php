@@ -29,6 +29,10 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php';
 
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowState.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php';
+
+
 /**
  * An exportData object represents one export. Each export can have multiple files.
  * The exportData object is used by the exporter, to process the export. It
@@ -299,6 +303,22 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 		return $currentState;
 	}
 
+	
+	/**
+	 * Creates a workflowstate for this exportData object
+	 *
+	 * @param string workflowstate
+	 */
+	public function addWorkflowState($stateName){
+		$workflowState = new tx_l10nmgr_models_exporter_workflowState();
+		$workflowState->setExportdata_id($this->getUid());
+		$workflowState->setState($stateName);
+
+		$workflowRepository = new tx_l10nmgr_models_exporter_workflowStateRepository();
+		$workflowRepository->add($workflowState);
+	}
+	
+	
 	/**
 	 * Increases the number of exportruns for this exportData object.
 	 *
