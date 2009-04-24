@@ -48,43 +48,43 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	protected $modeOnlyChanged=FALSE;
 	protected $modeNoHidden=FALSE;
 	protected $modeOnlyNew=FALSE;
-	
+
 	protected $sysLang;
 
-	
+
 	public function getPageGroup(){
 		return $this->pageGroup;
 	}
-	
+
 	protected function setPageGroup($pageGroup){
 		$this->pageGroup = $pageGroup;
 	}
-	
+
 	public function preRenderProcessing(){
 		$this->buildPageGroup();
 	}
-		
+
 	abstract protected function buildPageGroup();
-	
-	
+
+
 	/**
 	 * @var	integer		$forcedSourceLanguage		Overwrite the default language uid with the desired language to export
 	 */
 	protected $forcedSourceLanguage = false;
-	
+
 	/**
 	 * Method to set the Configuration of this localisation
 	 *
 	 * @param  tx_l10nmgr_models_configuration_configuration $l10ncfg
-	 * @deprecated 
+	 * @deprecated
 	 */
 	public function setL10NConfiguration($l10ncfg){
 		$this->l10ncfgObj	= $l10ncfg;
 	}
-	
+
 	/**
 	 * Method to set the Translateable Information
-	 * 
+	 *
 	 * @param tx_l10nmgr_models_configuration_translateableInformation $translateableInformation
 	 */
 	public function setTranslateableInformation($translateableInformation){
@@ -99,7 +99,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	public function setTargetLanguageId($id){
 		$this->sysLang = $id;
 	}
-	
+
 	/**
 	 * Returns the translateableInformation
 	 *
@@ -108,7 +108,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	protected function getTranslateableInformation(){
 		return $this->translateableInformation;
 	}
-	
+
 	/**
 	 * Returns the id of the targetLanguage
 	 *
@@ -121,7 +121,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 			return $this->sysLang;
 		}
 	}
-	
+
 	/**
 	* Force a new source language to export the content to translate
 	*
@@ -132,7 +132,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	public function setForcedSourceLanguage($id) {
 		$this->forcedSourceLanguage = $id;
 	}
-	
+
 	function getExportType() {
 		return $this->exportType;
 	}
@@ -140,19 +140,19 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	public function setModeNoHidden() {
 		$this->modeNoHidden=TRUE;
 	}
-	
-	
+
+
 	public function setModeOnlyChanged() {
 		$this->modeOnlyChanged=TRUE;
 	}
-	
+
 	public function setModeOnlyNew() {
 		$this->modeOnlyNew=TRUE;
 	}
 
 	/**
 	 * create a filename to save the File
-	 * @deprecated 
+	 * @deprecated
 	 */
 /*	function getLocalFilename(){
 		$sourceLang = '';
@@ -194,9 +194,9 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
 		return $filename;
 	}*/
-	
+
 	abstract protected function getFilenamePrefix();
-	
+
 	/**
 	 * Returns the filename.
 	 *
@@ -206,13 +206,13 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	public function getFilename($enumerationPostfix = 0){
 		$prefix = $this->getFilenamePrefix();
 		$targetLanguageId = $this->getTranslateableInformation()->getTargetLanguage()->getUid();
-		
+
 		return $prefix.'_'.$targetLanguageId.'_'.date('dmy-Hi').'_'.$enumerationPostfix.'.xml';
 	}
 
 	/**
 	 * save the information of the export in the database table 'tx_l10nmgr_sava_data'
-	 * @deprecated 
+	 * @deprecated
 	 */
 	function saveExportInformation(){
 
@@ -243,7 +243,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 
 	/**
 	 * checks if an export exists
-	 * @deprecated 
+	 * @deprecated
 	 *
 	 */
 /*	function checkExports(){
@@ -269,7 +269,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	/**
 	 * Fetches saved exports based on configuration, export format and target language.
 	 *
-	 * @deprecated 
+	 * @deprecated
 	 * @author Andreas Otto <andreas.otto@dkd.de>
 	 * @return array Information about exports.
 	 */
@@ -287,8 +287,8 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 
 	/**
 	 * Renders a list of saved exports as HTML table.
-	 * 
-	 * @deprecated 
+	 *
+	 * @deprecated
 	 * @return string HTML table
 	 */
 /*	function renderExports() {
@@ -342,7 +342,7 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 
 	/**
 	 *  save the exported files in the file /uploads/tx_l10nmgr/saved_files/
-	 * @deprecated 
+	 * @deprecated
 	 */
 	/*function saveExportFile($fileContent){
 		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/saved_files/'.$this->getLocalFilename();

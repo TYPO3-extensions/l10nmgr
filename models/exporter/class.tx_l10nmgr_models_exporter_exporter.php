@@ -85,8 +85,16 @@ class tx_l10nmgr_models_exporter_exporter {
 
 	}
 
+	/**
+	 * Run
+	 *
+	 * @param void
+	 * @return bool true if not completely processed
+	 */
 	public function run() {
+
 		if(!$this->exportData->getExportIsCompletelyProcessed()) {
+
 			if($this->exportData->getIsCompletelyUnprocessed()) {
 				$this->exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTING);
 			}
@@ -113,8 +121,11 @@ class tx_l10nmgr_models_exporter_exporter {
 			}
 
 			return true;
+
 		} else {
+
 			return false;
+
 		}
 	}
 
