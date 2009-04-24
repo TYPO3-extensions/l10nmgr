@@ -114,7 +114,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		$this->view->setAvailableExportFormats(array('xml' => 'general.action.export.xml.title', 'xls' => 'general.action.export.xls.title'));
 		$this->view->setConfigurationId($this->arguments['configurationId']);
 		$this->view->addBackendStylesHeaderData();
-	
+
 	}
 
 
@@ -136,14 +136,14 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		}
 	}
 
-	
+
 	/**
 	 * This method is used to show a list of existing exports
 	 *
 	 */
 	public function showNotReimportedExportsAction(){
 		$configurationId			= $this->arguments['configurationId'];
-		
+
 		###
 		# LOAD CONFIGURATION
 		##
@@ -155,17 +155,17 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		##
 		$languageRespository 	= new  tx_l10nmgr_models_language_languageRepository();
 		$targetLanguage 		= $languageRespository->findById($this->arguments['targetLanguageId']);
-				
+
 		$exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$notReimportedExports 	= $exportDataRepository->findAllWithoutStateInHistoryByAssigendConfigurationAndTargetLanguage(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED, $l10Configuration, $targetLanguage);
 
-		
+
 		$this->view = new tx_l10nmgr_view_export_showExportList();
 		$this->initializeView($this->view);
-		
+
 		$this->view->setExportDataCollection($notReimportedExports);
 		$this->view->addBackendStylesHeaderData();
-		
+
 	}
 
 
@@ -206,19 +206,16 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		$exportDataRepository->add($exportData);
 		$this->arguments['exportDataId'] = $exportData->getUid();
 
-		$linkCreator	= $this->getViewHelper('tx_mvc_viewHelper_linkCreator');
-		$ajaxLink 		= $linkCreator->getAjaxActionLink ( 'ajaxDoExportRun' );
-		$progressUrl 	= $ajaxLink->useOverruledParameters()->makeUrl ();
-
 		$progressView = new tx_mvc_view_widget_progress();
 		$this->initializeView($progressView );
-		$progressView ->setProgress(0);
-		$progressView->setProgressUrl($progressUrl);
+		$progressView->setProgress(0);
 		$progressView->setAjaxEnabled(true);
+		$progressView->setProgressUrl($this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('ajaxDoExportRun')->useOverruledParameters()->makeUrl());
+		$progressView->setRedirectOnCompletedUrl('../mod1/index.php');
 
 		$this->view->setExportData($exportData);
 		$this->view->setProgressView($progressView);
-		$this->view->addBackendStylesHeaderData();		
+		$this->view->addBackendStylesHeaderData();
 	}
 
 	/**
@@ -238,10 +235,10 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		$exportFormat			= $this->arguments['selectedExportFormat'];
 		$exportDataID			= $this->arguments['exportDataId'];
 		//@todo is valid int?
-		
+
 		$exportPath 			= $this->configuration->get('exportPath');
 		//@todo is correct path?
-		
+
 		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData 			= $exportDataRepository->findById($exportDataID);
 
@@ -253,7 +250,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, 5, $exportView);
 
 		$res 					= $exporter->run();
-		
+
 		if($res){
 			$exportData 	= $exporter->getExportData();
 			$exportData->increaseNumberOfExportRuns();
@@ -270,7 +267,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 			$exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
 			$exportFileRepository->add($exportFile);
 			$exportDataRepository->save($exportData);
-		
+
 		}
 		return $exportData;
 	}
@@ -291,10 +288,17 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
 		$progressView = new tx_mvc_view_widget_progressAjax();
 		$this->initializeView($progressView);
-		$progressView->setProgress($exportData->getExportProgressPercentage());
-		$progressView->setProgressLabel(round($exportData->getExportProgressPercentage()). ' %');
+		$percent = $exportData->getExportProgressPercentage();
+		$progressView->setProgress($percent);
+		if ($percent < 100) {
+			$progressView->setProgressLabel(round($exportData->getExportProgressPercentage()). ' %');
+		} else {
+			$progressView->setProgressLabel('Completed');
+			$progressView->setCompleted(true);
+		}
 
 		echo $progressView->render();
+
 		exit();
 	}
 
