@@ -255,7 +255,7 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 			$statesRepository = t3lib_div::getUserObj($statesRepositoryClass);
 			tx_mvc_validator_factory::getInstanceValidator()->setClassOrInterface('tx_l10nmgr_models_exporter_workflowStateRepository')->isValid($statesRepository);
 
-			$this->row['statescollection'] = $statesRepository->findByexportdata_id($this->row['uid']);
+			$this->row['statescollection'] = $statesRepository->findByExportdDataNewestFirst($this->row['uid']);
 		}
 		return $this->row['statescollection'];
 	}
