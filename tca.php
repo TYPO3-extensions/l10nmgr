@@ -251,7 +251,53 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 	)
 );
 
-
+$TCA["tx_l10nmgr_importdata"] = Array (
+	"ctrl" => $TCA["tx_l10nmgr_exportdata"]["ctrl"],
+	"interface" => Array (
+		"showRecordFieldList" => "title, crdate, exportdata_id"
+	),
+	"feInterface" => $TCA["tx_l10nmgr_exportdata"]["feInterface"],
+	"columns" => Array (
+		"title" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.title",
+			"config" => Array (
+				"type" => "input",
+				"size" => "48",
+				"eval" => "required",
+				"readOnly" => 1,
+			)
+		),
+		"crdate" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.crdate",
+			"config" => Array (
+				"type" => "input",
+				"eval" => "date",
+				"size" => "48",
+				"readOnly" => 1,
+			)
+		),
+		'exportdata_id' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_workflowstates.exportdata_id',
+			'config' => Array (
+				'type' => 'group',
+				'internal_type' => 'db',
+				'allowed' => 'tx_l10nmgr_exportdata',
+				'size' => 1,
+				'minitems' => 0,
+				'maxitems' => 1,
+			)
+		),
+	),
+	"types" => Array (
+		"0" => Array("showitem" => "title, crdate, exportdata_id")
+	),
+	"palettes" => Array (
+		"1" => Array("showitem" => "")
+	)
+);
 
 $TCA['tx_l10nmgr_workflowstates'] = Array (
 	'ctrl' => $TCA['tx_l10nmgr_workflowstates']['ctrl'],
