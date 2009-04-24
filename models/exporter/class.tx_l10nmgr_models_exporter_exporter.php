@@ -109,7 +109,7 @@ class tx_l10nmgr_models_exporter_exporter {
 
 			if($this->exportData->countRemainingPages() <= 0) {
 				$this->exportData->setExportIsCompletelyProcessed(true);
-				$this->exportData->addWorkflowStat(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);
+				$this->exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);
 			}
 
 			return true;
