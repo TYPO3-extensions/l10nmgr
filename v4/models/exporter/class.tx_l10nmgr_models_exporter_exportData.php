@@ -29,7 +29,25 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php';
 
-
+/**
+ * An exportData object represents one export. Each export can have multiple files.
+ * The exportData object is used by the exporter, to process the export. It
+ * has internal methods to save the state of the whole export.
+ * The exporter uses these states during the processing.
+ *
+ * class.tx_l10nmgr_models_exporter_exportData.php
+ *
+ * @author	Timo Schmidt <schmidt@aoemedia.de>
+ * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
+ * @version $Id: class.tx_l10nmgr_models_importer_importData.php $
+ * @date 24.04.2009 - 13:24:06
+ * @see tx_mvc_ddd_typo3_abstractTCAObject
+ * @category database
+ * @package	TYPO3
+ * @subpackage	l10nmgr
+ * @access public
+ */
 
 class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCAObject {
 
@@ -204,7 +222,8 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
-	 * Set progress
+	 * The idea of the progress property is, to save state informations in on serializeable
+	 * field structure in the database. It can be used internally to save state information.
 	 *
 	 * @param string key
 	 * @param mixed value
@@ -221,8 +240,8 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
-	 * Get progress
-	 *
+	 * Return the progress which was registered for a given value.
+	 * 	 *
 	 * @param string key
 	 * @return mixed value
 	 */
