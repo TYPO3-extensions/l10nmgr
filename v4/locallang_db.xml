@@ -34,6 +34,7 @@
 				<label index="tx_l10nmgr_cfg.crdate">Date of export</label>
 				<label index="tx_l10nmgr_cfg.exporttablelist">Exported tables</label>
 			<label index="tx_l10nmgr_export">L10N Manager exports</label>
+			<label index="tx_l10nmgr_import">L10N Manager imports</label>
 			<label index="tx_l10nmgr_workflowstates">L10N Manager export states</label>
 				<label index="tx_l10nmgr_workflowstates.exportdata_id">Exportdata id</label>
 				<label index="tx_l10nmgr_workflowstates.crdate">Creation date</label>

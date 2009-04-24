@@ -120,6 +120,28 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 	)
 );
 
+
+t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_importdata");
+
+$TCA["tx_l10nmgr_importdata"] = Array (
+	"ctrl" => Array (
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_import',
+		'label' => 'title',
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'cruser_id' => 'cruser_id',
+		"default_sortby" => "ORDER BY title",
+		"delete" => "deleted",
+		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
+		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_cfg.gif",
+	),
+	"feInterface" => Array (
+		"fe_admin_fieldList" => "title, crdate, delete",
+	)
+);
+
+
+
 t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_workflowstates");
 
 $TCA['tx_l10nmgr_workflowstates'] = Array (
