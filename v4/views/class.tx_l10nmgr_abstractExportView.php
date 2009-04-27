@@ -204,10 +204,15 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 	 * @return string
 	 */
 	public function getFilename($enumerationPostfix = 0){
+
 		$prefix = $this->getFilenamePrefix();
 		$targetLanguageId = $this->getTranslateableInformation()->getTargetLanguage()->getUid();
 
-		return $prefix.'_'.$targetLanguageId.'_'.date('dmy-Hi').'_'.$enumerationPostfix.'.xml';
+		if ($enumerationPostfix != '') {
+			return $prefix . '_' . $targetLanguageId . '_' . date('dmy-Hi') . '_' . $enumerationPostfix . '.xml';
+		} else {
+			return $prefix . '_' . $targetLanguageId . '_' . date('dmy-Hi') . '.xml';
+		}
 	}
 
 	/**

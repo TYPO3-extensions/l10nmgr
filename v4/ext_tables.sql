@@ -85,6 +85,7 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	tablelist varchar(80) DEFAULT '' NOT NULL,
 	exportType blob NOT NULL,
 	progress blob NOT NULL,
+	filename text NOT NULL,
 
 	PRIMARY KEY (uid),
 );
