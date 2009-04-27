@@ -37,7 +37,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  *
  * class.tx_l10nmgr_models_translation_testcase.php
  *
- * @author Michael Klapper <klapper@aoemedia.de>
+ * @author Michael Klapper <michael.klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id$
@@ -61,6 +61,7 @@ class tx_l10nmgr_models_translation_basic_testcase extends tx_phpunit_testcase {
 	 * loads the basic tables into the testdatabase
 	 *
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function setUp() {
@@ -70,8 +71,9 @@ class tx_l10nmgr_models_translation_basic_testcase extends tx_phpunit_testcase {
 	/**
 	 * Verify the instanceof Repository is of type "tx_l10nmgr_models_translation_factory"
 	 *
-	 * @access     public
-	 * @return     void
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
 	 */
 	public function test_factoryRightInstanceOf() {
 		$this->assertTrue(($this->TranslationFactory instanceof tx_l10nmgr_models_translation_factory),'Object of wrong class');
@@ -80,29 +82,20 @@ class tx_l10nmgr_models_translation_basic_testcase extends tx_phpunit_testcase {
 	/**
 	 * Verify the returned value is truly of the right instanceof
 	 *
-	 * @access     public
-	 * @return     void
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
 	 */
-	public function test_factoryReturnsRightInstanceOf() {
+	public function test_factoryReturnsRightInstanceOfTranslationData() {
 		$fileName = t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/fixtures/files/validContent/catxml_export__to_en_GB_210409-175557.xml';
 		$this->assertTrue(($this->TranslationFactory->create($fileName) instanceof tx_l10nmgr_models_translation_data), 'Object of wrong class - expected instanceof "tx_l10nmgr_models_translation_data" ');
-	}
-
-	/**
-	 * load file
-	 *
-	 * @access     public
-	 * @return     void
-	 */
-	public function test_canLoadFullQualifiedFileName() {
-		$fileName = t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/fixtures/files/validContent/catxml_export__to_en_GB_210409-175557.xml';
-		$this->TranslationFactory->create($fileName);
 	}
 
 	/**
 	 * Provides fullQualifiedFilenames to files with invalid content
 	 *
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return array
 	 */
 	public function invalidFileContentProvider() {
@@ -123,6 +116,7 @@ class tx_l10nmgr_models_translation_basic_testcase extends tx_phpunit_testcase {
 	 * @param string $fullQualifiedFileName
 	 * @dataProvider invalidFileContentProvider
 	 * @expectedException tx_mvc_exception_invalidContent
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @access public
 	 * @return void
 	 */
@@ -134,6 +128,7 @@ class tx_l10nmgr_models_translation_basic_testcase extends tx_phpunit_testcase {
 	 * Provides fullQualifiedFilenames to files with invalid content
 	 *
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return array
 	 */
 	public function invalidFilePathProvider() {
@@ -143,6 +138,9 @@ class tx_l10nmgr_models_translation_basic_testcase extends tx_phpunit_testcase {
 			array($pathToFile . 'noFile.xml'),
 			array(''),
 			array(0),
+			array(true),
+			array(false),
+			array(null),
 			array(new ArrayObject()),
 			array(array()),
 		);
@@ -154,6 +152,7 @@ class tx_l10nmgr_models_translation_basic_testcase extends tx_phpunit_testcase {
 	 * @param string $fullQualifiedFileName
 	 * @dataProvider invalidFilePathProvider
 	 * @expectedException tx_mvc_exception_fileNotFound
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @access public
 	 * @return void
 	 */
