@@ -79,40 +79,68 @@ class tx_l10nmgr_models_translation_factory {
 	 * @access private
 	 * @return void
 	 */
-	private function exractTranslation(SimpleXMLElement $Page) {
+	private function exractTranslation(SimpleXMLElement $Pagerows) {
 		$PageCollection = new tx_l10nmgr_models_translation_pageCollection();
 
-		$PageCollection = new tx_l10nmgr_models_translation_pageCollection();
-		foreach ($Page as $page) {
+		foreach ($Pagerows as $pagerow) {
 			$Page = new tx_l10nmgr_models_translation_page();
-			$Page->setUid((int)$page['id']);
-			$FieldCollection = new tx_l10nmgr_models_translation_fieldCollection();
+			$Page->setUid((int)$pagerow['id']);
 
-			foreach ($page->children() as $field) {
-				$ElementCollection = new tx_l10nmgr_models_translation_elementCollection();
-				$Element = new tx_l10nmgr_models_translation_element();
-
-				$Element->setTableName((string)$field['table']);
-				$Element->setUid((int)$field['elementUid']);
-
-				$Field = new tx_l10nmgr_models_translation_field();
+			//each page has one element collection				
+			$ElementCollection = new tx_l10nmgr_models_translation_elementCollection();
+							
+			foreach ($pagerow->children() as $field) {
+				$table 		= (string)$field['table'];
+				$uid 		= (int)$field['elementUid'];
+			
+				$Element 	= $this->createOrGetElementFromElementCollection($ElementCollection,$table,$uid);
+				$Field 		= new tx_l10nmgr_models_translation_field();
+				
 				$Field->setFieldPath((string)$field['key']);
 				$Field->setContent((string)$field);
-				$FieldCollection->append($Field);
-
-				$FieldCollection->append($Field);
-
-
-var_dump($field);
-				$Page->setElementCollection($ElementCollection);
+				$Element->getFieldCollection()->append($Field);
 			}
-
-			$PageCollection->offsetSet((int)$page['id'], $Page);
+			
+			
+			$Page->setElementCollection($ElementCollection);
+			$PageCollection->offsetSet((int)$pagerow['id'], $Page);
 		}
-
+			echo "Debug".__FILE__." ".__LINE__;
+			print('<pre>');
+			print_r($PageCollection);					
+			print('</pre>');
+			
 		$this->TranslationData->setPagesCollection($PageCollection);
 	}
 
+	/**
+	 * Creates a new Element instance if no one exists for this combination of table and uid,
+	 * or return an existing instance.
+	 *
+	 * @param string $table
+	 * @param int $uid
+	 * @return tx_l10nmgr_models_translation_element
+	 */
+	protected function createOrGetElementFromElementCollection($ElementCollection,$table,$uid){
+		//here we need to decide if an element is allready in the collection of not. This is
+		//necessary because each child of the page is a field and there are multiple fields per element
+		if($ElementCollection->hasElementWithTableAndUid($table,$uid)){
+			//retrieve element
+			$Element = $ElementCollection->getElementByTableAndUid($table,$uid);
+		}else{
+			//create element
+			$Element = new tx_l10nmgr_models_translation_element();
+			$Element->setTableName($table);
+			$Element->setUid($uid);
+			$ElementCollection->append($Element);
+					
+			$FieldCollection = new tx_l10nmgr_models_translation_fieldCollection();
+			$Element->setFieldCollection($FieldCollection);				
+		}
+		
+		return $Element;
+	}
+	
 	/**
 	 * Extract the meta information of the import XML file into the tx_l10nmgr_models_translation_data object
 	 *
