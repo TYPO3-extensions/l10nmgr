@@ -110,7 +110,7 @@ CREATE TABLE tx_l10nmgr_importdata (
 # Table structure for table 'tx_l10nmgr_workflowstates'
 #
 CREATE TABLE tx_l10nmgr_workflowstates (
-uid int(11) NOT NULL auto_increment,
+	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
 	exportdata_id int(11) DEFAULT '0' NOT NULL,
 	tstamp int(11) DEFAULT '0' NOT NULL,

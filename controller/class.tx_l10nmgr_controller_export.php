@@ -202,6 +202,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
         $exportData->setL10NConfiguration($l10Configuration);
         $exportData->setSourceLanguageId($sourceLanguageId);
         $exportData->setTitle($l10Configuration->getTitle());
+        $exportData->setPid($l10Configuration->getPid()); // store the exportdata record on the same page as its configuration record
 
         $exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
         $exportDataRepository->add($exportData);
@@ -236,7 +237,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
         $exportDataID			= intval($this->arguments['exportDataId']);
 
         $exportFormat			= $this->arguments['selectedExportFormat'];
-        
+
         $exportPath 			= $this->configuration->get('exportPath');
 
         $exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
@@ -262,6 +263,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
             $exportFile->setExportDataObject($exportData);
             $exportFile->setContent($chunkResult);
             $exportFile->setPath($exportPath);
+            $exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
             $exportFile->write();
 
             $exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
@@ -291,6 +293,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
             $exportFile->setExportDataObject($exportData);
             $exportFile->setContent($zipper->file());
             $exportFile->setPath($exportPath);
+            $exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
             $exportFile->write();
 
             if (TYPO3_DLOG) t3lib_div::devLog('Created zip file', 'l10nmgr', 1);

@@ -303,7 +303,7 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 		return $currentState;
 	}
 
-	
+
 	/**
 	 * Creates a workflowstate for this exportData object
 	 *
@@ -313,12 +313,13 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 		$workflowState = new tx_l10nmgr_models_exporter_workflowState();
 		$workflowState->setExportdata_id($this->getUid());
 		$workflowState->setState($stateName);
+		$workflowState->setPid($this->getPid());
 
 		$workflowRepository = new tx_l10nmgr_models_exporter_workflowStateRepository();
 		$workflowRepository->add($workflowState);
 	}
-	
-	
+
+
 	/**
 	 * Increases the number of exportruns for this exportData object.
 	 *
