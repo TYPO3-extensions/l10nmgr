@@ -56,7 +56,7 @@ class tx_l10nmgr_models_translation_factory {
 	public function create($fullQualifiedFileName) {
 
 		if (! tx_mvc_validator_factory::getFileValidator()->isValid($fullQualifiedFileName)) {
-			throw new tx_mvc_exception_fileNotFound('The given filename: "' . (string)$fullQualifiedFileName . '" not found!');
+			throw new tx_mvc_exception_fileNotFound('The given filename: "' . var_export($fullQualifiedFileName, true) . '" not found!');
 		}
 
 		$TranslationXML = @simplexml_load_file($fullQualifiedFileName, 'SimpleXMLElement', LIBXML_NOCDATA);
