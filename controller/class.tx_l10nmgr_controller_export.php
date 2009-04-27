@@ -99,6 +99,12 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
      */
     protected $argumentsNamespace = 'l10nmgr';
 
+    /**
+     * These arguments should be kept by the controller because
+     * they are needed in the polling ajax request.
+     *
+     * @var unknown_type
+     */
     protected $keepArgumentKeys = array('noHidden','noXMLCheck','checkUTF8','selectedExportFormat','exportDataId');
 
 
@@ -119,6 +125,16 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
     }
 
 
+    /**
+     * This method is used to process a submitted exportForm.
+     * Depending on the checkboxes we need to start an exportProcess
+     * or need to show all exports which have not been reimported yet.
+     * 
+     * @param void
+     * @return void
+     * @author Timo Schmidt
+     *
+     */
     public function generateExportAction(){
         $configurationId			= $this->arguments['configurationId'];
         $checkForExistingExports	= $this->arguments['checkForExistingExports'];
@@ -139,8 +155,13 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
 
     /**
-     * This method is used to show a list of existing exports
-     *
+     * This method is used to show a list of existing exports.
+     * It uses tx_l10nmgr_view_export_showExportList view because
+     * it is a variant of a list view of exports.
+     * 
+     * @see tx_l10nmgr_view_export_showExportList
+     * @param void
+     * @return void
      */
     public function showNotReimportedExportsAction(){
         $configurationId			= $this->arguments['configurationId'];
@@ -160,19 +181,20 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
         $exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
         $notReimportedExports 	= $exportDataRepository->findAllWithoutStateInHistoryByAssigendConfigurationAndTargetLanguage(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED, $l10Configuration, $targetLanguage);
 
-
         $this->view = new tx_l10nmgr_view_export_showExportList();
         $this->initializeView($this->view);
 
         $this->view->setExportDataCollection($notReimportedExports);
         $this->view->addBackendStylesHeaderData();
-
     }
 
 
     /**
      * This method is used to start an export. It creates an exportData object
      * and loads the exportView with a progressbar.
+     * 
+     * @param void
+     * @return void
      *
      */
     public function startExportAction(){
@@ -190,7 +212,6 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
         ##
         $languageRespository 	= new  tx_l10nmgr_models_language_languageRepository();
         $targetLanguage 		= $languageRespository->findById($this->arguments['targetLanguageId']);
-
 
         ##
         # CREATE EXPORT DATA
@@ -270,7 +291,6 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
             $exportFileRepository->add($exportFile);
             $exportDataRepository->save($exportData);
         }
-
 
         if ($exportData->getExportIsCompletelyProcessed()) {
 
