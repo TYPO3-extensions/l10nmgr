@@ -49,7 +49,7 @@ class tx_l10nmgr_view_export_showExportForm extends tx_mvc_view_backendModule {
 	 *
 	 * @var        string
 	 */
-	protected $defaultTemplate = 'EXT:l10nmgr/templates/exportForm.php';
+	protected $defaultTemplate = 'EXT:l10nmgr/templates/export/form.php';
 	
 	
 	/**

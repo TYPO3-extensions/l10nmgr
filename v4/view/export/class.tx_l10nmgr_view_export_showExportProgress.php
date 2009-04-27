@@ -29,56 +29,56 @@
  *
  * {@inheritdoc }
  *
- * class.tx_l10nmgr_view_export_show.php
+ * class.class_name.php
  *
  * @author	 Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.tx_l10nmgr_view_export_show.php $
- * @date 22.04.2009 - 13:01:57
+ * @version $Id: class.class_name.php $
+ * @date 20.04.2009 - 16:47:15
  * @see tx_mvc_view_phpTemplate
  * @category view
  * @package	TYPO3
  * @subpackage	extensionkey
  * @access public
  */
-class tx_l10nmgr_view_export_showExportList extends tx_mvc_view_backendModule{
-
+class tx_l10nmgr_view_export_showExportProgress extends tx_mvc_view_backendModule { 
 	/**
 	 * The default template is used if o template is set
 	 *
 	 * @var        string
 	 */
-	protected $defaultTemplate = 'EXT:l10nmgr/templates/export/list.php';
-
-	protected $title = 'List of incomplete exports';
+	protected $defaultTemplate = 'EXT:l10nmgr/templates/export/progress.php';
 	
 	/**
-	 * @var ArrayObject exportData collection
-	 */
-	protected $exportDataCollection;
-	
-	
-	/**
-	 * This method is used to set a collection of exportData objects.
+	 * This method is used to add the progressView to the exportView
 	 *
-	 * @param ArrayObject $exportDataCollection
+	 * @param tx_l10nmgr_view_export_progress $progressView
 	 */
-	public function setExportDataCollection(ArrayObject $exportDataCollection){
-		$this->exportDataCollection = $exportDataCollection;
+	public function setProgressView(tx_mvc_view_widget_progress  $progressView){
+		$this->progressView = $progressView;
 	}
 	
 	/**
-	 * Returns a collection of exportData objects.
+	 * This method is used to set an exportData object which represents the current export.
 	 *
-	 * @return ArrayObject
+	 * @param tx_l10nmgr_models_export_exportData
 	 */
-	protected function getExportDataCollection(){
-		return $this->exportDataCollection;
+	public function setExportData($exportData){
+		$this->exportData = $exportData;
+	}
+	
+	/**
+	 * Returns the current exportData object to display it in the view
+	 *
+	 * @return tx_l10nmgr_models_export_exportDtaa
+	 */
+	protected function getExportData(){
+		return $this->exportData;
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/extensionkey/l10nmgr/view/export/class.tx_l10nmgr_view_export_showNotReimportedExports.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/extensionkey/l10nmgr/view/export/class.tx_l10nmgr_view_export_showNotReimportedExports.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/view/export/class.tx_l10nmgr_view_export_startExport.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/view/export/class.tx_l10nmgr_view_export_startExport.php']);
 }
 ?>
