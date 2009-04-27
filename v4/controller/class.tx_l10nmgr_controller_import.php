@@ -77,12 +77,14 @@ class tx_l10nmgr_controller_import extends tx_mvc_controller_action {
 	 * Show the controll panel to give the user the options what he can do
 	 *
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string HTML formated output
 	 */
 	public function controllPanelAction() {
 		$this->view->setTemplate($this->configuration->get('templates.import.controllPanel.php'));
+
 		//!TODO implement function "controllPanelAction"
-		return $this->view->render();
+
 	}
 
 	/**
