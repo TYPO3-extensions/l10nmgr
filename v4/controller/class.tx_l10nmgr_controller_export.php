@@ -234,7 +234,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
         $noXMLCheck				= intval($this->arguments['noXMLCheck']);
         $checkUTF8				= intval($this->arguments['checkUTF8']);
         $exportDataID			= intval($this->arguments['exportDataId']);
-        
+
         $exportFormat			= tx_mvc_filter_factory::getTextPlainFilter($this->arguments['selectedExportFormat']);
         $exportPath 			= tx_mvc_filter_factory::getTextPlainFilter($this->configuration->get('exportPath'));
 
@@ -366,15 +366,16 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
      */
     protected function getInitializedExportView($exportFormat,$sourceLanguage,$l10ncfgObj,$noXmlCheck=false,$useUtf8Mode=false,$onlyChangedContent=false,$noHidden=false){
 
-        if($exportFormat == 'xml'){
+        if ($exportFormat == 'xml') {
             $viewClassName	= t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
             $viewClass		= new $viewClassName();
             $viewClass->setSkipXMLCheck($noXmlCheck);
             $viewClass->setUseUTF8Mode($useUtf8Mode);
-
-        }elseif($exportFormat == 'xls'){
+        } elseif($exportFormat == 'xls') {
             $viewClassName	= t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
             $viewClass		= new $viewClassName();
+        } else {
+        	throw new LogicException('ExportFormat is invalid (must be "xml" or "xls")!');
         }
 
         $viewClass->setForcedSourceLanguage($sourceLanguage);
