@@ -26,6 +26,7 @@
 ***************************************************************/
 /**
  * Updating translation index - hook for tcemain
+ * TODO: rename this file (and all references to it) to class.tx_l10nmgr_tcemain_hook.php (instead of class.l10nmgr_tcemain_hook.php)
  *
  * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
  */
@@ -127,7 +128,7 @@ class tx_l10nmgr_tcemain_hook {
 			return $this->calcStat($p,$GLOBALS['TYPO3_DB']->cleanIntList($GLOBALS['BE_USER']->groupData['allowed_languages']));
 		}
 	}
-	
+
 	function calcStat($p,$languageList,$noLink=FALSE)	{
 			//
 		if ($p[0]!='pages')	{
@@ -181,7 +182,7 @@ class tx_l10nmgr_tcemain_hook {
 
 			$output = !$noLink ? '<a href="#" onclick="'.htmlspecialchars('parent.list_frame.location.href="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'cm2/index.php?table='.$p[0].'&uid='.$p[1].'&languageList='.rawurlencode($languageList).'"; return false;').'" target="listframe">'.$output.'</a>' : $output;
 			return $output;
-		}		
+		}
 	}
 }
 

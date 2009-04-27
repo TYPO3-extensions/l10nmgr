@@ -38,12 +38,12 @@ plugin.tx_l10nmgr_controller_export.configuration {
 		tcaFieldRenderer = 1
 		formElementRenderer = 0
 	}
-	
+
 	loadJQuery = 1
 	exportPath = uploads/tx_l10nmgr/saved_files/
 }'
 	);
-        
+
 
 }
 
@@ -147,11 +147,11 @@ t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_workflowstates");
 $TCA['tx_l10nmgr_workflowstates'] = Array (
 	'ctrl' => Array (
 		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_workflowstates',
-		'label' => 'title',
+		'label' => 'uid',
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'default_sortby' => 'ORDER BY title',
+		'default_sortby' => 'ORDER BY tstamp',
 		'delete' => 'deleted',
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
 		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_workflowstates.gif',
@@ -166,11 +166,11 @@ t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_exportfiles");
 $TCA['tx_l10nmgr_exportfiles'] = Array (
 	'ctrl' => Array (
 		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles',
-		'label' => 'title',
+		'label' => 'filename',
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'default_sortby' => 'ORDER BY title',
+		'default_sortby' => 'ORDER BY tstamp',
 		'delete' => 'deleted',
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
 		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_exportfiles.gif',
