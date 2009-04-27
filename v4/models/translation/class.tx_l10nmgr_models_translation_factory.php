@@ -29,7 +29,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  *
  * class.tx_l10nmgr_models_translation_factory.php
  *
- * @author Michael Klapper <klapper@aoemedia.de>
+ * @author Michael Klapper <michael.klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id$
@@ -51,6 +51,7 @@ class tx_l10nmgr_models_translation_factory {
 	 *
 	 * @param string $fullQualifiedFileName
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return tx_l10nmgr_models_translation_data
 	 */
 	public function create($fullQualifiedFileName) {
@@ -77,6 +78,7 @@ class tx_l10nmgr_models_translation_factory {
 	 *
 	 * @param SimpleXMLElement $Page
 	 * @access private
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	private function exractTranslation(SimpleXMLElement $Pagerows) {
@@ -86,66 +88,62 @@ class tx_l10nmgr_models_translation_factory {
 			$Page = new tx_l10nmgr_models_translation_page();
 			$Page->setUid((int)$pagerow['id']);
 
-			//each page has one element collection				
+				// Each page has one element collection
 			$ElementCollection = new tx_l10nmgr_models_translation_elementCollection();
-							
+
 			foreach ($pagerow->children() as $field) {
-				$table 		= (string)$field['table'];
-				$uid 		= (int)$field['elementUid'];
-			
-				$Element 	= $this->createOrGetElementFromElementCollection($ElementCollection,$table,$uid);
-				$Field 		= new tx_l10nmgr_models_translation_field();
-				
+				$table = (string)$field['table'];
+				$uid   = (int)$field['elementUid'];
+
+				$Field   = new tx_l10nmgr_models_translation_field();
 				$Field->setFieldPath((string)$field['key']);
 				$Field->setContent((string)$field);
+
+				$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);
 				$Element->getFieldCollection()->append($Field);
 			}
-			
-			
+
 			$Page->setElementCollection($ElementCollection);
 			$PageCollection->offsetSet((int)$pagerow['id'], $Page);
 		}
-			echo "Debug".__FILE__." ".__LINE__;
-			print('<pre>');
-			print_r($PageCollection);					
-			print('</pre>');
-			
+
 		$this->TranslationData->setPagesCollection($PageCollection);
 	}
 
 	/**
-	 * Creates a new Element instance if no one exists for this combination of table and uid,
-	 * or return an existing instance.
+	 * If the Element for the current table and uid combination not exists a new instance
+	 * of the tx_l10nmgr_models_translation_element will be create.
 	 *
 	 * @param string $table
 	 * @param int $uid
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return tx_l10nmgr_models_translation_element
 	 */
 	protected function createOrGetElementFromElementCollection($ElementCollection,$table,$uid){
-		//here we need to decide if an element is allready in the collection of not. This is
-		//necessary because each child of the page is a field and there are multiple fields per element
-		if($ElementCollection->hasElementWithTableAndUid($table,$uid)){
-			//retrieve element
-			$Element = $ElementCollection->getElementByTableAndUid($table,$uid);
-		}else{
-			//create element
+
+		if ( $ElementCollection->hasElementWithTableAndUid($table, $uid) ) {
+
+			$Element = $ElementCollection->getElementByTableAndUid($table, $uid);
+		} else {
+
 			$Element = new tx_l10nmgr_models_translation_element();
 			$Element->setTableName($table);
 			$Element->setUid($uid);
 			$ElementCollection->append($Element);
-					
+
 			$FieldCollection = new tx_l10nmgr_models_translation_fieldCollection();
-			$Element->setFieldCollection($FieldCollection);				
+			$Element->setFieldCollection($FieldCollection);
 		}
-		
+
 		return $Element;
 	}
-	
+
 	/**
 	 * Extract the meta information of the import XML file into the tx_l10nmgr_models_translation_data object
 	 *
 	 * @param SimpleXMLElement $Head
 	 * @access private
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	private function extractMetaData(SimpleXMLElement $Head) {
