@@ -1,5 +1,7 @@
 2009-04-27 Michael Klapper <michael.klapper@aoemedia.de>
 	* Add initial translation model incl. first testcase
+	* Add some PHPdoc
+	* Remove some whitespaces from classes
 
 2009-04-15 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Version 4.0.0 now

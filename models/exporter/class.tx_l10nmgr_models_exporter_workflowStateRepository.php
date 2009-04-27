@@ -32,6 +32,8 @@ class tx_l10nmgr_models_exporter_workflowStateRepository extends tx_mvc_ddd_typo
 	 */
 	protected $objectClassName = 'tx_l10nmgr_models_exporter_workflowState';
 
+
+
 	public function findAllWhereLatestState($state,$add_enable_fields = true){
 		//SELECT * FROM tx_l10nmgr_workflowstates s1 WHERE tstamp = ( SELECT MAX( s2.tstamp ) FROM `tx_l10nmgr_workflowstates` s2 WHERE s1.exportdata_id = s2.exportdata_id )
 		$queryParts = array ();

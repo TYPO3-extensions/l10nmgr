@@ -35,21 +35,21 @@
  */
 class tx_l10nmgr_l10nBaseService {
 	var $createTranslationAlsoIfEmpty=FALSE;
-	
+
 	function saveTranslation($l10ncfgObj,$translationObj) {
 		$sysLang=$translationObj->getLanguage();
 		$accumObj=$l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
-		
+
 		//@todo: accum object is created here for the import this is quite expensive
 		$flexFormDiffArray=$this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray($sysLang),$translationObj->getTranslationData());
-		
+
 		if ($flexFormDiffArray !== false) {
 			$l10ncfgObj->updateFlexFormDiff($sysLang,$flexFormDiffArray);
 		}
 	}
-	
-		
-	
+
+
+
 	/**
 	 * Submit incoming content to database. Must match what is available in $accum.
 	 *
@@ -65,11 +65,11 @@ class tx_l10nmgr_l10nBaseService {
 			$flexToolObj = t3lib_div::makeInstance('t3lib_flexformtools');
 			$TCEmain_data = array();
 			$TCEmain_cmd = array();
-			
+
 			$_flexFormDiffArray = array();
-			
+
 			/**
-			 * Tranversing the accum array (same array as for export and reading 
+			 * Tranversing the accum array (same array as for export and reading
 			 * the data from the import array.
 			 */
 				// Traverse:
@@ -77,18 +77,18 @@ class tx_l10nmgr_l10nBaseService {
 				foreach($accum[$pId]['items'] as $table => $elements)	{
 					foreach($elements as $elementUid => $data)	{
 						if (is_array($data['fields']))	{
-								
-							foreach($data['fields'] as $key => $tData)	{	
+
+							foreach($data['fields'] as $key => $tData)	{
 								/**
 								 * Getting data from input array with keys from accum traversation:
 								 * The next if clause means: has data to tranlate AND has a translation in the import
 								 */
-								
-								if ( is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {									
-									
+
+								if ( is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {
+
 									list($Ttable,$TuidString,$Tfield,$Tpath) = explode(':',$key);
 									list($Tuid,$Tlang,$TdefRecord) = explode('/',$TuidString);
-									
+
 									if (!$this->createTranslationAlsoIfEmpty  && $inputArray[$table][$elementUid][$key] =='' && $Tuid=='NEW')	{
 										//if data is empty do not save it
 										unset($inputArray[$table][$elementUid][$key]);
@@ -117,9 +117,9 @@ class tx_l10nmgr_l10nBaseService {
 									unset($inputArray[$table][$elementUid][$key]);	// Unsetting so in the end we can see if $inputArray was fully processed.
 								}
 								else {
-									//debug($tData,'fields not set for: '.$elementUid.'-'.$key);							
+									//debug($tData,'fields not set for: '.$elementUid.'-'.$key);
 									//debug($inputArray[$table],'inputarray');
-								}	
+								}
 							}
 							if (is_array($inputArray[$table][$elementUid]) && !count($inputArray[$table][$elementUid]))	{
 								unset($inputArray[$table][$elementUid]);	// Unsetting so in the end we can see if $inputArray was fully processed.
@@ -170,15 +170,15 @@ class tx_l10nmgr_l10nBaseService {
 				// Now, submitting translation data:
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
 			$tce->stripslashes_values = FALSE;
-			$tce->dontProcessTransformations = TRUE; 
+			$tce->dontProcessTransformations = TRUE;
 			//print_r($TCEmain_data);
 			$tce->start($TCEmain_data,array());	// check has been done previously that there is a backend user which is Admin and also in live workspace
 			$tce->process_datamap();
-			
+
 			if (count($tce->errorLog))	{
 				debug($tce->errorLog,'TCEmain update errors:');
 			}
-			
+
 			if (count($tce->autoVersionIdMap) && count($_flexFormDiffArray))	{
 			#	debug($this->flexFormDiffArray);
 				foreach($_flexFormDiffArray as $key => $value)	{
@@ -191,8 +191,8 @@ class tx_l10nmgr_l10nBaseService {
 #				debug($tce->autoVersionIdMap);
 #				debug($_flexFormDiffArray);
 			}
-			
-			
+
+
 				// Should be empty now - or there were more information in the incoming array than there should be!
 			if (count($inputArray))	{
 				debug($inputArray,'These fields were ignored since they were not in the configuration:');
@@ -202,9 +202,9 @@ class tx_l10nmgr_l10nBaseService {
 		}
 		return false;
 	}
-	
-	
-	
+
+
+
 }
 
 
