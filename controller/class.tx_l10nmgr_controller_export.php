@@ -235,8 +235,9 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
         $checkUTF8				= intval($this->arguments['checkUTF8']);
         $exportDataID			= intval($this->arguments['exportDataId']);
 
-        $exportFormat			= tx_mvc_filter_factory::getTextPlainFilter($this->arguments['selectedExportFormat']);
-        $exportPath 			= tx_mvc_filter_factory::getTextPlainFilter($this->configuration->get('exportPath'));
+        $exportFormat			= $this->arguments['selectedExportFormat'];
+        
+        $exportPath 			= $this->configuration->get('exportPath');
 
         $exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
         $exportData 			= $exportDataRepository->findById($exportDataID);
