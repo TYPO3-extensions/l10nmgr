@@ -229,16 +229,14 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
         ##
         # GET ARGUMENTS, NOTE: Arguments are available here because they have been marked as keepArguments
         ##
-        $onlyChangedContent 	= $this->arguments['onlyChangedContent'];
-        $noHidden				= $this->arguments['noHidden'];
-        $noXMLCheck				= $this->arguments['noXMLCheck'];
-        $checkUTF8				= $this->arguments['checkUTF8'];
-        $exportFormat			= $this->arguments['selectedExportFormat'];
-        $exportDataID			= $this->arguments['exportDataId'];
-        //@todo is valid int?
-
-        $exportPath 			= $this->configuration->get('exportPath');
-        //@todo is correct path?
+        $onlyChangedContent 	= intval($this->arguments['onlyChangedContent']);
+        $noHidden				= intval($this->arguments['noHidden']);
+        $noXMLCheck				= intval($this->arguments['noXMLCheck']);
+        $checkUTF8				= intval($this->arguments['checkUTF8']);
+        $exportDataID			= intval($this->arguments['exportDataId']);
+        
+        $exportFormat			= tx_mvc_filter_factory::getTextPlainFilter($this->arguments['selectedExportFormat']);
+        $exportPath 			= tx_mvc_filter_factory::getTextPlainFilter($this->configuration->get('exportPath'));
 
         $exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
         $exportData 			= $exportDataRepository->findById($exportDataID);
