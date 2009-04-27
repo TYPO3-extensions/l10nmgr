@@ -49,38 +49,12 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translation_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_models_translation_basic_testcase extends tx_phpunit_testcase {
 
 	/**
 	 * @var tx_l10nmgr_models_translation_factory
 	 */
 	private $TranslationFactory = null;
-
-	/**
-	 * Changes current database to test database
-	 *
-	 * If the test database can not be created exit the process
-	 *
-	 * @param string $databaseName OPTIONAL default is null - Overwrite test database name
-	 * @access protected
-	 * @uses t3lib_db
-	 * @return t3lib_db
-	 */
-	protected function useTestDatabase($databaseName = null) {
-		$Database = $GLOBALS ['TYPO3_DB'];
-
-		if ($databaseName) {
-			$database = $databaseName;
-		} else {
-			$database = $this->testDatabase;
-		}
-
-		if (! $Database->sql_select_db ( $database )) {
-			exit("Test Database not available");
-		}
-
-		return $Database;
-	}
 
 	/**
 	 * The setup method create the test database and
@@ -90,40 +64,7 @@ class tx_l10nmgr_models_translation_testcase extends tx_phpunit_database_testcas
 	 * @return void
 	 */
 	public function setUp() {
-		$this->createDatabase();
-		$this->useTestDatabase ();
-
-		$this->importExtensions (
-			array ('corefake','mvc',)
-		);
-
 		$this->TranslationFactory = new tx_l10nmgr_models_translation_factory();
-	}
-
-	/**
-	 * Close the test database and restore the
-	 * original system database configured by the localconf.php
-	 *
-	 * @access public
-	 * @uses t3lib_db
-	 * @return void
-	 */
-	public function tearDown() {
-		$this->cleanDatabase();
-		$this->dropDatabase();
-		$GLOBALS ['TYPO3_DB']->sql_select_db(TYPO3_db);
-	}
-
-	/**
-	 * Import dataset into test database
-	 *
-	 * @example $this->importDataSet('/fixtures/__FILENAME__.xml');
-	 * @param string $pathToFile The path beginning from the current location of the testcase
-	 * @access protected
-	 * @return void
-	 */
-	protected function importDataSet($pathToFile) {
-		parent::importDataSet(dirname ( __FILE__ ) . $pathToFile);
 	}
 
 	/**
@@ -168,7 +109,7 @@ class tx_l10nmgr_models_translation_testcase extends tx_phpunit_database_testcas
 		$pathToFile = t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/fixtures/files/invalidContent/';
 
 		return array (
-			array($pathToFile . 'emtpy.xml'),
+			array($pathToFile . 'empty.xml'),
 			array($pathToFile . 'echo.php'),
 			array($pathToFile . 'integer.xml'),
 			array($pathToFile . 'invalid.xml'),
@@ -200,6 +141,10 @@ class tx_l10nmgr_models_translation_testcase extends tx_phpunit_database_testcas
 
 		return array (
 			array($pathToFile . 'noFile.xml'),
+			array(''),
+			array(0),
+			array(new ArrayObject()),
+			array(array()),
 		);
 	}
 
@@ -217,8 +162,8 @@ class tx_l10nmgr_models_translation_testcase extends tx_phpunit_database_testcas
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_models_translation_testcase.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_models_translation_testcase.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_models_translation_basic_testcase.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_models_translation_basic_testcase.php']);
 }
 
 ?>
