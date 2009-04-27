@@ -69,7 +69,7 @@ class tx_l10nmgr_models_translation_factory {
 		$this->extractMetaData($TranslationXML->head);
 		$this->exractTranslation($TranslationXML->pageGrp);
 
-		return new stdClass();
+		return $this->TranslationData;
 	}
 
 	/**
