@@ -191,7 +191,7 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 $TCA["tx_l10nmgr_exportdata"] = Array (
 	"ctrl" => $TCA["tx_l10nmgr_exportdata"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "title, crdate, tablelist,translation_lang,source_lang"
+		"showRecordFieldList" => "title, crdate, tablelist,translation_lang,source_lang,filename"
 	),
 	"feInterface" => $TCA["tx_l10nmgr_exportdata"]["feInterface"],
 	"columns" => Array (
@@ -242,9 +242,26 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 				"readOnly" => 1,
 			)
 		),
+		'filename' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles.filename',
+			'config' => Array (
+				'type' => 'group',
+				"internal_type" => "file",
+                "allowed" => "zip",
+                "max_size" => 50000,
+                "uploadfolder" => 'uploads/tx_l10nmgr/saved_files',
+                "size" => 1,
+                "minitems" => 1,
+                "maxitems" => 1,
+				'size' => '48',
+				'eval' => 'required',
+				'readOnly' => 1,
+			)
+		),
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "title, crdate, translation_lang, tablelist, source_lang")
+		"0" => Array("showitem" => "title, crdate, translation_lang, tablelist, source_lang, filename")
 	),
 	"palettes" => Array (
 		"1" => Array("showitem" => "")
@@ -381,7 +398,7 @@ $TCA['tx_l10nmgr_exportfiles'] = Array (
 			'config' => Array (
 				'type' => 'group',
 				"internal_type" => "file",
-                "allowed" => "xml,zip",
+                "allowed" => "xml",
                 "max_size" => 50000,
                 "uploadfolder" => 'uploads/tx_l10nmgr/saved_files',
                 "size" => 1,

@@ -119,7 +119,7 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_cfg.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "title, source_lang, l10ncfg_id, crdate, delete, exclude",
+		"fe_admin_fieldList" => "title, source_lang, l10ncfg_id, crdate, delete, exclude, filename",
 	)
 );
 

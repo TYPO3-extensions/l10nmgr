@@ -304,23 +304,22 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
                 );
 
                 // delete file and original record
-                unlink($filename);
-                $exportFileRepository->remove($exportFile);
+                // unlink($filename);
+                // $exportFileRepository->remove($exportFile);
             }
 
-            $exportFile	= new tx_l10nmgr_models_exporter_exportFile();
-            $exportFile->setFilename($exportView->getFilename('zip').'.zip');
-            $exportFile->setExportDataObject($exportData);
-            $exportFile->setContent($zipper->file());
-            $exportFile->setPath($exportPath);
-            $exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
-            $exportFile->write();
+            // write to file
+            $filename = $exportView->getFilename('') . '.zip';
+            $res = t3lib_div::writeFile(PATH_site . $exportPath . $filename, $zipper->file());
+            if ($res == false) {
+            	throw new Exception(sprintf('Error while writing file "%s"', $exportPath . $filename));
+            }
 
             if (TYPO3_DLOG) t3lib_div::devLog('Created zip file', 'l10nmgr', 1);
 
-            $exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
-            $exportFileRepository->add($exportFile);
-//			$exportDataRepository->save($exportData);
+            // update exportdata record
+            $exportData->setFilename($filename);
+            $exportDataRepository->save($exportData);
         }
         return $exportData;
     }
