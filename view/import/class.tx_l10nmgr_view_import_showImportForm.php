@@ -25,60 +25,34 @@
  ***************************************************************/
 
 /**
- * description
- *
+ * Shows a form to upload a file for an import.
+ *  *
  * {@inheritdoc }
  *
- * class.class_name.php
+ * class.tx_l10nmgr_view_import_showImportForm.php
  *
  * @author	 Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.class_name.php $
- * @date 20.04.2009 - 16:47:15
+ * @version $Id: class.tx_l10nmgr_view_import_showImportForm.php $
+ * @date 27.04.2009 - 15:05:43
  * @see tx_mvc_view_phpTemplate
  * @category view
  * @package	TYPO3
- * @subpackage	extensionkey
+ * @subpackage	tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_view_export_startExport extends tx_mvc_view_backendModule { 
+class tx_l10nmgr_view_import_showImportForm extends tx_mvc_view_phpTemplate {
+
 	/**
 	 * The default template is used if o template is set
 	 *
 	 * @var        string
 	 */
-	protected $defaultTemplate = 'EXT:l10nmgr/templates/exportStart.php';
-	
-	/**
-	 * This method is used to add the progressView to the exportView
-	 *
-	 * @param tx_l10nmgr_view_export_progress $progressView
-	 */
-	public function setProgressView(tx_mvc_view_widget_progress  $progressView){
-		$this->progressView = $progressView;
-	}
-	
-	/**
-	 * This method is used to set an exportData object which represents the current export.
-	 *
-	 * @param tx_l10nmgr_models_export_exportData
-	 */
-	public function setExportData($exportData){
-		$this->exportData = $exportData;
-	}
-	
-	/**
-	 * Returns the current exportData object to display it in the view
-	 *
-	 * @return tx_l10nmgr_models_export_exportDtaa
-	 */
-	protected function getExportData(){
-		return $this->exportData;
-	}
+	protected $defaultTemplate = 'EXT:tx_l10nmgr/templates/import/importForm.php';
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/view/export/class.tx_l10nmgr_view_export_startExport.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/view/export/class.tx_l10nmgr_view_export_startExport.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/view/import/class.tx_l10nmgr_view_import_showImportForm.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/view/import/class.tx_l10nmgr_view_import_showImportForm.php']);
 }
 ?>

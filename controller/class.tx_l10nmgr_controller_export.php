@@ -146,7 +146,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
         $l10Configuration			= $configurationRepository->findById($configurationId);
 
         if(!$checkForExistingExports && !$l10Configuration->hasIncompleteExports()){
-            $this->routeToAction('startExportAction');
+            $this->routeToAction('showExportProgressAction');
         }else{
 
             $this->routeToAction('showNotReimportedExportsAction');
@@ -197,7 +197,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
      * @return void
      *
      */
-    public function startExportAction(){
+    public function showExportProgressAction(){
         $configurationId			= $this->arguments['configurationId'];
         $sourceLanguageId 			= $this->arguments['sourceLanguageId'];
 
@@ -324,8 +324,6 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
         }
         return $exportData;
     }
-
-
 
 
     /**

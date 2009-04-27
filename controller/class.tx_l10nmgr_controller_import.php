@@ -56,7 +56,7 @@ class tx_l10nmgr_controller_import extends tx_mvc_controller_action {
 	/**
 	 * @var string
 	 */
-	protected $defaultActionMethodName = 'controllPanelAction';
+	protected $defaultActionMethodName = 'showImportFormAction';
 
 	/**
 	 * @var string
@@ -80,8 +80,8 @@ class tx_l10nmgr_controller_import extends tx_mvc_controller_action {
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string HTML formated output
 	 */
-	public function controllPanelAction() {
-		$this->view->setTemplate($this->configuration->get('templates.import.controllPanel.php'));
+	public function showImportFormAction() {
+		$this->view->setTemplate($this->configuration->get('templates.importForm'));
 
 		//!TODO implement function "controllPanelAction"
 
