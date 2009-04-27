@@ -150,7 +150,7 @@ class tx_l10nmgr_CATXMLImportManager {
 						);
 		}
 		if (!isset($this->headerData['t3_sysLang']) || $this->headerData['t3_sysLang'] != $this->sysLang) {
-		
+
 
 			$error[] = sprintf(
 							$LANG->getLL('import.manager.error.language.message'),
@@ -185,7 +185,7 @@ class tx_l10nmgr_CATXMLImportManager {
 		}
 		if (!isset($this->headerData['t3_sysLang'])) {
 		//if (!isset($this->headerData['t3_sysLang']) || $this->headerData['t3_sysLang'] != $this->sysLang) {
-		
+
 			$error[] = sprintf(
 							$LANG->getLL('import.manager.error.language.message'),
 							$this->sysLang,
@@ -254,7 +254,7 @@ class tx_l10nmgr_CATXMLImportManager {
 	 * Delete previous localisations
 	 *
 	 * @param	array		table:id combinations to be deleted
-	 * @return	int		Number of deleted elements		
+	 * @return	int		Number of deleted elements
 	 */
 	function delL10N($delL10NData) {
 
