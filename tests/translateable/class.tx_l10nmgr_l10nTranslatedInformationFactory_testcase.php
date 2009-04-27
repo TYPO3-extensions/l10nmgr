@@ -379,20 +379,6 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$this->assertTrue($FCEContentField->isChanged());
 	}
 	
-	public function test_canFactoryCreateTranslateableInformationFromXML(){
-
-		//the data provider implements an interface that is understood by the factory
-		$dataProvider 				= new tx_l10nmgr_catxmlFactoryDataProvider('import.xml');
-		
-		
-		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-		$tranlateableInformation 	= $factory->create($dataProvider);
-		
-		$pageIdCcollection			= $tranlateableInformation->getPageIdCollection();
-		
-		$this->assertEquals($pageIdCcollection->offsetGet(0),4711,'First page ist not correct');
-		
-	}
 	
 	
 	/**

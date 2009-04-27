@@ -304,6 +304,24 @@ class tx_l10nmgr_models_translation_data {
 	public function setWorkspaceId($workspaceId) {
 		$this->workspaceId = $workspaceId;
 	}
+	
+	/**
+	 * Returns a collection of page ids which are relevant for this translation.
+	 *
+	 * @param void
+	 * @return ArrayObject
+	 * @author Timo Schmidt
+	 */
+	public function getPageIdCollection(){
+		$pageIdCollection = new ArrayObject();
+		
+		for($it = $this->PagesCollection->getIterator(); $it->valid(); $it->next()){
+			$currentPage = $it->current();
+			$pageIdCollection->append($currentPage->getUid());
+		}
+		
+		return $pageIdCollection;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_data.php']) {

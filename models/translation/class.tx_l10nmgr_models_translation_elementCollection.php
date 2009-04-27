@@ -80,6 +80,43 @@ class tx_l10nmgr_models_translation_elementCollection extends ArrayObject {
 
 		parent::append($Element);
 	}
+	
+	/**
+	 * This method is can be used to determine if this collection contains an
+	 * element from this table and this uid
+	 * 
+	 * @param string $tablename name of the table where the element should be from.
+	 * @param int $uid uid where the element should be from.
+	 */
+	public function hasElementWithTableAndUid($table,$uid){
+		foreach($this as $element){
+			if( $element->getTableName() == $table &&
+				$element->getUid() == $uid){
+				return true;		
+			}
+		}
+		
+		return false;
+	}
+
+	
+	/**
+	 * This method is used to access an element from the collection by tablename and uid
+	 *
+	 * @param string $table
+	 * @param int $uid
+	 * @return unknown
+	 */
+	public function getElementByTableAndUid($table,$uid){
+		foreach($this as $element){
+			if( $element->getTableName() == $table &&
+				$element->getUid() == $uid){
+				return  $element;	
+			}
+		}
+		
+		throw new Exception("Not such an elemnt in this collection");
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_elementCollection.php']) {

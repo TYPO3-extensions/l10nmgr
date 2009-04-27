@@ -158,6 +158,26 @@ class tx_l10nmgr_models_translation_testcase extends tx_phpunit_database_testcas
 		$this->TranslationFactory->create($fileName);
 	}
 
+	
+	/**
+	 * This testcase should ensure, that the translationData returns a valid collection of pageIds
+	 * from an import file.
+	 * 
+	 * @param void
+	 * @return void
+	 * @author Timo Schmidt
+	 *
+	 */
+	public function test_canDetermineCorrectPageIdsFromImportFile(){
+		$fileName 			= t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/fixtures/files/validContent/catxml_export__to_en_GB_210409-175557.xml';;
+		$translationData 	= $this->TranslationFactory->create($fileName);
+		
+		$this->assertEquals(11,$translationData->getPageIdCollection()->count(),'Unexpected Number of relevant pageids in importFile');
+		
+		
+	}
+	
+	
 	/**
 	 * Provides fullQualifiedFilenames to files with invalid content
 	 *
