@@ -22,10 +22,10 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10nmgr_models_translation_page.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_page.php';
 
 /**
- * Collection of tx_l10nmgr_models_translation_page objects
+ * Collection of tx_l10nmgr_domain_translation_page objects
  *
  * class.tx_l10nmgr_models_tranlsation_pageCollection.php
  *
@@ -39,13 +39,13 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translation_pageCollection extends ArrayObject {
+class tx_l10nmgr_domain_translation_pageCollection extends ArrayObject {
 
 
 	/**
 	 *
 	 * @access public
-	 * @return tx_l10nmgr_models_translation_page
+	 * @return tx_l10nmgr_domain_translation_page
 	 */
 	public function offsetGet($index) {
 		return parent::offsetGet($index);
@@ -54,14 +54,14 @@ class tx_l10nmgr_models_translation_pageCollection extends ArrayObject {
 	/**
 	 *
 	 * @param mixed $index
-	 * @param tx_l10nmgr_models_translation_page $Page
+	 * @param tx_l10nmgr_domain_translation_page $Page
 	 * @throws InvalidArgumentException
 	 * @return void
 	 */
 	public function offsetSet($index, $Page) {
 
-		if (! $Page instanceOf tx_l10nmgr_models_translation_page ) {
-			throw new InvalidArgumentException('Wrong parameter type given, "tx_l10nmgr_models_translation_page" expected!');
+		if (! $Page instanceOf tx_l10nmgr_domain_translation_page ) {
+			throw new InvalidArgumentException('Wrong parameter type given, "tx_l10nmgr_domain_translation_page" expected!');
 		}
 
 		parent::offsetSet($index, $Page);
@@ -69,22 +69,22 @@ class tx_l10nmgr_models_translation_pageCollection extends ArrayObject {
 
 	/**
 	 *
-	 * @param tx_l10nmgr_models_translation_page $Page
+	 * @param tx_l10nmgr_domain_translation_page $Page
 	 * @throws InvalidArgumentException
 	 * @return void
 	 */
 	public function append($Page) {
 
-		if (! $Page instanceOf tx_l10nmgr_models_translation_page ) {
-			throw new InvalidArgumentException('Wrong parameter type given, "tx_l10nmgr_models_translation_page" expected!');
+		if (! $Page instanceOf tx_l10nmgr_domain_translation_page ) {
+			throw new InvalidArgumentException('Wrong parameter type given, "tx_l10nmgr_domain_translation_page" expected!');
 		}
 
 		parent::append($Page);
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_pageCollection.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_pageCollection.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_pageCollection.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_pageCollection.php']);
 }
 
 ?>

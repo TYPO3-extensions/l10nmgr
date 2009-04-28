@@ -22,12 +22,12 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10nmgr_models_translation_data.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_data.php';
 
 /**
  * Factory to build the translation object
  *
- * class.tx_l10nmgr_models_translation_factory.php
+ * class.tx_l10nmgr_domain_translationFactory.php
  *
  * @author Michael Klapper <michael.klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -39,10 +39,10 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translation_factory {
+class tx_l10nmgr_domain_translationFactory {
 
 	/**
-	 * @var tx_l10nmgr_models_translation_data
+	 * @var tx_l10nmgr_domain_translation_data
 	 */
 	protected $TranslationData = null;
 
@@ -52,7 +52,7 @@ class tx_l10nmgr_models_translation_factory {
 	 * @param string $fullQualifiedFileName
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @return tx_l10nmgr_models_translation_data
+	 * @return tx_l10nmgr_domain_translation_data
 	 */
 	public function create($fullQualifiedFileName) {
 
@@ -65,7 +65,7 @@ class tx_l10nmgr_models_translation_factory {
 			throw new tx_mvc_exception_invalidContent('The file : "' . (string)$fullQualifiedFileName . '" contains no valid XML structure!');
 		}
 
-		$this->TranslationData = new tx_l10nmgr_models_translation_data();
+		$this->TranslationData = new tx_l10nmgr_domain_translation_data();
 
 		$this->extractMetaData($TranslationXML->head);
 		$this->exractTranslation($TranslationXML->pageGrp);
@@ -74,7 +74,7 @@ class tx_l10nmgr_models_translation_factory {
 	}
 
 	/**
-	 * Extract the page data from the XML import file into the tx_l10nmgr_models_translation_pageCollection object
+	 * Extract the page data from the XML import file into the tx_l10nmgr_domain_translation_pageCollection object
 	 *
 	 * @param SimpleXMLElement $Page
 	 * @access private
@@ -82,20 +82,20 @@ class tx_l10nmgr_models_translation_factory {
 	 * @return void
 	 */
 	private function exractTranslation(SimpleXMLElement $Pagerows) {
-		$PageCollection = new tx_l10nmgr_models_translation_pageCollection();
+		$PageCollection = new tx_l10nmgr_domain_translation_pageCollection();
 
 		foreach ($Pagerows as $pagerow) {
-			$Page = new tx_l10nmgr_models_translation_page();
+			$Page = new tx_l10nmgr_domain_translation_page();
 			$Page->setUid((int)$pagerow['id']);
 
 				// Each page has one element collection
-			$ElementCollection = new tx_l10nmgr_models_translation_elementCollection();
+			$ElementCollection = new tx_l10nmgr_domain_translation_elementCollection();
 
 			foreach ($pagerow->children() as $field) {
 				$table = (string)$field['table'];
 				$uid   = (int)$field['elementUid'];
 
-				$Field   = new tx_l10nmgr_models_translation_field();
+				$Field   = new tx_l10nmgr_domain_translation_field();
 				$Field->setFieldPath((string)$field['key']);
 
 				if ( ((int)$field['transformations'] === 1) ) {
@@ -127,12 +127,12 @@ class tx_l10nmgr_models_translation_factory {
 
 	/**
 	 * If the Element for the current table and uid combination not exists a new instance
-	 * of the tx_l10nmgr_models_translation_element will be create.
+	 * of the tx_l10nmgr_domain_translation_element will be create.
 	 *
 	 * @param string $table
 	 * @param int $uid
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @return tx_l10nmgr_models_translation_element
+	 * @return tx_l10nmgr_domain_translation_element
 	 */
 	protected function createOrGetElementFromElementCollection($ElementCollection,$table,$uid){
 
@@ -141,13 +141,13 @@ class tx_l10nmgr_models_translation_factory {
 			$Element = $ElementCollection->getElementByTableAndUid($table, $uid);
 		} else {
 
-			$Element = new tx_l10nmgr_models_translation_element();
+			$Element = new tx_l10nmgr_domain_translation_element();
 			$Element->setTableName($table);
 			$Element->setUid($uid);
 
 			$ElementCollection->offsetSet($uid, $Element);
 
-			$FieldCollection = new tx_l10nmgr_models_translation_fieldCollection();
+			$FieldCollection = new tx_l10nmgr_domain_translation_fieldCollection();
 			$Element->setFieldCollection($FieldCollection);
 		}
 
@@ -155,7 +155,7 @@ class tx_l10nmgr_models_translation_factory {
 	}
 
 	/**
-	 * Extract the meta information of the import XML file into the tx_l10nmgr_models_translation_data object
+	 * Extract the meta information of the import XML file into the tx_l10nmgr_domain_translation_data object
 	 *
 	 * @param SimpleXMLElement $Head
 	 * @access private
@@ -183,8 +183,8 @@ class tx_l10nmgr_models_translation_factory {
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_factory.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_factory.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translationFactory.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translationFactory.php']);
 }
 
 ?>

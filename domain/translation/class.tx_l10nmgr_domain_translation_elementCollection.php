@@ -22,12 +22,12 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10nmgr_models_translation_element.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_element.php';
 
 /**
- * Collection that holds tx_l10nmgr_models_translation_element
+ * Collection that holds tx_l10nmgr_domain_translation_element
  *
- * class.tx_l10nmgr_models_translation_elementCollection.php
+ * class.tx_l10nmgr_domain_translation_elementCollection.php
  *
  * @author Michael Klapper <klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -39,12 +39,12 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  * @subpackage extensionkey
  * @access public
  */
-class tx_l10nmgr_models_translation_elementCollection extends ArrayObject {
+class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject {
 
 	/**
 	 *
 	 * @access public
-	 * @return tx_l10nmgr_models_translation_element
+	 * @return tx_l10nmgr_domain_translation_element
 	 */
 	public function offsetGet($index) {
 		return parent::offsetGet($index);
@@ -53,14 +53,14 @@ class tx_l10nmgr_models_translation_elementCollection extends ArrayObject {
 	/**
 	 *
 	 * @param mixed $index
-	 * @param tx_l10nmgr_models_translation_element $Element
+	 * @param tx_l10nmgr_domain_translation_element $Element
 	 * @throws InvalidArgumentException
 	 * @return void
 	 */
 	public function offsetSet($index, $Element) {
 
-		if (! $Element instanceof tx_l10nmgr_models_translation_element ) {
-			throw new InvalidArgumentException('Wrong parameter type given, "tx_l10nmgr_models_translation_element" expected!');
+		if (! $Element instanceof tx_l10nmgr_domain_translation_element ) {
+			throw new InvalidArgumentException('Wrong parameter type given, "tx_l10nmgr_domain_translation_element" expected!');
 		}
 
 		parent::offsetSet($index, $Element);
@@ -68,14 +68,14 @@ class tx_l10nmgr_models_translation_elementCollection extends ArrayObject {
 
 	/**
 	 *
-	 * @param tx_l10nmgr_models_translation_element $Element
+	 * @param tx_l10nmgr_domain_translation_element $Element
 	 * @throws InvalidArgumentException
 	 * @return void
 	 */
 	public function append($Element) {
 
-		if (! $Element instanceof tx_l10nmgr_models_translation_element ) {
-			throw new InvalidArgumentException('Wrong parameter type given, "tx_l10nmgr_models_translation_element" expected!');
+		if (! $Element instanceof tx_l10nmgr_domain_translation_element ) {
+			throw new InvalidArgumentException('Wrong parameter type given, "tx_l10nmgr_domain_translation_element" expected!');
 		}
 
 		parent::append($Element);
@@ -110,7 +110,7 @@ class tx_l10nmgr_models_translation_elementCollection extends ArrayObject {
 	 * @param string $table
 	 * @param int $uid
 	 * @access public
-	 * @return tx_l10nmgr_models_translation_element
+	 * @return tx_l10nmgr_domain_translation_element
 	 */
 	public function getElementByTableAndUid($table, $uid) {
 
@@ -125,8 +125,8 @@ class tx_l10nmgr_models_translation_elementCollection extends ArrayObject {
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_elementCollection.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_elementCollection.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_elementCollection.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_elementCollection.php']);
 }
 
 ?>
