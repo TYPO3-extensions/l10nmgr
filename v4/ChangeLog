@@ -1,10 +1,10 @@
 2009-04-28 Michael Klapper <michael.klapper@aoemedia.de>
 	* Add some PHPdoc
 	* Remove some whitespaces from classes
-	* Improve the tx_l10nmgr_models_translation_factory to read CDATA and HTML
+	* Improve the tx_l10nmgr_domain_translationFactory to read CDATA and HTML
 	* Improve the testcase for the translation package
 	* Move translation subpackage to domain package
-	* Add initial tx_l10nmgr_service_translationBase
+	* Add initial tx_l10nmgr_service_importTranslation, tx_l10nmgr_service_importTranslation_basic_testcase
 
 2009-04-27 Michael Klapper <michael.klapper@aoemedia.de>
 	* Add initial translation model incl. first testcase
