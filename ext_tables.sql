@@ -86,39 +86,7 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	exportType blob NOT NULL,
 	progress blob NOT NULL,
 	filename text NOT NULL,
-
-	PRIMARY KEY (uid),
-);
-
-#
-# Table structure for table 'tx_l10nmgr_importdata'
-#
-CREATE TABLE tx_l10nmgr_importdata (
-	uid int(11) NOT NULL auto_increment,
-	pid int(11) DEFAULT '0' NOT NULL,
-	exportdata_id int(11) DEFAULT '0' NOT NULL,
-	tstamp int(11) DEFAULT '0' NOT NULL,
-	crdate int(11) DEFAULT '0' NOT NULL,
-	cruser_id int(11) DEFAULT '0' NOT NULL,
-	deleted tinyint(4) DEFAULT '0' NOT NULL,
-	title tinytext NOT NULL,
-	progress blob NOT NULL,
-
-	PRIMARY KEY (uid),
-);
-
-#
-# Table structure for table 'tx_l10nmgr_workflowstates'
-#
-CREATE TABLE tx_l10nmgr_workflowstates (
-	uid int(11) NOT NULL auto_increment,
-	pid int(11) DEFAULT '0' NOT NULL,
-	exportdata_id int(11) DEFAULT '0' NOT NULL,
-	tstamp int(11) DEFAULT '0' NOT NULL,
-	crdate int(11) DEFAULT '0' NOT NULL,
-	cruser_id int(11) DEFAULT '0' NOT NULL,
-	deleted tinyint(4) DEFAULT '0' NOT NULL,
-	state tinytext NOT NULL,
+	exportfiles int(11) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),
 );
@@ -135,6 +103,56 @@ CREATE TABLE tx_l10nmgr_exportfiles (
 	cruser_id int(11) DEFAULT '0' NOT NULL,
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	filename text NOT NULL,
+
+	PRIMARY KEY (uid),
+);
+
+#
+# Table structure for table 'tx_l10nmgr_importdata'
+#
+CREATE TABLE tx_l10nmgr_importdata (
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+	exportdata_id int(11) DEFAULT '0' NOT NULL,
+	configuration_id int(11) DEFAULT '0' NOT NULL,
+	tstamp int(11) DEFAULT '0' NOT NULL,
+	crdate int(11) DEFAULT '0' NOT NULL,
+	cruser_id int(11) DEFAULT '0' NOT NULL,
+	deleted tinyint(4) DEFAULT '0' NOT NULL,
+	progress blob NOT NULL,
+	importfiles int(11) DEFAULT '0' NOT NULL,
+
+	PRIMARY KEY (uid),
+);
+
+#
+# Table structure for table 'tx_l10nmgr_importfiles'
+#
+CREATE TABLE tx_l10nmgr_importfiles (
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+	importdata_id int(11) DEFAULT '0' NOT NULL,
+	tstamp int(11) DEFAULT '0' NOT NULL,
+	crdate int(11) DEFAULT '0' NOT NULL,
+	cruser_id int(11) DEFAULT '0' NOT NULL,
+	deleted tinyint(4) DEFAULT '0' NOT NULL,
+	filename text NOT NULL,
+
+	PRIMARY KEY (uid),
+);
+
+#
+# Table structure for table 'tx_l10nmgr_workflowstates'
+#
+CREATE TABLE tx_l10nmgr_workflowstates (
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+	exportdata_id int(11) DEFAULT '0' NOT NULL,
+	tstamp int(11) DEFAULT '0' NOT NULL,
+	crdate int(11) DEFAULT '0' NOT NULL,
+	cruser_id int(11) DEFAULT '0' NOT NULL,
+	deleted tinyint(4) DEFAULT '0' NOT NULL,
+	state tinytext NOT NULL,
 
 	PRIMARY KEY (uid),
 );

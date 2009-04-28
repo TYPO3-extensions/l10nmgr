@@ -35,7 +35,7 @@
 				<label index="tx_l10nmgr_cfg.exporttablelist">Exported tables</label>
 			<label index="tx_l10nmgr_export">L10N Manager exports</label>
 			<label index="tx_l10nmgr_import">L10N Manager imports</label>
-			<label index="tx_l10nmgr_workflowstates">L10N Manager export states</label>
+			<label index="tx_l10nmgr_workflowstates">L10N Manager workflow states</label>
 				<label index="tx_l10nmgr_workflowstates.exportdata_id">Exportdata id</label>
 				<label index="tx_l10nmgr_workflowstates.crdate">Creation date</label>
 				<label index="tx_l10nmgr_workflowstates.state">State</label>
@@ -43,6 +43,10 @@
 				<label index="tx_l10nmgr_exportfiles.exportdata_id">Exportdata id</label>
 				<label index="tx_l10nmgr_exportfiles.crdate">Creation date</label>
 				<label index="tx_l10nmgr_exportfiles.filename">File name</label>
+			<label index="tx_l10nmgr_importfiles">L10N Manager import files</label>
+				<label index="tx_l10nmgr_importfiles.importdata_id">importdata id</label>
+				<label index="tx_l10nmgr_importfiles.crdate">Creation date</label>
+				<label index="tx_l10nmgr_importfiles.filename">File name</label>
  			<label index="tx_l10nmgr_priorities">Localization priority</label>
 				<label index="tx_l10nmgr_priorities.title">Title:</label>
 				<label index="tx_l10nmgr_priorities.description">Description:</label>

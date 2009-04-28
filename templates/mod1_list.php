@@ -8,12 +8,11 @@ global $BACK_PATH, $LANG;
 ?>
 
 
-<?php $gD1 = $this->getDocument(); echo $gD1->startPage($LANG->getLL('general.title')); ?>
-<?php $gD2 = $this->getDocument(); echo $gD2->header($LANG->getLL('general.title')); ?>
-<?php $gD3 = $this->getDocument(); echo $gD3->section('', nl2br($LANG->getLL('general.description.message'))); ?>
-<?php $gD4 = $this->getDocument(); echo $gD4->section($LANG->getLL('general.list.configuration.title'),''); ?>
-
-<?php $gD5 = $this->getDocument(); echo $gD5->spacer(5); ?>
+<?= $this->getDocument()->startPage($LANG->getLL('general.title')); ?>
+<?= $this->getDocument()->header($LANG->getLL('general.title')); ?>
+<?= $this->getDocument()->section('', nl2br($LANG->getLL('general.description.message'))); ?>
+<?= $this->getDocument()->section($LANG->getLL('general.list.configuration.title'),''); ?>
+<?= $this->getDocument()->spacer(5); ?>
 
 <table id="translationObjectList" class="scrollable" border="1">
 	<thead>
@@ -90,16 +89,30 @@ global $BACK_PATH, $LANG;
 			</td>
 			<td><?php echo $configurationElementArray['title']; ?></td>
 			<td class="l10ncfgPath"><?php echo current(t3lib_BEfunc::getRecordPath($configurationElementArray['pid'], '1', 200, 50)); ?></td>
-			<td><?php echo '<a title="Export XML" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'export/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xml">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>gfx/xml_export.png" alt="Export XML" /></a>
-			<?php echo '<a title="Import XML" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'import/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xml">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>gfx/xml_import.png" alt="Import XML" /></a> |
-			<?php echo '<a title="Export XLS" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'export/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xls">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>gfx/xls_export.png" alt="Export XLS" /></a>
-			<?php echo '<a title="Import XLS" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'import/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xls">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>gfx/xls_import.png" alt="Import XLS" /></a> |
-			<?php echo '<a title="Translate online" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'translate/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=inlineEdit">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>gfx/pencil_go.png" alt="Translate online" /></a>
+			<td>
+				<?php echo '<a title="Export XML" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'export/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xml">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>xml_export.png" alt="Export XML" /></a>
+
+				<?php
+					$editOnClickParams  = '&edit[tx_l10nmgr_importdata][' . $configurationElementArray['pid'] . ']=new';
+					$editOnClickParams .= '&columnsOnly=configuration_id,importfiles';
+					$editOnClickParams .= '&returnEditConf=1';
+					$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][configuration_id]='.$configurationElementArray['uid'];
+					$editOnClickParams .= '&overrideVals[tx_l10nmgr_importdata][configuration_id]='.$configurationElementArray['uid'];
+					$importUrl = t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'import/index.php?l10nmgr[selectedExportFormat]=xml';
+				?>
+				<a title="Import XML" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $BACK_PATH, $importUrl)) ?>">
+					<img src="<?= t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) ?>xml_import.png" alt="Import XML" />
+				</a>
+
+
+				<?php echo '<a title="Export XLS" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'export/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xls">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>xls_export.png" alt="Export XLS" /></a>
+				<?php echo '<a title="Import XLS" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'import/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xls">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>xls_import.png" alt="Import XLS" /></a> |
+				<?php echo '<a title="Translate online" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'translate/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=inlineEdit">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>pencil_go.png" alt="Translate online" /></a>
 			</td>
 		</tr>
 		<?php } ?>
 	</tbody>
 </table>
 
-<?php $gD8 = $this->getDocument(); echo $gD8->spacer(10); ?>
-<?php $gD9 = $this->getDocument(); echo $gD9->endPage(); ?>
+<?= $this->getDocument()->spacer(10); ?>
+<?= $this->getDocument()->endPage(); ?>
