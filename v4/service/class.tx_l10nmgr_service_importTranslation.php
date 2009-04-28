@@ -51,6 +51,36 @@ class tx_l10nmgr_service_importTranslation {
 	 */
 	public function save(tx_l10nmgr_models_translateable_translateableInformation $TranslatableInformation, tx_l10nmgr_domain_translation_data $TranslationData) {
 
+		$TranslatablePageGroupCollection = $TranslatableInformation->getPageGroups();
+
+		foreach ( $TranslatablePageGroupCollection as $Page) {
+			$TranslatableElementsCollection = $Page->getTranslateableElements();
+
+			foreach ($TranslatableElementsCollection as $Element) {
+				$TranslatableFieldsCollection = $Element->getTranslateableFields();
+
+				foreach ($TranslatableFieldsCollection as $Field) {
+//					var_dump($Field);
+
+					try {
+						$TranslationData->findByTableUidAndKey($Page->getUid(), $Element->getTableName(), $Element->getUid(), $Field->getIdentityKey());
+//						$TranslationData->findByTableUidAndKey(000000, $Element->getTableName(), $Element->getUid(), $Field->getIdentityKey());
+
+
+
+
+					} catch (tx_mvc_exception_argumentOutOfRange $e ) {
+						$e->handle();
+					} catch (tx_mvc_exception  $e ) {
+						$e->handle();
+					}
+
+					$Field->getDefaultValue();
+
+				}
+			}
+		}
+
 	}
 }
 
