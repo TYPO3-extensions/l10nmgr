@@ -26,8 +26,6 @@
 t3lib_extMgm::isLoaded('mvc', true);
 tx_mvc_common_classloader::loadAll();
 
-//require_once t3lib_extMgm::extPath('mvc') . 'ddd/class.tx_mvc_abstractDbObject.php';
-//require_once t3lib_extMgm::extPath('mvc') . 'ddd/class.tx_mvc_abstractRepository.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10nmgr_models_translation_factory.php';
 
 /**
@@ -35,7 +33,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  *
  * {@inheritdoc}
  *
- * class.tx_l10nmgr_models_translation_testcase.php
+ * class.tx_l10nmgr_models_translation_factory_basic_testcase.php
  *
  * @author Michael Klapper <michael.klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -49,7 +47,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translation_basic_testcase extends tx_phpunit_testcase {
+class tx_l10nmgr_models_translation_factory_basic_testcase extends tx_phpunit_testcase {
 
 	/**
 	 * @var tx_l10nmgr_models_translation_factory
@@ -161,8 +159,8 @@ class tx_l10nmgr_models_translation_basic_testcase extends tx_phpunit_testcase {
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_models_translation_basic_testcase.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_models_translation_basic_testcase.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_models_translation_factory_basic_testcase.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_models_translation_factory_basic_testcase.php']);
 }
 
 ?>
