@@ -126,12 +126,12 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	public function dataContainsRightTableNameForEntityDataProvider() {
 
 		return array (
-			array ('pages', 1111, 1111),
-			array ('pages', 175, 175),
-			array ('pages', 175, 175),
-			array ('tt_content', 175, 423621),
-			array ('tt_content', 175, 3897),
-			array ('tt_content', 535, 1676),
+			array ('pages', 1111, 'pages:' . 1111),
+			array ('pages', 175, 'pages:' . 175),
+			array ('pages', 175, 'pages:' . 175),
+			array ('tt_content', 175, 'tt_content:' . 423621),
+			array ('tt_content', 175, 'tt_content:' . 3897),
+			array ('tt_content', 535, 'tt_content:' . 1676),
 		);
 	}
 
@@ -164,7 +164,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * 		true, // expected transformations status
 	 * 		1111, // Page UID
 	 * 		1111, // Record UID
-	 * 		'title', // record field column name
+	 * 		'tt_content:523531:bodytext"', // record command path
 	 * 	)
 	 * </exampl>
 	 *
@@ -175,11 +175,11 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	public function validFieldTransoformationStatusDataProvider() {
 
 		return array (
-			array(false, 1111, 1111, 'title'),
-			array(false, 535, 1674, 'header'),
-			array(false, 535, 1693, 'header'),
-			array(false, 25271, 25271, 'title'),
-			array(true, 535, 1676, 'bodytext'),
+			array(false, 1111, 'pages:' . 1111, 'pages_language_overlay:NEW/1/1111:title'),
+			array(false, 535, 'tt_content:' . 1674, 'tt_content:NEW/1/1674:header'),
+			array(false, 535, 'tt_content:' . 1693, 'tt_content:NEW/1/1693:header'),
+			array(false, 25271, 'pages:' . 25271, 'pages_language_overlay:NEW/1/25271:title'),
+			array(true, 535, 'tt_content:' . 1676, 'tt_content:NEW/1/1676:bodytext'),
 		);
 	}
 
@@ -213,7 +213,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * 		'WebEx Customers, // expected content
 	 * 		1111, // Page UID
 	 * 		1111, // Record UID
-	 * 		'title', // record field column name
+	 * 		'tt_content:523531:bodytext"', // record command path
 	 * 	)
 	 * </exampl>
 	 *
@@ -223,10 +223,10 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 */
 	public function fieldContainsRightContentBetweenCdataDataProvider() {
 		return array (
-			array('WebEx Customers', 1111, 1111, 'title'),
-			array('Contact Us', 175, 3887, 'header'),
-			array('WebEx US offices', 536, 536, 'abstract'),
-			array('WebEx International Offices', 535, 1674, 'header'),
+			array('WebEx Customers', 1111, 'pages:' . 1111, 'pages_language_overlay:NEW/1/1111:title'),
+			array('Contact Us', 175, 'tt_content:' . 3887, 'tt_content:NEW/1/3887:header'),
+			array('WebEx US offices', 536, 'pages:' . 536, 'pages_language_overlay:29181:abstract'),
+			array('WebEx International Offices', 535, 'tt_content:' . 1674, 'tt_content:NEW/1/1674:header'),
 		);
 	}
 
@@ -260,7 +260,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * 		'WebEx Customers, // expected content
 	 * 		1111, // Page UID
 	 * 		1111, // Record UID
-	 * 		'title', // record field column name
+	 * 		'tt_content:523531:bodytext"', // record command path
 	 * 	)
 	 * </exampl>
 	 *
@@ -273,14 +273,14 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 			array (
 				'<p><a href="http://www.webex.co.uk/">WebEx Communications UK Ltd</a> <br/>20 Garrick Street <br/>London WC2E 9BT <br/>United Kingdom <br/>Tel: 0800 389 9772 <br/>Email: <a href="mailto:europe@webex.com">europe@webex.com</a> </p>',
 				535,
-				1693,
-				'bodytext'
+				'tt_content:' . 1693,
+				'tt_content:NEW/1/1693:bodytext'
 			),
 			array (
 				'<p>&nbsp;</p><h1>Your message has been sent</h1><p>&nbsp;</p><p>Thank you for your message.  We have forwarded your communication to the appropriate department.  If this is a technical support matter, please call our customer care line at<strong> 866-229-3239</strong> for immediate attention.  To speak with a sales representative, please call <strong>877-509-3239</strong>.</p>',
 				19761,
-				523511,
-				'bodytext'
+				'tt_content:' . 523511,
+				'tt_content:523531:bodytext'
 			),
 		);
 	}
