@@ -1,5 +1,4 @@
 <?php
-
 /***************************************************************
  *  Copyright notice
  *
@@ -25,11 +24,14 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_importTranslation.php';
+
 /**
  *
  * class.tx_l10nmgr_models_importer_importer.php
  *
- * @author	 Timo Schmidt <schmidt@aoemedia.de>
+ * @author Timo Schmidt <schmidt@aoemedia.de>
+ * @author Michael Klapper <michael.klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_models_importer_importer.php $
@@ -44,92 +46,106 @@ class tx_l10nmgr_models_importer_importer {
 	 * @var tx_l10nmgr_models_importer_importData
 	 */
 	protected $importData;
-	
-	
+
 	/**
 	 * @var tx_l10nmgr_models_exporter_exportData
 	 */
 	protected $exportData;
-	
-	
+
 	/**
-	 * This method is used to create an import of a given 
+	 * This method is used to create an import of a given
 	 * tx_l10nmgr_models_importer_importData.
 	 *
 	 * @param tx_l10nmgr_models_importer_importData
+	 * @access public
+	 * @return void
 	 */
 	public function __construct($importData){
 		$this->importData = $importData;
 		$this->exportData = $importData->getExportDataObject();
 	}
-	
+
 	/**
 	 * This is the worker method of the importer, it uses the importData to get translationInform
-	 * 
-	 * @param void
+	 *
+	 * @access public
+	 * @author Timo Schmidt <schmidt@aoemedia.de>
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return boolean
 	 */
 	public function run(){
-		
-		//@todo maybe importData
-		if(!$this->importData->getImportIsCompletelyProcessed()) {
-			if($this->importData->getIsCompletelyUnprocessed()) {
-				//note: workflowStates depend on the exportData object therefore we have to use it to mark the import as started
+		$isRunning = false;
+
+			//!TODO  maybe importData
+		if (! $this->importData->getImportIsCompletelyProcessed() ) {
+
+			if ( $this->importData->getIsCompletelyUnprocessed() ) {
+				/**
+				 * @internal  workflowStates depend on the exportData object therefore we have to use it to mark the import as started
+				 */
 				$this->exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTING);
 			}
-			
-			//determine the next file to import
-			$currentFile 			= $this->getNextFile();
-			
-			//create translationData for the current file
-			$translationDataFactory = new tx_l10nmgr_model_translation_factory();
-			$translationData		= $translationDataFactory->create($currentFile);
-			
-			//get collection of pageIds to create a translateableInformation for the relevantPages from the imported file
-			$importPageIdCollection	= $translationData->getRelevantPageIds();
-			
-			//create a dataProvider based on the exportData and the relevantPageIds of the importFile
-			$translateableFactoryDataProvider	= $this->getTranslateableFactoryDataProviderFromExportData($importPageIdCollection);
-			$translateableInformationFactory	= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-			$translateableInformation			= $translateableInformationFactory->create($translateableFactoryDataProvider);
-			
-			//perform the import
-			tx_l10nmgr_models_importer_importService::performImport($translateableInformation,$translationData);
-			
-			if($this->importData->countRemainingFiles() <= 0) {
-				$this->importData->setImportIsCompletelyProcessed(true);				
+
+				// determine the next file to import
+			$currentFile = $this->getNextFile();
+
+			$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
+			$TranslationData    = $TranslationFactory->create($currentFile);
+
+				// get collection of pageIds to create a translateableInformation for the relevantPages from the imported file
+			$ImportPageIdCollection	= $TranslationData->getRelevantPageIds();
+
+				// create a dataProvider based on the exportData and the relevantPageIds of the importFile
+			$translateableFactoryDataProvider = $this->getTranslateableFactoryDataProviderFromExportData($ImportPageIdCollection);
+			$translateableInformationFactory  = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+			$TranslateableInformation         = $translateableInformationFactory->create($translateableFactoryDataProvider);
+
+				// Save the translation into the database
+			$TranslationService = new tx_l10nmgr_service_importTranslation();
+			$TranslationService->save($TranslateableInformation, $TranslationData);
+
+
+			if ( $this->importData->countRemainingFiles() <= 0 ) {
+				$this->importData->setImportIsCompletelyProcessed(true);
 				$this->exportData->addWorkflowStat(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
-			
 			}
-			
-			return true;
-		}else{
-			return false;
+
+			$isRunning = true;
 		}
+
+		return $isRunning;
 	}
-	
+
 	/**
 	 * Create a dataProvider for the translateableInformationFactory from the current exportData
 	 *
-	 * @param int
+	 * @param ArrayObject $PageIdCollection
+	 * @access protected
 	 * @return tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider
 	 */
-	protected function getTranslateableFactoryDataProviderFromExportData($pageIdCollection){
-		$dataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider(	$this->exportData->getL10nConfigurationObject(),
-																									$pageIdCollection,
-																									$this->exportData->getTranslationLanguageObject(),
-																									$this->exportData->getSourceLanguageObject());
-		return $dataProvider;
+	protected function getTranslateableFactoryDataProviderFromExportData($PageIdCollection) {
+		$TranslatableDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider (
+			$this->exportData->getL10nConfigurationObject(),
+			$PageIdCollection,
+			$this->exportData->getTranslationLanguageObject(),
+			$this->exportData->getSourceLanguageObject()
+		);
+
+		return $TranslatableDataProvider;
 	}
 
 	/**
 	 * Returns the next file for the import.
 	 *
-	 * return string $fileName 
+	 * @access protected
+	 * @return string $fileName
 	 */
-	protected function getNextFile(){
+	protected function getNextFile() {
 	}
-	
-
 }
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/importer/class.tx_l10nmgr_models_importer_importer.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/importer/class.tx_l10nmgr_models_importer_importer.php']);
+}
+
 ?>
