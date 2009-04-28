@@ -1,3 +1,7 @@
+2009-04-28 Michael Klapper <michael.klapper@aoemedia.de>
+	* Add some PHPdoc
+	* Remove some whitespaces from classes
+
 2009-04-27 Michael Klapper <michael.klapper@aoemedia.de>
 	* Add initial translation model incl. first testcase
 	* Add some PHPdoc

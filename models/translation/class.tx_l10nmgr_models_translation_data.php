@@ -304,7 +304,7 @@ class tx_l10nmgr_models_translation_data {
 	public function setWorkspaceId($workspaceId) {
 		$this->workspaceId = $workspaceId;
 	}
-	
+
 	/**
 	 * Returns a collection of page ids which are relevant for this translation.
 	 *
@@ -314,12 +314,12 @@ class tx_l10nmgr_models_translation_data {
 	 */
 	public function getPageIdCollection(){
 		$pageIdCollection = new ArrayObject();
-		
+
 		for($it = $this->PagesCollection->getIterator(); $it->valid(); $it->next()){
 			$currentPage = $it->current();
 			$pageIdCollection->append($currentPage->getUid());
 		}
-		
+
 		return $pageIdCollection;
 	}
 }
