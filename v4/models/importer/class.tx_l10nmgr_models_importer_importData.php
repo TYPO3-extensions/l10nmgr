@@ -29,24 +29,24 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_
 /**
  * Object of this class represent one import
  *
- *
  * class.tx_l10nmgr_models_importer_importData.php
  *
- * @author	 Mick Klapper <klapper@aoemedia.de> und Timo Schmidt <schmidt@aoemedia.de>
+ * @author Timo Schmidt <schmidt@aoemedia.de>
+ * @author Michael Klapper <michael.klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_models_importer_importData.php $
  * @date 24.04.2009 - 13:24:06
  * @see tx_mvc_ddd_typo3_abstractTCAObject
  * @category database
- * @package	TYPO3
- * @subpackage	l10nmgr
+ * @package TYPO3
+ * @subpackage tx_l10nmgr
  * @access public
  */
 class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCAObject  {
 
 	/**
-	 * Initialisize the database object with 
+	 * Initialisize the database object with
 	 * the table name of current object
 	 *
 	 * @access     public
@@ -59,8 +59,8 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	/**
 	 * Overwrite getDatabaseFieldNames to remove the "virtual files" that should not be stored in the database
 	 *
-	 * @return array array of field names to store in the database
 	 * @see ddd/tx_mvc_ddd_abstractDbObject#getDatabaseFieldNames()
+	 * @return array array of field names to store in the database
 	 */
 	public function getDatabaseFieldNames() {
 		$fields = parent::getDatabaseFieldNames();
@@ -73,7 +73,7 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 
 		return $fields;
 	}
-		
+
 	/**
 	 * Returns the related exportData object of this import data object
 	 *
