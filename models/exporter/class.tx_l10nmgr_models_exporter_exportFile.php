@@ -44,11 +44,6 @@ class tx_l10nmgr_models_exporter_exportFile extends tx_mvc_ddd_abstractDbObject 
 			unset($fields[$key]);
 		}
 
-		$key = array_search('path', $fields);
-		if ($key !== false) {
-			unset($fields[$key]);
-		}
-
 		return $fields;
 	}
 
@@ -83,15 +78,6 @@ class tx_l10nmgr_models_exporter_exportFile extends tx_mvc_ddd_abstractDbObject 
 	}
 
 	/**
-	 * Method to configure a path where the file should be save
-	 *
-	 * @param string $path
-	 */
-	public function setPath($path) {
-		$this->row['path'] = $path;
-	}
-
-	/**
 	 * Writes the file to the harddisk
 	 *
 	 * @param void
@@ -101,7 +87,8 @@ class tx_l10nmgr_models_exporter_exportFile extends tx_mvc_ddd_abstractDbObject 
 		if(empty($this->row['content'])) {
 			throw new LogicException('The exportfile has no content');
 		}
-		$path = t3lib_div::getFileAbsFileName($this->row['path'] . $this->row['filename']);
+
+		$path = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', $this->getTablename(), 'filename') . '/' . $this->row['filename']);
 		t3lib_div::writeFile($path, $this->row['content']);
 	}
 
