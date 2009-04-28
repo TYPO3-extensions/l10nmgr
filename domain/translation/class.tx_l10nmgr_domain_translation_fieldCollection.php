@@ -25,7 +25,7 @@
 require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_field.php';
 
 /**
- * Collection
+ * Collection of fields to translate
  *
  * class.tx_l10nmgr_domain_translation_fieldCollection.php
  *
@@ -94,4 +94,5 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_fieldCollection.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_fieldCollection.php']);
 }
+
 ?>
