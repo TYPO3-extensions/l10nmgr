@@ -129,7 +129,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
      * This method is used to process a submitted exportForm.
      * Depending on the checkboxes we need to start an exportProcess
      * or need to show all exports which have not been reimported yet.
-     * 
+     *
      * @param void
      * @return void
      * @author Timo Schmidt
@@ -158,7 +158,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
      * This method is used to show a list of existing exports.
      * It uses tx_l10nmgr_view_export_showExportList view because
      * it is a variant of a list view of exports.
-     * 
+     *
      * @see tx_l10nmgr_view_export_showExportList
      * @param void
      * @return void
@@ -192,7 +192,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
     /**
      * This method is used to start an export. It creates an exportData object
      * and loads the exportView with a progressbar.
-     * 
+     *
      * @param void
      * @return void
      *
@@ -259,8 +259,6 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
         $exportFormat			= tx_mvc_filter_factory::getTextPlainFilter()->filter($this->arguments['selectedExportFormat']);
 
-        $exportPath 			= $this->configuration->get('exportPath');
-
         $exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
         $exportData 			= $exportDataRepository->findById($exportDataID);
 
@@ -283,7 +281,6 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
             $exportFile->setFilename($exportView->getFilename($exportData->getNumberOfExportRuns()));
             $exportFile->setExportDataObject($exportData);
             $exportFile->setContent($chunkResult);
-            $exportFile->setPath($exportPath);
             $exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
             $exportFile->write();
 
@@ -294,10 +291,12 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
         if ($exportData->getExportIsCompletelyProcessed()) {
 
+        	$exportFilePath	= tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename');
+
             // create one zip file
             $zipper = new tx_mvc_util_zip();
             foreach ($exportData->getExportFiles() as $exportFile) {
-            	$filename = t3lib_div::getFileAbsFileName($exportPath . $exportFile->getFilename());
+            	$filename = t3lib_div::getFileAbsFileName($exportFilePath . '/' . $exportFile->getFilename());
                 $zipper->add_file(
                     file_get_contents($filename),
                     $exportFile->getFilename()
@@ -310,7 +309,8 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
             // write to file
             $filename = $exportView->getFilename('') . '.zip';
-            $res = t3lib_div::writeFile(PATH_site . $exportPath . $filename, $zipper->file());
+            $exportDataFilePath	= tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportData::getTableName(), 'filename');
+            $res = t3lib_div::writeFile(PATH_site . $exportDataFilePath . '/' . $filename, $zipper->file());
             if ($res == false) {
             	throw new Exception(sprintf('Error while writing file "%s"', $exportPath . $filename));
             }
