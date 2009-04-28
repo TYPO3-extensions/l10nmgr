@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testdata>
+    <tx_l10nmgr_exportdata>
+        <uid>9999</uid>
+        <pid>33153</pid>
+        <l10ncfg_id>4711</l10ncfg_id>
+        <tstamp>1240920868</tstamp>
+        <crdate>1240920868</crdate>
+        <cruser_id>831</cruser_id>
+        <deleted>0</deleted>
+        <title>importer testcase</title>
+        <source_lang>0</source_lang>
+        <translation_lang>999</translation_lang>
+        <tablelist>pages,tt_content</tablelist>
+        <exportType>1</exportType>
+        <filename>test__to_en_GB_280409-141428.xml</filename>
+    </tx_l10nmgr_exportdata>
+</testdata>
+ 

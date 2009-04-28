@@ -126,16 +126,17 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-		
-		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
-		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
-		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+				
 		$fixtureLimitToPageIds = $this->getFixtureLimitToPageids ();
 		
 		$ids = array ();
 		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
 		
-		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, $fixtureLimitToPageIds, $fixtureTargetLanguage, $fixturePreviewLanguage );
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById(9999);
+		
+		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData, $fixtureLimitToPageIds );
 		$translateableInformations 	= $factory->create ( $typo3DataProvider );
 		
 		$pageGroups = $translateableInformations->getPageGroups ();
@@ -154,14 +155,14 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-		
-		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
-		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
-		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+				
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById(9999);
 		$fixtureLimitToPageIds = $this->getFixtureLimitToPageids ();
 		
 		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, $fixtureLimitToPageIds, $fixtureTargetLanguage, $fixturePreviewLanguage );
+		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData, $fixtureLimitToPageIds);
 		$translateableInformations 	= $factory->create ( $typo3DataProvider );
 		
 		$pageGroups = $translateableInformations->getPageGroups ();
@@ -175,33 +176,39 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	}
 	
 	public function test_canGetContentElementFromPageAndReturnCorrectDiffToDefaut() {
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetContentElementFromPageAndReturnCorrectDiffToDefaut.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-
-		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
-		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
-		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
-
-		//diff must be something like l18n
-		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(4711)), $fixtureTargetLanguage, $fixturePreviewLanguage);
-		$translateableInformations 	= $factory->create ( $typo3DataProvider );
-		
-		
-		$pageGroups = $translateableInformations->getPageGroups ();	
-		$allElements = $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
-		
-		//get second element (first is the page itself).
-		$ttContentElement = $allElements->offsetGet ( 1 );
-		
-		$this->assertEquals(1,$ttContentElement->getTranslateableFields()->count(),'Unexpected number of translateableFields');
-		
-		$headerField = $ttContentElement->getTranslateableFields()->offsetGet(0);
-
-		$this->assertEquals('l18n',$headerField->getDiffDefaultValue(),'Incorrect diffDefaultValue');
-		
+		try{
+			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetContentElementFromPageAndReturnCorrectDiffToDefaut.xml' );
+			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
+			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+			
+			$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+			$exportData = $exportDataRepository->findById(9999);
+			
+			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+			$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
+			$translateableInformations 	= $factory->create ( $typo3DataProvider );
+			
+			$pageGroups = $translateableInformations->getPageGroups ();	
+			$allElements = $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
+			
+			//get second element (first is the page itself).
+			$ttContentElement = $allElements->offsetGet ( 1 );
+			
+			$this->assertEquals(1,$ttContentElement->getTranslateableFields()->count(),'Unexpected number of translateableFields');
+			
+			$headerField = $ttContentElement->getTranslateableFields()->offsetGet(0);
+	
+			$this->assertEquals('l18n',$headerField->getDiffDefaultValue(),'Incorrect diffDefaultValue');
+		}catch(Exception $e){
+			echo "Debug".__FILE__." ".__LINE__;
+			print('<pre>');
+			print_r($e->getTrace());					
+			print('</pre>');
+			 $e->getTrace();
+			
+		}
 	}
 	
 	public function test_determineCorrectTranslateableFields() {
@@ -209,15 +216,13 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-
-		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
-		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
-		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
-
-		//diff must be something like l18n
-		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 		
-		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(4711)), $fixtureTargetLanguage, $fixturePreviewLanguage);
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById(9999);
+		
+		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
 		$translateableInformations 	= $factory->create ( $typo3DataProvider );
 		
 		
@@ -251,15 +256,16 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-
-		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
-		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
-		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );		
 
 		//diff must be something like l18n
 		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById(9999);
 		
-		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage);
+		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
 		$translateableInformations 	= $factory->create ( $typo3DataProvider );
 
 		/**
@@ -273,16 +279,14 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-
-		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
-		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
-		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
-
-		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 		
-		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(9999)), $fixtureTargetLanguage, $fixturePreviewLanguage);
-		$translateableInformations 	= $factory->create ( $typo3DataProvider );
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById(9999);
 		
+		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(9999)));
+		$translateableInformations 	= $factory->create ( $typo3DataProvider );		
 		/**
 		 * The TranslateableInformation has 2 translateableElements:
 		 * 
@@ -316,15 +320,17 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-
-		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
-		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
-		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );	
 
 		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 		
-		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage);
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById(9999);
+		
+		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
 		$translateableInformations 	= $factory->create ( $typo3DataProvider );
+						
 		
 		/**
 		 * The FCE on the page is configured with langChildren = 0 AND langDisable = 0. This means, that there
@@ -345,14 +351,13 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-
-		$fixtureL10NConfig = $this->getFixtureL10NConfig ();
-		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
-		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();		
-
-		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+			
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById(9999);
 		
-		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($fixtureL10NConfig, new ArrayObject(array(99999)), $fixtureTargetLanguage, $fixturePreviewLanguage);
+		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
 		$translateableInformations 	= $factory->create ( $typo3DataProvider );
 
 		$pageGroups = $translateableInformations->getPageGroups ();	

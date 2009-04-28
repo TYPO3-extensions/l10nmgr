@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testcase>
+    <pages>
+        <uid>33153</uid>
+        <pid>1</pid>
+        <t3ver_oid>0</t3ver_oid>
+        <t3ver_id>0</t3ver_id>
+        <t3ver_wsid>0</t3ver_wsid>
+        <t3ver_label></t3ver_label>
+        <t3ver_state>0</t3ver_state>
+        <t3ver_stage>0</t3ver_stage>
+        <t3ver_count>0</t3ver_count>
+        <t3ver_tstamp>0</t3ver_tstamp>
+        <t3ver_swapmode>0</t3ver_swapmode>
+        <t3_origuid>0</t3_origuid>
+        <tstamp>1240920563</tstamp>
+        <sorting>16</sorting>
+        <deleted>0</deleted>
+        <perms_userid>831</perms_userid>
+        <perms_groupid>2</perms_groupid>
+        <perms_user>31</perms_user>
+        <perms_group>31</perms_group>
+        <perms_everybody>0</perms_everybody>
+        <editlock>0</editlock>
+        <crdate>1240920500</crdate>
+        <cruser_id>831</cruser_id>
+        <title>importer testcase</title>
+        <doktype>1</doktype>
+        <TSconfig></TSconfig>
+        <storage_pid>0</storage_pid>
+        <is_siteroot>0</is_siteroot>
+        <php_tree_stop>0</php_tree_stop>
+        <url></url>
+        <hidden>0</hidden>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <urltype>1</urltype>
+        <shortcut>0</shortcut>
+        <shortcut_mode>0</shortcut_mode>
+        <no_cache>0</no_cache>
+        <fe_group></fe_group>
+        <subtitle></subtitle>
+        <layout>0</layout>
+        <target></target>
+        <media></media>
+        <lastUpdated>0</lastUpdated>
+        <keywords></keywords>
+        <cache_timeout>0</cache_timeout>
+        <newUntil>0</newUntil>
+        <description></description>
+        <no_search>0</no_search>
+        <SYS_LASTCHANGED>0</SYS_LASTCHANGED>
+        <abstract></abstract>
+        <module></module>
+        <extendToSubpages>0</extendToSubpages>
+        <author></author>
+        <author_email></author_email>
+        <nav_title></nav_title>
+        <nav_hide>0</nav_hide>
+        <content_from_pid>0</content_from_pid>
+        <mount_pid>0</mount_pid>
+        <mount_pid_ol>0</mount_pid_ol>
+        <alias></alias>
+        <l18n_cfg>0</l18n_cfg>
+        <fe_login_mode>0</fe_login_mode>
+        <tx_templavoila_ds>0</tx_templavoila_ds>
+        <tx_templavoila_to>0</tx_templavoila_to>
+        <tx_templavoila_next_ds>0</tx_templavoila_next_ds>
+        <tx_templavoila_next_to>0</tx_templavoila_next_to>
+        <tx_templavoila_flex>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;T3FlexForms&gt;
+    &lt;data&gt;
+        &lt;sheet index=&quot;sDEF&quot;&gt;
+            &lt;language index=&quot;lDEF&quot;&gt;
+                &lt;field index=&quot;field_content&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;619943&lt;/value&gt;
+                &lt;/field&gt;
+            &lt;/language&gt;
+        &lt;/sheet&gt;
+    &lt;/data&gt;
+&lt;/T3FlexForms&gt;</tx_templavoila_flex>
+    </pages>
+    <pages>
+        <uid>33154</uid>
+        <pid>33153</pid>
+        <t3ver_oid>0</t3ver_oid>
+        <t3ver_id>0</t3ver_id>
+        <t3ver_wsid>0</t3ver_wsid>
+        <t3ver_label></t3ver_label>
+        <t3ver_state>0</t3ver_state>
+        <t3ver_stage>0</t3ver_stage>
+        <t3ver_count>0</t3ver_count>
+        <t3ver_tstamp>0</t3ver_tstamp>
+        <t3ver_swapmode>0</t3ver_swapmode>
+        <t3_origuid>0</t3_origuid>
+        <tstamp>1240920656</tstamp>
+        <sorting>256</sorting>
+        <deleted>0</deleted>
+        <perms_userid>831</perms_userid>
+        <perms_groupid>2</perms_groupid>
+        <perms_user>31</perms_user>
+        <perms_group>31</perms_group>
+        <perms_everybody>0</perms_everybody>
+        <editlock>0</editlock>
+        <crdate>1240920529</crdate>
+        <cruser_id>831</cruser_id>
+        <title>importer testcase subpage</title>
+        <doktype>1</doktype>
+        <TSconfig></TSconfig>
+        <storage_pid>0</storage_pid>
+        <is_siteroot>0</is_siteroot>
+        <php_tree_stop>0</php_tree_stop>
+        <url></url>
+        <hidden>0</hidden>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <urltype>1</urltype>
+        <shortcut>0</shortcut>
+        <shortcut_mode>0</shortcut_mode>
+        <no_cache>0</no_cache>
+        <fe_group></fe_group>
+        <subtitle></subtitle>
+        <layout>0</layout>
+        <target></target>
+        <media></media>
+        <lastUpdated>0</lastUpdated>
+        <keywords></keywords>
+        <cache_timeout>0</cache_timeout>
+        <newUntil>0</newUntil>
+        <description></description>
+        <no_search>0</no_search>
+        <SYS_LASTCHANGED>0</SYS_LASTCHANGED>
+        <abstract></abstract>
+        <module></module>
+        <extendToSubpages>0</extendToSubpages>
+        <author></author>
+        <author_email></author_email>
+        <nav_title></nav_title>
+        <nav_hide>0</nav_hide>
+        <content_from_pid>0</content_from_pid>
+        <mount_pid>0</mount_pid>
+        <mount_pid_ol>0</mount_pid_ol>
+        <alias></alias>
+        <l18n_cfg>0</l18n_cfg>
+        <fe_login_mode>0</fe_login_mode>
+        <tx_templavoila_ds>0</tx_templavoila_ds>
+        <tx_templavoila_to>0</tx_templavoila_to>
+        <tx_templavoila_next_ds>0</tx_templavoila_next_ds>
+        <tx_templavoila_next_to>0</tx_templavoila_next_to>
+        <tx_templavoila_flex>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;T3FlexForms&gt;
+    &lt;data&gt;
+        &lt;sheet index=&quot;sDEF&quot;&gt;
+            &lt;language index=&quot;lDEF&quot;&gt;
+                &lt;field index=&quot;field_colortheme&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN.vDEFbase&quot;&gt;&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_slogan&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN.vDEFbase&quot;&gt;&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_logo&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN.vDEFbase&quot;&gt;&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_footerlogo&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN.vDEFbase&quot;&gt;&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_topmenupid&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN.vDEFbase&quot;&gt;&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_footermenupid&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN.vDEFbase&quot;&gt;&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_metamenupid&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN.vDEFbase&quot;&gt;&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_leftmetamenu&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_3.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vPT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_2.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v22.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vZH.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vNL.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vFR.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vDE.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v33.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_1.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v_4.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vIT.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vJA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vKO.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;v11.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vES.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vCA.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vSV.vDEFbase&quot;&gt;&lt;/value&gt;
+                    &lt;value index=&quot;vEN.vDEFbase&quot;&gt;&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_content&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;619944&lt;/value&gt;
+                &lt;/field&gt;
+            &lt;/language&gt;
+        &lt;/sheet&gt;
+    &lt;/data&gt;
+&lt;/T3FlexForms&gt;</tx_templavoila_flex>
+    </pages>
+    
+    <tt_content>
+        <uid>619943</uid>
+        <pid>33153</pid>
+        <t3ver_oid>0</t3ver_oid>
+        <t3ver_id>0</t3ver_id>
+        <t3ver_wsid>0</t3ver_wsid>
+        <t3ver_label></t3ver_label>
+        <t3ver_state>0</t3ver_state>
+        <t3ver_stage>0</t3ver_stage>
+        <t3ver_count>0</t3ver_count>
+        <t3ver_tstamp>0</t3ver_tstamp>
+        <t3_origuid>0</t3_origuid>
+        <tstamp>1240920613</tstamp>
+        <hidden>0</hidden>
+        <sorting>100</sorting>
+        <CType>text</CType>
+        <header>Importer tt content Header</header>
+        <header_position></header_position>
+        <bodytext>Importer tt_content &lt;b&gt;bodytext&lt;/b&gt;</bodytext>
+        <imagewidth>0</imagewidth>
+        <imageorient>0</imageorient>
+        <imagecaption></imagecaption>
+        <imagecols>0</imagecols>
+        <imageborder>0</imageborder>
+        <layout>0</layout>
+        <deleted>0</deleted>
+        <cols>0</cols>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <colPos>0</colPos>
+        <subheader></subheader>
+        <spaceBefore>0</spaceBefore>
+        <spaceAfter>0</spaceAfter>
+        <fe_group></fe_group>
+        <header_link></header_link>
+        <imagecaption_position></imagecaption_position>
+        <image_link></image_link>
+        <image_zoom>0</image_zoom>
+        <image_noRows>0</image_noRows>
+        <image_effects>0</image_effects>
+        <image_compression>0</image_compression>
+        <altText></altText>
+        <titleText></titleText>
+        <longdescURL></longdescURL>
+        <header_layout>0</header_layout>
+        <text_align></text_align>
+        <text_face>0</text_face>
+        <text_size>0</text_size>
+        <text_color>0</text_color>
+        <text_properties>0</text_properties>
+        <menu_type>0</menu_type>
+        <list_type></list_type>
+        <table_border>0</table_border>
+        <table_cellspacing>0</table_cellspacing>
+        <table_cellpadding>0</table_cellpadding>
+        <table_bgColor>0</table_bgColor>
+        <select_key></select_key>
+        <sectionIndex>1</sectionIndex>
+        <linkToTop>0</linkToTop>
+        <filelink_size>0</filelink_size>
+        <section_frame>0</section_frame>
+        <date>0</date>
+        <splash_layout>0</splash_layout>
+        <image_frames>0</image_frames>
+        <recursive>0</recursive>
+        <imageheight>0</imageheight>
+        <rte_enabled>0</rte_enabled>
+        <sys_language_uid>0</sys_language_uid>
+        <tx_impexp_origuid>0</tx_impexp_origuid>
+        <pi_flexform></pi_flexform>
+        <l18n_parent>0</l18n_parent>
+        <l18n_diffsource>a:20:{s:5:&quot;CType&quot;;N;s:6:&quot;colPos&quot;;N;s:11:&quot;spaceBefore&quot;;N;s:10:&quot;spaceAfter&quot;;N;s:13:&quot;section_frame&quot;;N;s:12:&quot;sectionIndex&quot;;N;s:6:&quot;hidden&quot;;N;s:6:&quot;header&quot;;N;s:15:&quot;header_position&quot;;N;s:13:&quot;header_layout&quot;;N;s:11:&quot;header_link&quot;;N;s:4:&quot;date&quot;;N;s:9:&quot;linkToTop&quot;;N;s:8:&quot;bodytext&quot;;N;s:11:&quot;rte_enabled&quot;;N;s:9:&quot;starttime&quot;;N;s:7:&quot;endtime&quot;;N;s:32:&quot;tx_languagevisibility_visibility&quot;;N;s:16:&quot;sys_language_uid&quot;;N;s:8:&quot;fe_group&quot;;N;}</l18n_diffsource>
+        <tx_templavoila_ds></tx_templavoila_ds>
+        <tx_templavoila_to>0</tx_templavoila_to>
+        <tx_templavoila_flex></tx_templavoila_flex>
+        <crdate>1240920563</crdate>
+        <cruser_id>831</cruser_id>
+    </tt_content>
+    <tt_content>
+        <uid>619944</uid>
+        <pid>33154</pid>
+        <t3ver_oid>0</t3ver_oid>
+        <t3ver_id>0</t3ver_id>
+        <t3ver_wsid>0</t3ver_wsid>
+        <t3ver_label></t3ver_label>
+        <t3ver_state>0</t3ver_state>
+        <t3ver_stage>0</t3ver_stage>
+        <t3ver_count>0</t3ver_count>
+        <t3ver_tstamp>0</t3ver_tstamp>
+        <t3_origuid>0</t3_origuid>
+        <tstamp>1240920696</tstamp>
+        <hidden>0</hidden>
+        <sorting>100</sorting>
+        <CType>templavoila_pi1</CType>
+        <header>Teaserbox Testcase Headertext</header>
+        <header_position></header_position>
+        <bodytext></bodytext>
+        <imagewidth>0</imagewidth>
+        <imageorient>0</imageorient>
+        <imagecaption></imagecaption>
+        <imagecols>0</imagecols>
+        <imageborder>0</imageborder>
+        <layout>0</layout>
+        <deleted>0</deleted>
+        <cols>0</cols>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <colPos>0</colPos>
+        <subheader></subheader>
+        <spaceBefore>0</spaceBefore>
+        <spaceAfter>0</spaceAfter>
+        <fe_group></fe_group>
+        <header_link></header_link>
+        <imagecaption_position></imagecaption_position>
+        <image_link></image_link>
+        <image_zoom>0</image_zoom>
+        <image_noRows>0</image_noRows>
+        <image_effects>0</image_effects>
+        <image_compression>0</image_compression>
+        <altText></altText>
+        <titleText></titleText>
+        <longdescURL></longdescURL>
+        <header_layout>0</header_layout>
+        <text_align></text_align>
+        <text_face>0</text_face>
+        <text_size>0</text_size>
+        <text_color>0</text_color>
+        <text_properties>0</text_properties>
+        <menu_type>0</menu_type>
+        <list_type></list_type>
+        <table_border>0</table_border>
+        <table_cellspacing>0</table_cellspacing>
+        <table_cellpadding>0</table_cellpadding>
+        <table_bgColor>0</table_bgColor>
+        <select_key></select_key>
+        <sectionIndex>1</sectionIndex>
+        <linkToTop>0</linkToTop>
+        <filelink_size>0</filelink_size>
+        <section_frame>0</section_frame>
+        <date>0</date>
+        <splash_layout>0</splash_layout>
+        <image_frames>0</image_frames>
+        <recursive>0</recursive>
+        <imageheight>0</imageheight>
+        <rte_enabled>0</rte_enabled>
+        <sys_language_uid>0</sys_language_uid>
+        <tx_impexp_origuid>0</tx_impexp_origuid>
+        <pi_flexform></pi_flexform>
+        <l18n_parent>0</l18n_parent>
+        <l18n_diffsource>a:13:{s:5:&quot;CType&quot;;N;s:6:&quot;colPos&quot;;N;s:11:&quot;spaceBefore&quot;;N;s:10:&quot;spaceAfter&quot;;N;s:13:&quot;section_frame&quot;;N;s:12:&quot;sectionIndex&quot;;N;s:6:&quot;header&quot;;N;s:17:&quot;tx_templavoila_ds&quot;;N;s:17:&quot;tx_templavoila_to&quot;;N;s:19:&quot;tx_templavoila_flex&quot;;N;s:32:&quot;tx_languagevisibility_visibility&quot;;N;s:16:&quot;sys_language_uid&quot;;N;s:8:&quot;fe_group&quot;;N;}</l18n_diffsource>
+        <tx_templavoila_ds>26</tx_templavoila_ds>
+        <tx_templavoila_to>36</tx_templavoila_to>
+        <tx_templavoila_flex>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;T3FlexForms&gt;
+    &lt;data&gt;
+        &lt;sheet index=&quot;sDEF&quot;&gt;
+            &lt;language index=&quot;lDEF&quot;&gt;
+                &lt;field index=&quot;field_content&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;Teaserbox Testcase Bodytext&lt;/value&gt;
+                    &lt;value index=&quot;_TRANSFORM_vDEF.vDEFbase&quot;&gt;Teaserbox Testcase Bodytext&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_author&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;Teaserbox Author&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_date&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index=&quot;field_background&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;&lt;/value&gt;
+                &lt;/field&gt;
+            &lt;/language&gt;
+        &lt;/sheet&gt;
+    &lt;/data&gt;
+&lt;/T3FlexForms&gt;</tx_templavoila_flex>
+        <tx_templavoila_pito>0</tx_templavoila_pito>
+        <t3ver_move_id>0</t3ver_move_id>
+        <crdate>1240920656</crdate>
+        <cruser_id>831</cruser_id>
+    </tt_content>
+
+    <tx_l10nmgr_exportdata>
+        <uid>251</uid>
+        <pid>33153</pid>
+        <l10ncfg_id>383</l10ncfg_id>
+        <tstamp>1240920868</tstamp>
+        <crdate>1240920868</crdate>
+        <cruser_id>831</cruser_id>
+        <deleted>0</deleted>
+        <title>importer testcase</title>
+        <source_lang>0</source_lang>
+        <translation_lang>1</translation_lang>
+        <tablelist>pages,tt_content</tablelist>
+        <exportType>1</exportType>
+        <filename>test__to_en_GB_280409-141428.xml</filename>
+    </tx_l10nmgr_exportdata> 
+<!-- Configuration -->
+    <tx_l10nmgr_cfg>
+        <uid>383</uid>
+        <pid>33153</pid>
+        <tstamp>1240920858</tstamp>
+        <crdate>1240920743</crdate>
+        <cruser_id>831</cruser_id>
+        <title>importer testcase</title>
+        <depth>1</depth>
+        <displaymode>0</displaymode>
+        <tablelist>pages,tt_content</tablelist>
+        <exclude></exclude>
+        <include></include>
+        <flexformdiff></flexformdiff>
+        <sourceLangStaticId></sourceLangStaticId>
+        <incfcewithdefaultlanguage>0</incfcewithdefaultlanguage>
+        <filenameprefix>test</filenameprefix>
+    </tx_l10nmgr_cfg> 
+<!-- Languages -->
+    <sys_language>
+        <uid>1</uid>
+        <pid>0</pid>
+        <tstamp>1234779086</tstamp>
+        <hidden>0</hidden>
+        <title>Australia (English)</title>
+        <flag>au.gif</flag>
+        <static_lang_isocode>211</static_lang_isocode>
+    </sys_language>
+    <static_countries>
+        <uid>14</uid>
+        <pid>0</pid>
+        <cn_iso_2>AU</cn_iso_2>
+        <cn_iso_3>AUS</cn_iso_3>
+        <cn_iso_nr>36</cn_iso_nr>
+        <cn_parent_tr_iso_nr>53</cn_parent_tr_iso_nr>
+        <cn_official_name_local>Commonwealth of Australia</cn_official_name_local>
+        <cn_official_name_en>Commonwealth of Australia</cn_official_name_en>
+        <cn_capital>Canberra</cn_capital>
+        <cn_tldomain>au</cn_tldomain>
+        <cn_currency_iso_3>AUD</cn_currency_iso_3>
+        <cn_currency_iso_nr>36</cn_currency_iso_nr>
+        <cn_phone>61</cn_phone>
+        <cn_eu_member>0</cn_eu_member>
+        <cn_address_format>3</cn_address_format>
+        <cn_zone_flag>0</cn_zone_flag>
+        <cn_short_local>Australia</cn_short_local>
+        <cn_short_en>Australia</cn_short_en>
+        <cn_uno_member>1</cn_uno_member>
+    </static_countries>
+    <static_languages>
+        <uid>211</uid>
+        <pid>0</pid>
+        <lg_iso_2>_3</lg_iso_2>
+        <lg_name_en>English (Australia)</lg_name_en>
+        <lg_typo3></lg_typo3>
+        <lg_country_iso_2></lg_country_iso_2>
+        <lg_collate_locale>en_GB</lg_collate_locale>
+        <lg_name_local>English</lg_name_local>
+        <lg_sacred>0</lg_sacred>
+        <lg_constructed>1</lg_constructed>
+    </static_languages>            
+</testcase>
