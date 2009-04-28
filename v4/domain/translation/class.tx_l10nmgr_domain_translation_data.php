@@ -71,7 +71,6 @@ class tx_l10nmgr_domain_translation_data {
 	 */
 	protected $targetLanguageUid = 0;
 
-
 	/**
 	 * Base url from the exported system
 	 *
@@ -85,7 +84,6 @@ class tx_l10nmgr_domain_translation_data {
 	 * @var integer
 	 */
 	protected $workspaceId = 0;
-
 
 	/**
 	 * Count of the available fields from the XML export file
@@ -114,7 +112,7 @@ class tx_l10nmgr_domain_translation_data {
 	protected $messages = null;
 
 	/**
-	 * Version of the XML struct
+	 * Version of the XML struct defined by constant "L10NMGR_FILEVERSION"
 	 *
 	 * @see EXT:l10nmgr/ext_localconf.php
 	 * @var float
@@ -129,8 +127,27 @@ class tx_l10nmgr_domain_translation_data {
 	protected $PagesCollection = null;
 
 	/**
+	 * Find fieldCollection for current parameter
+	 *
+	 * Note:
+	 * An tx_mvc_exception_argumentOutOfRange Exception is thrown if an index not available.
+	 *
+	 * @param integer $pageUid
+	 * @param string $tableName
+	 * @param integer $elementUid
+	 * @param string $uniqueKey EXAMPLE "pages_language_overlay:NEW/1/1111:title"
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return tx_l10nmgr_domain_translation_fieldCollection
+	 */
+	public function findByTableUidAndKey($pageUid, $tableName, $elementUid, $uniqueKey) {
+
+		return $this->getPagesCollection()->offsetGet($pageUid)->getElementCollection()->offsetGet($tableName . ':' . $elementUid)->getFieldCollection();
+	}
+
+	/**
 	 *
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string
 	 */
 	public function getBaseUrl() {
@@ -139,6 +156,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return integer
 	 */
 	public function getFieldCount() {
@@ -147,6 +165,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return float
 	 */
 	public function getFormatVersion() {
@@ -155,6 +174,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return integer
 	 */
 	public function getL10ncfgUid() {
@@ -163,6 +183,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return ArrayObject
 	 */
 	public function getMessages() {
@@ -171,7 +192,8 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
-	 * @return unknown_type
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return tx_l10nmgr_domain_translation_pageCollection
 	 */
 	public function getPagesCollection() {
 		return $this->PagesCollection;
@@ -179,6 +201,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return integer
 	 */
 	public function getSysLanguageUid() {
@@ -187,6 +210,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string
 	 */
 	public function getSourceLanguageISOcode() {
@@ -195,6 +219,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param string $sourceLanguageISOcode
 	 */
 	public function setSourceLanguageISOcode($sourceLanguageISOcode) {
@@ -203,6 +228,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return integer
 	 */
 	public function getTargetLanguageUid() {
@@ -211,6 +237,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return integer
 	 */
 	public function getWordCount() {
@@ -219,6 +246,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return integer
 	 */
 	public function getWorkspaceId() {
@@ -227,6 +255,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param string $baseUrl
 	 */
 	public function setBaseUrl($baseUrl) {
@@ -235,6 +264,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param integer $fieldCount
 	 */
 	public function setFieldCount($fieldCount) {
@@ -243,6 +273,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param float $formatVersion
 	 */
 	public function setFormatVersion($formatVersion) {
@@ -251,6 +282,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param integer $l10ncfgUid
 	 */
 	public function setL10ncfgUid($l10ncfgUid) {
@@ -259,6 +291,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param ArrayObject $messages
 	 */
 	public function setMessages($messages) {
@@ -267,6 +300,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param tx_l10nmgr_domain_translation_pageCollection $PagesCollection
 	 */
 	public function setPagesCollection(tx_l10nmgr_domain_translation_pageCollection $PagesCollection) {
@@ -275,6 +309,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param integer $sysLanguageUid
 	 */
 	public function setSysLanguageUid($sysLanguageUid) {
@@ -283,6 +318,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param integer $targetLanguageUid
 	 */
 	public function setTargetLanguageUid($targetLanguageUid) {
@@ -291,6 +327,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param integer $wordCount
 	 */
 	public function setWordCount($wordCount) {
@@ -299,6 +336,7 @@ class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @param integer $workspaceId
 	 */
 	public function setWorkspaceId($workspaceId) {
@@ -315,7 +353,7 @@ class tx_l10nmgr_domain_translation_data {
 	public function getPageIdCollection(){
 		$pageIdCollection = new ArrayObject();
 
-		for($it = $this->PagesCollection->getIterator(); $it->valid(); $it->next()){
+		for ( $it = $this->PagesCollection->getIterator(); $it->valid(); $it->next() ) {
 			$currentPage = $it->current();
 			$pageIdCollection->append($currentPage->getUid());
 		}
