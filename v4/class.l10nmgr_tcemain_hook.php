@@ -163,21 +163,21 @@ class tx_l10nmgr_tcemain_hook {
 			$msg = '';
 			if ($flags['new'] && !$flags['unknown'] && !$flags['noChange'] && !$flags['update'])	{
 				$msg.= 'None of '.$flags['new'].' elements are translated.';
-				$output = '<img src="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'flags_new.png" hspace="2" width="10" height="16" alt="'.htmlspecialchars($msg).'" title="'.htmlspecialchars($msg).'" />';
+				$output = '<img src="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'gfx/flags_new.png" hspace="2" width="10" height="16" alt="'.htmlspecialchars($msg).'" title="'.htmlspecialchars($msg).'" />';
 			} elseif ($flags['new'] || $flags['update']) {
 				if ($flags['update'])	$msg.= $flags['update'].' elements to update. ';
 				if ($flags['new'])	$msg.= $flags['new'].' new elements found. ';
-				$output = '<img src="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'flags_update.png" hspace="2" width="10" height="16" alt="'.htmlspecialchars($msg).'" title="'.htmlspecialchars($msg).'" />';
+				$output = '<img src="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'gfx/flags_update.png" hspace="2" width="10" height="16" alt="'.htmlspecialchars($msg).'" title="'.htmlspecialchars($msg).'" />';
 			} elseif ($flags['unknown'])	{
 				$msg.= 'Translation status is unknown for '.$flags['unknown'].' elements. Please check and update. ';
-				$output = '<img src="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'flags_unknown.png" hspace="2" width="10" height="16" alt="'.htmlspecialchars($msg).'" title="'.htmlspecialchars($msg).'" />';
+				$output = '<img src="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'gfx/flags_unknown.png" hspace="2" width="10" height="16" alt="'.htmlspecialchars($msg).'" title="'.htmlspecialchars($msg).'" />';
 			} elseif ($flags['noChange'])	{
 				$msg.= 'All '.$flags['noChange'].' translations OK';
-				$output = '<img src="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'flags_ok.png" hspace="2" width="10" height="16" alt="'.htmlspecialchars($msg).'" title="'.htmlspecialchars($msg).'" />';
+				$output = '<img src="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'gfx/flags_ok.png" hspace="2" width="10" height="16" alt="'.htmlspecialchars($msg).'" title="'.htmlspecialchars($msg).'" />';
 			} else {
 				$msg.= 'Nothing to do. ';
 				$msg.='[n/?/u/ok='.implode('/',$flags).']';
-				$output = '<img src="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'flags_none.png" hspace="2" width="10" height="16" alt="'.htmlspecialchars($msg).'" title="'.htmlspecialchars($msg).'" />';
+				$output = '<img src="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'gfx/flags_none.png" hspace="2" width="10" height="16" alt="'.htmlspecialchars($msg).'" title="'.htmlspecialchars($msg).'" />';
 			}
 
 			$output = !$noLink ? '<a href="#" onclick="'.htmlspecialchars('parent.list_frame.location.href="'.$GLOBALS['BACK_PATH'].t3lib_extMgm::extRelPath('l10nmgr').'cm2/index.php?table='.$p[0].'&uid='.$p[1].'&languageList='.rawurlencode($languageList).'"; return false;').'" target="listframe">'.$output.'</a>' : $output;
