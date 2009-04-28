@@ -3,6 +3,7 @@
 	* Remove some whitespaces from classes
 	* Improve the tx_l10nmgr_models_translation_factory to read CDATA and HTML
 	* Improve the testcase for the translation package
+	* Move translation subpackage to domain package
 
 2009-04-27 Michael Klapper <michael.klapper@aoemedia.de>
 	* Add initial translation model incl. first testcase

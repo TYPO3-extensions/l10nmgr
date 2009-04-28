@@ -26,7 +26,7 @@
 t3lib_extMgm::isLoaded('mvc', true);
 tx_mvc_common_classloader::loadAll();
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10nmgr_models_translation_factory.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/class.tx_l10nmgr_domain_translationFactory.php';
 
 /**
  * Verify that the TranslationFactory parse the XML
@@ -34,7 +34,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  *
  * {@inheritdoc}
  *
- * class.tx_l10nmgr_models_translation_factory_xmlData_testcase.php
+ * class.tx_l10nmgr_domain_translationFactory_xmlData_testcase.php
  *
  * @author Michael Klapper <michael.klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -48,7 +48,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translation_factory_xmlData_testcase extends tx_phpunit_testcase {
+class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_testcase {
 
 	/**
 	 * @var tx_l10nmgr_models_translation_factory
@@ -70,7 +70,7 @@ class tx_l10nmgr_models_translation_factory_xmlData_testcase extends tx_phpunit_
 	 */
 	public function setUp() {
 		$fileName                 = t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/fixtures/files/validContent/catxml_export__to_en_GB_210409-175557.xml';
-		$this->TranslationFactory = new tx_l10nmgr_models_translation_factory();
+		$this->TranslationFactory = new tx_l10nmgr_domain_translationFactory();
 		$this->TranslationData    = $this->TranslationFactory->create($fileName);
 	}
 
@@ -308,8 +308,8 @@ class tx_l10nmgr_models_translation_factory_xmlData_testcase extends tx_phpunit_
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_models_translation_factory_xmlData_testcase.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_models_translation_factory_xmlData_testcase.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_domain_translationFactory_xmlData_testcase.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_domain_translationFactory_xmlData_testcase.php']);
 }
 
 ?>

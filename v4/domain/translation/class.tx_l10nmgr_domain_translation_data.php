@@ -22,12 +22,12 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10nmgr_models_translation_pageCollection.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_pageCollection.php';
 
 /**
  * Translation data object which holds the metadata of an XML file
  *
- * class.tx_l10nmgr_models_translation_data.php
+ * class.tx_l10nmgr_domain_translation_data.php
  *
  * @author Michael Klapper <klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -39,7 +39,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translation_data {
+class tx_l10nmgr_domain_translation_data {
 
 	/**
 	 * Translation configuration record uid of table "tx_l10nmgr_cfg"
@@ -124,7 +124,7 @@ class tx_l10nmgr_models_translation_data {
 	/**
 	 * All available pages from the XML export file
 	 *
-	 * @var tx_l10nmgr_models_translation_pageCollection
+	 * @var tx_l10nmgr_domain_translation_pageCollection
 	 */
 	protected $PagesCollection = null;
 
@@ -267,9 +267,9 @@ class tx_l10nmgr_models_translation_data {
 
 	/**
 	 * @access public
-	 * @param tx_l10nmgr_models_translation_pageCollection $PagesCollection
+	 * @param tx_l10nmgr_domain_translation_pageCollection $PagesCollection
 	 */
-	public function setPagesCollection(tx_l10nmgr_models_translation_pageCollection $PagesCollection) {
+	public function setPagesCollection(tx_l10nmgr_domain_translation_pageCollection $PagesCollection) {
 		$this->PagesCollection = $PagesCollection;
 	}
 
@@ -324,8 +324,8 @@ class tx_l10nmgr_models_translation_data {
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_data.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_data.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_data.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_data.php']);
 }
 
 ?>

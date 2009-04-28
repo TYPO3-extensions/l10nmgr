@@ -25,7 +25,7 @@
 /**
  * Value object that holds the content of an translated record field
  *
- * class.tx_l10nmgr_models_translation_field.php
+ * class.tx_l10nmgr_domain_translation_field.php
  *
  * @author Michael Klapper <klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -37,7 +37,7 @@
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translation_field {
+class tx_l10nmgr_domain_translation_field {
 
 	/**
 	 * Key that stores several informations
@@ -119,8 +119,8 @@ class tx_l10nmgr_models_translation_field {
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_field.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_field.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_field.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_field.php']);
 }
 
 ?>

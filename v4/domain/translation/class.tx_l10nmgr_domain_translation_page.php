@@ -22,7 +22,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10nmgr_models_translation_elementCollection.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_elementCollection.php';
 
 /**
  * Business object of an page which contains tx_l10nmgr_models_tranlation_elementCollection
@@ -39,7 +39,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translation/class.tx_l10
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translation_page {
+class tx_l10nmgr_domain_translation_page {
 
 	/**
 	 * Uid of the entity page eq database table record
@@ -91,8 +91,8 @@ class tx_l10nmgr_models_translation_page {
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_page.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translation/class.tx_l10nmgr_models_translation_page.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_page.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/translation/class.tx_l10nmgr_domain_translation_page.php']);
 }
 
 ?>
