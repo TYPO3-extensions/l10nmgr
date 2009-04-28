@@ -111,11 +111,8 @@ class tx_l10nmgr_domain_translationFactory {
 					$Field->setContent((string)$field);
 				}
 
-				$fieldKeyArray = explode(':', $field['key']);
-				$fieldColumn = array_pop($fieldKeyArray);
-
 				$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);
-				$Element->getFieldCollection()->offsetSet($fieldColumn, $Field);
+				$Element->getFieldCollection()->offsetSet((string)$field['key'], $Field);
 			}
 
 			$Page->setElementCollection($ElementCollection);
@@ -136,16 +133,16 @@ class tx_l10nmgr_domain_translationFactory {
 	 */
 	protected function createOrGetElementFromElementCollection($ElementCollection,$table,$uid){
 
-		if ( $ElementCollection->hasElementWithTableAndUid($table, $uid) ) {
+		if ( $ElementCollection->offsetExists($table . ':' . $uid) ) {
 
-			$Element = $ElementCollection->getElementByTableAndUid($table, $uid);
+			$Element = $ElementCollection->offsetGet($table . ':' . $uid);
 		} else {
 
 			$Element = new tx_l10nmgr_domain_translation_element();
 			$Element->setTableName($table);
 			$Element->setUid($uid);
 
-			$ElementCollection->offsetSet($uid, $Element);
+			$ElementCollection->offsetSet($table . ':' . $uid, $Element);
 
 			$FieldCollection = new tx_l10nmgr_domain_translation_fieldCollection();
 			$Element->setFieldCollection($FieldCollection);
