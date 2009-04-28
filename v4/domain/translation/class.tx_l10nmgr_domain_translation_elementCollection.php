@@ -42,11 +42,17 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10
 class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject {
 
 	/**
-	 *
 	 * @access public
+	 * @throws tx_mvc_exception_argumentOutOfRange
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return tx_l10nmgr_domain_translation_element
 	 */
 	public function offsetGet($index) {
+
+		if (! parent::offsetExists($index)) {
+			throw new tx_mvc_exception_argumentOutOfRange('Index "' . var_export($index, true) . '" for tx_l10nmgr_domain_translation_element are not available');
+		}
+
 		return parent::offsetGet($index);
 	}
 
@@ -55,6 +61,7 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject {
 	 * @param mixed $index
 	 * @param tx_l10nmgr_domain_translation_element $Element
 	 * @throws InvalidArgumentException
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function offsetSet($index, $Element) {
@@ -70,6 +77,7 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject {
 	 *
 	 * @param tx_l10nmgr_domain_translation_element $Element
 	 * @throws InvalidArgumentException
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function append($Element) {
@@ -79,49 +87,6 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject {
 		}
 
 		parent::append($Element);
-	}
-
-	/**
-	 * This method is can be used to determine if this collection contains an
-	 * element from this table and this uid
-	 *
-	 * @param string $tablename name of the table where the element should be from.
-	 * @param int $uid uid where the element should be from.
-	 * @access public
-	 * @return boolean
-	 */
-	public function hasElementWithTableAndUid($table,$uid){
-		$hasElement = false;
-
-		foreach ($this as $Element) {
-
-			if( ($Element->getTableName() == $table) && ($Element->getUid() == $uid) ) {
-				$hasElement = true;
-			}
-		}
-
-		return $hasElement;
-	}
-
-
-	/**
-	 * This method is used to access an element from the collection by tablename and uid
-	 *
-	 * @param string $table
-	 * @param int $uid
-	 * @access public
-	 * @return tx_l10nmgr_domain_translation_element
-	 */
-	public function getElementByTableAndUid($table, $uid) {
-
-		foreach ($this as $Element) {
-
-			if ( ($Element->getTableName() == $table) && ($Element->getUid() == $uid) ) {
-				return  $Element;
-			}
-		}
-
-		throw new Exception("Not such an elemnt in this collection");
 	}
 }
 
