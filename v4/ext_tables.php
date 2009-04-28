@@ -40,7 +40,6 @@ plugin.tx_l10nmgr_controller_export.configuration {
 	}
 
 	loadJQuery = 1
-	exportPath = uploads/tx_l10nmgr/saved_files/
 }
 
 plugin.tx_l10nmgr_controller_import.configuration {
@@ -51,10 +50,10 @@ plugin.tx_l10nmgr_controller_import.configuration {
 		tcaFieldRenderer = 1
 		formElementRenderer = 0
 	}
-	
+
 	templates{
 		form = EXT:l10nmgr/templates/import/form.php
-	}	
+	}
 }
 '
 	);
@@ -65,7 +64,7 @@ plugin.tx_l10nmgr_controller_import.configuration {
 
 
 t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_cfg");
-t3lib_extMgm::addLLrefForTCAdescr('tx_l10nmgr_cfg','EXT:l10nmgr/locallang_csh_l10nmgr.php');
+t3lib_extMgm::addLLrefForTCAdescr('tx_l10nmgr_cfg','EXT:l10nmgr/locallang_csh_l10nmgr.xml');
 
 // Example for disabling localization of specific fields in tables like tt_content
 // Add as many fields as you need
@@ -112,6 +111,8 @@ $TCA["tx_l10nmgr_priorities"] = Array (
 	)
 );
 
+
+
 t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_exportdata");
 
 $TCA["tx_l10nmgr_exportdata"] = Array (
@@ -136,22 +137,63 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 );
 
 
+
+t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_exportfiles");
+
+$TCA['tx_l10nmgr_exportfiles'] = Array (
+	'ctrl' => Array (
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles',
+		'label' => 'filename',
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'cruser_id' => 'cruser_id',
+		'default_sortby' => 'ORDER BY tstamp',
+		'delete' => 'deleted',
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
+		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_cfg.gif',
+	),
+	'feInterface' => Array (
+		'fe_admin_fieldList' => 'filename',
+	)
+);
+
+
+
 t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_importdata");
 
 $TCA["tx_l10nmgr_importdata"] = Array (
 	"ctrl" => Array (
 		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_import',
-		'label' => 'title',
+		'label' => 'uid',
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
-		"default_sortby" => "ORDER BY title",
+		"default_sortby" => "ORDER BY tstamp",
 		"delete" => "deleted",
 		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_cfg.gif",
 	),
 	"feInterface" => Array (
-		"fe_admin_fieldList" => "title, crdate, delete",
+		"fe_admin_fieldList" => "",
+	)
+);
+
+t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_importfiles");
+
+$TCA['tx_l10nmgr_importfiles'] = Array (
+	'ctrl' => Array (
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_importfiles',
+		'label' => 'filename',
+		'tstamp' => 'tstamp',
+		'crdate' => 'crdate',
+		'cruser_id' => 'cruser_id',
+		'default_sortby' => 'ORDER BY tstamp',
+		'delete' => 'deleted',
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
+		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_cfg.gif',
+	),
+	'feInterface' => Array (
+		'fe_admin_fieldList' => 'filename',
 	)
 );
 
@@ -169,29 +211,10 @@ $TCA['tx_l10nmgr_workflowstates'] = Array (
 		'default_sortby' => 'ORDER BY tstamp',
 		'delete' => 'deleted',
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_workflowstates.gif',
+		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_cfg.gif',
 	),
 	'feInterface' => Array (
 		'fe_admin_fieldList' => 'crdate, state',
-	)
-);
-
-t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_exportfiles");
-
-$TCA['tx_l10nmgr_exportfiles'] = Array (
-	'ctrl' => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles',
-		'label' => 'filename',
-		'tstamp' => 'tstamp',
-		'crdate' => 'crdate',
-		'cruser_id' => 'cruser_id',
-		'default_sortby' => 'ORDER BY tstamp',
-		'delete' => 'deleted',
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_l10nmgr_exportfiles.gif',
-	),
-	'feInterface' => Array (
-		'fe_admin_fieldList' => 'filename',
 	)
 );
 
