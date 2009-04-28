@@ -60,7 +60,7 @@ class tx_l10nmgr_models_translation_factory {
 			throw new tx_mvc_exception_fileNotFound('The given filename: "' . var_export($fullQualifiedFileName, true) . '" not found!');
 		}
 
-		$TranslationXML = @simplexml_load_file($fullQualifiedFileName, 'SimpleXMLElement', LIBXML_NOCDATA);
+		$TranslationXML = simplexml_load_file($fullQualifiedFileName, 'SimpleXMLElement', LIBXML_NOCDATA ^ LIBXML_NOERROR ^ LIBXML_NONET ^ LIBXML_XINCLUDE ^ LIBXML_NOEMPTYTAG);
 		if (! $TranslationXML instanceof SimpleXMLElement ) {
 			throw new tx_mvc_exception_invalidContent('The file : "' . (string)$fullQualifiedFileName . '" contains no valid XML structure!');
 		}
@@ -97,10 +97,25 @@ class tx_l10nmgr_models_translation_factory {
 
 				$Field   = new tx_l10nmgr_models_translation_field();
 				$Field->setFieldPath((string)$field['key']);
-				$Field->setContent((string)$field);
+
+				if ( ((int)$field['transformations'] === 1) ) {
+					$Field->setTransformation(true);
+					$content = '';
+						// get the HTML markup without CDATA
+					foreach ($field->children() as $child) {
+						$content .= $child->asXML();
+					}
+					$Field->setContent($content);
+
+				} else {
+					$Field->setContent((string)$field);
+				}
+
+				$fieldKeyArray = explode(':', $field['key']);
+				$fieldColumn = array_pop($fieldKeyArray);
 
 				$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);
-				$Element->getFieldCollection()->append($Field);
+				$Element->getFieldCollection()->offsetSet($fieldColumn, $Field);
 			}
 
 			$Page->setElementCollection($ElementCollection);
@@ -129,7 +144,8 @@ class tx_l10nmgr_models_translation_factory {
 			$Element = new tx_l10nmgr_models_translation_element();
 			$Element->setTableName($table);
 			$Element->setUid($uid);
-			$ElementCollection->append($Element);
+
+			$ElementCollection->offsetSet($uid, $Element);
 
 			$FieldCollection = new tx_l10nmgr_models_translation_fieldCollection();
 			$Element->setFieldCollection($FieldCollection);
