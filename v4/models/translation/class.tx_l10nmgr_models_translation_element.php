@@ -63,50 +63,53 @@ class tx_l10nmgr_models_translation_element {
 	protected $FieldCollection = null;
 
 	/**
+	 * @access public
 	 * @return tx_l10nmgr_models_translation_fieldCollection
 	 */
 	public function getFieldCollection() {
-
 		return $this->FieldCollection;
 	}
 
 	/**
+	 * @access public
 	 * @return string
 	 */
 	public function getTableName() {
-
 		return $this->tableName;
 	}
 
 	/**
+	 * @access public
 	 * @return integer
 	 */
 	public function getUid() {
-
 		return $this->uid;
 	}
 
 	/**
 	 * @param tx_l10nmgr_models_translation_fieldCollection $FieldCollection
+	 * @access public
+	 * @return void
 	 */
 	public function setFieldCollection($FieldCollection) {
-
 		$this->FieldCollection = $FieldCollection;
 	}
 
 	/**
 	 * @param string $tableName
+	 * @access public
+	 * @return void
 	 */
 	public function setTableName($tableName) {
-
 		$this->tableName = $tableName;
 	}
 
 	/**
 	 * @param integer $uid
+	 * @access public
+	 * @return void
 	 */
 	public function setUid($uid) {
-
 		$this->uid = $uid;
 	}
 }

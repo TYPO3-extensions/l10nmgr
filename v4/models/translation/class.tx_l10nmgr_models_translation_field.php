@@ -39,7 +39,6 @@
  */
 class tx_l10nmgr_models_translation_field {
 
-
 	/**
 	 * Key that stores several informations
 	 * - Table name
@@ -61,34 +60,61 @@ class tx_l10nmgr_models_translation_field {
 	protected $content = '';
 
 	/**
+	 * Indicate that the current field content are
+	 * modified by the rte transformation
+	 *
+	 * @var boolean
+	 */
+	protected $transformation = false;
+
+	/**
+	 * @access public
 	 * @return string
 	 */
 	public function getContent() {
-
 		return $this->content;
 	}
 
 	/**
+	 * @access public
 	 * @return string
 	 */
 	public function getFieldPath() {
-
 		return $this->fieldPath;
 	}
 
 	/**
+	 * @access public
+	 * @return boolean
+	 */
+	public function getTransformation() {
+		return $this->transformation;
+	}
+
+	/**
+	 * @param boolean $transformation
+	 * @access public
+	 * @return void
+	 */
+	public function setTransformation($transformation) {
+		$this->transformation = $transformation;
+	}
+
+	/**
 	 * @param string $content
+	 * @access public
+	 * @return void
 	 */
 	public function setContent($content) {
-
 		$this->content = $content;
 	}
 
 	/**
 	 * @param string $fieldPath
+	 * @access public
+	 * @return void
 	 */
 	public function setFieldPath($fieldPath) {
-
 		$this->fieldPath = $fieldPath;
 	}
 }

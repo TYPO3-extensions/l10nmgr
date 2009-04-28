@@ -80,41 +80,47 @@ class tx_l10nmgr_models_translation_elementCollection extends ArrayObject {
 
 		parent::append($Element);
 	}
-	
+
 	/**
 	 * This method is can be used to determine if this collection contains an
 	 * element from this table and this uid
-	 * 
+	 *
 	 * @param string $tablename name of the table where the element should be from.
 	 * @param int $uid uid where the element should be from.
+	 * @access public
+	 * @return boolean
 	 */
 	public function hasElementWithTableAndUid($table,$uid){
-		foreach($this as $element){
-			if( $element->getTableName() == $table &&
-				$element->getUid() == $uid){
-				return true;		
+		$hasElement = false;
+
+		foreach ($this as $Element) {
+
+			if( ($Element->getTableName() == $table) && ($Element->getUid() == $uid) ) {
+				$hasElement = true;
 			}
 		}
-		
-		return false;
+
+		return $hasElement;
 	}
 
-	
+
 	/**
 	 * This method is used to access an element from the collection by tablename and uid
 	 *
 	 * @param string $table
 	 * @param int $uid
-	 * @return unknown
+	 * @access public
+	 * @return tx_l10nmgr_models_translation_element
 	 */
-	public function getElementByTableAndUid($table,$uid){
-		foreach($this as $element){
-			if( $element->getTableName() == $table &&
-				$element->getUid() == $uid){
-				return  $element;	
+	public function getElementByTableAndUid($table, $uid) {
+
+		foreach ($this as $Element) {
+
+			if ( ($Element->getTableName() == $table) && ($Element->getUid() == $uid) ) {
+				return  $Element;
 			}
 		}
-		
+
 		throw new Exception("Not such an elemnt in this collection");
 	}
 }
