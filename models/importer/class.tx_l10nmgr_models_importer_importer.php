@@ -94,7 +94,7 @@ class tx_l10nmgr_models_importer_importer {
 			$translateableInformation			= $translateableInformationFactory->create($translateableFactoryDataProvider);
 			
 			//perform the import
-			$this->performImport($translateableInformation,$translationData);
+			tx_l10nmgr_models_importer_importService::performImport($translateableInformation,$translationData);
 			
 			if($this->importData->countRemainingFiles() <= 0) {
 				$this->importData->setImportIsCompletelyProcessed(true);				
@@ -130,15 +130,6 @@ class tx_l10nmgr_models_importer_importer {
 	protected function getNextFile(){
 	}
 	
-	/**
-	 * This method performs an import base on a translateableInformation (same like an export on import time) and a translationData (values of the import file).
-	 *
-	 * @param tx_l10nmgr_models_translateable_translateableInformation $translateableInformaiton
-	 * @param tx_models_translation_data $translationData
-	 */
-	protected function performImport(tx_l10nmgr_models_translateable_translateableInformation $translateableInformaiton, tx_models_translation_data $translationData){
-		//this is where the tce main importing stuff goes
-	}
-}
 
+}
 ?>

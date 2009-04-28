@@ -73,6 +73,11 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 	protected $workspaceId;
 	
 	/**
+	 * @var tx_l10nmgr_models_export_exportData 
+	 */
+	protected $exportData;
+	
+	/**
 	 * @var int
 	 */
 	protected $countedFields;
@@ -204,7 +209,24 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 		return $this->countedWords;
 	}
 	
+	/**
+	 * Method to get the exportData objects where this translateableInformation belongs to.
+	 * 
+	 * @return tx_l10nmgr_models_export_exportData
+	 */
+	public function getExportData() {
+		return $this->exportData;
+	}
 	
+	/**
+	 * Method to set the exportData where the translateableInformation has been created for.
+	 * 
+	 * @param tx_l10nmgr_models_export_exportData $exportData
+	 */
+	public function setExportData($exportData) {
+		$this->exportData = $exportData;
+	}
+
 }
 
 ?>

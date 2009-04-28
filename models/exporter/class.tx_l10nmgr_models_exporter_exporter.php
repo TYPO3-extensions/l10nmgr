@@ -100,13 +100,8 @@ class tx_l10nmgr_models_exporter_exporter {
 			}
 
 			$pagesForChunk 				= $this->getNextPagesChunk();
-
-			$l10ncfgObj					= $this->exportData->getL10nConfigurationObject();
-			$targetLanguage				= $this->exportData->getTranslationLanguageObject();
-			$sourceLanguage				= $this->exportData->getSourceLanguageObject();
-
 			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-			$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($l10ncfgObj,$pagesForChunk,$targetLanguage,$sourceLanguage );
+			$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($this->exportData,$pagesForChunk );
 			$tranlateableInformation 	= $factory->create($typo3DataProvider);
 
 			$this->exportView->setTranslateableInformation($tranlateableInformation);

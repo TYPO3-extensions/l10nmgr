@@ -81,8 +81,10 @@ class tx_l10nmgr_controller_import extends tx_mvc_controller_action {
 	 * @return string HTML formated output
 	 */
 	public function showImportFormAction() {
-		$this->view->setTemplate($this->configuration->get('templates.importForm'));
-
+		$this->view->setTemplate($this->configuration->get('templates.form'));
+//		$this->view->setRenderAction('generateImport');
+		
+		$this->view->addBackendStylesHeaderData();
 		//!TODO implement function "controllPanelAction"
 
 	}

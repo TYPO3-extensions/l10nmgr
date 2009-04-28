@@ -42,7 +42,10 @@
  * @subpackage	tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_view_import_showImportForm extends tx_mvc_view_phpTemplate {
+
+require_once t3lib_extMgm::extPath('mvc').'util/class.tx_mvc_util_pageSelector.php';
+
+class tx_l10nmgr_view_import_showImportForm extends tx_mvc_view_backendModule {
 
 	/**
 	 * The default template is used if o template is set
@@ -50,6 +53,19 @@ class tx_l10nmgr_view_import_showImportForm extends tx_mvc_view_phpTemplate {
 	 * @var        string
 	 */
 	protected $defaultTemplate = 'EXT:tx_l10nmgr/templates/import/importForm.php';
+	
+	/**
+	 * Returns an field to handle files for uploading
+	 * 	 *
+	 * @return string
+	 */
+	protected function getUploadField(){
+		$params['fieldName'] = 'Importfile';
+		$params['fieldValue'] = '';
+		$params['fieldMode'] = 'file';
+		return tx_mvc_util_pageSelector::getSelector($params);
+		
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/view/import/class.tx_l10nmgr_view_import_showImportForm.php']) {

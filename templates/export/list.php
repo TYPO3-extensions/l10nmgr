@@ -15,7 +15,7 @@
 			<td><?= t3lib_BEfunc::datetime($exportData['crdate']); ?> </td>
 			<td><?= $exportData['l10ncfg_id']; ?></td>
 			<td><?= $exportData['exportType']; ?></td>
-			<td><?= $exportData['translation_lang']; ?></td>
+			<td><?= $exportData->getTranslationLanguageObject()->getTitle(); ?></td>
 			<td>files</td>
 		</tr>
 	<?php } ?>
