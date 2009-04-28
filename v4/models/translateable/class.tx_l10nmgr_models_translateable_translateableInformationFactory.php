@@ -73,6 +73,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 		$translateableInformation 	= new tx_l10nmgr_models_translateable_translateableInformation();
 		$translateableInformation->setSourceLanguage($this->dataProvider->getSourceLanguage());
 		$translateableInformation->setTargetLanguage($this->dataProvider->getTargetLanguage());
+		$translateableInformation->setExportData($this->dataProvider->getExportData());
 		$translateableInformation->setSiteUrl($this->dataProvider->getSiteUrl());
 		$translateableInformation->setWorkspaceId($this->dataProvider->getWorkspaceId());
 		

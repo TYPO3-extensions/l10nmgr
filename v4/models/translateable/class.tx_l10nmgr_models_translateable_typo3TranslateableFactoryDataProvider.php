@@ -37,12 +37,21 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 	
 	protected $collectionOfRelevantPageIds;
 	
+	/**
+	 * Holds the exportData object
+	 *
+	 * @var tx_l10nmgr_models_export_exportData
+	 */
+	protected $exportData;
 	
-	public function __construct(tx_l10nmgr_models_configuration_configuration $l10ncfg, 
-							ArrayObject $pageIdCollection, 
-							tx_l10nmgr_models_language_language $targetLanguage, 
-							tx_l10nmgr_models_language_language $sourceLanguage = NULL){
-
+	public function __construct(tx_l10nmgr_models_exporter_exportData $exportData, 
+							ArrayObject $pageIdCollection ){
+		
+		$this->exportData	= $exportData;
+		$l10ncfg 			= $exportData->getL10nConfigurationObject();
+		$targetLanguage		= $exportData->getTranslationLanguageObject();
+		$sourceLanguage		= $exportData->getSourceLanguageObject();
+		
 		$this->disallowDoktypes = array('--div--','3','255');
 										
 		$this->setWorkspaceId($GLOBALS['BE_USER']->workspace);						
@@ -61,28 +70,37 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 	}
 	
 	/**
-	 * @return unknown
+	 * Returns the related exportData object 
+	 *
+	 * @return tx_l10nmgr_models_exporter_exportDatat
+	 */
+	public function getExportData(){
+		return $this->exportData;
+	}
+	
+	/**
+	 * @return string
 	 */
 	public function getSiteUrl() {
 		return $this->siteUrl;
 	}
 	
 	/**
-	 * @return unknown
+	 * @return tx_l10nmgr_models_language_language
 	 */
 	public function getSourceLanguage() {
 		return $this->sourceLanguage;
 	}
 	
 	/**
-	 * @return unknown
+	 * @return tx_l10nmgr_models_language_language
 	 */
 	public function getTargetLanguage() {
 		return $this->targetLanguage;
 	}
 	
 	/**
-	 * @return unknown
+	 * @return int
 	 */
 	public function getWorkspaceId() {
 		return $this->workspaceId;
@@ -125,11 +143,20 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 		$this->workspaceId = $workspaceId;
 	}
 
-	
+	/**
+	 * Returns all relavantTables of the export
+	 *
+	 * @return unknown
+	 */
 	public function getRelevantTables(){
 		return $this->relevantTables;
 	}
 	
+	/**
+	 * Returns a collection of pageIds
+	 *
+	 * @return ArrayObject
+	 */
 	public function getRelevantPageIds(){
 		return $this->collectionOfRelevantPageIds;
 	}

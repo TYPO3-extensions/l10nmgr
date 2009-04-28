@@ -41,10 +41,22 @@ plugin.tx_l10nmgr_controller_export.configuration {
 
 	loadJQuery = 1
 	exportPath = uploads/tx_l10nmgr/saved_files/
-	templates{
-		importForm = EXT:l10nmgr/templates/import/form.php
+}
+
+plugin.tx_l10nmgr_controller_import.configuration {
+	viewHelper.disable {
+		linkCreator = 0
+		label = 0
+		fieldRenderer = 1
+		tcaFieldRenderer = 1
+		formElementRenderer = 0
 	}
-}'
+	
+	templates{
+		form = EXT:l10nmgr/templates/import/form.php
+	}	
+}
+'
 	);
 
 
