@@ -45,9 +45,16 @@ class tx_l10nmgr_domain_translation_pageCollection extends ArrayObject {
 	/**
 	 *
 	 * @access public
+	 * @throws tx_mvc_exception_argumentOutOfRange
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return tx_l10nmgr_domain_translation_page
 	 */
 	public function offsetGet($index) {
+
+		if (! parent::offsetExists($index)) {
+			throw new tx_mvc_exception_argumentOutOfRange('Index "' . var_export($index, true) . '" for tx_l10nmgr_domain_translation_page are not available');
+		}
+
 		return parent::offsetGet($index);
 	}
 
@@ -56,6 +63,7 @@ class tx_l10nmgr_domain_translation_pageCollection extends ArrayObject {
 	 * @param mixed $index
 	 * @param tx_l10nmgr_domain_translation_page $Page
 	 * @throws InvalidArgumentException
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function offsetSet($index, $Page) {
@@ -71,6 +79,7 @@ class tx_l10nmgr_domain_translation_pageCollection extends ArrayObject {
 	 *
 	 * @param tx_l10nmgr_domain_translation_page $Page
 	 * @throws InvalidArgumentException
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function append($Page) {

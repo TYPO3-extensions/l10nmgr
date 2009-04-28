@@ -44,9 +44,16 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject {
 	/**
 	 *
 	 * @access public
+	 * @throws tx_mvc_exception_argumentOutOfRange
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return tx_l10nmgr_domain_translation_field
 	 */
 	public function offsetGet($index) {
+
+		if (! parent::offsetExists($index)) {
+			throw new tx_mvc_exception_argumentOutOfRange('Index "' . var_export($index, true) . '" for tx_l10nmgr_domain_translation_field are not available');
+		}
+
 		return parent::offsetGet($index);
 	}
 
@@ -55,6 +62,7 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject {
 	 * @param mixed $index
 	 * @param tx_l10nmgr_domain_translation_field $Field
 	 * @throws InvalidArgumentException
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function offsetSet($index, $Field) {
@@ -70,6 +78,7 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject {
 	 *
 	 * @param tx_l10nmgr_domain_translation_field $Field
 	 * @throws InvalidArgumentException
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function append($Field) {
