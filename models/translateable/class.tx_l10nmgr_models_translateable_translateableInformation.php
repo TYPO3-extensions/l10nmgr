@@ -226,6 +226,7 @@ class tx_l10nmgr_models_translateable_translateableInformation {
 	public function setExportData($exportData) {
 		$this->exportData = $exportData;
 	}
+	
 
 }
 
