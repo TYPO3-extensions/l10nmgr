@@ -25,7 +25,7 @@
 /**
  * Translation base
  *
- * class.tx_l10nmgr_service_translationImport.php
+ * class.tx_l10nmgr_service_importTranslation.php
  *
  * @author Michael Klapper <klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -37,7 +37,7 @@
  * @subpackage ex_l10nmgr
  * @access public
  */
-class tx_l10nmgr_service_translationImport {
+class tx_l10nmgr_service_importTranslation {
 
 	/**
 	 * Save the incoming translationData object into the database
@@ -54,8 +54,8 @@ class tx_l10nmgr_service_translationImport {
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/service/class.tx_l10nmgr_service_translationImport.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/service/class.tx_l10nmgr_service_translationImport.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/service/class.tx_l10nmgr_service_importTranslation.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/service/class.tx_l10nmgr_service_importTranslation.php']);
 }
 
 ?>
