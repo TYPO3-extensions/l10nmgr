@@ -104,7 +104,6 @@ class tx_l10nmgr_models_importer_importer {
 			$TranslationService = new tx_l10nmgr_service_importTranslation();
 			$TranslationService->save($TranslateableInformation, $TranslationData);
 
-
 			if ( $this->importData->countRemainingFiles() <= 0 ) {
 				$this->importData->setImportIsCompletelyProcessed(true);
 				$this->exportData->addWorkflowStat(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
