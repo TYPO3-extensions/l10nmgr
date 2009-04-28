@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testcase>
+
+
+    <tx_l10nmgr_exportdata>
+        <uid>251</uid>
+        <pid>33153</pid>
+        <l10ncfg_id>383</l10ncfg_id>
+        <tstamp>1240920868</tstamp>
+        <crdate>1240920868</crdate>
+        <cruser_id>831</cruser_id>
+        <deleted>0</deleted>
+        <title>importer testcase</title>
+        <source_lang>0</source_lang>
+        <translation_lang>1</translation_lang>
+        <tablelist>pages,tt_content</tablelist>
+        <exportType>1</exportType>
+        <filename>test__to_en_GB_280409-141428.xml</filename>
+    </tx_l10nmgr_exportdata> 
+<!-- Configuration -->
+    <tx_l10nmgr_cfg>
+        <uid>383</uid>
+        <pid>33153</pid>
+        <tstamp>1240920858</tstamp>
+        <crdate>1240920743</crdate>
+        <cruser_id>831</cruser_id>
+        <title>importer testcase</title>
+        <depth>1</depth>
+        <displaymode>0</displaymode>
+        <tablelist>pages,tt_content</tablelist>
+        <exclude></exclude>
+        <include></include>
+        <flexformdiff></flexformdiff>
+        <sourceLangStaticId></sourceLangStaticId>
+        <incfcewithdefaultlanguage>1</incfcewithdefaultlanguage>
+        <filenameprefix>test</filenameprefix>
+    </tx_l10nmgr_cfg> 
+<!-- Languages -->
+    <sys_language>
+        <uid>1</uid>
+        <pid>0</pid>
+        <tstamp>1234779086</tstamp>
+        <hidden>0</hidden>
+        <title>Australia (English)</title>
+        <flag>au.gif</flag>
+        <static_lang_isocode>211</static_lang_isocode>
+    </sys_language>
+    <static_countries>
+        <uid>14</uid>
+        <pid>0</pid>
+        <cn_iso_2>AU</cn_iso_2>
+        <cn_iso_3>AUS</cn_iso_3>
+        <cn_iso_nr>36</cn_iso_nr>
+        <cn_parent_tr_iso_nr>53</cn_parent_tr_iso_nr>
+        <cn_official_name_local>Commonwealth of Australia</cn_official_name_local>
+        <cn_official_name_en>Commonwealth of Australia</cn_official_name_en>
+        <cn_capital>Canberra</cn_capital>
+        <cn_tldomain>au</cn_tldomain>
+        <cn_currency_iso_3>AUD</cn_currency_iso_3>
+        <cn_currency_iso_nr>36</cn_currency_iso_nr>
+        <cn_phone>61</cn_phone>
+        <cn_eu_member>0</cn_eu_member>
+        <cn_address_format>3</cn_address_format>
+        <cn_zone_flag>0</cn_zone_flag>
+        <cn_short_local>Australia</cn_short_local>
+        <cn_short_en>Australia</cn_short_en>
+        <cn_uno_member>1</cn_uno_member>
+    </static_countries>
+    <static_languages>
+        <uid>211</uid>
+        <pid>0</pid>
+        <lg_iso_2>_3</lg_iso_2>
+        <lg_name_en>English (Australia)</lg_name_en>
+        <lg_typo3></lg_typo3>
+        <lg_country_iso_2></lg_country_iso_2>
+        <lg_collate_locale>en_GB</lg_collate_locale>
+        <lg_name_local>English</lg_name_local>
+        <lg_sacred>0</lg_sacred>
+        <lg_constructed>1</lg_constructed>
+    </static_languages>            
+</testcase>
