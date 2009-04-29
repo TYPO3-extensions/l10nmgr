@@ -39,7 +39,7 @@
  * @subpackage	l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmgr_interfaces_wordsCountable {
+class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmgr_interface_wordsCountable {
 
 
 	/**
