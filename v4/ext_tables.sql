@@ -82,11 +82,15 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	title tinytext NOT NULL,
 	source_lang blob NOT NULL,
 	translation_lang blob NOT NULL,
-	tablelist varchar(80) DEFAULT '' NOT NULL,
-	exportType blob NOT NULL,
+	exporttype tinytext NOT NULL,
 	progress blob NOT NULL,
 	filename text NOT NULL,
 	exportfiles int(11) DEFAULT '0' NOT NULL,
+	checkforexistingexports tinyint(4) DEFAULT '0' NOT NULL,
+	onlychangedcontent tinyint(4) DEFAULT '0' NOT NULL,
+	nohidden tinyint(4) DEFAULT '0' NOT NULL,
+	noxmlcheck tinyint(4) DEFAULT '0' NOT NULL,
+	checkutf8 tinyint(4) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),
 );

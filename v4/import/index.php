@@ -28,5 +28,4 @@ if ($editConf['tx_l10nmgr_importdata'][$editedRecord[0]] == 'new') {
 }
 
 
-
 ?>

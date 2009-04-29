@@ -38,10 +38,10 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
-class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
+class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 
 	protected $defaultTemplate = 'EXT:l10nmgr/templates/catxml/catxml.php';
-	
+
 	/**
 	 * @var	array		$internalMessges		Part of XML with fail logging information content elements
 	 */
@@ -53,35 +53,35 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 * @var boolean
 	 */
 	protected $skipXMLCheck;
-	
+
 	/**
 	 * @var boolean
 	 */
 	protected $useUTF8Mode;
-	
+
 	protected $xmlTool;
-	
+
 	/**
 	 * @return boolean
 	 */
 	protected function getSkipXMLCheck() {
 		return $this->skipXMLCheck;
 	}
-	
+
 	/**
 	 * @return boolean
 	 */
 	protected function getUseUTF8Mode() {
 		return $this->useUTF8Mode;
 	}
-	
+
 	/**
 	 * @param boolean $skipXMLCheck
 	 */
 	public function setSkipXMLCheck($skipXMLCheck) {
 		$this->skipXMLCheck = $skipXMLCheck;
 	}
-	
+
 	/**
 	 * @param boolean $useUTF8Mode
 	 */
@@ -110,17 +110,17 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		$output = array();
 
 			// Traverse the structure and generate XML output:
-		foreach($accum as $pId => $page) {
+		foreach ($accum as $pId => $page) {
 			$output[] =  "\t" . '<pageGrp id="'.$pId.'">'."\n";
-			foreach($accum[$pId]['items'] as $table => $elements) {
-				foreach($elements as $elementUid => $data) {
+			foreach ($accum[$pId]['items'] as $table => $elements) {
+				foreach ($elements as $elementUid => $data) {
 					if (!empty($data['ISOcode'])) {
 						$targetIso=$data['ISOcode'];
 					}
 
 					if (is_array($data['fields'])) {
 						$fieldsForRecord = array();
-						foreach($data['fields'] as $key => $tData) {
+						foreach ($data['fields'] as $key => $tData) {
 							if (is_array($tData)) {
 								list(,$uidString,$fieldName) = explode(':',$key);
 								list($uidValue) = explode('/',$uidString);
@@ -212,15 +212,15 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		//DZ: why return XML here
 		return $XML;
 	}*/
-	
-	
+
+
 
 	/**
 	 * Implementation of abstract method to deliver a filename prefix
 	 *
 	 * @return string
 	 */
-	public function getFilenamePrefix(){
+	public function getFilenamePrefix() {
 		return 'catxml_export';
 	}
 
@@ -235,96 +235,95 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	function setInternalMessage($message, $key) {
 		$this->internalMessages[] = "\t\t" . '<t3_skippedItem>' . "\n\t\t\t\t" . '<t3_description>' . $message . '</t3_description>' . "\n\t\t\t\t" . '<t3_key>' . $key . '</t3_key>' . "\n\t\t\t" . '</t3_skippedItem>' . "\r";
 	}
-	
-	
-	protected function getInternalMessagesXML(){
+
+
+	protected function getInternalMessagesXML() {
 		return implode("\n\t",$this->internalMessages);
 	}
-	
 
-	
+
+
 	/**
 	 * Internal method to build the pageGroupXML structure.
-	 * 
+	 *
 	 * @param void
 	 * @return void
-	 *
 	 */
-	protected function buildPageGroup(){
+	protected function buildPageGroup() {
 		global $LANG;
 
-		foreach($this->getTranslateableInformation()->getPageGroups() as $pageGroup){
-			$pageStartTag = sprintf('<pageGrp id="%d">',$pageGroup->getPageId());
+		foreach ($this->getTranslateableInformation()->getPageGroups() as $pageGroup) { /* @var $pageGroup tx_l10nmgr_models_translateable_pageGroup */
+			$pageStartTag = sprintf('<pageGrp id="%d">', $pageGroup->getUid());
 			$xml .= $pageStartTag;
-			
-			foreach($pageGroup->getTranslateableElements() as $translateableElement){
-				 foreach($translateableElement->getTranslateableFields() as $translateableField){
-					if (!$this->modeOnlyChanged || $translateableField->isChanged()){
 
-						try{				
-							$table 		= $translateableElement->getTable();
+			foreach ($pageGroup->getTranslateableElements() as $translateableElement) { /* @var $translateableElement tx_l10nmgr_models_translateable_translateableElement */
+				 foreach ($translateableElement->getTranslateableFields() as $translateableField) { /* @var $translateableField tx_l10nmgr_models_translateable_translateableField */
+					if (!$this->modeOnlyChanged || $translateableField->isChanged()) {
+
+						try {
+							$table 		= $translateableElement->getTableName();
 							$uid 		= $translateableElement->getUid();
 							$key 		= $translateableField->getIdentityKey();
 							$data		= $this->getTransformedTranslationDataFromTranslateableField($this->getSkipXMLCheck(), $this->getUseUTF8Mode(),$translateableField,$this->forcedSourceLanguage);
 							$needsTrafo = $translateableField->needsTransformation();
 							$transformationAttribute = $needsTrafo ? 'transformations="1"' : '';
-							
+
 							$dataTag 	= sprintf('<data table="%s" elementUid="%d" key="%s" %s>%s</data>',$table,$uid,$key,$transformationAttribute,$data);
 							$xml .= $dataTag;
-							
-						}catch(Exception $e){
+
+						} catch(Exception $e) {
 							$this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'),$uid.'/'.$table.'/'.$key);
 						}
 
-					 } 
-				 } 
-			 } 
+					}
+				}
+			}
 			$pageEndTag = '</pageGrp>';
-			 $xml .= $pageEndTag;
+			$xml .= $pageEndTag;
 		}
-		
+
 		$this->setPageGroup($xml);
 	}
-	
+
 	/**
 	 * Searches the internal XML Tool Singleton
 	 *
 	 * @return tx_l10nmgr_xmltools
 	 */
-	protected function findXMLTool(){
-		if(!($this->xmlTool instanceof tx_l10nmgr_xmltools)){
+	protected function findXMLTool() {
+		if (!($this->xmlTool instanceof tx_l10nmgr_xmltools)) {
 			$this->xmlTool= t3lib_div::makeInstance("tx_l10nmgr_xmltools");
 		}
-		
+
 		return $this->xmlTool;
 	}
 
-	protected function getTransformedTranslationDataFromTranslateableField($skipXMLCheck,$useUTF8mode,$translateableField,$forcedSourceLanguage){
+	protected function getTransformedTranslationDataFromTranslateableField($skipXMLCheck,$useUTF8mode,$translateableField,$forcedSourceLanguage) {
 		$dataForTranslation = $translateableField->getDataForTranslation($forcedSourceLanguage);
-		
-		if($translateableField->needsTransformation()){
+
+		if ($translateableField->needsTransformation()) {
 			$result = $this->findXMLTool()->RTE2XML($dataForTranslation);
-		}else{
+		} else {
 			$result = str_replace('&','&amp;',$dataForTranslation);
-			
-			if($useUTF8mode){
+
+			if ($useUTF8mode) {
 				$result = tx_l10nmgr_utf8tools::utf8_bad_strip($result);
 			}
-			
-			if($this->findXMLTool()->isValidXMLString($result)){
+
+			if ($this->findXMLTool()->isValidXMLString($result)) {
 				return $result;
-			}else{
-				if($skipXMLCheck){
+			} else {
+				if ($skipXMLCheck) {
 					$result = '<![CDATA['.$result.']]>';
-				}else{
+				} else {
 					throw new Exception("Invalid data in tag");
 				}
 			}
 		}
-		
+
 		return $result;
 	}
-	
+
 }
 
 

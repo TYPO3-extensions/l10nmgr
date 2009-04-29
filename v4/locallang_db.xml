@@ -33,7 +33,19 @@
 				<label index="tx_l10nmgr_cfg.translationLang">Target language:</label>
 				<label index="tx_l10nmgr_cfg.crdate">Date of export</label>
 				<label index="tx_l10nmgr_cfg.exporttablelist">Exported tables</label>
-			<label index="tx_l10nmgr_export">L10N Manager exports</label>
+			<label index="tx_l10nmgr_exportdata">L10N Manager exports</label>
+				<label index="tx_l10nmgr_exportdata.l10ncfg_id">Configuration</label>
+				<label index="tx_l10nmgr_exportdata.title">Title</label>
+				<label index="tx_l10nmgr_exportdata.exporttype">Format</label>
+				<label index="tx_l10nmgr_exportdata.translation_lang">Target language</label>
+				<label index="tx_l10nmgr_exportdata.source_lang">Force source language</label>
+				<label index="tx_l10nmgr_exportdata.filename">File</label>
+				<label index="tx_l10nmgr_exportdata.checkforexistingexports">Check for already exported content</label>
+				<label index="tx_l10nmgr_exportdata.onlychangedcontent">New/Changed content only</label>
+				<label index="tx_l10nmgr_exportdata.nohidden">No hidden content</label>
+				<label index="tx_l10nmgr_exportdata.noxmlcheck">Do not check xml</label>
+				<label index="tx_l10nmgr_exportdata.checkutf8">Check UTF-8</label>
+
 			<label index="tx_l10nmgr_import">L10N Manager imports</label>
 			<label index="tx_l10nmgr_workflowstates">L10N Manager workflow states</label>
 				<label index="tx_l10nmgr_workflowstates.exportdata_id">Exportdata id</label>
