@@ -43,21 +43,21 @@ require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.
 class tx_l10nmgr_models_translateable_translateableInformationFactory {
 
 
-	
+
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param void
 	 * @return void
 	 */
 	public function __construct(){
 
 	}
-	
+
 	/**
 	 * This method is used, to create a translateableInformation object structure from a
 	 * configuration, a set of pageIds and a target and a previewLanguage.
-	 * Internally it iterates the pageIdCollection and fetches the information for a translation using the 
+	 * Internally it iterates the pageIdCollection and fetches the information for a translation using the
 	 * tx_l10nmgr_tools class.
 	 *
 	 * @param tx_l10nmgr_models_configuration_configuration $l10ncfg
@@ -69,38 +69,38 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	public function create(tx_l10nmgr_interaces_translateable_translateableFactoryDataProvider $dataProvider){
 
 		$this->dataProvider			= $dataProvider;
-		
+
 		$translateableInformation 	= new tx_l10nmgr_models_translateable_translateableInformation();
 		$translateableInformation->setSourceLanguage($this->dataProvider->getSourceLanguage());
 		$translateableInformation->setTargetLanguage($this->dataProvider->getTargetLanguage());
 		$translateableInformation->setExportData($this->dataProvider->getExportData());
 		$translateableInformation->setSiteUrl($this->dataProvider->getSiteUrl());
 		$translateableInformation->setWorkspaceId($this->dataProvider->getWorkspaceId());
-		
+
 		$pageIdCollection		= $this->dataProvider->getRelevantPageIds();
 		$tables_to_process		= $this->dataProvider->getRelevantTables();
-		
+
 		//we only need to process tables which are in the TCA AND the configuration
-		
+
 		//iterate pageId collection
 		foreach($pageIdCollection as $pageId){
 			$pageRow = t3lib_BEfunc::getRecordWSOL('pages',$pageId);
 
-			if(is_array($pageRow)){	
+			if(is_array($pageRow)){
 				//create pageGroup and add metadata
 				$pageGroup 	= new tx_l10nmgr_models_translateable_PageGroup();
 				$pageGroup->setPageRow($pageRow);
-	
+
 				// traverse tca tables:
 				foreach($tables_to_process as $table)	{
-					//the table pages its self is not needed because the informations of the page 
+					//the table pages its self is not needed because the informations of the page
 					//are attached to the page group object
-					if($table !== 'pages'){					
+					if($table !== 'pages'){
 						//get all Records on the page
-						
+
 						$uidCollection	= $this->dataProvider->getRelevantElementIdsByTablenameAndPageId($table,$pageId);
 						if(is_array($uidCollection)){
-							foreach($uidCollection as $uid){		
+							foreach($uidCollection as $uid){
 								$translateableElement 	= $this->getTranslateableElementFromDataProvider($table,$uid);
 								$pageGroup->addTranslateableElement($translateableElement);
 							}
@@ -110,47 +110,47 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 						$pageGroup->addTranslateableElement($translateablePageElement);
 					}
 				}
-				
+
 				$translateableInformation->addPageGroup($pageGroup);
 			}
 		}
-		
+
 		return $translateableInformation;
 	}
-	
+
 	/**
-	 * This method is used to fetch the translationInformation for each field and add it to a translateableElement. At the 
+	 * This method is used to fetch the translationInformation for each field and add it to a translateableElement. At the
 	 * end the method returns the whole initialzid translateableElement.
-	 * 
+	 *
 	 * @param string name of the table
-	 * @param 
-	 * 
+	 * @param
+	 *
 	 */
 	protected function getTranslateableElementFromDataProvider($table,$uid){
-		
+
 		$translationDetails = $this->dataProvider->getTranslationDetailsByTablenameAndElementId($table,$uid);
-		
+
 		$translationInfo 	= $translationDetails['translationInfo'];
-		
+
 		$translateableElement = new tx_l10nmgr_models_translateable_translateableElement();
-		$translateableElement->setTable($table);
-		
+		$translateableElement->setTableName($table);
+
 		$translateableElement->setLogs($translationDetails['log']);
-		
+
 		$translateableElement->setUid($translationInfo['uid']);
 		$translateableElement->setSysLanguageUid($translationInfo['sys_language_uid']);
 		$translateableElement->setTranslationTable($translationInfo['translation_table']);
 		$translateableElement->setTranslations($translationInfo['translations']);
 		$translateableElement->setExcessiveTranslations($translationInfo['excessive_translations']);
-		
+
 		$translationFields = $translationDetails['fields'];
 		if(is_array($translationFields)){
 			foreach($translationFields as $key => $translationField){
-				
+
 				//@todo refactor determination of fieldName
 				list(,$uidString,$fieldName) = explode(':',$key);
 				list($uidValue) = explode('/',$uidString);
-				
+
 				$translateableField = new tx_l10nmgr_models_translateable_translateableField();
 				$translateableField->setIdentityKey($key);
 				$translateableField->setFieldName($fieldName);
@@ -163,11 +163,11 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 				$translateableField->setReadOnly($translationField['readOnly']);
 				$translateableField->setFieldType($translationField['fieldType']);
 				$translateableField->setIsRTE($translationField['isRTE']);
-				
+
 				$translateableElement->addTranslateableField($translateableField);
 			}
 		}
-		
+
 		return $translateableElement;
 	}
 }

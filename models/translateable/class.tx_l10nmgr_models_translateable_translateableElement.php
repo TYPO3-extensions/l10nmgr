@@ -40,35 +40,35 @@
  * @access public
  */
 class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmgr_interfaces_wordsCountable {
-	
-	
+
+
 	/**
 	 * Holds the translateableFields of the translateableElement
 	 * @var ArrayObject
 	 */
 	protected $translateableFields;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $uid;
-	
+
 	/**
 	 * @var string
 	 */
 	protected $table;
-	
-	
+
+
 	/**
 	 * @var ArrayObject
 	 */
 	protected $logs;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $sys_language_uid;
-	
+
 	/**
 	 * @var string
 	 */
@@ -78,22 +78,22 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	 * @var array
 	 */
 	protected $translations;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $excessive_translations;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $countedWords;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $countedFields;
-	
+
 	/**
 	 * Constructor
 	 *
@@ -109,9 +109,9 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	 */
 	public function addTranslateableField(tx_l10nmgr_models_translateable_translateableField $translateableField){
 		unset($this->countedWords);
-		$this->translateableFields->append($translateableField);	
+		$this->translateableFields->append($translateableField);
 	}
-	
+
 	/**
 	 * Returns the collection of translateableFields of the translateabeElement
 	 *
@@ -120,22 +120,22 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	public function getTranslateableFields(){
 		return $this->translateableFields;
 	}
-	
+
 	/**
 	 * Method to set the tablename of the translateableElement
 	 *
 	 * @param string $table
 	 */
-	public function setTable($table){
-		$this->table = $table;		
+	public function setTableName($table){
+		$this->table = $table;
 	}
-	
+
 	/**
 	 * Returns the name of the table
 	 *
 	 * @return string
 	 */
-	public function getTable(){
+	public function getTableName(){
 		return $this->table;
 	}
 
@@ -147,7 +147,7 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	public function setUid($uid){
 		$this->uid = $uid;
 	}
-	
+
 	/**
 	 * Returns the uid of the element
 	 *
@@ -156,50 +156,50 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	public function getUid(){
 		return $this->uid;
 	}
-	
+
 	/**
 	 * Method to attach an array with logmessages to the translateableElement
 	 *
 	 * @param array $logs
 	 */
 	public function setLogs($logs){
-		
+
 		if(is_array($logs)){
 			$this->logs = new ArrayObject($logs);
 		}
 	}
-	
+
 	/**
 	 * Method to configure a language uid.
-	 * 
+	 *
 	 * @param int $id
 	 */
 	public function setSysLanguageUid($id){
 		$this->sys_language_uid = $id;
 	}
 
-	
+
 	/**
 	 * @param string $translation_table
 	 */
 	public function setTranslationTable($translation_table) {
 		$this->translation_table = $translation_table;
 	}
-	
+
 	/**
 	 * @param array $excessive_translations
 	 */
 	public function setExcessiveTranslations($excessive_translations) {
 		$this->excessive_translations = $excessive_translations;
 	}
-	
+
 	/**
 	 * @param array $translations
 	 */
 	public function setTranslations($translations) {
 		$this->translations = $translations;
 	}
-	
+
 	/**
 	 * Returns the numberof words of the translateableElement
 	 *
@@ -215,13 +215,13 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 				$this->countedWords +=  (int)$it->current()->countWords();
 			}
 		}
-		
+
 		return $this->countedWords;
 	}
-	
+
 	/**
 	 * Returns the number of translateableFields
-	 * 
+	 *
 	 * @return int
 	 */
 	public function countFields(){
@@ -230,7 +230,7 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 		}else{
 			$this->countedFields = 0;
 		}
-		
+
 		return $this->countedFields;
 	}
 }

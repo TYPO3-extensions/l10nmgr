@@ -40,36 +40,36 @@
  * @access public
  */
 class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces_wordsCountable{
-	
+
 	/**
 	 * Holds the assigned translateableElements
 	 * @var ArrayObject
 	 */
 	protected $translateableElements;
-	
+
 	/**
 	 * Hold the page_row of the pageGroup
 	 *
 	 * @var array
 	 */
 	protected $page_row;
-	
+
 	/**
 	 * Number of fields of all translateableElements
 	 *
 	 * @var int
 	 */
 	protected $countedFields;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $countedWords;
 
-	
+
 	/**
-	 * Constructor 
-	 * 
+	 * Constructor
+	 *
 	 * @param void
 	 */
 	public function __construct(){
@@ -78,7 +78,7 @@ class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces
 		$this->countedWords = 0;
 	}
 
-	
+
 	/**
 	 * Method to initialize the pageGroup from a page row of the database.
 	 *
@@ -87,26 +87,26 @@ class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces
 	public function setPageRow($row){
 		$this->page_row = $row;
 	}
-	
 
-	public function getPageId(){
+
+	public function getUid(){
 		return $this->page_row['uid'];
 	}
-	
+
 	public function getPageTitle(){
 		return $this->page_row['title'];
 	}
-	
-	
+
+
 	/**
 	 * Method to add a translateableElement to the PageGroup.
-	 * 
+	 *
 	 * @param tx_l10nmgr_models_translateable_translateableElement
 	 */
 	public function addTranslateableElement(tx_l10nmgr_models_translateable_translateableElement $translateableElement){
 		$this->translateableElements->append($translateableElement);
 	}
-	
+
 	/**
 	 * Returns the collection of translateableElements
 	 *
@@ -115,7 +115,7 @@ class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces
 	public function getTranslateableElements(){
 		return $this->translateableElements;
 	}
-	
+
 	/**
 	 * Counts the number of fields of all translateableElements in the pageGroup
 	 *
@@ -127,10 +127,10 @@ class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces
 				$this->countedFields  += $translateableElement->countFields();
 			}
 		}
-		
+
 		return $this->countedFields;
 	}
-	
+
 	/**
 	 * Counts all words within the pagegroup.
 	 *
@@ -142,7 +142,7 @@ class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces
 				$this->countedWords += $translateableElement->countWords();
 			}
 		}
-		
+
 		return $this->countedWords;
 	}
 }
