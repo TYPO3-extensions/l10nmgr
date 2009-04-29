@@ -25,7 +25,7 @@
 /**
  * Model that provides a structured array by a XML translation file
  *
- * interface.tx_l10nmgr_interaces_translateable_translateableFactoryDataProvider.php
+ * interface.tx_l10nmgr_interface_translateable_translateableFactoryDataProvider.php
  *
  * @author Timo Schmidt <timo.schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -37,7 +37,7 @@
  * @subpackage tx_l10nmgr
  * @access public
  */
-interface tx_l10nmgr_interaces_translateable_translateableFactoryDataProvider{
+interface tx_l10nmgr_interface_translateable_translateableFactoryDataProvider{
 
 	/**
 	 * The implementation of the method should return an ArrayObject
@@ -79,8 +79,8 @@ interface tx_l10nmgr_interaces_translateable_translateableFactoryDataProvider{
 	public function getTranslationDetailsByTablenameAndElementId($tableName,$elementId);
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/interfaces/interface.tx_l10nmgr_interaces_translateable_translateableFactoryDataProvider.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/interfaces/interface.tx_l10nmgr_interaces_translateable_translateableFactoryDataProvider.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/interfaces/interface.tx_l10nmgr_interface_translateable_translateableFactoryDataProvider.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/interfaces/interface.tx_l10nmgr_interface_translateable_translateableFactoryDataProvider.php']);
 }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-interface tx_l10nmgr_interfaces_wordsCountable{
+interface tx_l10nmgr_interface_wordsCountable{
 	
 	/**
 	 * Returns the number of words of an element
