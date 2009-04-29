@@ -95,12 +95,15 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 	 *
 	 * @param string $message Reason for skipping
 	 * @access public
+	 * @throws tx_mvc_exception_skipped
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function markSkipped($message) {
 		$this->skippedMessage = $message;
 		$this->isSkipped      = true;
+
+		throw new tx_mvc_exception_skipped('Entity: "' . get_class($this) . '" with the uid: "' . $this->fieldPath . '" was skipped.');
 	}
 
 	/**
