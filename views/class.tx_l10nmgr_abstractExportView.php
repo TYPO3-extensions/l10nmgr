@@ -28,9 +28,9 @@ require_once (t3lib_extMgm::extPath ( "mvc" ) . 'mvc/view/class.tx_mvc_view_phpT
 
 
 /**
-* abstrakt Base class for rendering the export or htmllist of a l10ncfg
-**/
-abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
+ * Abstract Base class for rendering the export or htmllist of a l10ncfg
+ */
+abstract class tx_l10nmgr_abstractExportView extends tx_mvc_view_phpTemplate {
 
 	/**
 	 * @var	tx_l10nmgr_models_configuration_configuration		$l10ncfgObj		The language configuration object
@@ -137,17 +137,16 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 		return $this->exportType;
 	}
 
-	public function setModeNoHidden() {
-		$this->modeNoHidden=TRUE;
+	public function setModeNoHidden($modeNoHidden = true) {
+		$this->modeNoHidden = $modeNoHidden;
 	}
 
-
-	public function setModeOnlyChanged() {
-		$this->modeOnlyChanged=TRUE;
+	public function setModeOnlyChanged($setModeOnlyChanged = true) {
+		$this->modeOnlyChanged = $setModeOnlyChanged;
 	}
 
-	public function setModeOnlyNew() {
-		$this->modeOnlyNew=TRUE;
+	public function setModeOnlyNew($setModeOnlyNew = true) {
+		$this->modeOnlyNew = $setModeOnlyNew;
 	}
 
 	/**
@@ -224,25 +223,26 @@ abstract class tx_l10nmgr_abstractExportView extends  tx_mvc_view_phpTemplate{
 		// get current date
 		$date = time();
 
-		//To-Do get source language if another than default is selected
-		$sourceLanguageId=0;
+		// TODO: get source language if another than default is selected
+		$sourceLanguageId = 0;
 
 		// query to insert the data in the database
-		$field_values = array(						'source_lang' => $sourceLanguageId,
-													'translation_lang' => $this->sysLang,
-													'crdate' => $date,
-													'tstamp' => $date,
-													'l10ncfg_id' => $this->l10ncfgObj->getData('uid'),
-													'pid' => $this->l10ncfgObj->getData('pid'),
-													'tablelist' => $this->l10ncfgObj->getData('tablelist'),
-													'title' => $this->l10ncfgObj->getData('title'),
-													'cruser_id' => $this->l10ncfgObj->getData('cruser_id'),
-													'filename' => $this->getLocalFilename(),
-													'exportType' => $this->exportType);
+		$field_values = array(
+			'source_lang' => $sourceLanguageId,
+			'translation_lang' => $this->sysLang,
+			'crdate' => $date,
+			'tstamp' => $date,
+			'l10ncfg_id' => $this->l10ncfgObj->getData('uid'),
+			'pid' => $this->l10ncfgObj->getData('pid'),
+			'tablelist' => $this->l10ncfgObj->getData('tablelist'),
+			'title' => $this->l10ncfgObj->getData('title'),
+			'cruser_id' => $this->l10ncfgObj->getData('cruser_id'),
+			'filename' => $this->getLocalFilename(),
+			'exportType' => $this->exportType
+		);
 
 		$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_l10nmgr_exportdata', $field_values);
 
-		#t3lib_div::debug();
 		return $res;
 	}
 

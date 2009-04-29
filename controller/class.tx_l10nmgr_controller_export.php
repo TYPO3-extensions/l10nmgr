@@ -58,11 +58,11 @@ require_once t3lib_extMgm::extPath('mvc').'util/class.tx_mvc_util_zip.php';
 ###
 require_once(t3lib_extMgm::extPath('l10nmgr').'views/CATXML/class.tx_l10nmgr_CATXMLView.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'views/excelXML/class.tx_l10nmgr_excelXMLView.php');
-    // autoload the mvc
+	// autoload the mvc
 if (t3lib_extMgm::isLoaded('mvc')) {
-    tx_mvc_common_classloader::loadAll();
+	tx_mvc_common_classloader::loadAll();
 } else {
-    exit('Framework "mvc" not loaded!');
+	exit('Framework "mvc" not loaded!');
 }
 
 /**
@@ -84,337 +84,303 @@ if (t3lib_extMgm::isLoaded('mvc')) {
  */
 class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
-    /**
-     * @var        string
-     */
-    protected $extensionKey = 'l10nmgr';
+	/**
+	 * @var        string
+	 */
+	protected $extensionKey = 'l10nmgr';
 
-    /**
-     * @var        string
-     */
-    protected $defaultActionMethodName = 'showExportFormAction';
+	/**
+	 * @var        string
+	 */
+	protected $defaultActionMethodName = 'showExportFormAction';
 
-    /**
-     * @var        string
-     */
-    protected $argumentsNamespace = 'l10nmgr';
+	/**
+	 * @var        string
+	 */
+	protected $argumentsNamespace = 'l10nmgr';
 
-    /**
-     * These arguments should be kept by the controller because
-     * they are needed in the polling ajax request.
-     *
-     * @var unknown_type
-     */
-    protected $keepArgumentKeys = array('noHidden','noXMLCheck','checkUTF8','selectedExportFormat','exportDataId');
-
-
-    /**
-     * This action method is used
-     *
-     */
-    public function showExportFormAction(){
-
-        $this->view->setAvailableSourceLanguages($this->getLanguagesForLanguageMenu(true));
-        $this->view->setAvailableTargetLanguages($this->getLanguagesForLanguageMenu(false));
-        $this->view->setSelectedExportFormat($this->arguments['selectedExportFormat']);
-        $this->view->setRenderAction('generateExport');
-        $this->view->setAvailableExportFormats(array('xml' => 'general.action.export.xml.title', 'xls' => 'general.action.export.xls.title'));
-        $this->view->setConfigurationId($this->arguments['configurationId']);
-        $this->view->addBackendStylesHeaderData();
-
-    }
+	/**
+	 * These arguments should be kept by the controller because
+	 * they are needed in the polling ajax request.
+	 *
+	 * @var unknown_type
+	 */
+	protected $keepArgumentKeys = array('noHidden','noXMLCheck','checkUTF8','selectedExportFormat','exportDataId');
 
 
-    /**
-     * This method is used to process a submitted exportForm.
-     * Depending on the checkboxes we need to start an exportProcess
-     * or need to show all exports which have not been reimported yet.
-     *
-     * @param void
-     * @return void
-     * @author Timo Schmidt
-     *
-     */
-    public function generateExportAction(){
-        $configurationId			= $this->arguments['configurationId'];
-        $checkForExistingExports	= $this->arguments['checkForExistingExports'];
+	/**
+	 * This action method is used
+	 *
+	 */
+	public function showExportFormAction() {
 
-        ###
-        # LOAD CONFIGURATION
-        ##
-        $configurationRepository	= new tx_l10nmgr_models_configuration_configurationRepository();
-        $l10Configuration			= $configurationRepository->findById($configurationId);
+		$this->view->setAvailableSourceLanguages($this->getLanguagesForLanguageMenu(true));
+		$this->view->setAvailableTargetLanguages($this->getLanguagesForLanguageMenu(false));
+		$this->view->setSelectedExportFormat($this->arguments['selectedExportFormat']);
+		$this->view->setRenderAction('generateExport');
+		$this->view->setAvailableExportFormats(array('xml' => 'general.action.export.xml.title', 'xls' => 'general.action.export.xls.title'));
+		$this->view->setConfigurationId($this->arguments['configurationId']);
+		$this->view->addBackendStylesHeaderData();
 
-        if(!$checkForExistingExports && !$l10Configuration->hasIncompleteExports()){
-            $this->routeToAction('showExportProgressAction');
-        }else{
+	}
 
-            $this->routeToAction('showNotReimportedExportsAction');
-        }
-    }
+	/**
+	 * Retrieves the uid of the currently created exportdata record
+	 *
+	 * @param void
+	 * @return bool true if the record was created
+	 */
+	protected function mapReturnEditConftoArguments($table, $mapTo) {
 
+		$serializedReturnEditConf = t3lib_div::_GET('returnEditConf');
 
-    /**
-     * This method is used to show a list of existing exports.
-     * It uses tx_l10nmgr_view_export_showExportList view because
-     * it is a variant of a list view of exports.
-     *
-     * @see tx_l10nmgr_view_export_showExportList
-     * @param void
-     * @return void
-     */
-    public function showNotReimportedExportsAction(){
-        $configurationId			= $this->arguments['configurationId'];
+		if (!empty($serializedReturnEditConf)) {
+			$returnEditConf = unserialize(t3lib_div::_GET('returnEditConf'));
+			$editedRecord = array_keys($returnEditConf[$table]);
 
-        ###
-        # LOAD CONFIGURATION
-        ##
-        $configurationRepository	= new tx_l10nmgr_models_configuration_configurationRepository();
-        $l10Configuration			= $configurationRepository->findById($configurationId);
+			if ($returnEditConf[$table][$editedRecord[0]] == 'edit') {
+				$this->arguments[$mapTo] = $editedRecord[0];
+				return true;
+			} elseif ($returnEditConf[$table][$editedRecord[0]] == 'new') {
+				return false;
+			} else {
+				throw new Exception('Unkown return value');
+			}
 
-        ##
-        # HANDLE LANGUAGES
-        ##
-        $languageRespository 	= new  tx_l10nmgr_models_language_languageRepository();
-        $targetLanguage 		= $languageRespository->findById($this->arguments['targetLanguageId']);
-
-        $exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
-        $notReimportedExports 	= $exportDataRepository->findAllWithoutStateInHistoryByAssigendConfigurationAndTargetLanguage(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED, $l10Configuration, $targetLanguage);
-
-        $this->view = new tx_l10nmgr_view_export_showExportList();
-        $this->initializeView($this->view);
-
-        $this->view->setExportDataCollection($notReimportedExports);
-        $this->view->addBackendStylesHeaderData();
-    }
+		}
+	}
 
 
-    /**
-     * This method is used to start an export. It creates an exportData object
-     * and loads the exportView with a progressbar.
-     *
-     * @param void
-     * @return void
-     *
-     */
-    public function showExportProgressAction(){
-        $configurationId			= $this->arguments['configurationId'];
-        $sourceLanguageId 			= $this->arguments['sourceLanguageId'];
+	/**
+	 * This method is used to process a submitted exportForm.
+	 * Depending on the checkboxes we need to start an exportProcess
+	 * or need to show all exports which have not been reimported yet.
+	 *
+	 * @param void
+	 * @return void
+	 * @author Timo Schmidt
+	 */
+	public function generateExportAction() {
 
-        ###
-        # LOAD CONFIGURATION
-        ##
-        $configurationRepository	= new tx_l10nmgr_models_configuration_configurationRepository();
-        $l10Configuration			= $configurationRepository->findById($configurationId);
+		$dataWasFound = $this->mapReturnEditConftoArguments('tx_l10nmgr_exportdata', 'exportDataId');
 
-        ##
-        # HANDLE LANGUAGES
-        ##
-        $languageRespository 	= new  tx_l10nmgr_models_language_languageRepository();
-        $targetLanguage 		= $languageRespository->findById($this->arguments['targetLanguageId']);
+		if ($dataWasFound === false) {
+			// abort
+			// TODO: redirect to list
+		}
 
-        ##
-        # CREATE EXPORT DATA
-        ##
-        $exportData		= new tx_l10nmgr_models_exporter_exportData();
-        $exportData->setTablelist($l10Configuration->getTablelist());
-        $exportData->setExportType(1);
-        $exportData->setTranslationLanguageObject($targetLanguage);
-        $exportData->setL10NConfiguration($l10Configuration);
-        $exportData->setSourceLanguageId($sourceLanguageId);
-        $exportData->setTitle($l10Configuration->getTitle());
-        $exportData->setPid($l10Configuration->getPid()); // store the exportdata record on the same page as its configuration record
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
 
-        $exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
-        $exportDataRepository->add($exportData);
-        $this->arguments['exportDataId'] = $exportData->getUid();
-
-        $progressView = new tx_mvc_view_widget_progress();
-        $this->initializeView($progressView );
-        $progressView->setProgress(0);
-        $progressView->setAjaxEnabled(true);
-        $progressView->setProgressUrl($this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('ajaxDoExportRun')->useOverruledParameters()->makeUrl());
-        $progressView->setRedirectOnCompletedUrl('../mod1/index.php');
-
-        $this->view->setExportData($exportData);
-        $this->view->setProgressView($progressView);
-        $this->view->addBackendStylesHeaderData();
-    }
-
-    /**
-     * This method performs on run of an export. It is polled via ajax to perform a complete export.
-     * It returns an exportData object
-     *
-     * @return tx_l10nmgr_models_exporter_exportData
-     */
-    public function performExportRun(){
-        ##
-        # GET ARGUMENTS, NOTE: Arguments are available here because they have been marked as keepArguments
-        ##
-        $onlyChangedContent 	= tx_mvc_filter_factory::getBooleanFilter()->filter($this->arguments['onlyChangedContent']);
-        $noHidden				= tx_mvc_filter_factory::getBooleanFilter()->filter($this->arguments['noHidden']);
-        $noXMLCheck				= tx_mvc_filter_factory::getBooleanFilter()->filter($this->arguments['noXMLCheck']);
-        $checkUTF8				= tx_mvc_filter_factory::getBooleanFilter()->filter($this->arguments['checkUTF8']);
-        $exportDataID			= tx_mvc_filter_factory::getIntPositiveFilter()->filter($this->arguments['exportDataId']);
-
-        $exportFormat			= tx_mvc_filter_factory::getTextPlainFilter()->filter($this->arguments['selectedExportFormat']);
-
-        $exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
-        $exportData 			= $exportDataRepository->findById($exportDataID);
-
-        $sourceLanguage			= $exportData->getSourceLanguageObject();
-        $l10Configuration		= $exportData->getL10nConfigurationObject();
-
-        //perform Export
-        $exportView				= $this->getInitializedExportView($exportFormat,$sourceLanguage,$l10Configuration,$noXMLCheck,$checkUTF8,$onlyChangedContent,$noHidden);
-        $exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, 5, $exportView);
-
-        $res 					= $exporter->run();
-
-        $exportData 			= $exporter->getExportData();
-
-        if ($res) {
-            $exportData->increaseNumberOfExportRuns();
-            $chunkResult 	= $exporter->getResultForChunk();
-
-            $exportFile		= new tx_l10nmgr_models_exporter_exportFile();
-            $exportFile->setFilename($exportView->getFilename($exportData->getNumberOfExportRuns()));
-            $exportFile->setExportDataObject($exportData);
-            $exportFile->setContent($chunkResult);
-            $exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
-            $exportFile->write();
-
-            $exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
-            $exportFileRepository->add($exportFile);
-            $exportDataRepository->save($exportData);
-        }
-
-        if ($exportData->getExportIsCompletelyProcessed()) {
-
-        	$exportFilePath	= tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename');
-
-            // create one zip file
-            $zipper = new tx_mvc_util_zip();
-            foreach ($exportData->getExportFiles() as $exportFile) {
-            	$filename = t3lib_div::getFileAbsFileName($exportFilePath . '/' . $exportFile->getFilename());
-                $zipper->add_file(
-                    file_get_contents($filename),
-                    $exportFile->getFilename()
-                );
-
-                // delete file and original record
-                // unlink($filename);
-                // $exportFileRepository->remove($exportFile);
-            }
-
-            // write to file
-            $filename = $exportView->getFilename('') . '.zip';
-            $exportDataFilePath	= tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportData::getTableName(), 'filename');
-            $res = t3lib_div::writeFile(PATH_site . $exportDataFilePath . '/' . $filename, $zipper->file());
-            if ($res == false) {
-            	throw new Exception(sprintf('Error while writing file "%s"', $exportPath . $filename));
-            }
-
-            if (TYPO3_DLOG) t3lib_div::devLog('Created zip file', 'l10nmgr', 1);
-
-            // update exportdata record
-            $exportData->setFilename($filename);
-            $exportDataRepository->save($exportData);
-        }
-        return $exportData;
-    }
+		$this->arguments['configurationId'] = $exportData->getL10ncfg_id();
 
 
-    /**
-     * This method is used to do an export run via ajax. It internally routes
-     * the request to the doExportRunAction
-     *
-     * @param void
-     */
-    public function ajaxDoExportRunAction(){
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
 
-        // $exportData = $this->routeToAction('performExportRun');
-        $exportData = $this->performExportRun();
-
-        $progressView = new tx_mvc_view_widget_progressAjax();
-        $this->initializeView($progressView);
-        $percent = $exportData->getExportProgressPercentage();
-        $progressView->setProgress($percent);
-        if ($percent < 100) {
-            $progressView->setProgressLabel(round($exportData->getExportProgressPercentage()). ' %');
-        } else {
-            $progressView->setProgressLabel('Completed');
-            $progressView->setCompleted(true);
-        }
-
-        echo $progressView->render();
-
-        exit();
-    }
-
-    /**
-     * Helper method to determin all relevant languages for the dropdown language menu
-     *
-     * @param boolean $includeDefaultLanguage
-     * @return array
-     */
-    protected function getLanguagesForLanguageMenu($includeDefaultLanguage = false){
-        $t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
-        $sysL = $t8Tools->getSystemLanguages();
-
-        //add the default language
-        if($includeDefaultLanguage){
-            $languages[0] = "-default-";
-        }
-
-        foreach($sysL as $sL)	{
-            if ($sL['uid']>0 && $GLOBALS['BE_USER']->checkLanguageAccess($sL['uid']))	{
-                if ($this->configuration->get('enable_hidden_languages') == 1 || $sL['hidden'] == 0) {
-                    $languages[$sL['uid']] = $sL['title'];
-                }
-            }
-        }
-
-        return $languages;
-    }
+		if (!$exportData->getCheckForExistingExports()) {
+			$l10Configuration = $exportData->getL10nConfigurationObject();
+			if (!$l10Configuration->hasIncompleteExports()) {
+				$this->routeToAction('showExportProgressAction');
+			} else {
+				$this->routeToAction('showNotReimportedExportsAction');
+			}
+		} else {
+			$this->routeToAction('showNotReimportedExportsAction');
+		}
+	}
 
 
-    /**
-    * Creats an instance of a configured xml export view
-    *
-     * @param tx_l10nmgr_models_language_language $previewLanguage
-     * @return tx_l10nmgr_CATXMLView
-     */
-    protected function getInitializedExportView($exportFormat,$sourceLanguage,$l10ncfgObj,$noXmlCheck=false,$useUtf8Mode=false,$onlyChangedContent=false,$noHidden=false){
+	/**
+	 * This method is used to show a list of existing exports.
+	 * It uses tx_l10nmgr_view_export_showExportList view because
+	 * it is a variant of a list view of exports.
+	 *
+	 * @see tx_l10nmgr_view_export_showExportList
+	 * @param void
+	 * @return void
+	 */
+	public function showNotReimportedExportsAction() {
 
-        if ($exportFormat == 'xml') {
-            $viewClassName	= t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
-            $viewClass		= new $viewClassName();
-            $viewClass->setSkipXMLCheck($noXmlCheck);
-            $viewClass->setUseUTF8Mode($useUtf8Mode);
-        } elseif($exportFormat == 'xls') {
-            $viewClassName	= t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
-            $viewClass		= new $viewClassName();
-        } else {
-        	throw new LogicException('ExportFormat is invalid (must be "xml" or "xls")!');
-        }
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
 
-        $viewClass->setForcedSourceLanguage($sourceLanguage);
-        $viewClass->setL10NConfiguration($l10ncfgObj);
+		$exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$notReimportedExports 	= $exportDataRepository->findAllWithoutStateInHistoryByAssigendConfigurationAndTargetLanguage(
+			tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED,
+			$exportData->getL10ncfg_id(), // configuration id
+			$exportData->getTranslation_lang() // target language id
+		);
 
-        if ($onlyChangedContent) {
-            $viewClass->setModeOnlyChanged();
-        }
-        if ($noHidden) {
-            $viewClass->setModeNoHidden();
-        }
+		$this->view = new tx_l10nmgr_view_export_showExportList();
+		$this->initializeView($this->view);
 
-        return $viewClass;
-    }
+		$this->view->setExportDataCollection($notReimportedExports);
+		$this->view->addBackendStylesHeaderData();
+	}
+
+
+	/**
+	 * This method is used to start an export. It creates an exportData object
+	 * and loads the exportView with a progressbar.
+	 *
+	 * @param void
+	 * @return void
+	 *
+	 */
+	public function showExportProgressAction() {
+
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
+
+		$progressView = new tx_mvc_view_widget_progress();
+		$this->initializeView($progressView );
+		$progressView->setProgress(0);
+		$progressView->setAjaxEnabled(true);
+		$progressView->setProgressUrl($this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('ajaxDoExportRun')->useOverruledParameters()->makeUrl());
+		$progressView->setRedirectOnCompletedUrl('../mod1/index.php');
+
+		$this->view->setExportData($exportData);
+		$this->view->setProgressView($progressView);
+		$this->view->addBackendStylesHeaderData();
+	}
+
+	/**
+	 * This method performs on run of an export. It is polled via ajax to perform a complete export.
+	 * It returns an exportData object
+	 *
+	 * TODO: this method should be a method from the tx_l10nmgr_models_exporter_exporter class
+	 *
+	 * @return tx_l10nmgr_models_exporter_exportData
+	 * @return tx_l10nmgr_models_exporter_exportData
+	 */
+	public function performExportRun(tx_l10nmgr_models_exporter_exportData $exportData) {
+
+		$exportView				= $this->getInitializedExportView($exportData);
+		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, 5, $exportView);
+
+		$res 					= $exporter->run();
+
+		if ($res) {
+			$exportData->increaseNumberOfExportRuns();
+			$chunkResult = $exporter->getResultForChunk();
+
+			$exportFile	= new tx_l10nmgr_models_exporter_exportFile();
+			$exportFile->setFilename($exportView->getFilename($exportData->getNumberOfExportRuns()));
+			$exportFile->setExportDataObject($exportData);
+			$exportFile->setContent($chunkResult);
+			$exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
+			$exportFile->write();
+
+			$exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
+			$exportFileRepository->add($exportFile);
+		}
+
+		if ($exportData->getExportIsCompletelyProcessed()) {
+			$exportData->createZip($exportView->getFilename('') . '.zip');
+		}
+
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository->save($exportData);
+
+		return $exportData;
+	}
+
+	/**
+	 * This method is used to do an export run via ajax. It internally routes
+	 * the request to the doExportRunAction
+	 *
+	 * @param void
+	 */
+	public function ajaxDoExportRunAction() {
+
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
+
+		$exportData = $this->performExportRun($exportData);
+
+		$progressView = new tx_mvc_view_widget_progressAjax();
+		$this->initializeView($progressView);
+		$percent = $exportData->getExportProgressPercentage();
+		$progressView->setProgress($percent);
+		if ($percent < 100) {
+			$progressView->setProgressLabel(round($exportData->getExportProgressPercentage()). ' %');
+		} else {
+			$progressView->setProgressLabel('Completed');
+			$progressView->setCompleted(true);
+		}
+
+		echo $progressView->render();
+
+		exit();
+	}
+
+	/**
+	 * Helper method to determin all relevant languages for the dropdown language menu
+	 *
+	 * @param boolean $includeDefaultLanguage
+	 * @return array
+	 */
+	protected function getLanguagesForLanguageMenu($includeDefaultLanguage = false) {
+		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
+		$sysL = $t8Tools->getSystemLanguages();
+
+		//add the default language
+		if ($includeDefaultLanguage) {
+			$languages[0] = "-default-";
+		}
+
+		foreach($sysL as $sL)	{
+			if ($sL['uid']>0 && $GLOBALS['BE_USER']->checkLanguageAccess($sL['uid']))	{
+				if ($this->configuration->get('enable_hidden_languages') == 1 || $sL['hidden'] == 0) {
+					$languages[$sL['uid']] = $sL['title'];
+				}
+			}
+		}
+
+		return $languages;
+	}
+
+
+	/**
+	 * Creats an instance of a configured xml export view
+	 *
+	 * TODO: this should be a method of the exporter class (or the exportData class?)
+	 *
+	 * @param tx_l10nmgr_models_language_language $previewLanguage
+	 * @return tx_l10nmgr_CATXMLView
+	 */
+	protected function getInitializedExportView(tx_l10nmgr_models_exporter_exportData $exportData) {
+
+		switch ($exportData->getExporttype()) {
+
+			case 'xml' : {
+				$viewClass = new tx_l10nmgr_CATXMLView();
+				$viewClass->setSkipXMLCheck($exportData->getNoxmlcheck());
+				$viewClass->setUseUTF8Mode($exportData->getCheckutf8());
+			} break;
+
+			case 'xls' : {
+				$viewClass = new tx_l10nmgr_excelXMLView();
+			} break;
+
+			default: {
+				throw new LogicException('ExportFormat is invalid (must be "xml" or "xls")!');
+			}
+
+		}
+
+		$viewClass->setForcedSourceLanguage($exportData->getSourceLanguageObject());
+		$viewClass->setL10NConfiguration($exportData->getL10nConfigurationObject());
+		$viewClass->setModeOnlyChanged($exportData->getOnlychangedcontent());
+		$viewClass->setModeNoHidden($exportData->getNohidden());
+
+		return $viewClass;
+	}
 
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/controller/class.tx_l10nmgr_controller_xmlexport.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/controller/class.tx_l10nmgr_controller_xmlexport.php']);
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/controller/class.tx_l10nmgr_controller_xmlexport.php']);
 }
 ?>

@@ -195,56 +195,72 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 	),
 	"feInterface" => $TCA["tx_l10nmgr_exportdata"]["feInterface"],
 	"columns" => Array (
+		'l10ncfg_id' => Array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.l10ncfg_id',
+			'config' => Array (
+				'type' => 'group',
+				'internal_type' => 'db',
+				'allowed' => 'tx_l10nmgr_cfg',
+				'size' => 1,
+				'minitems' => 0,
+				'maxitems' => 1,
+			)
+		),
+		'exporttype' => Array(
+			"exclude" => 1,
+			"label" => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.exporttype',
+			"config" => Array (
+                "type" => "select",
+                "items" => Array (
+                    Array('XML', 'xml'),
+                    Array('MS Excel', 'xls'),
+                ),
+                'default' => 'xml',
+                "size" => 1,
+                "minitems" => 0,
+                "maxitems" => 1,
+            )
+		),
 		"title" => Array (
 			"exclude" => 1,
-			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.title",
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.title",
 			"config" => Array (
 				"type" => "input",
 				"size" => "48",
 				"eval" => "required",
-				"readOnly" => 1,
-			)
-		),
-		"crdate" => Array (
-			"exclude" => 1,
-			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.crdate",
-			"config" => Array (
-				"type" => "input",
-				"eval" => "date",
-				"size" => "48",
-				"readOnly" => 1,
-			)
-		),
-		"tablelist" => Array (
-			"exclude" => 1,
-			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.exporttablelist",
-			"config" => Array (
-				"type" => "input",
-				"size" => "48",
-				"readOnly" => 1,
 			)
 		),
 		"translation_lang" => Array (
 			"exclude" => 1,
-			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.translationLang",
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.translation_lang",
 			"config" => Array (
-				"type" => "input",
-				"size" => "48",
-				"readOnly" => 1,
-			)
+                "type" => "select",
+                "foreign_table" => "sys_language",
+                "foreign_table_where" => "ORDER BY sys_language.sorting",
+                "size" => 1,
+                "minitems" => 0,
+                "maxitems" => 1,
+            )
 		),
 		"source_lang" => Array (
 			"exclude" => 1,
-			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_cfg.sourceLang",
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.source_lang",
 			"config" => Array (
-				"type" => "input",
-				"size" => "48",
-				"readOnly" => 1,
-			)
+                "type" => "select",
+                "items" => Array (
+                    Array("-- default --",0),
+                ),
+                "foreign_table" => "sys_language",
+                "foreign_table_where" => "ORDER BY sys_language.sorting",
+                "size" => 1,
+                "minitems" => 0,
+                "maxitems" => 1,
+            )
 		),
 		'filename' => Array (
 			'exclude' => 1,
-			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportfiles.filename',
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.filename',
 			'config' => Array (
 				'type' => 'group',
 				"internal_type" => "file",
@@ -252,19 +268,65 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
                 "max_size" => 50000,
                 "uploadfolder" => 'uploads/tx_l10nmgr/exportfiles/zips',
                 "size" => 1,
-                "minitems" => 1,
+                "minitems" => 0,
                 "maxitems" => 1,
-				'size' => '48',
-				'eval' => 'required',
+				'size' => '1',
 				'readOnly' => 1,
 			)
 		),
+		'checkforexistingexports' => Array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.checkforexistingexports',
+			'config' => Array (
+				'type' => 'check',
+			)
+		),
+		'onlychangedcontent' => Array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.onlychangedcontent',
+			'config' => Array (
+				'type' => 'check',
+			)
+		),
+		'nohidden' => Array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.nohidden',
+			'config' => Array (
+				'type' => 'check',
+			)
+		),
+		'noxmlcheck' => Array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.noxmlcheck',
+			'config' => Array (
+				'type' => 'check',
+			)
+		),
+		'checkutf8' => Array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.checkutf8',
+			'config' => Array (
+				'type' => 'check',
+			)
+		)
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "title, crdate, translation_lang, tablelist, source_lang, filename")
+		"xml" => Array("showitem" => "l10ncfg_id, title, exporttype;;1, --palette--;Languages;3, --palette--;Export Options;2"),
+		"xls" => Array("showitem" => "l10ncfg_id, title, exporttype, --palette--;Languages;3, --palette--;Export Options;2")
 	),
 	"palettes" => Array (
-		"1" => Array("showitem" => "")
+		"1" => Array(
+			"showitem" => 'noxmlcheck, checkutf8',
+			'canNotCollapse' => 1
+		),
+		"2" => Array(
+			"showitem" => 'checkforexistingexports, onlychangedcontent, nohidden',
+			'canNotCollapse' => 1
+		),
+		"3" => Array(
+			"showitem" => 'source_lang, translation_lang',
+			'canNotCollapse' => 1
+		)
 	)
 );
 

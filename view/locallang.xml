@@ -81,6 +81,13 @@
 			<label index="render_overview.clickedit.message">Click to edit</label>
 			<label index="render_overview.clicklocalize.message">Click to localize</label>
 			<label index="l10nmgr.documentation.title">Documentation</label>
+
+			<!-- Pagination labels -->
+			<label index="mvc.widget.first_page">First</label>
+			<label index="mvc.widget.last_page">Last</label>
+			<label index="mvc.widget.previous_page">Prev</label>
+			<label index="mvc.widget.next_page">Next</label>
+			<label index="mvc.widget.page">Page</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="general.action.refresh.button.title">Aktualisieren</label>

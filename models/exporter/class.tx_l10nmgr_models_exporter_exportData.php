@@ -419,6 +419,40 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 		$this->row['source_lang'] = $id;
 	}
 
+
+	/**
+	 * Create one zip files including all export files
+	 *
+	 * @param string filename
+	 * @return void
+	 */
+	public function createZip($fileName) {
+		$exportFilePath	= tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename');
+
+		// create one zip file
+		$zipper = new tx_mvc_util_zip();
+		foreach ($this->getExportFiles() as $exportFile) { /* @var $exportFile tx_l10nmgr_models_exporter_exportFile */
+			$filename = t3lib_div::getFileAbsFileName($exportFilePath . '/' . $exportFile->getFilename());
+			$zipper->add_file(
+				file_get_contents($filename),
+				$exportFile->getFilename()
+			);
+		}
+
+		// write to file
+		$exportDataFilePath	= tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', self::getTableName(), 'filename');
+		$res = t3lib_div::writeFile(PATH_site . $exportDataFilePath . '/' . $fileName, $zipper->file());
+		if ($res == false) {
+			throw new Exception(sprintf('Error while writing file "%s"', $exportPath . $fileName));
+		}
+
+		if (TYPO3_DLOG) t3lib_div::devLog('Created zip file', 'l10nmgr', 1);
+
+		// update exportdata record
+		$this->setFilename($fileName);
+
+	}
+
 }
 
 ?>

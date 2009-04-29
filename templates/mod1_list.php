@@ -5,6 +5,8 @@
 
 //var_dump($this->getRegistrydata());
 global $BACK_PATH, $LANG;
+
+$extPath = t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));
 ?>
 
 
@@ -36,7 +38,7 @@ global $BACK_PATH, $LANG;
 		<tr class="bgColor3">
 			<td align="center">
 				<a class="tooltip" href="#<?php echo 'tooltip_' . $configurationElementArray['uid']; ?>">
-					<img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>gfx/cog.png" />
+					<img src="<?php echo $extPath;?>gfx/cog.png" />
 				</a>
 
 				<?php $parentPageArray = t3lib_BEfunc::getRecord('pages',$configurationElementArray['pid']); ?>
@@ -90,24 +92,60 @@ global $BACK_PATH, $LANG;
 			<td><?php echo $configurationElementArray['title']; ?></td>
 			<td class="l10ncfgPath"><?php echo current(t3lib_BEfunc::getRecordPath($configurationElementArray['pid'], '1', 200, 50)); ?></td>
 			<td>
-				<?php echo '<a title="Export XML" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'export/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xml">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>xml_export.png" alt="Export XML" /></a>
+				<!-- Export XML -->
+				<?php
+					$editOnClickParams  = '&edit[tx_l10nmgr_exportdata][' . $configurationElementArray['pid'] . ']=new';
+					$editOnClickParams .= '&returnEditConf=1';
+					$editOnClickParams .= '&noView=1';
+					$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configurationElementArray['uid'];
+					$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][exporttype]=xml';
+					$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][title]='.$configurationElementArray['title'];
+					$editOnClickParams .= '&overrideVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configurationElementArray['uid'];
+					$redirectUrl = $extPath . 'export/index.php?l10nmgr[action]=generateExport';
+				?>
+				<a title="Export XML" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $BACK_PATH, $redirectUrl)) ?>">
+					<img src="<?= $extPath ?>gfx/xml_export.png" alt="Export XML" />
+				</a>
 
+				<!-- Import XML -->
 				<?php
 					$editOnClickParams  = '&edit[tx_l10nmgr_importdata][' . $configurationElementArray['pid'] . ']=new';
 					$editOnClickParams .= '&columnsOnly=configuration_id,importfiles';
 					$editOnClickParams .= '&returnEditConf=1';
+					$editOnClickParams .= '&noView=1';
 					$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][configuration_id]='.$configurationElementArray['uid'];
 					$editOnClickParams .= '&overrideVals[tx_l10nmgr_importdata][configuration_id]='.$configurationElementArray['uid'];
-					$importUrl = t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'import/index.php?l10nmgr[selectedExportFormat]=xml';
+					$redirectUrl = $extPath . 'import/index.php?';
 				?>
-				<a title="Import XML" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $BACK_PATH, $importUrl)) ?>">
-					<img src="<?= t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) ?>xml_import.png" alt="Import XML" />
+				<a title="Import XML" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $BACK_PATH, $redirectUrl)) ?>">
+					<img src="<?= $extPath ?>gfx/xml_import.png" alt="Import XML" />
 				</a>
 
 
-				<?php echo '<a title="Export XLS" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'export/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xls">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>xls_export.png" alt="Export XLS" /></a>
-				<?php echo '<a title="Import XLS" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'import/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xls">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>xls_import.png" alt="Import XLS" /></a> |
-				<?php echo '<a title="Translate online" href="' . t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr')) . 'translate/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=inlineEdit">';?><img src="<?php echo t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10nmgr'));?>pencil_go.png" alt="Translate online" /></a>
+				<!-- Export XLS -->
+				<?php
+					$editOnClickParams  = '&edit[tx_l10nmgr_exportdata][' . $configurationElementArray['pid'] . ']=new';
+					$editOnClickParams .= '&returnEditConf=1';
+					$editOnClickParams .= '&noView=1';
+					$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configurationElementArray['uid'];
+					$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][exporttype]=xls';
+					$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][title]='.$configurationElementArray['title'];
+					$editOnClickParams .= '&overrideVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configurationElementArray['uid'];
+					$redirectUrl = $extPath . 'export/index.php?';
+				?>
+				<a title="Export XLS" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $BACK_PATH, $redirectUrl)) ?>">
+					<img src="<?= $extPath ?>gfx/xls_export.png" alt="Export XLS" />
+				</a>
+
+				<!-- Import XLS -->
+				<a title="Import XLS" href="<?php echo $extPath . 'import/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=xls';?>">
+					<img src="<?php echo $extPath;?>gfx/xls_import.png" alt="Import XLS" />
+				</a> |
+
+				<!-- Translate online -->
+				<a title="Translate online" href="<?php echo $extPath . 'translate/index.php?l10nmgr[configurationId]=' . $configurationElementArray['uid'] . '&l10nmgr[selectedExportFormat]=inlineEdit';?>">
+					<img src="<?php echo $extPath;?>gfx/pencil_go.png" alt="Translate online" />
+				</a>
 			</td>
 		</tr>
 		<?php } ?>

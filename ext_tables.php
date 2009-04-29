@@ -55,6 +55,16 @@ plugin.tx_l10nmgr_controller_import.configuration {
 		form = EXT:l10nmgr/templates/import/form.php
 	}
 }
+
+plugin.tx_l10nmgr_controller_list.configuration {
+	viewHelper.disable {
+		linkCreator = 0
+		label = 0
+		fieldRenderer = 1
+		tcaFieldRenderer = 1
+		formElementRenderer = 0
+	}
+}
 '
 	);
 
@@ -117,7 +127,7 @@ t3lib_extMgm::allowTableOnStandardPages("tx_l10nmgr_exportdata");
 
 $TCA["tx_l10nmgr_exportdata"] = Array (
 	"ctrl" => Array (
-		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_export',
+		'title' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata',
 		'label' => 'title',
 		'l10ncfg_id' => 'l10ncfg_id',
 		'tstamp' => 'tstamp',
@@ -128,6 +138,7 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		'source_lang' => 'source_lang',
 		"default_sortby" => "ORDER BY title",
 		"delete" => "deleted",
+		'type' => 'exporttype',
 		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_cfg.gif",
 	),

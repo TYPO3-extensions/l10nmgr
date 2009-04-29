@@ -19,5 +19,5 @@
 	</head>
 
 	<?= $this->getPageGroup(); ?>
-	
+
 </TYPO3L10N>
