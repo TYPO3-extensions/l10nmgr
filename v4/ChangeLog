@@ -3,6 +3,16 @@
 	* Update PHPdoc of domain/translation package
 	* Rename some methods from the translatable package to be compatible to the translation package 
 	* Improve the translation package testcases
+	* Rename interface package
+	* Rename existing interfaces to the new package name
+	* Add new Interface interface.tx_l10nmgr_interface_stateImportable.php
+	* Package translatable: update code indention, PHPdoc, add some command processing informations to the class "tx_l10nmgr_models_translateable_translateableField"
+	* Add tx_l10nmgr_interface_stateImportable to classes of package "translation"
+	* Prepare logging method to the class "tx_l10nmgr_domain_translation_data"
+	* Change the interface package and its name "tx_l10nmgr_interfaces_wordsCountable" the package "interfaces" is now "interface"
+	* Add throw tx_mvc_exception_skipped if an field is marked as skipped on "tx_l10nmgr_domain_translation_field::markSipped"
+	* Refactor the "tx_l10nmgr_service_importTranslation"
+	* Add exportRecordUid member to the class.tx_l10nmgr_domain_translation_data.php 
 
 2009-04-28 Michael Klapper <michael.klapper@aoemedia.de>
 	* Add some PHPdoc
