@@ -141,7 +141,7 @@ class tx_l10nmgr_domain_translation_data {
 	 */
 	public function findByTableUidAndKey($pageUid, $tableName, $elementUid, $uniqueKey) {
 
-		return $this->getPagesCollection()->offsetGet($pageUid)->getElementCollection()->offsetGet($tableName . ':' . $elementUid)->getFieldCollection();
+		return $this->getPagesCollection()->offsetGet($pageUid)->getElementCollection()->offsetGet($tableName . ':' . $elementUid)->getFieldCollection()->offsetGet($uniqueKey);
 	}
 
 	/**

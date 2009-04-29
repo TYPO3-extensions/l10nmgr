@@ -42,6 +42,8 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10
 class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject {
 
 	/**
+	 * @example Mixed key tt_content:1111
+	 *           Build from the table name and uid of the record
 	 * @access public
 	 * @throws tx_mvc_exception_argumentOutOfRange
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
