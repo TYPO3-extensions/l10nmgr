@@ -54,7 +54,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 * @param tx_l10nmgr_models_language_language $previewLanguage
 	 * @todo we need to handle the include index
 	 */
-	public function create(tx_l10nmgr_interaces_translateable_translateableFactoryDataProvider $dataProvider){
+	public function create(tx_l10nmgr_interface_translateable_translateableFactoryDataProvider $dataProvider){
 
 		$this->dataProvider			= $dataProvider;
 

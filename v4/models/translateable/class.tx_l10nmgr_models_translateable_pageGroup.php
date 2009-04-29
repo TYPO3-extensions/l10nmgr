@@ -40,7 +40,7 @@
  * @subpackage	l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces_wordsCountable{
+class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interface_wordsCountable{
 
 	/**
 	 * Holds the assigned translateableElements
