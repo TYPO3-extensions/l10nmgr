@@ -43,7 +43,7 @@ class tx_l10nmgr_domain_translation_pageCollection extends ArrayObject {
 
 
 	/**
-	 *
+	 * @example Integer key, uid of pages record like: 1111
 	 * @access public
 	 * @throws tx_mvc_exception_argumentOutOfRange
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
