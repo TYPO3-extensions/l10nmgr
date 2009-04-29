@@ -131,9 +131,11 @@ class tx_l10nmgr_domain_translationFactory_basic_testcase extends tx_phpunit_tes
 	 */
 	public function invalidFilePathProvider() {
 		$pathToFile = t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/fixtures/files/';
+		$siteUrl = tx_mvc_common_typo3::getContextIndependentSiteUrl();
 
 		return array (
 			array($pathToFile . 'noFile.xml'),
+			array($siteUrl . 'typo3conf/ext/l10nmgr/tests/translation/fixtures/files/validContent/catxml_export__to_en_GB_210409-175557.xml'), // Remote files are not allowed
 			array(''),
 			array(0),
 			array(true),

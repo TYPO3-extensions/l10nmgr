@@ -115,7 +115,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * 	array (
 	 * 		'pages', // expected tabel name
 	 * 		1111, // Page UID
-	 * 		1111, // Record UID
+	 * 		'tt_content:1111', // Mixed key build from the table name and record UID like "tt_content:111"
 	 * 	)
 	 * </exampl>
 	 *
@@ -140,7 +140,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 *
 	 * @param string $expectedValue The expected result string
 	 * @param integer $fixturePageId Page id where the elements (record) are located
-	 * @param integer $fixtureElementId Record UID
+	 * @param string $fixtureElementId Mixed key build from the table name and record UID like "tt_content:111"
 	 * @access public
 	 * @dataProvider dataContainsRightTableNameForEntityDataProvider
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
@@ -163,7 +163,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * 	array (
 	 * 		true, // expected transformations status
 	 * 		1111, // Page UID
-	 * 		1111, // Record UID
+	 * 		'tt_content:1111', // Mixed key build from the table name and record UID like "tt_content:111"
 	 * 		'tt_content:523531:bodytext"', // record command path
 	 * 	)
 	 * </exampl>
@@ -188,7 +188,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 *
 	 * @param string $expectedValue The expected result string
 	 * @param integer $fixturePageId Page id where the elements (record) are located
-	 * @param integer $fixtureElementId Record UID
+	 * @param string $fixtureElementId Mixed key build from the table name and record UID like "tt_content:111"
 	 * @param string $fixtureFieldName Field name like "title" or "bodytext"
 	 * @access public
 	 * @dataProvider validFieldTransoformationStatusDataProvider
@@ -212,7 +212,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * 	array (
 	 * 		'WebEx Customers, // expected content
 	 * 		1111, // Page UID
-	 * 		1111, // Record UID
+	 * 		'tt_content:1111', // Mixed key build from the table name and record UID like "tt_content:111"
 	 * 		'tt_content:523531:bodytext"', // record command path
 	 * 	)
 	 * </exampl>
@@ -235,7 +235,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 *
 	 * @param string $expectedValue The expected result string
 	 * @param integer $fixturePageId Page id where the elements (record) are located
-	 * @param integer $fixtureElementId Record UID
+	 * @param string $fixtureElementId Mixed key build from the table name and record UID like "tt_content:111"
 	 * @param string $fixtureFieldName Field name like "title" or "bodytext"
 	 * @access public
 	 * @dataProvider fieldContainsRightContentBetweenCdataDataProvider
@@ -259,7 +259,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * 	array (
 	 * 		'WebEx Customers, // expected content
 	 * 		1111, // Page UID
-	 * 		1111, // Record UID
+	 * 		'tt_content:1111', // Mixed key build from the table name and record UID like "tt_content:111"
 	 * 		'tt_content:523531:bodytext"', // record command path
 	 * 	)
 	 * </exampl>
@@ -290,21 +290,62 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 *
 	 * @param string $expectedValue The expected result string
 	 * @param integer $fixturePageId Page id where the elements (record) are located
-	 * @param integer $fixtureElementId Record UID
-	 * @param string $fixtureFieldName Field name like "title" or "bodytext"
+	 * @param string $fixtureElementId Mixed key build from the table name and record UID like "tt_content:111"
+	 * @param string $fixtureFieldPath Field name like "tt_content:523531:bodytext"
 	 * @access public
 	 * @dataProvider fieldContainsRightContentWithoutCdataDataProvider
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_fieldContainsRightContentWithoutCDATA($expectedValue, $fixturePageId, $fixtureElementId, $fixtureFieldName) {
-		$fixtureFieldContent = $this->TranslationData->getPagesCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldName)->getContent();
+	public function test_fieldContainsRightContentWithoutCDATA($expectedValue, $fixturePageId, $fixtureElementId, $fixtureFieldPath) {
+		$fixtureFieldContent = $this->TranslationData->getPagesCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldPath)->getContent();
 
 		$this->assertEquals (
 			$expectedValue,
 			$fixtureFieldContent,
 			'Wrong content found in field of element. Expected content "' . htmlspecialchars($expectedValue) . '" the following content is given "' . htmlspecialchars($fixtureFieldContent) . '"'
 		);
+	}
+
+	/**
+	 * Provides invalid index keys to access the TranslationData
+	 *
+	 * <example>
+	 * 	array (
+	 * 		'WebEx Customers, // expected content
+	 * 		1111, // Page UID
+	 * 		'tt_content:1111', // Mixed key build from the table name and record UID like "tt_content:111"
+	 * 		'tt_content:523531:bodytext"', // record command path
+	 * 	)
+	 * </exampl>
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return array
+	 */
+	public function throwsExceptionWhileAccessingNotAvailableIndexOfTranslationDataCollectionDataProvider() {
+		return array (
+			array (0, 'tt_content:' . 1693, 'tt_content:NEW/1/1693:bodytext'), // provides an invalid page uid
+			array (535, 'invalidTableName:' . 1693, 'tt_content:NEW/1/1693:bodytext'), // provides an invalid mixed key to access the element record
+			array (535, 'tt_content:' . 0, 'tt_content:NEW/1/1693:bodytext'), // provides an invalid mixed key to access the element record
+			array (535, 'tt_content:' . 1693, 'invalidTableName:NEW/1/1693:bodytext'), // provides invalid path key
+		);
+	}
+
+	/**
+	 * Verify that an exception is thrown if an not existing index of collection is tryed to access
+	 *
+	 * @param integer $fixturePageId  Page id where the elements (record) are located
+	 * @param string $fixtureElementId Mixed key build from the table name and record UID like "tt_content:111"
+	 * @param string $fixtureFieldPath  Field name like "tt_content:523531:bodytext"
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @dataProvider throwsExceptionWhileAccessingNotAvailableIndexOfTranslationDataCollectionDataProvider
+	 * @expectedException tx_mvc_exception_argumentOutOfRange
+	 * @return void
+	 */
+	public function test_throwsExceptionWhileAccessingNotAvailableIndexOfTranslationDataCollection($fixturePageId, $fixtureElementId, $fixtureFieldPath) {
+		$this->TranslationData->getPagesCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldPath)->getContent();
 	}
 }
 
