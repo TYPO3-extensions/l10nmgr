@@ -171,6 +171,7 @@ class tx_l10nmgr_domain_translationFactory {
 			$this->TranslationData->setFieldCount((int)$metaData->t3_count);
 			$this->TranslationData->setWordCount((int)$metaData->t3_wordCount);
 			$this->TranslationData->setFormatVersion((float)$metaData->t3_formatVersion);
+			$this->TranslationData->setExportDataRecordUid((int)$metaData->t3_exportDataId);
 
 			foreach ($metaData->t3_internal as $messageIndes => $message) {
 				//!TODO redefine the message point (alias "t3_internal")

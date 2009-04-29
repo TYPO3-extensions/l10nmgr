@@ -50,6 +50,13 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	protected $isImported = false;
 
 	/**
+	 * Exportd record uid of database table "tx_l10nmgr_exportdata"
+	 *
+	 * @var integer
+	 */
+	protected $exportDataRecordUid = 0;
+
+	/**
 	 * Translation configuration record uid of table "tx_l10nmgr_cfg"
 	 *
 	 * @var integer
@@ -193,6 +200,25 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 */
 	public function findByTableUidAndKey($pageUid, $tableName, $elementUid, $uniqueKey) {
 		return $this->getPagesCollection()->offsetGet($pageUid)->getElementCollection()->offsetGet($tableName . ':' . $elementUid)->getFieldCollection()->offsetGet($uniqueKey);
+	}
+
+	/**
+	 * @param unknown_type $exportDataRecordUid
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return
+	 */
+	public function setExportDataRecordUid($exportDataRecordUid) {
+		$this->exportDataRecordUid = $exportDataRecordUid;
+	}
+
+	/**
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return integer
+	 */
+	public function getExportDataRecordUid() {
+		return $this->exportDataRecordUid;
 	}
 
 	/**
