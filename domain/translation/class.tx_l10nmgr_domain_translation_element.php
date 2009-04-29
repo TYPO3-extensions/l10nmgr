@@ -39,7 +39,14 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_domain_translation_element {
+class tx_l10nmgr_domain_translation_element implements tx_l10nmgr_interface_stateImportable {
+
+	/**
+	 * Indicate that the current entity was already processed for the import
+	 *
+	 * @var boolean
+	 */
+	protected $isImported = false;
 
 	/**
 	 * Name of the current record table
@@ -63,7 +70,35 @@ class tx_l10nmgr_domain_translation_element {
 	protected $FieldCollection = null;
 
 	/**
+	 * Mark entity as processed for the import
+	 *
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function markAsImported() {
+		$this->isImported = true;
+	}
+
+	/**
+	 * Retrieve the import state
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return boolean
+	 */
+	public function isImported() {
+
+		if ($this->FieldCollection->isImported()) {
+			$this->isImported = true;
+		}
+
+		return $this->isImported;
+	}
+
+	/**
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return tx_l10nmgr_domain_translation_fieldCollection
 	 */
 	public function getFieldCollection() {
@@ -72,6 +107,7 @@ class tx_l10nmgr_domain_translation_element {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string
 	 */
 	public function getTableName() {
@@ -80,6 +116,7 @@ class tx_l10nmgr_domain_translation_element {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return integer
 	 */
 	public function getUid() {
@@ -89,15 +126,17 @@ class tx_l10nmgr_domain_translation_element {
 	/**
 	 * @param tx_l10nmgr_domain_translation_fieldCollection $FieldCollection
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function setFieldCollection($FieldCollection) {
+	public function setFieldCollection(tx_l10nmgr_domain_translation_fieldCollection $FieldCollection) {
 		$this->FieldCollection = $FieldCollection;
 	}
 
 	/**
 	 * @param string $tableName
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function setTableName($tableName) {
@@ -107,6 +146,7 @@ class tx_l10nmgr_domain_translation_element {
 	/**
 	 * @param integer $uid
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function setUid($uid) {

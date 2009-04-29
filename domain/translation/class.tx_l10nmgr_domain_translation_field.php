@@ -22,6 +22,8 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once t3lib_extMgm::extPath('l10nmgr') . 'interface/interface.tx_l10nmgr_interface_stateImportable.php';
+
 /**
  * Value object that holds the content of an translated record field
  *
@@ -37,7 +39,14 @@
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_domain_translation_field {
+class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateImportable {
+
+	/**
+	 * Indicate that the current entity was already processed for the import
+	 *
+	 * @var boolean
+	 */
+	protected $isImported = false;
 
 	/**
 	 * Key that stores several informations
@@ -68,7 +77,57 @@ class tx_l10nmgr_domain_translation_field {
 	protected $transformation = false;
 
 	/**
+	 * Reason for skipping the entity
+	 *
+	 * @var string
+	 */
+	protected $skippedMessage = '';
+
+	/**
+	 * Indicator that the entity was skipped
+	 *
+	 * @var boolean
+	 */
+	protected $isSkipped = false;
+
+	/**
+	 * Mark the current entity as skipped for the current translation import process
+	 *
+	 * @param string $message Reason for skipping
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function markSkipped($message) {
+		$this->skippedMessage = $message;
+		$this->isSkipped      = true;
+	}
+
+	/**
+	 * Set this field as imported
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function markAsImported() {
+		$this->isImported = true;
+	}
+
+	/**
+	 * Indicate that this field is already processed for import
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return boolean
+	 */
+	public function isImported() {
+		return $this->isImported;
+	}
+
+	/**
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string
 	 */
 	public function getContent() {
@@ -77,6 +136,7 @@ class tx_l10nmgr_domain_translation_field {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string
 	 */
 	public function getFieldPath() {
@@ -85,6 +145,7 @@ class tx_l10nmgr_domain_translation_field {
 
 	/**
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return boolean
 	 */
 	public function getTransformation() {
@@ -94,6 +155,7 @@ class tx_l10nmgr_domain_translation_field {
 	/**
 	 * @param boolean $transformation
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function setTransformation($transformation) {
@@ -103,6 +165,7 @@ class tx_l10nmgr_domain_translation_field {
 	/**
 	 * @param string $content
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function setContent($content) {
@@ -112,6 +175,7 @@ class tx_l10nmgr_domain_translation_field {
 	/**
 	 * @param string $fieldPath
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function setFieldPath($fieldPath) {

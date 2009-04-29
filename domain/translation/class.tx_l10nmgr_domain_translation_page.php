@@ -39,7 +39,14 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_domain_translation_page {
+class tx_l10nmgr_domain_translation_page implements tx_l10nmgr_interface_stateImportable {
+
+	/**
+	 * Indicate that the current entity was already processed for the import
+	 *
+	 * @var boolean
+	 */
+	protected $isImported = false;
 
 	/**
 	 * Uid of the entity page eq database table record
@@ -56,7 +63,35 @@ class tx_l10nmgr_domain_translation_page {
 	protected $ElementCollection = null;
 
 	/**
+	 * Mark entity as processed for the import
+	 *
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function markAsImported() {
+		$this->isImported = true;
+	}
+
+	/**
+	 * Retrieve the import state
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return boolean
+	 */
+	public function isImported() {
+
+		if ( $this->ElementCollection->isImported() ) {
+			$this->isImported = true;
+		}
+
+		return $this->isImported;
+	}
+
+	/**
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return tx_l10nmgr_models_tranlation_elementCollection
 	 */
 	public function getElementCollection() {
@@ -64,8 +99,8 @@ class tx_l10nmgr_domain_translation_page {
 	}
 
 	/**
-	 * @return integer
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return integer
 	 */
 	public function getUid() {
@@ -73,17 +108,19 @@ class tx_l10nmgr_domain_translation_page {
 	}
 
 	/**
-	 * @param tx_l10nmgr_models_tranlation_elementCollection $ElementCollection
+	 * @param tx_l10nmgr_domain_translation_elementCollection $ElementCollection
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function setElementCollection($ElementCollection) {
+	public function setElementCollection(tx_l10nmgr_domain_translation_elementCollection $ElementCollection) {
 		$this->ElementCollection = $ElementCollection;
 	}
 
 	/**
 	 * @param integer $uid
 	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function setUid($uid) {
