@@ -22,6 +22,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once t3lib_extMgm::extPath('l10nmgr') . 'interface/interface.tx_l10nmgr_interface_stateImportable.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_pageCollection.php';
 
 /**
@@ -39,7 +40,14 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_domain_translation_data {
+class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateImportable {
+
+	/**
+	 * Indicate that the current entity was already processed for the import
+	 *
+	 * @var boolean
+	 */
+	protected $isImported = false;
 
 	/**
 	 * Translation configuration record uid of table "tx_l10nmgr_cfg"
@@ -109,7 +117,7 @@ class tx_l10nmgr_domain_translation_data {
 	 *
 	 * @var ArrayObject
 	 */
-	protected $messages = null;
+	protected $MessageCollection = null;
 
 	/**
 	 * Version of the XML struct defined by constant "L10NMGR_FILEVERSION"
@@ -127,6 +135,50 @@ class tx_l10nmgr_domain_translation_data {
 	protected $PagesCollection = null;
 
 	/**
+	 * Write import success information about the chilg elements
+	 *
+	 * Possible log entrys are:
+	 * - Fields skipped with message
+	 * - Fields which are imported
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function writeProcessingLog() {
+		//!TODO implement me
+	}
+
+	/**
+	 * Mark entity as processed for the import
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function markAsImported() {
+		$this->isImported = true;
+	}
+
+	/**
+	 * Retrieve the import state
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return boolean
+	 */
+	public function isImported() {
+
+		if ( $this->PagesCollection->isImported() ) {
+			$this->isImported = true;
+		} else {
+			$this->isImported = false;
+		}
+
+		return $this->isImported;
+	}
+
+	/**
 	 * Find fieldCollection for current parameter
 	 *
 	 * Note:
@@ -140,12 +192,10 @@ class tx_l10nmgr_domain_translation_data {
 	 * @return tx_l10nmgr_domain_translation_fieldCollection
 	 */
 	public function findByTableUidAndKey($pageUid, $tableName, $elementUid, $uniqueKey) {
-
 		return $this->getPagesCollection()->offsetGet($pageUid)->getElementCollection()->offsetGet($tableName . ':' . $elementUid)->getFieldCollection()->offsetGet($uniqueKey);
 	}
 
 	/**
-	 *
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string
@@ -187,7 +237,8 @@ class tx_l10nmgr_domain_translation_data {
 	 * @return ArrayObject
 	 */
 	public function getMessages() {
-		return $this->messages;
+		//!TODO implement me finally
+		return $this->MessageCollection;
 	}
 
 	/**
@@ -220,15 +271,6 @@ class tx_l10nmgr_domain_translation_data {
 	/**
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @param string $sourceLanguageISOcode
-	 */
-	public function setSourceLanguageISOcode($sourceLanguageISOcode) {
-		$this->sourceLanguageISOcode = $sourceLanguageISOcode;
-	}
-
-	/**
-	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return integer
 	 */
 	public function getTargetLanguageUid() {
@@ -254,90 +296,111 @@ class tx_l10nmgr_domain_translation_data {
 	}
 
 	/**
+	 * @param string $baseUrl
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @param string $baseUrl
+	 * @return void
 	 */
 	public function setBaseUrl($baseUrl) {
 		$this->baseUrl = $baseUrl;
 	}
 
 	/**
+	 * @param integer $fieldCount
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @param integer $fieldCount
+	 * @return void
 	 */
 	public function setFieldCount($fieldCount) {
 		$this->fieldCount = $fieldCount;
 	}
 
 	/**
+	 * @param float $formatVersion
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @param float $formatVersion
+	 * @return void
 	 */
 	public function setFormatVersion($formatVersion) {
 		$this->formatVersion = $formatVersion;
 	}
 
 	/**
+	 * @param integer $l10ncfgUid
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @param integer $l10ncfgUid
+	 * @return void
 	 */
 	public function setL10ncfgUid($l10ncfgUid) {
 		$this->l10ncfgUid = $l10ncfgUid;
 	}
 
 	/**
+	 * @param string $messages
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @param ArrayObject $messages
+	 * @return void
 	 */
-	public function setMessages($messages) {
-		$this->messages = $messages;
+	public function setMessage($messages) {
+		//!TODO implement me finally
+		$this->MessageCollection->append($messages);
 	}
 
 	/**
+	 * @param tx_l10nmgr_domain_translation_pageCollection $PagesCollection
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @param tx_l10nmgr_domain_translation_pageCollection $PagesCollection
+	 * @return void
 	 */
 	public function setPagesCollection(tx_l10nmgr_domain_translation_pageCollection $PagesCollection) {
 		$this->PagesCollection = $PagesCollection;
 	}
 
 	/**
+	 * @param integer $sysLanguageUid
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @param integer $sysLanguageUid
+	 * @return void
 	 */
 	public function setSysLanguageUid($sysLanguageUid) {
 		$this->sysLanguageUid = $sysLanguageUid;
 	}
 
 	/**
+	 * @param string $sourceLanguageISOcode
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function setSourceLanguageISOcode($sourceLanguageISOcode) {
+		$this->sourceLanguageISOcode = $sourceLanguageISOcode;
+	}
+
+	/**
 	 * @param integer $targetLanguageUid
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
 	 */
 	public function setTargetLanguageUid($targetLanguageUid) {
 		$this->targetLanguageUid = $targetLanguageUid;
 	}
 
 	/**
+	 * @param integer $wordCount
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @param integer $wordCount
+	 * @return void
 	 */
 	public function setWordCount($wordCount) {
 		$this->wordCount = $wordCount;
 	}
 
 	/**
+	 * @param integer $workspaceId
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @param integer $workspaceId
+	 * @return void
 	 */
 	public function setWorkspaceId($workspaceId) {
 		$this->workspaceId = $workspaceId;
@@ -346,9 +409,9 @@ class tx_l10nmgr_domain_translation_data {
 	/**
 	 * Returns a collection of page ids which are relevant for this translation.
 	 *
-	 * @param void
-	 * @return ArrayObject
+	 * @access public
 	 * @author Timo Schmidt
+	 * @return ArrayObject
 	 */
 	public function getPageIdCollection(){
 		$pageIdCollection = new ArrayObject();
