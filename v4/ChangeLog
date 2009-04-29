@@ -1,3 +1,6 @@
+2009-04-29 Michael Klapper <michael.klapper@aoemedia.de>
+	* Replace class tx_l10nmgr_models_importer_importService with tx_l10nmgr_service_importTranslation
+
 2009-04-28 Michael Klapper <michael.klapper@aoemedia.de>
 	* Add some PHPdoc
 	* Remove some whitespaces from classes
