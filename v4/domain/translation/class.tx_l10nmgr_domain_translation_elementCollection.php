@@ -60,7 +60,8 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject {
 
 	/**
 	 *
-	 * @param mixed $index
+	 * @param string $index Like tt_content:1111
+	 *                       Build from the table name and uid of the record
 	 * @param tx_l10nmgr_domain_translation_element $Element
 	 * @throws InvalidArgumentException
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>

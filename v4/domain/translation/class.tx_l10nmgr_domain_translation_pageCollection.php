@@ -60,7 +60,7 @@ class tx_l10nmgr_domain_translation_pageCollection extends ArrayObject {
 
 	/**
 	 *
-	 * @param mixed $index
+	 * @param integer $index Uid of pages record
 	 * @param tx_l10nmgr_domain_translation_page $Page
 	 * @throws InvalidArgumentException
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
