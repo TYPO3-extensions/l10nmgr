@@ -59,7 +59,7 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject {
 
 	/**
 	 *
-	 * @param mixed $index
+	 * @param string $index Field path like "pages_language_overlay:NEW/1/1111:title"
 	 * @param tx_l10nmgr_domain_translation_field $Field
 	 * @throws InvalidArgumentException
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
