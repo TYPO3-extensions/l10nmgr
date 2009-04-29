@@ -112,6 +112,7 @@ class tx_l10nmgr_CATXMLImportManager {
 		$headerInformationNodes = $this->xmlNodes['TYPO3L10N'][0]['ch']['head'][0]['ch'];
 		if (!is_array($headerInformationNodes)) {
 			$this->_errorMsg[] = $LANG->getLL('import.manager.error.missing.head.message');
+			
 			return false;
 		}
 

@@ -107,28 +107,31 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 	}
 	
 	/**
-	 * @param unknown_type $relevantTables
+	 * @param ArrayObject $relevantTables
 	 */
 	public function setRelevantTables($relevantTables) {
 		$this->relevantTables = $relevantTables;
 	}
 	
 	/**
-	 * @param unknown_type $siteUrl
+	 * @param string $siteUrl
 	 */
 	public function setSiteUrl($siteUrl) {
 		$this->siteUrl = $siteUrl;
 	}
 	
 	/**
-	 * @param unknown_type $sourceLanguage
+	 * Method to set a Sourcelanguage 
+	 * 
+	 * @param tx_l10nmgr_models_language_language $sourceLanguage
 	 */
 	public function setSourceLanguage($sourceLanguage) {
 		$this->sourceLanguage = $sourceLanguage;
 	}
 	
 	/**
-	 * @param unknown_type $targetLanguage
+	 * Method to set a target language for the dataProvider
+	 * @param tx_l10nmgr_models_language_language $targetLanguage
 	 */
 	public function setTargetLanguage($targetLanguage) {
 		$this->targetLanguage = $targetLanguage;
@@ -137,7 +140,8 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 
 	
 	/**
-	 * @param unknown_type $workspaceId
+	 * Method to set a workspace id where this export is relevant for.
+	 * @param int $workspaceId
 	 */
 	public function setWorkspaceId($workspaceId) {
 		$this->workspaceId = $workspaceId;
@@ -146,7 +150,7 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 	/**
 	 * Returns all relavantTables of the export
 	 *
-	 * @return unknown
+	 * @return ArrayObject
 	 */
 	public function getRelevantTables(){
 		return $this->relevantTables;
@@ -161,6 +165,16 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 		return $this->collectionOfRelevantPageIds;
 	}
 	
+	/**
+	 * This method is a wrapper method for the old translation tool class.
+	 * It determines relevant element uids by the tablename and the uid of the page
+	 * where the element is stored on.
+	 * 
+	 *  @see tx_l10nmgr_tools
+	 *  @param string $tablename
+	 *  @param int $pageid
+	 *  @return array
+	 */
 	public function getRelevantElementIdsByTablenameAndPageId($tablename,$pageid){
 		$records = $this->t8Tools->getRecordsToTranslateFromTable($tablename, $pageid);
 		$uids = array();
@@ -171,6 +185,14 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 		return $uids;
 	}
 	
+	/**
+	 * This method is a wrapper for the old translationtools. It determines relevant
+	 * informations for the translation from the TYPO3 core.
+	 * 
+	 *  @see tx_l10nmgr_tools
+	 *  @param string tablename of the element
+	 *  @param int uid of the element
+	 */
 	public function getTranslationDetailsByTablenameAndElementId($tablename,$elementid){
 		if(!self::isInIncludeOrExcludeArray($this->excludeArray,$tablename,$elementid)){	
 			//this is need because 'pages' and other tables need to be handled diffrent
@@ -182,6 +204,13 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 	}
 		
 	
+	/**
+     * This internal method adds a collection of pageIds to the relevant pageIds 
+     * for the export. It internally uses the exclude array, to exclude element which should not
+     * ne exported
+     * 
+     * @param ArrayObject
+	 */
 	protected function addPageIdCollectionToRelevantPageIds($pageIdCollection){
 		$this->collectionOfRelevantPageIds = new ArrayObject();
 					

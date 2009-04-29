@@ -42,18 +42,6 @@ require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.
  */
 class tx_l10nmgr_models_translateable_translateableInformationFactory {
 
-
-
-	/**
-	 * Constructor
-	 *
-	 * @param void
-	 * @return void
-	 */
-	public function __construct(){
-
-	}
-
 	/**
 	 * This method is used, to create a translateableInformation object structure from a
 	 * configuration, a set of pageIds and a target and a previewLanguage.
@@ -172,4 +160,8 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	}
 }
 
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php']);
+}
 ?>

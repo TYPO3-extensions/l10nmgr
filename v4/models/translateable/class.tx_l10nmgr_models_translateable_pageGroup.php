@@ -26,7 +26,8 @@
  ***************************************************************/
 
 /**
- * description
+ * A pageGroup is a logical group for elements of one page.
+ * It provides the abillity to count all fields and words in the pageGroup.
  *
  * class.tx_l10nmgr_models_translateable_PageGroup.php
  *
@@ -78,7 +79,6 @@ class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces
 		$this->countedWords = 0;
 	}
 
-
 	/**
 	 * Method to initialize the pageGroup from a page row of the database.
 	 *
@@ -89,10 +89,20 @@ class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces
 	}
 
 
+	/**
+	 * Returns the uid of the page, which the pageGroup is based on.
+	 * 
+	 * @return int
+	 */
 	public function getUid(){
 		return $this->page_row['uid'];
 	}
 
+	/**
+ 	 * Returns the title of the page where the pageGroup is based on
+ 	 *
+ 	 * @return string
+	 */
 	public function getPageTitle(){
 		return $this->page_row['title'];
 	}
@@ -147,4 +157,7 @@ class tx_l10nmgr_models_translateable_pageGroup implements tx_l10nmgr_interfaces
 	}
 }
 
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php']);
+}
 ?>

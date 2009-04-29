@@ -215,7 +215,6 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 		$this->previewLanguage_values = $previewLanguage_values;
 	}
 	
-
 	/**
 	 * Returns a value for a preview language for a given language id
 	 *
@@ -276,9 +275,7 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 		
 		return $dataForTranslation;
 	}
-	
-
-	
+		
 	/**
 	 * delivers the data for the translation depending on the sourceLanguage
 	 * 
@@ -295,9 +292,6 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 		
 		return $dataForTranslation;
 	}
-	
-
-	
 	
 	/**
 	 * This method can be used to determin if there is a difference between the diffDefaultValue and the defaultValue
@@ -318,4 +312,7 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	}
 }
 
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php']);
+}
 ?>
