@@ -58,14 +58,14 @@ class tx_l10nmgr_controller_list extends tx_mvc_controller_action {
 		$this->initializeView($paginationSubView);
 
 		$paginationSubView->setCount($configurationsRepository->countAll());
-		$paginationSubView->setItemsPerPage(10);
+		$paginationSubView->setItemsPerPage(30);
 		$paginationSubView->setCurrentOffset($this->arguments['offset']);
 		$paginationSubView->setShowPages(5);
 
 		$this->view->pagination = $paginationSubView;
 
 		$configurationsRepository = new tx_l10nmgr_models_configuration_configurationRepository();
-		$this->view->configurations = $configurationsRepository->findAll(true, 'crdate DESC', false, 10, $this->arguments['offset']);
+		$this->view->configurations = $configurationsRepository->findAll(true, 'crdate DESC', false, 30, $this->arguments['offset']);
 		$this->view->addBackendStylesHeaderData();
 
 	}

@@ -61,7 +61,7 @@ class tx_l10nmgr_models_language_language extends tx_mvc_ddd_typo3_abstractTCAOb
 	 *
 	 * @return tx_l10nmgr_models_language_staticLanguage
 	 */
-	public function getStaticLanguage(){
+	public function getStaticLanguage() {
 		if (!empty($this->row['static_lang_isocode'])) {
 			if (empty($this->row['static_lang_isocode_object'])) {
 				$staticLanguageRepository = new tx_l10nmgr_models_language_staticLanguageRepository();

@@ -253,8 +253,6 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	}
 
 	/**
-	 *
-	 *
 	 * @deprecated
 	 */
 	public function updateFlexFormDiff($sysLang,$flexFormDiffArray)	{
@@ -292,6 +290,9 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 			return $this->row['sourceLangStaticObject'];
 		}
 	}
+
+
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/configuration/class.tx_l10nmgr_models_configuration_configuration.php'])	{

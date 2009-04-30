@@ -2,11 +2,10 @@
 
 <?php $extPath = t3lib_div::resolveBackPath($GLOBALS['BACK_PATH'] .t3lib_extMgm::extRelPath('l10nmgr')); ?>
 
-<div style="padding: 10px">
+<div style="padding: 20px">
 
 	<h2>Configurations</h2>
-
-	<hr />
+	<hr style="margin-bottom: 20px" />
 
 	<table id="translationObjectList" style="border: 1px solid black;">
 		<thead>

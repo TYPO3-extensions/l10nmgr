@@ -193,6 +193,43 @@ class tx_l10nmgr_models_exporter_exporter {
 	protected function removeProcessedChunkPages($pageIdCollection) {
 		$this->exportData->removePagesIdsFromRemainingPages($pageIdCollection);
 	}
+
+
+
+	/**
+	 * This method performs on run of an export. It is polled via ajax to perform a complete export.
+	 * It returns an exportData object
+	 *
+	 * @return tx_l10nmgr_models_exporter_exportData
+	 */
+	public static function performExportRun(tx_l10nmgr_models_exporter_exportData $exportData, $numberOfPagesPerChunk = 5) {
+
+		$exportView				= $exportData->getInitializedExportView();
+		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
+
+		$res 					= $exporter->run();
+
+		if ($res) {
+			$exportData->increaseNumberOfExportRuns();
+
+			$exportFile	= new tx_l10nmgr_models_exporter_exportFile();
+			$exportFile->setFilename($exportView->getFilename($exportData->getNumberOfExportRuns()));
+			$exportFile->setExportDataObject($exportData);
+			$exportFile->setContent($exporter->getResultForChunk());
+			$exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
+			$exportFile->write();
+
+			$exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
+			$exportFileRepository->add($exportFile);
+		}
+
+		if ($exportData->getExportIsCompletelyProcessed()) {
+			$exportData->createZip($exportView->getFilename('') . '.zip');
+		}
+
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository->save($exportData);
+	}
 }
 
 ?>
