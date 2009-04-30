@@ -46,7 +46,6 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_showExportForm.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_showExportList.php');
 
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progress.php');
@@ -109,22 +108,6 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
 
 	/**
-	 * This action method is used
-	 *
-	 */
-	public function showExportFormAction() {
-
-		$this->view->setAvailableSourceLanguages($this->getLanguagesForLanguageMenu(true));
-		$this->view->setAvailableTargetLanguages($this->getLanguagesForLanguageMenu(false));
-		$this->view->setSelectedExportFormat($this->arguments['selectedExportFormat']);
-		$this->view->setRenderAction('generateExport');
-		$this->view->setAvailableExportFormats(array('xml' => 'general.action.export.xml.title', 'xls' => 'general.action.export.xls.title'));
-		$this->view->setConfigurationId($this->arguments['configurationId']);
-		$this->view->addBackendStylesHeaderData();
-
-	}
-
-	/**
 	 * Retrieves the uid of the currently created exportdata record
 	 *
 	 * @param void
@@ -171,12 +154,7 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
 		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
-
 		$this->arguments['configurationId'] = $exportData->getL10ncfg_id();
-
-
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
-		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
 
 		if (!$exportData->getCheckForExistingExports()) {
 			$l10Configuration = $exportData->getL10nConfigurationObject();
@@ -314,33 +292,6 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
 		exit();
 	}
-
-	/**
-	 * Helper method to determin all relevant languages for the dropdown language menu
-	 *
-	 * @param boolean $includeDefaultLanguage
-	 * @return array
-	 */
-	protected function getLanguagesForLanguageMenu($includeDefaultLanguage = false) {
-		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
-		$sysL = $t8Tools->getSystemLanguages();
-
-		//add the default language
-		if ($includeDefaultLanguage) {
-			$languages[0] = "-default-";
-		}
-
-		foreach($sysL as $sL)	{
-			if ($sL['uid']>0 && $GLOBALS['BE_USER']->checkLanguageAccess($sL['uid']))	{
-				if ($this->configuration->get('enable_hidden_languages') == 1 || $sL['hidden'] == 0) {
-					$languages[$sL['uid']] = $sL['title'];
-				}
-			}
-		}
-
-		return $languages;
-	}
-
 
 	/**
 	 * Creats an instance of a configured xml export view

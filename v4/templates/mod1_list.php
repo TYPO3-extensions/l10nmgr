@@ -115,7 +115,7 @@ $extPath = t3lib_div::resolveBackPath($BACK_PATH .t3lib_extMgm::extRelPath('l10n
 					$editOnClickParams .= '&noView=1';
 					$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][configuration_id]='.$configurationElementArray['uid'];
 					$editOnClickParams .= '&overrideVals[tx_l10nmgr_importdata][configuration_id]='.$configurationElementArray['uid'];
-					$redirectUrl = $extPath . 'import/index.php?';
+					$redirectUrl = $extPath . 'import/index.php?l10nmgr[action]=generateImport';
 				?>
 				<a title="Import XML" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $BACK_PATH, $redirectUrl)) ?>">
 					<img src="<?= $extPath ?>gfx/xml_import.png" alt="Import XML" />
