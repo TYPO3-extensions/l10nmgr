@@ -26,6 +26,9 @@
 t3lib_extMgm::isLoaded('mvc', true);
 tx_mvc_common_classloader::loadAll();
 
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importData.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importDataRepository.php');
+
 /**
  * Controller to import different formats of translations back into the TYPO3 environment
  *
@@ -56,7 +59,7 @@ class tx_l10nmgr_controller_import extends tx_mvc_controller_action {
 	/**
 	 * @var string
 	 */
-	protected $defaultActionMethodName = 'showImportFormAction';
+	protected $defaultActionMethodName = 'generateImportAction';
 
 	/**
 	 * @var string
@@ -74,19 +77,51 @@ class tx_l10nmgr_controller_import extends tx_mvc_controller_action {
 	}
 
 	/**
+	 * Retrieves the uid of the currently created exportdata record
+	 * 
+	 * @todo this is the same as in the export controller maybe it can be done in a more generall way?
+	 * 
+	 * @param void
+	 * @return bool true if the record was created
+	 */
+	protected function mapReturnEditConftoArguments($table, $mapTo) {
+
+		$serializedReturnEditConf = t3lib_div::_GET('returnEditConf');
+
+		if (!empty($serializedReturnEditConf)) {
+			$returnEditConf = unserialize(t3lib_div::_GET('returnEditConf'));
+			$editedRecord = array_keys($returnEditConf[$table]);
+
+			if ($returnEditConf[$table][$editedRecord[0]] == 'edit') {
+				$this->arguments[$mapTo] = $editedRecord[0];
+				return true;
+			} elseif ($returnEditConf[$table][$editedRecord[0]] == 'new') {
+				return false;
+			} else {
+				throw new Exception('Unkown return value');
+			}
+
+		}
+	}
+		
+	
+	/**
 	 * Show the controll panel to give the user the options what he can do
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @author Timo Schmidt
 	 * @return string HTML formated output
 	 */
-	public function showImportFormAction() {
-		$this->view->setTemplate($this->configuration->get('templates.form'));
-//		$this->view->setRenderAction('generateImport');
-		
-		$this->view->addBackendStylesHeaderData();
-		//!TODO implement function "controllPanelAction"
+	public function generateImportAction() {
+		$dataWasFound = $this->mapReturnEditConftoArguments('tx_l10nmgr_importdata', 'importDataId');
 
+		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
+		$importData = $importDataRepository->findById($this->arguments['importDataId']);
+		
+		echo 'Debug in '.__FILE__.' at line '.__LINE__;
+		print('<pre>');
+		print_r($importData);
+		print('</pre>');
 	}
 
 	/**

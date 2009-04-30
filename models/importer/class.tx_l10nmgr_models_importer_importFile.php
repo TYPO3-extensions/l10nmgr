@@ -1,4 +1,4 @@
-<?php
+<?php 
 /***************************************************************
  *  Copyright notice
  *
@@ -13,8 +13,6 @@
  *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
- *  A copy is found in the textfile GPL.txt and important notices to the license
- *  from the author is found in LICENSE.txt distributed with these scripts.
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,31 +23,39 @@
  ***************************************************************/
 
 /**
- * This repository class is used to access importDataObjects
+ * This object represents an importFile
  *
- * {@inheritdoc }
+ * {@inheritdoc}
  *
- * class.tx_l10nmgr_models_importer_importDataRepository.php
+ * class.tx_l10nmgr_models_importer_importFile.php
  *
- * @author	 Timo Schmidt <schmidt@aoemedia.de>
+ * @author Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.tx_l10nmgr_models_importer_importDataRepository.php $
- * @date 24.04.2009 - 13:34:50
- * @see tx_mvc_abstractRepository
+ * @version $Id: class.tx_l10nmgr_models_importer_importFile.php $
+ * @date 29.04.2009 18:56:28
+ * @see tx_mvc_ddd_abstractDbObject
  * @category database
- * @package	TYPO3
- * @subpackage	l10nmgr
+ * @package TYPO3
+ * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_importer_importDataRepository extends tx_mvc_ddd_typo3_abstractTCAObjectRepository  {
+class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_abstractDbObject {
+
 	/**
-	 * @var string The name of the objectclass for that this repository s responsible
+	 * Initialisize the database object with
+	 * the table name of current object
+	 *
+	 * @access     public
+	 * @return     string
 	 */
-	protected $objectClassName = 'tx_l10nmgr_models_importer_importData';
+	public static function getTableName() {
+		return 'tx_l10nmgr_importfiles';
+	}
+
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/importer/class.tx_l10nmgr_models_importer_importDataRepository.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/importer/class.tx_l10nmgr_models_importer_importDataRepository.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/importer/class.tx_l10nmgr_models_importer_importFile.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/importer/class.tx_l10nmgr_models_importer_importFile.php']);
 }
 ?>

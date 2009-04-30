@@ -142,7 +142,7 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 		$pageGroups = $translateableInformations->getPageGroups ();
 		
 		foreach ( $pageGroups as $pageGroup ) {
-			$ids [$pageGroup->getPageId ()] = ( int ) $pageGroup->getPageId ();
+			$ids [$pageGroup->getUid ()] = ( int ) $pageGroup->getUid ();
 		}
 		
 		$this->assertTrue ( in_array ( 4711, $ids, 'translatedable page could not be found in pageid array' ) );

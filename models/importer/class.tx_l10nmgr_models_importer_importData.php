@@ -90,6 +90,19 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 			throw new LogicException('This importData has no exportData assigned');
 		}
 	}
+	
+	/**
+	 * Determines all Files which are assigned to this import
+	 * 
+	 * @return tx_models_importer_importFileCollection 
+	 */
+	public function getImportFiles(){
+		if(!empty($this->row['uid'])){
+			if(empty($this->row['importfilecollection_object'])){
+				
+			}
+		}
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/importer/class.tx_l10nmgr_models_importer_importData.php']) {

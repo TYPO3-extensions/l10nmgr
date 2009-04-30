@@ -10,7 +10,6 @@
 		<title>Test Exportdata</title>
  		<source_lang>0</source_lang>
  		<translation_lang>999</translation_lang>
- 		<tablelist>pages,tt_content</tablelist>
  		<exportType>1</exportType>
 	</tx_l10nmgr_exportdata>
     <sys_language>
