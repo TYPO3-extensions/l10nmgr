@@ -453,6 +453,116 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 
 	}
 
+	/**
+	 * Creats an instance of a configured xml export view
+	 *
+	 * @param void
+	 * @return tx_l10nmgr_abstractExportView
+	 */
+	public function getInitializedExportView() {
+
+		switch ($this->getExporttype()) {
+
+			case 'xml' : {
+				$viewClass = new tx_l10nmgr_CATXMLView();
+				$viewClass->setSkipXMLCheck($this->getNoxmlcheck());
+				$viewClass->setUseUTF8Mode($this->getCheckutf8());
+			} break;
+
+			case 'xls' : {
+				$viewClass = new tx_l10nmgr_excelXMLView();
+			} break;
+
+			default: {
+				throw new LogicException('ExportFormat is invalid (must be "xml" or "xls")!');
+			}
+
+		}
+
+		$viewClass->setForcedSourceLanguage($this->getSourceLanguageObject());
+		$viewClass->setL10NConfiguration($this->getL10nConfigurationObject());
+		$viewClass->setModeOnlyChanged($this->getOnlychangedcontent());
+		$viewClass->setModeNoHidden($this->getNohidden());
+
+		return $viewClass;
+	}
+
+	/**
+	 * Gets the language title
+	 *
+	 * @param tx_l10nmgr_models_language_language|null language object, if empty the label from configuration will be read
+	 * @return string language title
+	 */
+	protected function getLanguageLabel(tx_l10nmgr_models_language_language $lang=NULL) {
+		if (is_null($lang)) {
+			// default language
+			$tsConf = t3lib_BEfunc::getModTSconfig($exportData->getPid(), 'mod.SHARED.');
+			$languageLabel = $tsConf['properties']['defaultLanguageLabel'];
+
+			// TODO: extension manager configuration if empty
+		} else {
+			$languageLabel = $lang->getTitle();
+		}
+
+		return $languageLabel;
+	}
+
+	/**
+	 * Get the title of the source language
+	 *
+	 * @return string
+	 */
+	public function getSourceLanguageTitle() {
+		return $this->getLanguageLabel($this->getSourceLanguageObject());
+	}
+
+	/**
+	 * Get the title of the translation language
+	 *
+	 * @return string
+	 */
+	public function getTranslationLanguageTitle() {
+		return $this->getLanguageLabel($this->getTranslationLanguageObject());
+	}
+
+	/**
+	 * Get the iso code
+	 *
+	 * @param tx_l10nmgr_models_language_language|null if empty the iso code from configuration will be read
+	 * @return string iso code
+	 */
+	protected function getIsoCode(tx_l10nmgr_models_language_language $lang=NULL) {
+		if (is_null($lang)) {
+			// default language
+			$tsConf = t3lib_BEfunc::getModTSconfig($this->getPid(), 'mod.SHARED.');
+			$isoCode = $tsConf['properties']['defaultLanguageISOCode'];
+
+			// TODO: extension manager configuration if empty
+		} else {
+			$isoCode = $lang->getStaticLanguage()->getLg_collate_locale();
+		}
+
+		return $isoCode;
+	}
+
+	/**
+	 * Get the iso code for the translation language
+	 *
+	 * @return string iso code
+	 */
+	public function getTranslationIsoCode() {
+		return $this->getIsoCode($this->getTranslationLanguageObject());
+	}
+
+	/**
+	 * Get the iso code for the source language
+	 *
+	 * @return string iso code
+	 */
+	public function getSourceIsoCode() {
+		return $this->getIsoCode($this->getSourceLanguageObject());
+	}
+
 }
 
 ?>

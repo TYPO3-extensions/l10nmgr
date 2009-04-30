@@ -194,6 +194,8 @@ abstract class tx_l10nmgr_abstractExportView extends tx_mvc_view_phpTemplate {
 		return $filename;
 	}*/
 
+
+
 	abstract protected function getFilenamePrefix();
 
 	/**
