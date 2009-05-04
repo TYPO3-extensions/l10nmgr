@@ -23,7 +23,7 @@
  ***************************************************************/
 
 
-class tx_l10nmgr_models_exporter_exportFile extends tx_mvc_ddd_abstractDbObject {
+class tx_l10nmgr_models_exporter_exportFile extends tx_mvc_ddd_typo3_abstractTCAObject {
 
 	/**
 	 * Overwrite getDatabaseFieldNames to remove the "virtual files" that should not be stored in the database
