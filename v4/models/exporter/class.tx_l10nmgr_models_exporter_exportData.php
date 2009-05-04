@@ -22,9 +22,10 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once t3lib_extMgm::extPath('l10nmgr').'interface/interface.tx_l10nmgr_interface_progressable.php';
+
 require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php';
-
 
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php';
@@ -53,7 +54,7 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_
  * @access public
  */
 
-class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCAObject {
+class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCAObject implements tx_l10nmgr_interface_progressable{
 
 	/**
 	 * Initialize the database object with
@@ -149,7 +150,7 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 *
 	 * @return float
 	 */
-	public function getExportProgressPercentage() {
+	public function getProgressPercentage() {
 		$numberOfProcessedPages = $this->getExportTotalNumberOfPages() - $this->getExportRemainingPages()->count();
 
 		return (100 / $this->getExportTotalNumberOfPages()) * $numberOfProcessedPages;

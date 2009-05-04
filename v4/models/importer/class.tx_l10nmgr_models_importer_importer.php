@@ -109,6 +109,8 @@ class tx_l10nmgr_models_importer_importer {
 				$this->exportData->addWorkflowStat(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
 			}
 
+			$this->removeProcessedFile($currentFile);
+			
 			$isRunning = true;
 		}
 
@@ -139,7 +141,28 @@ class tx_l10nmgr_models_importer_importer {
 	 * @access protected
 	 * @return string $fileName
 	 */
-	protected function getNextFile() {
+	protected function getNextFilename() {
+		$remainingFilenames = $this->importData->getImportRemainingFilenames();
+		
+	}
+
+	protected function saveProcessedFile($filename){
+		$this->importData->removeFilesFromRemainingFiles(new ArrayObject($filename));
+	}
+	
+	/**
+	 *
+	 */
+	public static function performImportRun($importData){
+		$importer 	= new tx_l10nmgr_models_importer_importer($importData);
+		$res 		= $importer->run();
+
+
+		if ($res) { $exportData->increaseNumberOfImportRuns(); }
+
+
+		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
+		$importDataRepository->save($importData);	
 	}
 }
 

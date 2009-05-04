@@ -25,6 +25,10 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportDataRepository.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importDataRepository.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importFile.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importFileRepository.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importFileCollection.php';
 
 /**
  * Object of this class represent one import
@@ -43,7 +47,7 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCAObject  {
+class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCAObject implements tx_l10nmgr_interface_progressable  {
 
 	/**
 	 * Initialisize the database object with
@@ -90,52 +94,54 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 			throw new LogicException('This importData has no exportData assigned');
 		}
 	}
-
+	
 	/**
-	 * Determines all Files which are assigned to this import
-	 *
-	 * @return tx_models_importer_importFileCollection
+	 * Determines all files which are assigned to this import
+	 * 
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return tx_models_importer_importFileCollection 
 	 */
 	public function getImportFiles() {
 		if (!empty($this->row['uid'])) {
 			if (empty($this->row['importfilecollection_object'])) {
-
+				$importFileRepository 						= new tx_l10nmgr_models_importer_importFileRepository();
+				$importFiles								= $importFileRepository->findCollectionByProperty('importdata_id',$this->getUid());
+				$this->row['importfilecollection_object'] 	= new tx_l10nmgr_models_importer_importFileCollection($importFiles);
 			}
+			
+			return $this->row['importfilecollection_object'];
 		}
 	}
-
+	
 	/**
-	 * The idea of the progress property is, to save state informations in on serializeable
-	 * field structure in the database. It can be used internally to save state information.
-	 *
-	 * @param string key
-	 * @param mixed value
+	 * This method is used to extract all importFiles which are zip files.
+	 * 
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @param void
 	 * @return void
 	 */
-	protected function setProgress($key, $value) {
-		if (!empty($this->row['progress'])) {
-			$progress = unserialize($this->row['progress']);
-		} else {
-			$progress = array();
+	public function extractAllZipContent(){
+		foreach($this->getImportFiles() as $importFile){
+			if($importFile->isZip()){
+				$importFile->extractZIPAndCreateImportFileForEach();
+			}
 		}
-		$progress[$key] = $value;
-		$this->row['progress'] = serialize($progress);
+		//invalidate old cached results
+		unset($this->row['importfilecollection_object']);
 	}
 
+
 	/**
-	 * Return the progress which was registered for a given value.
-	 *
-	 * @param string key
-	 * @return mixed value
+	 * Returns the progress of the processed importData as pecentage value
+	 * 
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return float
+	 * 
 	 */
-	protected function getProgress($key) {
-		if (!empty($this->row['progress'])) {
-			$progress = unserialize($this->row['progress']);
-		} else {
-			$progress = array();
-		}
-		return $progress[$key];
+	public function getProgressPercentage(){
+		return 0;
 	}
+		
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/importer/class.tx_l10nmgr_models_importer_importData.php']) {
