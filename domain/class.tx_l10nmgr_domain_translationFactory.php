@@ -119,7 +119,7 @@ class tx_l10nmgr_domain_translationFactory {
 			$PageCollection->offsetSet((int)$pagerow['id'], $Page);
 		}
 
-		$this->TranslationData->setPagesCollection($PageCollection);
+		$this->TranslationData->setPageCollection($PageCollection);
 	}
 
 	/**

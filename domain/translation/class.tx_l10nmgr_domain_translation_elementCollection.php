@@ -56,8 +56,9 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject implem
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function markAsImported() {
-		$this->isImported = true;
+	public function markImported() {
+//!TODO refactor this, the object should not allowed to set his own isImported state to true
+//		$this->isImported = true;
 	}
 
 	/**
@@ -69,11 +70,19 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject implem
 	 */
 	public function isImported() {
 
-		foreach ( $this as $Element ) {
-			if (! $Element->isImported() ) {
-				$this->isImported = false;
-				break;
+		if ($this->isImported !== true) {
+
+			foreach ( $this as $Element ) { /* @var $Element tx_l10nmgr_domain_translation_element */
+				if ($Element->isImported() === false) {
+					$this->isImported = false;
+					break;
+				}
+				$this->isImported = true;
 			}
+		}
+
+			// if the elementCollection contains no elements
+		if ($this->isImported === false && $this->count() === 0) {
 			$this->isImported = true;
 		}
 
@@ -113,6 +122,7 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject implem
 		}
 
 		parent::offsetSet($index, $Element);
+		$this->isImported = false;
 	}
 
 	/**
@@ -129,6 +139,7 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject implem
 		}
 
 		parent::append($Element);
+		$this->isImported = false;
 	}
 }
 

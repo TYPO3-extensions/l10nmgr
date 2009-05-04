@@ -76,8 +76,9 @@ class tx_l10nmgr_domain_translation_element implements tx_l10nmgr_interface_stat
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function markAsImported() {
-		$this->isImported = true;
+	public function markImported() {
+//!TODO refactor this, the object should not allowed to set his own isImported state to true
+//		$this->isImported = true;
 	}
 
 	/**
@@ -89,8 +90,11 @@ class tx_l10nmgr_domain_translation_element implements tx_l10nmgr_interface_stat
 	 */
 	public function isImported() {
 
-		if ($this->FieldCollection->isImported()) {
-			$this->isImported = true;
+		if ($this->isImported !== true) {
+
+			if ( ($this->FieldCollection instanceof tx_l10nmgr_domain_translation_fieldCollection) &&  $this->FieldCollection->isImported()) {
+				$this->isImported = true;
+			}
 		}
 
 		return $this->isImported;
@@ -124,6 +128,8 @@ class tx_l10nmgr_domain_translation_element implements tx_l10nmgr_interface_stat
 	}
 
 	/**
+	 * If a new fieldCollection is set to the Element, the isImported state is automaticliy set to false.
+	 *
 	 * @param tx_l10nmgr_domain_translation_fieldCollection $FieldCollection
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
@@ -131,6 +137,7 @@ class tx_l10nmgr_domain_translation_element implements tx_l10nmgr_interface_stat
 	 */
 	public function setFieldCollection(tx_l10nmgr_domain_translation_fieldCollection $FieldCollection) {
 		$this->FieldCollection = $FieldCollection;
+		$this->isImported      = false;
 	}
 
 	/**
@@ -140,7 +147,7 @@ class tx_l10nmgr_domain_translation_element implements tx_l10nmgr_interface_stat
 	 * @return void
 	 */
 	public function setTableName($tableName) {
-		$this->tableName = $tableName;
+		$this->tableName  = $tableName;
 	}
 
 	/**
@@ -150,7 +157,7 @@ class tx_l10nmgr_domain_translation_element implements tx_l10nmgr_interface_stat
 	 * @return void
 	 */
 	public function setUid($uid) {
-		$this->uid = $uid;
+		$this->uid        = $uid;
 	}
 }
 
