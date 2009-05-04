@@ -86,31 +86,26 @@ class tx_l10nmgr_models_importer_importFile_testcase extends tx_phpunit_database
 	}
 
 	/**
-	 *
-	 * This testcase is used to ensure that an exportFile which contains a zip can be unzipped
+	 * This testcase is used to ensure that an exportFile which contains a zip can be unzipped.
+	 * 
 	 */
 	public function test_canExtractZip() {
 
-	//	try{
-			$row['uid'] = 4711;
-			$row['importdata_id'] = 1212;
-			$row['filename'] = 'test.zip';
+		$row['uid'] = 4711;
+		$row['importdata_id'] = 1212;
+		$row['filename'] = 'test.zip';
 			
-			$importFile = new tx_l10nmgr_models_importer_importFile($row);
+		$importFile = new tx_l10nmgr_models_importer_importFile($row);
 
-			$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/');
-			$importFile->isXml();
-			
-			$importFile->extractZIP();
-			
-			//die();
-	/*	}catch(Exception $e){
-			echo $e->getMessage();
-			echo 'Debug in '.__FILE__.' at line '.__LINE__;
-			print('<pre>');
-			print_r($e->getTrace());
-			print('</pre>');
-		}*/
+		$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/');
+		
+		$this->assertTrue($importFile->isZip(),'Testfile should be an zip file!');		
+		
+		$importFile->extractZIP();
+
+		$fileHasBeenWritten = tx_mvc_validator_factory::getFileValidator()->isValid(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
+		
+		$this->assertTrue($fileHasBeenWritten);
 	}
 }
 

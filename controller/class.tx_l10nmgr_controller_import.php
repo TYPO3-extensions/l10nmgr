@@ -26,8 +26,17 @@
 t3lib_extMgm::isLoaded('mvc', true);
 tx_mvc_common_classloader::loadAll();
 
+require_once(t3lib_extMgm::extPath('l10nmgr').'controller/class.tx_l10nmgr_controller_abstractProgressable.php');
+
+
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importData.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importDataRepository.php');
+
+require_once(t3lib_extMgm::extPath('l10nmgr').'view/import/class.tx_l10nmgr_view_importer_detail.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'view/class.tx_l10nmgr_view_showProgress.php');
+
+require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progress.php');
+require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progressAjax.php');
 
 /**
  * Controller to import different formats of translations back into the TYPO3 environment
@@ -49,7 +58,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_controller_import extends tx_mvc_controller_action {
+class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgressable {
 
 	/**
 	 * @var string
@@ -66,74 +75,78 @@ class tx_l10nmgr_controller_import extends tx_mvc_controller_action {
 	 */
 	protected $argumentsNamespace = 'tx_l10nmgrimport';
 
-	/**
-	 * Called before processing - used to initialise the arguments
-	 *
-	 * @access protected
-	 * @return void
+
+	 /**
+	 * @var array mapping external parameters to arguments
 	 */
-	protected function initializeArguments() {
-		//!TODO implement function "initializeArguments"
-	}
-
+	protected $mapParametersToArguments = array(
+		'createdRecord' => 'returnEditConf',
+	);	
+	
 	/**
-	 * Retrieves the uid of the currently created exportdata record
-	 * 
-	 * @todo this is the same as in the export controller maybe it can be done in a more generall way?
-	 * 
-	 * @param void
-	 * @return bool true if the record was created
+	 * These arguments should be kept since they are needed in the ajax polling action
 	 */
-	protected function mapReturnEditConftoArguments($table, $mapTo) {
-
-		$serializedReturnEditConf = t3lib_div::_GET('returnEditConf');
-
-		if (!empty($serializedReturnEditConf)) {
-			$returnEditConf = unserialize(t3lib_div::_GET('returnEditConf'));
-			$editedRecord = array_keys($returnEditConf[$table]);
-
-			if ($returnEditConf[$table][$editedRecord[0]] == 'edit') {
-				$this->arguments[$mapTo] = $editedRecord[0];
-				return true;
-			} elseif ($returnEditConf[$table][$editedRecord[0]] == 'new') {
-				return false;
-			} else {
-				throw new Exception('Unkown return value');
-			}
-
-		}
-	}
-		
+	protected $keepArgumentKeys = array('importDataId');
 	
 	/**
 	 * Show the controll panel to give the user the options what he can do
 	 *
 	 * @access public
-	 * @author Timo Schmidt
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return string HTML formated output
 	 */
 	public function generateImportAction() {
-		$dataWasFound = $this->mapReturnEditConftoArguments('tx_l10nmgr_importdata', 'importDataId');
+		//retrieve importdata record
+		$importDataId 						= tx_mvc_common_typo3::parseReturnEditConf($this->arguments['createdRecord'],'tx_l10nmgr_importdata');
+		tx_mvc_validator_factory::getIntValidator()->isValid($importDataId,true);
 
-		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
-		$importData = $importDataRepository->findById($this->arguments['importDataId']);
+		$this->arguments['importDataId'] 	= $importDataId;
 		
-		echo 'Debug in '.__FILE__.' at line '.__LINE__;
-		print('<pre>');
-		print_r($importData);
-		print('</pre>');
+		$importDataRepository 	= new tx_l10nmgr_models_importer_importDataRepository();
+		$importData 			= $importDataRepository->findById($importDataId);
+		
+		/* Ensure, that all files are unzipped */
+		$importData->extractAllZipContent();
+
+		$this->routeToAction('showProgressAction');
 	}
+		
 
 	/**
-	 * Custom error method called automaticly when not available action is called
-	 *
-	 * @todo Reconsider error handling
-	 * @see tx_l10nmgr_controller_import::controllPanelAction()
-	 * @access public
-	 * @return string
+	 * 
+	 * 
+	 * @author Timo Schmidt
 	 */
-	public function errorAction () {
-		return $this->routeToAction('controllPanelAction');
+	protected function getProgressableSubjectView(){
+		$view = new tx_l10nmgr_view_importer_detail();
+		$this->initializeView($view);
+		$view->setImportData($this->getProgressableSubject());		
+		
+		return $view;
+	}
+	
+	/**
+	 * 
+	 * @author Timo Schmidt
+	 * @return tx_l10nmgr_interface_progressable
+	 */
+	protected function getProgressableSubject(){
+		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['importDataId'],true);
+		
+		$importDataRepository 	= new tx_l10nmgr_models_importer_importDataRepository();
+		$importData 			= $importDataRepository->findById($this->arguments['importDataId']);
+		
+		return $importData;
+	}
+	
+	/**
+	 * Worker method called by ajaxPerformRunAction
+	 * 
+	 * @see ajaxPerformRunAction
+	 */
+	protected function performProgressableRun($importData){
+		tx_l10nmgr_models_importer_importer::performImportRun($importData, 5);
+		
 	}
 }
 

@@ -24,6 +24,8 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once(t3lib_extMgm::extPath('l10nmgr').'controller/class.tx_l10nmgr_controller_abstractProgressable.php');
+
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php');
 
@@ -47,6 +49,9 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_showExportList.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_detail.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'view/class.tx_l10nmgr_view_showProgress.php');
+
 
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progress.php');
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progressAjax.php');
@@ -81,7 +86,7 @@ if (t3lib_extMgm::isLoaded('mvc')) {
  * @subpackage	l10nmgr'
  * @access public
  */
-class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
+class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgressable {
 
 	/**
 	 * @var        string
@@ -139,15 +144,6 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 			$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 			$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
 
-//		$tsConf = t3lib_BEfunc::getModTSconfig($this->getPid(), 'mod.SHARED.');
-//		var_dump($tsConf['properties']);
-//
-//		// defaultLanguageFlag
-//		// defaultLanguageLabel
-//
-//		// defaultLanguageISOCode
-//		// defaultLanguageSajanCode
-
 			$exportData->setTitle(sprintf('%s [%s->%s]', $exportData->getTitle(), $exportData->getSourceIsoCode(), $exportData->getTranslationIsoCode()));
 			$exportDataRepository->save($exportData);
 
@@ -156,7 +152,11 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 			if (!$exportData->getCheckForExistingExports()) {
 				$l10Configuration = $exportData->getL10nConfigurationObject();
 				if (!$l10Configuration->hasIncompleteExports()) {
-					$this->routeToAction('showExportProgressAction');
+					
+					//route to action from abstract controller
+					
+					#@see tx_l10nmgr_controller_abstractProgressable
+					$this->routeToAction('showProgressAction');
 				} else {
 					$this->routeToAction('showNotReimportedExportsAction');
 				}
@@ -199,57 +199,45 @@ class tx_l10nmgr_controller_export extends tx_mvc_controller_action {
 
 
 	/**
-	 * This method is used to start an export. It creates an exportData object
-	 * and loads the exportView with a progressbar.
-	 *
+	 * This method returns a view for the subject that is progressable.
+	 * In case of the export this is a view which displays informations of the export
+	 * data.
+	 * 
 	 * @param void
-	 * @return void
-	 *
+	 * @return tx_mvc_view_widget_phpTemplateListView
 	 */
-	public function showExportProgressAction() {
-
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
-		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
-
-		$progressView = new tx_mvc_view_widget_progress();
-		$this->initializeView($progressView );
-		$progressView->setProgress(0);
-		$progressView->setAjaxEnabled(true);
-		$progressView->setProgressUrl($this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('ajaxDoExportRun')->useOverruledParameters()->makeUrl());
-		$progressView->setRedirectOnCompletedUrl('../mod1/index.php');
-
-		$this->view->setExportData($exportData);
-		$this->view->setProgressView($progressView);
-		$this->view->addBackendStylesHeaderData();
+	protected function getProgressableSubjectView(){
+		$view = new tx_l10nmgr_view_export_detail();
+		$this->initializeView($view);
+		$view->setExportData($this->getProgressableSubject());		
+		
+		return $view;
 	}
-
+	
 	/**
-	 * This method is used to do an export run via ajax. It internally routes
-	 * the request to the doExportRunAction
-	 *
-	 * @param void
+	 * This method returns the progressableSubject. In case of the import
+	 * controller this is an exportData object.
+	 * 
+	 * @return tx_l10nmgr_models_exporter_exportData
 	 */
-	public function ajaxDoExportRunAction() {
-
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
-		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
-
+	protected function getProgressableSubject(){
+		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'],true);
+		
+		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData 			= $exportDataRepository->findById($this->arguments['exportDataId']);
+		
+		return $exportData;
+	}
+	
+	/**
+	 * Worker method called by ajaxPerformRunAction. It
+	 * performs the use case specific logic. In case of the exporter
+	 * this is the logic to export 5 files from the exportData.
+	 * 
+	 * @see ajaxPerformRunAction
+	 */
+	protected function performProgressableRun($exportData){
 		tx_l10nmgr_models_exporter_exporter::performExportRun($exportData, 5);
-
-		$progressView = new tx_mvc_view_widget_progressAjax();
-		$this->initializeView($progressView);
-		$percent = $exportData->getExportProgressPercentage();
-		$progressView->setProgress($percent);
-		if ($percent < 100) {
-			$progressView->setProgressLabel(round($exportData->getExportProgressPercentage()). ' %');
-		} else {
-			$progressView->setProgressLabel('Completed');
-			$progressView->setCompleted(true);
-		}
-
-		echo $progressView->render();
-
-		exit();
 	}
 
 }

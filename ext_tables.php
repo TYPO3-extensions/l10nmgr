@@ -54,6 +54,8 @@ plugin.tx_l10nmgr_controller_import.configuration {
 	templates{
 		form = EXT:l10nmgr/templates/import/form.php
 	}
+	
+	loadJQuery = 1
 }
 
 plugin.tx_l10nmgr_controller_list.configuration {
