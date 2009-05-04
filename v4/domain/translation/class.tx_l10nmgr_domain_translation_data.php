@@ -153,7 +153,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @return void
 	 */
 	public function writeProcessingLog() {
-		//!TODO implement me
+		//!TODO implement "writeProcessingLog" method
 	}
 
 	/**
@@ -264,7 +264,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @return ArrayObject
 	 */
 	public function getMessages() {
-		//!TODO implement me finally
+		//!TODO implement "getMessages" finally while the message format is currntly not defined
 		return $this->MessageCollection;
 	}
 
@@ -369,7 +369,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @return void
 	 */
 	public function setMessage($messages) {
-		//!TODO implement me finally
+		//!TODO implement "setMessage" finally while message format is currently not defined
 		$this->MessageCollection->append($messages);
 	}
 
