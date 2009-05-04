@@ -79,14 +79,14 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 *
 	 * @return tx_l10nmgr_models_export_exportData
 	 */
-	public function getExportDataObject(){
+	public function getExportDataObject() {
 		if (!empty($this->row['exportdata_id'])) {
 			if (empty($this->row['exportdata_object'])) {
 				$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 				$this->row['exportdata_object'] = $exportDataRepository->findById($this->row['exportdata_id']);
 			}
 			return $this->row['exportdata_object'];
-		}else{
+		} else {
 			throw new LogicException('This importData has no exportData assigned');
 		}
 	}
@@ -96,9 +96,9 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 *
 	 * @return tx_models_importer_importFileCollection
 	 */
-	public function getImportFiles(){
-		if(!empty($this->row['uid'])){
-			if(empty($this->row['importfilecollection_object'])){
+	public function getImportFiles() {
+		if (!empty($this->row['uid'])) {
+			if (empty($this->row['importfilecollection_object'])) {
 
 			}
 		}
