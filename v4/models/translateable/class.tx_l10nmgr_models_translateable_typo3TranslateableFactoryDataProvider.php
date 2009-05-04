@@ -69,6 +69,13 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 		$this->addPageIdCollectionToRelevantPageIds($pageIdCollection);
 	}
 
+	
+	/**
+	 * @return boolean
+	 */
+	public function getOnlyNewAndChanged(){
+		return $this->exportData->getOnlychangedcontent();
+	}
 	/**
 	 * Returns the related exportData object
 	 *

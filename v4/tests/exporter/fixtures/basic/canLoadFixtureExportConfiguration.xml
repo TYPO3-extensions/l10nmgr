@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ts_webex>
+	<tx_l10nmgr_cfg>
+		<uid>999</uid>
+		<pid>4711</pid>
+		<title></title>
+		<depth>100</depth>
+		<displaymode>2</displaymode>
+		<tablelist>pages,tt_content</tablelist>
+		<exclude></exclude>
+		<include></include>
+	</tx_l10nmgr_cfg>
+</ts_webex>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testdatabase>
+	<!-- This exportdata is in a workflow state which was not defined by the l10nmgr itsself. It has no l10nmgr_imported in its history -->
+		<tx_l10nmgr_workflowstates>
+			<uid>1</uid>
+			<pid>1</pid>
+			<exportdata_id>1</exportdata_id>
+			<tstamp></tstamp>
+			<crdate></crdate>
+			<state>l10nmgr_exporting</state>
+		</tx_l10nmgr_workflowstates>
+		<tx_l10nmgr_workflowstates>
+			<uid>2</uid>
+			<pid>1</pid>
+			<exportdata_id>1</exportdata_id>
+			<tstamp>111</tstamp>
+			<crdate></crdate>
+			<state>l10nmgr_exported</state>
+		</tx_l10nmgr_workflowstates>
+		<tx_l10nmgr_workflowstates>
+			<uid>3</uid>
+			<pid>1</pid>
+			<exportdata_id>1</exportdata_id>
+			<tstamp>222</tstamp>
+			<crdate></crdate>
+			<state>another_workflow state</state>
+		</tx_l10nmgr_workflowstates>
+		<tx_l10nmgr_workflowstates>
+			<uid>4</uid>
+			<pid>1</pid>
+			<exportdata_id>1</exportdata_id>
+			<tstamp>333</tstamp>
+			<crdate></crdate>
+			<state>yet_another_workflow state</state>
+		</tx_l10nmgr_workflowstates>
+	<!-- This is an exportdata which has the state l10nmgr_imported in his history -->
+		<tx_l10nmgr_workflowstates>
+			<uid>5</uid>
+			<pid>1</pid>
+			<exportdata_id>2</exportdata_id>
+			<tstamp></tstamp>
+			<crdate></crdate>
+			<state>l10nmgr_exporting</state>
+		</tx_l10nmgr_workflowstates>
+		<tx_l10nmgr_workflowstates>
+			<uid>6</uid>
+			<pid>1</pid>
+			<exportdata_id>2</exportdata_id>
+			<tstamp>111</tstamp>
+			<crdate></crdate>
+			<state>l10nmgr_exported</state>
+		</tx_l10nmgr_workflowstates>
+		<tx_l10nmgr_workflowstates>
+			<uid>7</uid>
+			<pid>1</pid>
+			<exportdata_id>2</exportdata_id>
+			<tstamp>222</tstamp>
+			<crdate></crdate>
+			<state>another_workflow state</state>
+		</tx_l10nmgr_workflowstates>	
+		<tx_l10nmgr_workflowstates>
+			<uid>8</uid>
+			<pid>1</pid>
+			<exportdata_id>2</exportdata_id>
+			<tstamp>333</tstamp>
+			<crdate></crdate>
+			<state>l10nmgr_importing</state>
+		</tx_l10nmgr_workflowstates>		
+		<tx_l10nmgr_workflowstates>
+			<uid>9</uid>
+			<pid>1</pid>
+			<exportdata_id>2</exportdata_id>
+			<tstamp>444</tstamp>
+			<crdate></crdate>
+			<state>l0nmgr_imported</state>
+		</tx_l10nmgr_workflowstates>
+		<tx_l10nmgr_workflowstates>
+			<uid>10</uid>
+			<pid>1</pid>
+			<exportdata_id>2</exportdata_id>
+			<tstamp>555</tstamp>
+			<crdate></crdate>
+			<state>another_workflow_state_after_export</state>
+		</tx_l10nmgr_workflowstates>
+		
+		<tx_l10nmgr_exportdata>
+			<uid>1</uid>
+			<pid>0</pid>
+			<l10ncfg_id>31</l10ncfg_id>
+			<tstamp>1240391652</tstamp>
+			<crdate>1240391652</crdate>
+			<cruser_id>0</cruser_id>
+			<deleted>0</deleted>
+			<title>---</title>
+			<source_lang>0</source_lang>
+			<translation_lang>1</translation_lang>
+			<exportType>1</exportType>
+			<progress></progress>
+		</tx_l10nmgr_exportdata>
+
+		<tx_l10nmgr_exportdata>
+			<uid>2</uid>
+			<pid>0</pid>
+			<l10ncfg_id>31</l10ncfg_id>
+			<tstamp>1240391652</tstamp>
+			<crdate>1240391652</crdate>
+			<cruser_id>0</cruser_id>
+			<deleted>0</deleted>
+			<title>SMB Segment</title>
+			<source_lang>0</source_lang>
+			<translation_lang>1</translation_lang>
+			<exportType>1</exportType>
+			<progress></progress>
+		</tx_l10nmgr_exportdata>				
+</testdatabase>
