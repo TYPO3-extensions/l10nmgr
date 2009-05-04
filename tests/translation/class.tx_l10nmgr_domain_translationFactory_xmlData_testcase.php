@@ -92,6 +92,26 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	}
 
 	/**
+	 * Verify that the TranslationFactury build the right amount of pages from the export XML file
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_translationDataContainsRightAmountOfPages() {
+		$importFile = dirname(__FILE__) . '/fixtures/files/validContent/canImportServiceImportCorrectDataFixtureImport.xml';
+
+		$TranslationData = $this->TranslationFactory->create($importFile);
+
+		$this->assertEquals (
+			2,
+			$TranslationData->getPageIdCollection()->count(),
+			'The TranslationFactory should find 2 page items but contains: "' . $TranslationData->getPageIdCollection()->count() . '".'
+		);
+	}
+
+
+	/**
 	 * Verify that the page collection with the UID 175 contains the right amount elements within the elements collection.
 	 *
 	 * @access public
