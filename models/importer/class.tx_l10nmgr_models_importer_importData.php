@@ -79,6 +79,39 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
+	 * The idea of the progress property is, to save state informations in on serializeable
+	 * field structure in the database. It can be used internally to save state information.
+	 *
+	 * @param string key
+	 * @param mixed value
+	 * @return void
+	 */
+	protected function setProgress($key, $value) {
+		if (!empty($this->row['progress'])) {
+			$progress = unserialize($this->row['progress']);
+		} else {
+			$progress = array();
+		}
+		$progress[$key] = $value;
+		$this->row['progress'] = serialize($progress);
+	}
+
+	/**
+	 * Return the progress which was registered for a given value.
+	 *
+	 * @param string key
+	 * @return mixed value
+	 */
+	protected function getProgress($key) {
+		if (!empty($this->row['progress'])) {
+			$progress = unserialize($this->row['progress']);
+		} else {
+			$progress = array();
+		}
+		return $progress[$key];
+	}
+
+	/**
 	 * Returns the related exportData object of this import data object
 	 *
 	 * @return tx_l10nmgr_models_export_exportData
