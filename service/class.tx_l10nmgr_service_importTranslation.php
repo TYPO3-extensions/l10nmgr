@@ -260,7 +260,7 @@ class tx_l10nmgr_service_importTranslation {
 		}
 
 			// Mark field as imported so we can verify later the processed progress.
-		$TranslationField->markAsImported();
+		$TranslationField->markImported();
 	}
 
 	/**
