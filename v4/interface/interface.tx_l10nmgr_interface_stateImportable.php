@@ -45,7 +45,7 @@ interface tx_l10nmgr_interface_stateImportable {
 	 * @access public
 	 * @return void
 	 */
-	public function markAsImported();
+	public function markImported();
 
 	/**
 	 * Retrieve the import state
