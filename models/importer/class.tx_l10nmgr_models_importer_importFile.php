@@ -152,7 +152,7 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 				$zipper = new ZipArchive();
 
 				if($zipper->open($importFile)){
-					//@todo what should be done, when a file will be overwritten?
+					//!TODO what should be done, when a file will be overwritten?
 					$zipper->extractTo($this->getImportFilePath());
 
 					//create a new importFile for each xml file in the zip
