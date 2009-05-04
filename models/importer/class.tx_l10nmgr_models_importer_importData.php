@@ -90,18 +90,51 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 			throw new LogicException('This importData has no exportData assigned');
 		}
 	}
-	
+
 	/**
 	 * Determines all Files which are assigned to this import
-	 * 
-	 * @return tx_models_importer_importFileCollection 
+	 *
+	 * @return tx_models_importer_importFileCollection
 	 */
 	public function getImportFiles(){
 		if(!empty($this->row['uid'])){
 			if(empty($this->row['importfilecollection_object'])){
-				
+
 			}
 		}
+	}
+
+	/**
+	 * The idea of the progress property is, to save state informations in on serializeable
+	 * field structure in the database. It can be used internally to save state information.
+	 *
+	 * @param string key
+	 * @param mixed value
+	 * @return void
+	 */
+	protected function setProgress($key, $value) {
+		if (!empty($this->row['progress'])) {
+			$progress = unserialize($this->row['progress']);
+		} else {
+			$progress = array();
+		}
+		$progress[$key] = $value;
+		$this->row['progress'] = serialize($progress);
+	}
+
+	/**
+	 * Return the progress which was registered for a given value.
+	 *
+	 * @param string key
+	 * @return mixed value
+	 */
+	protected function getProgress($key) {
+		if (!empty($this->row['progress'])) {
+			$progress = unserialize($this->row['progress']);
+		} else {
+			$progress = array();
+		}
+		return $progress[$key];
 	}
 }
 

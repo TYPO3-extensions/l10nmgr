@@ -234,9 +234,9 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @return void
 	 */
 	protected function setProgress($key, $value) {
-		if(!empty($this->row['progress'])) {
+		if (!empty($this->row['progress'])) {
 			$progress = unserialize($this->row['progress']);
-		}else{
+		} else {
 			$progress = array();
 		}
 		$progress[$key] = $value;
@@ -245,14 +245,14 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 
 	/**
 	 * Return the progress which was registered for a given value.
-	 * 	 *
+	 *
 	 * @param string key
 	 * @return mixed value
 	 */
 	protected function getProgress($key) {
-		if(!empty($this->row['progress'])) {
+		if (!empty($this->row['progress'])) {
 			$progress = unserialize($this->row['progress']);
-		}else{
+		} else {
 			$progress = array();
 		}
 		return $progress[$key];
