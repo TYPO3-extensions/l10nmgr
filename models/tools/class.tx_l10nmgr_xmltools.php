@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
+*  (c) 2006 Kasper Skï¿½rhï¿½j <kasperYYYY@typo3.com>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -26,7 +26,7 @@
  *
  * $Id$
  *
- * @author	Daniel Pötzinger <development@aoemedia.de>
+ * @author	Daniel Pï¿½tzinger <development@aoemedia.de>
  */
 
  require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf8tools.php');
@@ -93,7 +93,7 @@ class tx_l10nmgr_xmltools {
 	 * @return	string		string with HTML
 	 */
 	function XML2RTE($xmlstring) {
-		//fixed setting of Parser (TO-DO set it via typoscript)
+		//@todo fixed setting of Parser (TO-DO set it via typoscript)
 			
 			//Added because import failed
 			$xmlstring=str_replace('<br/>','<br>',$xmlstring);

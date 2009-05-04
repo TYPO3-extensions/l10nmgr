@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testcase>
+    <tx_l10nmgr_cfg>
+        <uid>384</uid>
+        <pid>33155</pid>
+        <tstamp>1241083726</tstamp>
+        <crdate>1241083726</crdate>
+        <cruser_id>831</cruser_id>
+        <title>headertest</title>
+        <depth>0</depth>
+        <displaymode>0</displaymode>
+        <tablelist>pages,tt_content</tablelist>
+        <exclude></exclude>
+        <include></include>
+        <flexformdiff></flexformdiff>
+        <sourceLangStaticId></sourceLangStaticId>
+        <incfcewithdefaultlanguage>0</incfcewithdefaultlanguage>
+        <filenameprefix>test</filenameprefix>
+    </tx_l10nmgr_cfg>
+</testcase>

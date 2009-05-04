@@ -47,7 +47,7 @@ class tx_l10nmgr_models_exporter_exportDataRepository_testcase extends tx_phpuni
 	 *
 	 */
 	public function test_canFindExportDataWithStateInHistory(){
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canFindExportDataWithStateInHistory.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/statehistory/canFindExportDataWithStateInHistory.xml');
 			
 		$exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportDataCollection	= $exportDataRepository->findAllWithStateInHistory('l0nmgr_imported');
@@ -62,7 +62,7 @@ class tx_l10nmgr_models_exporter_exportDataRepository_testcase extends tx_phpuni
 	 *
 	 */
 	public function test_canFindExportDataWithoutStateInHistory(){
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canFindExportDataWithStateInHistory.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').  'tests/exporter/fixtures/statehistory/canFindExportDataWithStateInHistory.xml');
 			
 		$exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportDataCollection	= $exportDataRepository->findAllWithoutStateInHistory('l0nmgr_imported');
