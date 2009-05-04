@@ -28,10 +28,8 @@ tx_mvc_common_classloader::loadAll();
 
 require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/class.tx_l10nmgr_domain_translationFactory.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_importTranslation.php';
-//require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translatable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php';
 
 /**
- *
  *
  * {@inheritdoc}
  *
@@ -104,7 +102,7 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 		$this->useTestDatabase ();
 
 		$this->importExtensions (
-			array ('corefake','cms','l10nmgr','static_info_tables','templavoila')
+			array ('corefake','cms','l10nmgr','static_info_tables','templavoila', 'aoe_webex_tableextensions', 'languagevisibility', 'syslog', 'realurl', 'indexed_search', 'aoe_realurlpath')
 		);
 
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
@@ -141,8 +139,8 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 	/**
 	 * Verify the instanceof Repository is of type "tx_l10nmgr_service_importTranslation"
 	 *
-	 * @access     public
-	 * @return     void
+	 * @access public
+	 * @return void
 	 */
 	public function test_repositoryRightInstanceOf() {
 		$this->assertTrue(($this->TranslationService instanceof tx_l10nmgr_service_importTranslation),'Object of wrong class');
@@ -151,12 +149,10 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 	/**
 	 * first basicTest
 	 *
-	 * @access     public
-	 * @return     void
+	 * @access public
+	 * @return void
 	 */
 	public function test_testCaseName() {
-
-ini_set('xdebug.var_display_max_depth', 15);
 
 		$this->importDataSet('/fixtures/canImportServiceImportCorrectData_pages.xml');
 		$this->importDataSet('/fixtures/canImportServiceImportCorrectData_tt_content.xml');
@@ -164,20 +160,16 @@ ini_set('xdebug.var_display_max_depth', 15);
 		$this->importDataSet('/fixtures/templavoilaTemplateDatastructure.xml');
 		$this->importDataSet('/fixtures/templavoilaTemplateObject.xml');
 
-		$export = dirname(__FILE__).'/fixtures/canImportServiceImportCorrectDataFixtureExport.xml';
-		$import = dirname(__FILE__).'/fixtures/canImportServiceImportCorrectDataFixtureImport.xml';
+//		$export = dirname(__FILE__) . '/fixtures/canImportServiceImportCorrectDataFixtureExport.xml';
+		$import = dirname(__FILE__) . '/fixtures/canImportServiceImportCorrectDataFixtureImport.xml';
 
 		$TranslationData = $this->TranslationFactory->create($import);
 
-		//the translationdata should contain two pages (33153 and 33154)
-		$this->assertEquals(2,	$TranslationData->getPageIdCollection()->count());
+		$ExportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$ExportData           = $ExportDataRepository->findById($TranslationData->getExportDataRecordUid());
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
-		$exportData = $exportDataRepository->findById(251);
-
-		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
+		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($ExportData, $TranslationData->getPageIdCollection());
 		$TranslatableInformation		  = $this->TranslatableFactory->create($translateableFactoryDataProvider);
-//print __METHOD__ . '<pre>'; var_dump($TranslatableInformation); exit("<br /><br /><br />------- end of debug.");
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 
