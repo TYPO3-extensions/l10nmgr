@@ -67,6 +67,16 @@ class tx_l10nmgr_domain_translationFactory_basic_testcase extends tx_phpunit_tes
 	}
 
 	/**
+	 * Reset the test environment
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function tearDown() {
+		$this->TranslationFactory = null;
+	}
+
+	/**
 	 * Verify the instanceof Repository is of type "tx_l10nmgr_domain_translationFactory"
 	 *
 	 * @access public

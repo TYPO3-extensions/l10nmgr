@@ -119,7 +119,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * @return void
 	 */
 	public function test_translationDataContainsRightAmountOfElements() {
-		$fixtureElementsCount = (int)$this->TranslationData->getPagesCollection()->offsetGet(175)->getElementCollection()->count();
+		$fixtureElementsCount = (int)$this->TranslationData->getPageCollection()->offsetGet(175)->getElementCollection()->count();
 
 		$this->assertEquals (
 			5,
@@ -167,7 +167,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * @return void
 	 */
 	public function test_elementContainsRightTableNameForEntity($expectedValue, $fixturePageId, $fixtureElementId) {
-		$fixtureValue = $this->TranslationData->getPagesCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getTableName();
+		$fixtureValue = $this->TranslationData->getPageCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getTableName();
 
 		$this->assertEquals (
 			$expectedValue,
@@ -184,7 +184,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * 		true, // expected transformations status
 	 * 		1111, // Page UID
 	 * 		'tt_content:1111', // Mixed key build from the table name and record UID like "tt_content:111"
-	 * 		'tt_content:523531:bodytext"', // record command path
+	 * 		'tt_content:523531:bodytext', // record command path
 	 * 	)
 	 * </exampl>
 	 *
@@ -216,7 +216,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * @return void
 	 */
 	public function test_fieldTransformationStatusIsSet($expectedValue, $fixturePageId, $fixtureElementId, $fixtureFieldName) {
-		$fixtureValue = $this->TranslationData->getPagesCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldName)->getTransformation();
+		$fixtureValue = $this->TranslationData->getPageCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldName)->getTransformation();
 
 		$this->assertEquals (
 			$expectedValue,
@@ -263,7 +263,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * @return void
 	 */
 	public function test_fieldContainsRightContentBetweenCDATA($expectedValue, $fixturePageId, $fixtureElementId, $fixtureFieldName) {
-		$fixtureFieldContent = $this->TranslationData->getPagesCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldName)->getContent();
+		$fixtureFieldContent = $this->TranslationData->getPageCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldName)->getContent();
 
 		$this->assertEquals (
 			$expectedValue,
@@ -277,10 +277,10 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 *
 	 * <example>
 	 * 	array (
-	 * 		'WebEx Customers, // expected content
-	 * 		1111, // Page UID
+	 * 		'WebEx Customers', // expected content
+	 * 		1111', // Page UID
 	 * 		'tt_content:1111', // Mixed key build from the table name and record UID like "tt_content:111"
-	 * 		'tt_content:523531:bodytext"', // record command path
+	 * 		'tt_content:523531:bodytext', // record command path
 	 * 	)
 	 * </exampl>
 	 *
@@ -318,7 +318,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * @return void
 	 */
 	public function test_fieldContainsRightContentWithoutCDATA($expectedValue, $fixturePageId, $fixtureElementId, $fixtureFieldPath) {
-		$fixtureFieldContent = $this->TranslationData->getPagesCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldPath)->getContent();
+		$fixtureFieldContent = $this->TranslationData->getPageCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldPath)->getContent();
 
 		$this->assertEquals (
 			$expectedValue,
@@ -365,7 +365,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 * @return void
 	 */
 	public function test_throwsExceptionWhileAccessingNotAvailableIndexOfTranslationDataCollection($fixturePageId, $fixtureElementId, $fixtureFieldPath) {
-		$this->TranslationData->getPagesCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldPath)->getContent();
+		$this->TranslationData->getPageCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldPath)->getContent();
 	}
 }
 
