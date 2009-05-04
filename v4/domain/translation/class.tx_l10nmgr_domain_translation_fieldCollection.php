@@ -56,12 +56,16 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject implemen
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function markAsImported() {
-		$this->isImported = true;
+	public function markImported() {
+//!TODO refactor this, the object should not allowed to set his own isImported state to true
+//		$this->isImported = true;
 	}
 
 	/**
 	 * Retrieve the import state
+	 *
+	 * If the FieldCollection contains no field, the import state
+	 * is indicated as true while nothing more is to processed.
 	 *
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
@@ -69,14 +73,20 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject implemen
 	 */
 	public function isImported() {
 
-		foreach ( $this as $Field ) {
+		if ($this->isImported !== true) {
 
-			if (! $Field->isImported() ) {
-				$this->isImported = false;
-				break;
+			foreach ( $this as $Field ) { /* @var $Field tx_l10nmgr_domain_translation_field */
+				if ( ($Field->isImported() === false) && ($Field->isSkipped() === false) ) {
+					$this->isImported = false;
+					break;
+				}
+				$this->isImported = true;
 			}
 
-			$this->isImported = true;
+				// if the fieldCollection contains no fields
+			if ($this->isImported === false && $this->count() === 0) {
+				$this->isImported = true;
+			}
 		}
 
 		return $this->isImported;
@@ -113,6 +123,7 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject implemen
 		}
 
 		parent::offsetSet($index, $Field);
+		$this->isImported = false;
 	}
 
 	/**
@@ -129,6 +140,7 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject implemen
 		}
 
 		parent::append($Field);
+		$this->isImported = false;
 	}
 }
 

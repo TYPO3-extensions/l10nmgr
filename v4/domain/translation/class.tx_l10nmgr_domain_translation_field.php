@@ -113,7 +113,7 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function markAsImported() {
+	public function markImported() {
 		$this->isImported = true;
 	}
 
@@ -126,6 +126,28 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 	 */
 	public function isImported() {
 		return $this->isImported;
+	}
+
+	/**
+	 * Indicate that this field is skipped for import processing
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return boolean
+	 */
+	public function isSkipped() {
+		return $this->isSkipped;
+	}
+
+	/**
+	 * Return the skipped reason.
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return string
+	 */
+	public function getSkippedMessage() {
+		return $this->skippedMessage;
 	}
 
 	/**

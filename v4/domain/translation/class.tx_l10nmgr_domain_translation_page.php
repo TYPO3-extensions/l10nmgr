@@ -69,8 +69,9 @@ class tx_l10nmgr_domain_translation_page implements tx_l10nmgr_interface_stateIm
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function markAsImported() {
-		$this->isImported = true;
+	public function markImported() {
+//!TODO refactor this, the object should not allowed to set his own isImported state to true
+//		$this->isImported = true;
 	}
 
 	/**
@@ -82,7 +83,7 @@ class tx_l10nmgr_domain_translation_page implements tx_l10nmgr_interface_stateIm
 	 */
 	public function isImported() {
 
-		if ( $this->ElementCollection->isImported() ) {
+		if ( ($this->ElementCollection instanceof tx_l10nmgr_domain_translation_elementCollection) && $this->ElementCollection->isImported() ) {
 			$this->isImported = true;
 		}
 

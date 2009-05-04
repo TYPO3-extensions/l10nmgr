@@ -139,7 +139,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 *
 	 * @var tx_l10nmgr_domain_translation_pageCollection
 	 */
-	protected $PagesCollection = null;
+	protected $PageCollection = null;
 
 	/**
 	 * Write import success information about the chilg elements
@@ -163,8 +163,9 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function markAsImported() {
-		$this->isImported = true;
+	public function markImported() {
+//!TODO refactor this, the object should not allowed to set his own isImported state to true
+//		$this->isImported = true;
 	}
 
 	/**
@@ -176,7 +177,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 */
 	public function isImported() {
 
-		if ( $this->PagesCollection->isImported() ) {
+		if ( ($this->PageCollection instanceof tx_l10nmgr_domain_translation_pageCollection) && $this->PageCollection->isImported() ) {
 			$this->isImported = true;
 		} else {
 			$this->isImported = false;
@@ -199,7 +200,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @return tx_l10nmgr_domain_translation_fieldCollection
 	 */
 	public function findByTableUidAndKey($pageUid, $tableName, $elementUid, $uniqueKey) {
-		return $this->getPagesCollection()->offsetGet($pageUid)->getElementCollection()->offsetGet($tableName . ':' . $elementUid)->getFieldCollection()->offsetGet($uniqueKey);
+		return $this->getPageCollection()->offsetGet($pageUid)->getElementCollection()->offsetGet($tableName . ':' . $elementUid)->getFieldCollection()->offsetGet($uniqueKey);
 	}
 
 	/**
@@ -272,8 +273,8 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return tx_l10nmgr_domain_translation_pageCollection
 	 */
-	public function getPagesCollection() {
-		return $this->PagesCollection;
+	public function getPageCollection() {
+		return $this->PageCollection;
 	}
 
 	/**
@@ -373,13 +374,13 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	}
 
 	/**
-	 * @param tx_l10nmgr_domain_translation_pageCollection $PagesCollection
+	 * @param tx_l10nmgr_domain_translation_pageCollection $PageCollection
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function setPagesCollection(tx_l10nmgr_domain_translation_pageCollection $PagesCollection) {
-		$this->PagesCollection = $PagesCollection;
+	public function setPageCollection(tx_l10nmgr_domain_translation_pageCollection $PageCollection) {
+		$this->PageCollection = $PageCollection;
 	}
 
 	/**
@@ -442,7 +443,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	public function getPageIdCollection(){
 		$pageIdCollection = new ArrayObject();
 
-		for ( $it = $this->PagesCollection->getIterator(); $it->valid(); $it->next() ) {
+		for ( $it = $this->PageCollection->getIterator(); $it->valid(); $it->next() ) {
 			$currentPage = $it->current();
 			$pageIdCollection->append($currentPage->getUid());
 		}
