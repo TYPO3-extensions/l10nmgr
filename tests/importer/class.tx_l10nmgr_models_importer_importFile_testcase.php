@@ -103,7 +103,7 @@ class tx_l10nmgr_models_importer_importFile_testcase extends tx_phpunit_database
 			
 			$importFile->extractZIP();
 			
-			die();
+			//die();
 	/*	}catch(Exception $e){
 			echo $e->getMessage();
 			echo 'Debug in '.__FILE__.' at line '.__LINE__;
