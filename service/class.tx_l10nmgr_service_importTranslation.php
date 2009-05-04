@@ -154,8 +154,8 @@ class tx_l10nmgr_service_importTranslation {
 			}
 		}
 
-		self::debug($TCEmain->copyMappingArray_merged,'$TCEmain->copyMappingArray_merged');
-		self::debug($this->TCEmain_data,'==> $TCEmain_data');
+		tx_mvc_common_debug::debug($TCEmain->copyMappingArray_merged, '$TCEmain->copyMappingArray_merged', self::SHOW_DEBUG_INFORMATION);
+		tx_mvc_common_debug::debug($this->TCEmain_data,'==> $TCEmain_data', self::SHOW_DEBUG_INFORMATION);
 
 			// Remap new translated elements to their l18n_parent records
 		foreach (array_keys($this->TCEmain_data) as $tableName)	{
@@ -165,7 +165,7 @@ class tx_l10nmgr_service_importTranslation {
 				list($cmdForceCreateNew, , $cmdl18nParentRecordUid) = explode('/', $cmdProcessString);
 
 				if ($cmdForceCreateNew === 'NEW') {
-					self::debug($this->TCEmain_data,'$this->TCEmain_data');
+					tx_mvc_common_debug::debug($this->TCEmain_data, '$this->TCEmain_data', self::SHOW_DEBUG_INFORMATION);
 
 					if ($TCEmain->copyMappingArray_merged[$tableName][$cmdl18nParentRecordUid])	{
 
@@ -177,7 +177,7 @@ class tx_l10nmgr_service_importTranslation {
 						debug('Record "'.$tableName.':'.$cmdl18nParentRecordUid.'" was NOT localized as it should have been!');
 					}
 
-					self::debug($this->TCEmain_data,'$this->TCEmain_data');
+					tx_mvc_common_debug::debug($this->TCEmain_data, '$this->TCEmain_data', self::SHOW_DEBUG_INFORMATION);
 					unset($this->TCEmain_data[$tableName][$cmdProcessString]);
 				}
 			}
@@ -261,21 +261,6 @@ class tx_l10nmgr_service_importTranslation {
 
 			// Mark field as imported so we can verify later the processed progress.
 		$TranslationField->markImported();
-	}
-
-	/**
-	 * Formated debug output of an given object (can be mixed type)
-	 *
-	 * @param mixed $object
-	 * @param string $debugHeader OPTIONAL Headline for the debug output
-	 * @access public
-	 * @static
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @return void
-	 */
-	static protected function debug($object, $debugHeader) {
-		if (self::SHOW_DEBUG_INFORMATION)
-			tx_mvc_common_debug::debug($object, $debugHeader);
 	}
 }
 
