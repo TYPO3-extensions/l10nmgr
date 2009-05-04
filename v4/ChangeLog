@@ -4,6 +4,7 @@
 	  - Optimize and cache the isImported state including their polling
 	  - Keep attention on the fields who are marked as skipped
 	* Add tests for the translation package
+	* Rename method call "tx_l10nmgr_interface_stateImportable::markAsImported" to "tx_l10nmgr_interface_stateImportable::markImported" 
 
 2009-04-29 Michael Klapper <michael.klapper@aoemedia.de>
 	* Replace class tx_l10nmgr_models_importer_importService with tx_l10nmgr_service_importTranslation
