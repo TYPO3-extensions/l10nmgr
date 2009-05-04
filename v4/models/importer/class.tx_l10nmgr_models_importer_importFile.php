@@ -143,7 +143,7 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
-	public function extractZIP(){
+	public function extractZIPAndCreateImportFileForEach(){
 		$importFile 	= $this->getAbsoluteFilename();
 
 		if(tx_mvc_validator_factory::getFileValidator()->isValid($importFile)){
