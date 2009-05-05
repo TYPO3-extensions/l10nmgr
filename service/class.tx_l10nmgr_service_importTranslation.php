@@ -149,9 +149,7 @@ class tx_l10nmgr_service_importTranslation {
 			$TCEmain->process_cmdmap();
 
 				//!TODO add the errorLog to the import record for better handling
-			if (count($TCEmain->errorLog))	{
-				debug($TCEmain->errorLog,'TCEmain localization errors:');
-			}
+			tx_mvc_common_debug::debug($TCEmain->errorLog, 'TCEmain localization errors:', (bool)count($TCEmain->errorLog));
 		}
 
 		tx_mvc_common_debug::debug($TCEmain->copyMappingArray_merged, '$TCEmain->copyMappingArray_merged', self::SHOW_DEBUG_INFORMATION);
@@ -202,9 +200,7 @@ class tx_l10nmgr_service_importTranslation {
 		$TCEmain->process_datamap();
 
 			//!TODO add the errorLog to the import record for better handling
-		if ( count($TCEmain->errorLog) )	{
-			debug($TCEmain->errorLog, 'TCEmain update errors:');
-		}
+		tx_mvc_common_debug::debug($TCEmain->errorLog, 'TCEmain update errors:', (bool)count($TCEmain->errorLog));
 	}
 
 	/**
