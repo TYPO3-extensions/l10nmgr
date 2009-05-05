@@ -231,64 +231,54 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 		$this->Data->setWordCount($fixtureWordCount);
 		$this->Data->setWorkspaceId($fixtureWorkspaceId);
 
-		$this->assertAttributeEquals (
+		$this->assertEquals (
 			$fixtureBaseUrl,
-			'baseUrl',
-			$this->Data,
+			$this->Data->getBaseUrl(),
 			'tx_l10nmgr_domain_translation_data member "baseUrl" contains wrong value'
 		);
-		$this->assertAttributeEquals (
+		$this->assertEquals (
 			$fixtureExportDataRecordUid,
-			'exportDataRecordUid',
-			$this->Data,
+			$this->Data->getExportDataRecordUid(),
 			'tx_l10nmgr_domain_translation_data member "exportDataRecordUid" contains wrong value'
 		);
-		$this->assertAttributeEquals (
+		$this->assertEquals (
 			$fixtureFieldCount,
-			'fieldCount',
-			$this->Data,
+			$this->Data->getFieldCount(),
 			'tx_l10nmgr_domain_translation_data member "fieldCount" contains wrong value'
 		);
-		$this->assertAttributeEquals (
+		$this->assertEquals (
 			$fixtureFormatVersion,
-			'formatVersion',
-			$this->Data,
+			$this->Data->getFormatVersion(),
 			'tx_l10nmgr_domain_translation_data member "formatVersion" contains wrong value'
 		);
-		$this->assertAttributeEquals (
+		$this->assertEquals (
 			$fixtureL10ncfgUid,
-			'l10ncfgUid',
-			$this->Data,
+			$this->Data->getL10ncfgUid(),
 			'tx_l10nmgr_domain_translation_data member "l10ncfgUid" contains wrong value'
 		);
-		$this->assertAttributeEquals (
+		$this->assertEquals (
 			$fixtureSourceLanguageISOcode,
-			'sourceLanguageISOcode',
-			$this->Data,
+			$this->Data->getSourceLanguageISOcode(),
 			'tx_l10nmgr_domain_translation_data member "sourceLanguageISOcode" contains wrong value'
 		);
-		$this->assertAttributeEquals (
+		$this->assertEquals (
 			$fixtureSysLanguageUid,
-			'sysLanguageUid',
-			$this->Data,
+			$this->Data->getSysLanguageUid(),
 			'tx_l10nmgr_domain_translation_data member "sysLanguageUid" contains wrong value'
 		);
-		$this->assertAttributeEquals (
+		$this->assertEquals (
 			$fixtureTargetLanguageUid,
-			'targetLanguageUid',
-			$this->Data,
+			$this->Data->getTargetLanguageUid(),
 			'tx_l10nmgr_domain_translation_data member "targetLanguageUid" contains wrong value'
 		);
-		$this->assertAttributeEquals (
+		$this->assertEquals (
 			$fixtureWordCount,
-			'wordCount',
-			$this->Data,
+			$this->Data->getWordCount(),
 			'tx_l10nmgr_domain_translation_data member "wordCount" contains wrong value'
 		);
-		$this->assertAttributeEquals (
+		$this->assertEquals (
 			$fixtureWorkspaceId,
-			'workspaceId',
-			$this->Data,
+			$this->Data->getWorkspaceId(),
 			'tx_l10nmgr_domain_translation_data member "workspaceId" contains wrong value'
 		);
 
