@@ -43,9 +43,19 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 	 * @var tx_l10nmgr_models_export_exportData
 	 */
 	protected $exportData;
+	
+	/**
+	 * @var tx_l10nmgr_tools
+	 */
+	protected $t8Tools;
 
-	public function __construct(tx_l10nmgr_models_exporter_exportData $exportData,
-							ArrayObject $pageIdCollection ){
+	/**
+	 * Constructor
+	 * 
+	 * @param tx_l10nmgr_models_exporter_exportData exportData object
+	 * @param ArrayObject pageIdCollection
+	 */
+	public function __construct(tx_l10nmgr_models_exporter_exportData $exportData, ArrayObject $pageIdCollection ){
 
 		$this->exportData	= $exportData;
 		$l10ncfg 			= $exportData->getL10nConfigurationObject();
@@ -185,8 +195,10 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 	public function getRelevantElementIdsByTablenameAndPageId($tablename,$pageid){
 		$records = $this->t8Tools->getRecordsToTranslateFromTable($tablename, $pageid);
 		$uids = array();
-		foreach($records as $record){
-			$uids[] = $record['uid'];
+		if (is_array($records)) {
+			foreach($records as $record){
+				$uids[] = $record['uid'];
+			}
 		}
 
 		return $uids;
