@@ -33,7 +33,6 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowState.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php';
 
-
 /**
  * An exportData object represents one export. Each export can have multiple files.
  * The exportData object is used by the exporter, to process the export. It
@@ -53,7 +52,6 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_
  * @subpackage	l10nmgr
  * @access public
  */
-
 class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCAObject implements tx_l10nmgr_interface_progressable{
 
 	/**
@@ -428,30 +426,31 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @return void
 	 */
 	public function createZip($fileName) {
-		$exportFilePath	= tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename');
+		
+		$zipPath	= tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportData::getTableName(), 'filename');
+		
+		$fullPath = PATH_site . $zipPath . '/' . $fileName;
 
-		// create one zip file
-		$zipper = new tx_mvc_util_zip();
+		$zipper = new ZipArchive();
+		
+		$res = $zipper->open($fullPath, ZipArchive::CREATE);
+		if ($res !== true) {
+			throw new Exception('Error while creating zipfile');
+		}
+		
+		$exportFilePath	= PATH_site . tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename');
 		foreach ($this->getExportFiles() as $exportFile) { /* @var $exportFile tx_l10nmgr_models_exporter_exportFile */
-			$filename = t3lib_div::getFileAbsFileName($exportFilePath . '/' . $exportFile->getFilename());
-			$zipper->add_file(
-				file_get_contents($filename),
-				$exportFile->getFilename()
-			);
+			$zipper->addFile(t3lib_div::getFileAbsFileName($exportFilePath . '/' . $exportFile->getFilename()), $exportFile->getFilename());
 		}
-
-		// write to file
-		$exportDataFilePath	= tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', self::getTableName(), 'filename');
-		$res = t3lib_div::writeFile(PATH_site . $exportDataFilePath . '/' . $fileName, $zipper->file());
-		if ($res == false) {
-			throw new Exception(sprintf('Error while writing file "%s"', $exportPath . $fileName));
-		}
+		
+		$zipper->close();
+		
+		t3lib_div::fixPermissions($fullPath);
 
 		if (TYPO3_DLOG) t3lib_div::devLog('Created zip file', 'l10nmgr', 1);
 
 		// update exportdata record
 		$this->setFilename($fileName);
-
 	}
 
 	/**
