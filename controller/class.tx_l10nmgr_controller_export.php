@@ -55,7 +55,6 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'view/class.tx_l10nmgr_view_showPr
 
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progress.php');
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progressAjax.php');
-require_once t3lib_extMgm::extPath('mvc').'util/class.tx_mvc_util_zip.php';
 
 ###
 # OLD VIEWS

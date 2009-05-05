@@ -64,6 +64,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		$progressView = new tx_mvc_view_widget_progress();
 		$this->initializeView($progressView );
 		$progressView->setProgress(0);
+		$progressView->setProgressLabel('Preparing export...'); // TODO: move to locallang
 		$progressView->setAjaxEnabled(true);
 		$progressView->setProgressUrl($this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('ajaxPerformRun')->useOverruledParameters()->makeUrl());
 		$progressView->setRedirectOnCompletedUrl('../mod1/index.php');
