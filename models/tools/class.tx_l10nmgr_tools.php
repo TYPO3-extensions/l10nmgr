@@ -143,7 +143,7 @@ class tx_l10nmgr_tools {
 	 *
 	 * @param	string		Table name
 	 * @param	integer		Page id
-	 * @return	array		Array of records from table (with all fields selected)
+	 * @return	array|null		Array of records from table (with all fields selected)
 	 */
 	function getRecordsToTranslateFromTable($table,$pageId)	{
 		global $TCA;
