@@ -70,19 +70,16 @@ class tx_l10nmgr_domain_translation_pageCollection extends ArrayObject implement
 	 */
 	public function isImported() {
 
-		if ($this->isImported !== true) {
-
-			foreach ( $this as $Page ) { /* @var $Page tx_l10nmgr_domain_translation_page */
-				if (! $Page->isImported()) {
-					$this->isImported = false;
-					break;
-				}
-				$this->isImported = true;
+		foreach ( $this as $Page ) { /* @var $Page tx_l10nmgr_domain_translation_page */
+			if (! $Page->isImported()) {
+				$this->isImported = false;
+				break;
 			}
+			$this->isImported = true;
+		}
 
-			if ( ($this->isImported === false) && ($this->count() === 0) ) {
-				$this->isImported = true;
-			}
+		if ( ($this->isImported === false) && ($this->count() === 0) ) {
+			$this->isImported = true;
 		}
 
 		return $this->isImported;
@@ -119,7 +116,6 @@ class tx_l10nmgr_domain_translation_pageCollection extends ArrayObject implement
 		}
 
 		parent::offsetSet($index, $Page);
-		$this->isImported = false;
 	}
 
 	/**
@@ -136,7 +132,6 @@ class tx_l10nmgr_domain_translation_pageCollection extends ArrayObject implement
 		}
 
 		parent::append($Page);
-		$this->isImported = false;
 	}
 }
 

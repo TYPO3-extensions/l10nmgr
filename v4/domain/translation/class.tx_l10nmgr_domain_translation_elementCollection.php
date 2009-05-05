@@ -70,15 +70,12 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject implem
 	 */
 	public function isImported() {
 
-		if ($this->isImported !== true) {
-
-			foreach ( $this as $Element ) { /* @var $Element tx_l10nmgr_domain_translation_element */
-				if ($Element->isImported() === false) {
-					$this->isImported = false;
-					break;
-				}
-				$this->isImported = true;
+		foreach ( $this as $Element ) { /* @var $Element tx_l10nmgr_domain_translation_element */
+			if ($Element->isImported() === false) {
+				$this->isImported = false;
+				break;
 			}
+			$this->isImported = true;
 		}
 
 			// if the elementCollection contains no elements
@@ -122,7 +119,6 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject implem
 		}
 
 		parent::offsetSet($index, $Element);
-		$this->isImported = false;
 	}
 
 	/**
@@ -139,7 +135,6 @@ class tx_l10nmgr_domain_translation_elementCollection extends ArrayObject implem
 		}
 
 		parent::append($Element);
-		$this->isImported = false;
 	}
 }
 

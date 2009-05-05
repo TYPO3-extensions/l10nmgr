@@ -73,20 +73,17 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject implemen
 	 */
 	public function isImported() {
 
-		if ($this->isImported !== true) {
-
-			foreach ( $this as $Field ) { /* @var $Field tx_l10nmgr_domain_translation_field */
-				if ( ($Field->isImported() === false) && ($Field->isSkipped() === false) ) {
-					$this->isImported = false;
-					break;
-				}
-				$this->isImported = true;
+		foreach ( $this as $Field ) { /* @var $Field tx_l10nmgr_domain_translation_field */
+			if ( ($Field->isImported() === false) && ($Field->isSkipped() === false) ) {
+				$this->isImported = false;
+				break;
 			}
+			$this->isImported = true;
+		}
 
-				// if the fieldCollection contains no fields
-			if ($this->isImported === false && $this->count() === 0) {
-				$this->isImported = true;
-			}
+			// if the fieldCollection contains no fields
+		if ($this->isImported === false && $this->count() === 0) {
+			$this->isImported = true;
 		}
 
 		return $this->isImported;
@@ -123,7 +120,6 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject implemen
 		}
 
 		parent::offsetSet($index, $Field);
-		$this->isImported = false;
 	}
 
 	/**
@@ -140,7 +136,6 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject implemen
 		}
 
 		parent::append($Field);
-		$this->isImported = false;
 	}
 }
 
