@@ -99,7 +99,7 @@ class tx_cliimport_cli extends t3lib_cli {
         	    $msg.= $this->previewSource($xml);            
 		}
 	} elseif ($task == '2') {
-		$msg.= $this->importXMLFile($filepath,$preview);
+		$msg.= $this->importXMLFile($filepath,$preview,$serverlink);
 	}
 
 	$end = microtime(true);
@@ -226,7 +226,7 @@ class tx_cliimport_cli extends t3lib_cli {
     * importQueue which is called over cli
     *
     */
-    function importXMLFile($filepath,$preview){
+    function importXMLFile($filepath,$preview,$serverlink){
 	global $LANG;
 	$out ="";
 	//$out.="Importiere Datei ".$filepath;
