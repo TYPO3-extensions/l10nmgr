@@ -1,4 +1,4 @@
-<?php
+<?php 
 /***************************************************************
  *  Copyright notice
  *
@@ -40,7 +40,7 @@
  * @subpackage extensionkey
  * @access public
  */
-
+ 
 
 require_once t3lib_extMgm::extPath('l10nmgr') . 'models/importer/class.tx_l10nmgr_models_importer_importFile.php';
 
@@ -54,20 +54,20 @@ class tx_l10nmgr_models_importer_importFile_testcase extends tx_phpunit_database
 	 */
 	protected function useTestDatabase($databaseName = null) {
 		$db = $GLOBALS ['TYPO3_DB'];
-
+		
 		if ($databaseName) {
 			$database = $databaseName;
 		} else {
 			$database = $this->testDatabase;
 		}
-
+		
 		if (! $db->sql_select_db ( $database )) {
 			die ( "Test Database not available" );
 		}
-
+		
 		return $db;
 	}
-
+		
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
 	 *
@@ -87,25 +87,31 @@ class tx_l10nmgr_models_importer_importFile_testcase extends tx_phpunit_database
 
 	/**
 	 * This testcase is used to ensure that an exportFile which contains a zip can be unzipped.
-	 *
+	 * 
 	 */
 	public function test_canExtractZip() {
 
 		$row['uid'] = 4711;
 		$row['importdata_id'] = 1212;
 		$row['filename'] = 'test.zip';
-
+			
 		$importFile = new tx_l10nmgr_models_importer_importFile($row);
 
-		$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/');
-
-		$this->assertTrue($importFile->isZip(),'Testfile should be an zip file!');
-
+		$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
+		
+		$this->assertTrue($importFile->isZip(),'Testfile should be an zip file!');		
+		
 		$importFile->extractZIPAndCreateImportFileForEach();
 
-		$this->assertFileExists (
-			t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml'
-		);
+		$fileHasBeenWritten = tx_mvc_validator_factory::getFileValidator()->isValid(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
+		
+		$this->assertTrue($fileHasBeenWritten);
+		
+		unlink(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
+		
+		$fileHasBeeRemoved = !tx_mvc_validator_factory::getFileValidator()->isValid(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
+		 
+		$this->assertTrue($fileHasBeeRemoved);
 	}
 }
 

@@ -253,7 +253,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 		global $LANG;
 
 		foreach ($this->getTranslateableInformation()->getPageGroups() as $pageGroup) { /* @var $pageGroup tx_l10nmgr_models_translateable_pageGroup */
-			$pageStartTag = sprintf('<pageGrp id="%d">', $pageGroup->getUid());
+			$pageStartTag = "\t".sprintf('<pageGrp id="%d">', $pageGroup->getUid())."\n";
 			$xml .= $pageStartTag;
 
 			foreach ($pageGroup->getTranslateableElements() as $translateableElement) { /* @var $translateableElement tx_l10nmgr_models_translateable_translateableElement */
@@ -268,7 +268,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 							$needsTrafo = $translateableField->needsTransformation();
 							$transformationAttribute = $needsTrafo ? ' transformations="1"' : '';
 
-							$dataTag 	= sprintf(' <data table="%s" elementUid="%d" key="%s"%s>%s</data> ',$table,$uid,$key,$transformationAttribute,$data)."\n";
+							$dataTag 	= "\t\t".sprintf('<data table="%s" elementUid="%d" key="%s"%s>%s</data> ',$table,$uid,$key,$transformationAttribute,$data)."\n";
 							$xml .= $dataTag;
 
 						} catch(Exception $e) {
@@ -278,7 +278,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 					}
 				}
 			}
-			$pageEndTag = '</pageGrp>';
+			$pageEndTag = "\t".'</pageGrp>'."\n";
 			$xml .= $pageEndTag;
 		}
 
@@ -331,13 +331,10 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 
 		return $result;
 	}
-
 }
-
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/CATXML/class.tx_l10nmgr_CATXMLView.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/CATXML/class.tx_l10nmgr_CATXMLView.php']);
 }
-
 
 ?>

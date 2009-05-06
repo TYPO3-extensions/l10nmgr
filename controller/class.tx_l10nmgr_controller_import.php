@@ -101,9 +101,12 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	public function generateImportAction() {
 		//retrieve importdata record
 		$importDataId 						= tx_mvc_common_typo3::parseReturnEditConf($this->arguments['createdRecord'],'tx_l10nmgr_importdata');
-		tx_mvc_validator_factory::getIntValidator()->isValid($importDataId,true);
-
-		$this->arguments['importDataId'] 	= $importDataId;
+		
+		if(!empty($importDataId)){ 
+			$this->arguments['importDataId'] 	= $importDataId;
+		}
+		
+		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['importDataId'],true);
 		
 		$importDataRepository 	= new tx_l10nmgr_models_importer_importDataRepository();
 		$importData 			= $importDataRepository->findById($importDataId);
