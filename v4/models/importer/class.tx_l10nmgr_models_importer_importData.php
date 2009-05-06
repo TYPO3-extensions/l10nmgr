@@ -79,7 +79,7 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 		if ($key !== false) {
 			unset($fields[$key]);
 		}
-				
+
 		return $fields;
 	}
 
@@ -115,19 +115,19 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 		}
 		return $progress[$key];
 	}
-	
+
 	/**
 	 * This method can be used to determine, that an import is completly processed.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function getImportIsCompletelyProcessed(){
 		$this->getProgress('import_is_completely_processed');
 	}
-	
+
 	/**
  	 * This method can be used to determine, that the import is completly unprocessed.
- 	 * 
+ 	 *
  	 * @return boolean
 	 */
 	public function getImportIsCompletelyUnprocessed(){
@@ -137,37 +137,37 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	/**
 	 * Returns an array with filenames which are marked have not yet
 	 * been processed.
-	 * 
+	 *
 	 * @param void
 	 * @return array
 	 */
 	public function getImportRemainingFilenames(){
 		if (!($this->getProgress('import_remaining_filenames') instanceof ArrayObject)) {
-			
+
 			$remaining_files = new ArrayObject();
 			foreach($this->getImportFiles() as $importFile){
 				$remaining_files->append($importFile->getAbsoluteFilename());
 			}
-			
-			$this->setProgress('import_remaining_filenames',$remaining_files);			
+
+			$this->setProgress('import_remaining_filenames',$remaining_files);
 		}
-		
+
 		return $this->getProgress('import_remaining_filenames');
 	}
-	
+
 	/**
 	 * Counts the number of remaining, unprocessed filenames.
-	 * 
+	 *
 	 * @return int
 	 */
 	protected function getImportNumberOfRemainingFilenames(){
 		return $this->getImportRemainingFilenames()->count();
 	}
-	
+
 	/**
 	 * This method is used to remove a collection of filenames from the remaining filenames
 	 * when they have been processed.
-	 * 
+	 *
 	 *@param ArrayObject $filenames Collection of filenames to remove
 	 *@return void
 	 */
@@ -175,8 +175,8 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 		$remainingFilenames = $this->getImportRemainingFilenames();
 		$remainingFilenamesLeft = array_diff($this->getImportRemainingFilenames()->getArrayCopy(),$filenames->getArrayCopy());
 		$remainingFilenames ->exchangeArray($remainingFilenamesLeft);
-		
-		$this->setProgress('import_remaining_filenames',$remainingFilenames );	
+
+		$this->setProgress('import_remaining_filenames',$remainingFilenames );
 	}
 
 	/**
@@ -189,8 +189,8 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 		$numRuns = $this->getNumberOfImportRuns();
 		$numRuns++;
 		$this->setNumberOfImportRuns($numRuns);
-	}	
-	
+	}
+
 	/**
 	 * Returns the number of runs which have been performed during the import yet.
 	 *
@@ -207,28 +207,28 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 */
 	protected function setNumberOfImportRuns($value){
 		$this->setProgress('import_number_of_runs',$value);
-	}	
-	
+	}
+
 	/**
 	 * Returns the number of remaining filesnames which need to be imported.
-	 * 
+	 *
 	 * @author Timo Schmidt
 	 * @return int
 	 */
 	public function countRemainingImportFilenames(){
 		return $this->getImportRemainingFilenames()->count();
 	}
-	
+
 	/**
 	 * Returns the number of importfiles which are relevant for this import
-	 * 
+	 *
 	 * @author Timo Schmidt
 	 * @return int
 	 */
 	public function getImportTotalNumberOfFiles(){
 		return $this->getImportFiles()->count();
 	}
-	
+
 	/**
 	 * Returns the related exportData object of this import data object
 	 *
@@ -245,12 +245,12 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 			throw new LogicException('This importData has no exportData assigned');
 		}
 	}
-	
+
 	/**
 	 * Determines all files which are assigned to this import
-	 * 
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
-	 * @return tx_models_importer_importFileCollection 
+	 * @return tx_models_importer_importFileCollection
 	 */
 	public function getImportFiles() {
 		if (!empty($this->row['uid'])) {
@@ -259,14 +259,14 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 				$importFiles								= $importFileRepository->findCollectionByProperty('importdata_id',$this->getUid());
 				$this->row['importfilecollection_object'] 	= new tx_l10nmgr_models_importer_importFileCollection($importFiles);
 			}
-			
+
 			return $this->row['importfilecollection_object'];
 		}
 	}
-	
+
 	/**
 	 * This method is used to extract all importFiles which are zip files.
-	 * 
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @param void
 	 * @return void
@@ -284,15 +284,15 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 
 	/**
 	 * Returns the progress of the processed importData as pecentage value
-	 * 
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return float
-	 * 
+	 *
 	 */
 	public function getProgressPercentage(){
 		return (100 / $this->getImportTotalNumberOfFiles()) * ($this->getImportTotalNumberOfFiles() - $this->getImportNumberOfRemainingFilenames());
 	}
-		
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/importer/class.tx_l10nmgr_models_importer_importData.php']) {

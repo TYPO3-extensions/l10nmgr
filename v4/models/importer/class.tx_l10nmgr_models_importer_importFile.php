@@ -61,9 +61,9 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
-	 * The constructor initialized the importFile path with the configured 
+	 * The constructor initialized the importFile path with the configured
 	 * value in the tsconfig.
-	 * 
+	 *
 	 * @param array row from the database passed to the parent constructor
 	 */
 	public function __construct($row = array()){
@@ -100,7 +100,7 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	/**
 	 * Returns the filename extension of a file.
 	 * This protected method is used to determine the filename extension from the importedFile.
-	 * 
+	 *
 	 * @param string filename
 	 * @return string filename extension
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
@@ -155,14 +155,14 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
 	public function extractZIPAndCreateImportFileForEach(){
-		$importFile 	= $this->getAbsoluteFilename();
+		$absoluteImportFile 	= $this->getAbsoluteFilename();
 
-		if(tx_mvc_validator_factory::getFileValidator()->isValid($importFile)){
+		if(tx_mvc_validator_factory::getFileValidator()->isValid($absoluteImportFile)){
 			if($this->isZip()){
 				//the record contains a valid file
 				$zipper = new ZipArchive();
 
-				if($zipper->open($importFile)){
+				if($zipper->open($absoluteImportFile)){
 					//!TODO what should be done, when a file will be overwritten?
 					$zipper->extractTo($this->getImportFilePath());
 
@@ -171,7 +171,7 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 						$filename = $zipper->getNameIndex($i);
 						$this->createImportFileFromArchiveContent($filename);
 					}
-					
+
 					//remove the zip itsself
 					$this->remove();
 					$zipper->close();
@@ -182,13 +182,13 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 				throw new tx_mvc_exception_invalidArgument('The current file is not zipfile, therefore it cannot be unzipped.');
 			}
 		}else{
-			throw new tx_mvc_exception_fileNotFound('invalid zip file '.$importFile.' in import');
+			throw new tx_mvc_exception_fileNotFound('invalid zip file '.$absoluteImportFile.' in import');
 		}
 	}
 
 	/**
 	 * This method should be used internally to remove the importFile from the database:
-	 * 
+	 *
 	 * @param void
 	 * @return void
 	 */
@@ -196,7 +196,7 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 		$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
 		$importFileRepository->remove($this);
 	}
-	
+
 	/**
 	 * This method is used to create an importFileRecord from an importFile that is a zipfile.
 	 *
@@ -209,6 +209,7 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 		$importFile = new tx_l10nmgr_models_importer_importFile();
 		$importFile->setFilename($filename);
 		$importFile->setImportdata_id($this->getImportdata_id());
+		$importFile->setImportFilePath($this->getImportFilePath());
 
 		$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
 		$importFileRepository->add($importFile);
