@@ -32,12 +32,12 @@
  * @author Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.classname.php $
+ * @version $Id: class.tx_l10nmgr_models_importer_importData_testcase.php $
  * @date 30.04.2009 10:25:09
  * @see  tx_phpunit_testcas
  * @category testcase
  * @package TYPO3
- * @subpackage extensionkey
+ * @subpackage l10nmgr
  * @access public
  */
 
@@ -110,6 +110,13 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 		$this->assertFileExists (
 			t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml'
 		);
+
+		//remove test file
+		unlink(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
+
+		$this->assertFileNotExists(
+			t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml'
+		);
 	}
 
 	/**
@@ -137,11 +144,12 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 	 */
 	public function test_canRemoveFilenamesFromRemainingFilenames(){
 		$importData		= $this->getFixtureImportDataWithTwoFiles();
-		$importData->removeFilenamesFromRemainingFilenames(new ArrayObject(array('file1.xml')));
+		$importData->removeFilenamesFromRemainingFilenames(new ArrayObject(array(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/file1.xml')));
 
 		$remainingFilenames = $importData->getImportRemainingFilenames();
 
-		$this->assertEquals('file2.xml',$remainingFilenames->offsetGet(0),'Wrong filenames in remaining files of importData');
+
+		$this->assertEquals(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/file2.xml',$remainingFilenames->getIterator()->current(),'Wrong filenames in remaining files of importData');
 	}
 
 	/**
@@ -150,9 +158,9 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 	 * @return tx_l10nmgr_models_importer_importData
 	 */
 	protected function getFixtureImportDataWithTwoFiles(){
-		$importFileRow['uid'] = 4712;
+		$importFileRow['uid'] 			= 4712;
 		$importFileRow['importdata_id'] = 1313;
-		$importFileRow['filename'] = 'fixtureZIPWithTwoFiles.zip';
+		$importFileRow['filename'] 		= 'fixtureZIPWithTwoFiles.zip';
 
 		$importFile = new tx_l10nmgr_models_importer_importFile($importFileRow);
 		$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
@@ -161,6 +169,11 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 		//create a fixture importData
 		$importDataRow['uid'] = 1313;
 		$importData	= new tx_l10nmgr_models_importer_importData($importDataRow);
+
+		//overwrite importfilepath for each related import file
+		foreach($importData->getImportFiles() as $importFile){
+			$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
+		}
 
 		return $importData;
 	}
