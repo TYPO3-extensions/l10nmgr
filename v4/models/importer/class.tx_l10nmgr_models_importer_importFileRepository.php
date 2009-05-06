@@ -23,7 +23,7 @@
  ***************************************************************/
 
 /**
- * documenation
+ * This repository is used to find importFiles. 
  *
  * {@inheritdoc}
  *

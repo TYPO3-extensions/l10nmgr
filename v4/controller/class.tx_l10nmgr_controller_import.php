@@ -29,6 +29,7 @@ tx_mvc_common_classloader::loadAll();
 require_once(t3lib_extMgm::extPath('l10nmgr').'controller/class.tx_l10nmgr_controller_abstractProgressable.php');
 
 
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importer.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importData.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importDataRepository.php');
 
@@ -85,6 +86,8 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	
 	/**
 	 * These arguments should be kept since they are needed in the ajax polling action
+	 * 
+	 * @var array
 	 */
 	protected $keepArgumentKeys = array('importDataId');
 	
@@ -107,13 +110,16 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 		
 		/* Ensure, that all files are unzipped */
 		$importData->extractAllZipContent();
-
+	
 		$this->routeToAction('showProgressAction');
 	}
 		
 
 	/**
+	 * This method returns the detail view for the importData that is currently processed-
 	 * 
+	 * @param void
+	 * @return 
 	 * 
 	 * @author Timo Schmidt
 	 */
@@ -126,6 +132,7 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	}
 	
 	/**
+	 * Returns the importData which should be progressed in the ajax function.
 	 * 
 	 * @author Timo Schmidt
 	 * @return tx_l10nmgr_interface_progressable
@@ -140,12 +147,12 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	}
 	
 	/**
-	 * Worker method called by ajaxPerformRunAction
+	 * Worker method called by ajaxPerformRunAction.
 	 * 
 	 * @see ajaxPerformRunAction
 	 */
 	protected function performProgressableRun($importData){
-		tx_l10nmgr_models_importer_importer::performImportRun($importData, 5);
+		tx_l10nmgr_models_importer_importer::performImportRun($importData);
 		
 	}
 }

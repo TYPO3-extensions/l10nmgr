@@ -85,14 +85,12 @@ class tx_l10nmgr_models_exporter_exporter {
 	 * Run
 	 *
 	 * @param void
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return bool true if not completely processed
 	 */
 	public function run() {
-
 		if ($this->exportData->getExportIsCompletelyProcessed()) {
-
 			return false;
-
 		} else {
 
 			if ($this->exportData->getIsCompletelyUnprocessed()) {
@@ -114,12 +112,16 @@ class tx_l10nmgr_models_exporter_exporter {
 				$this->exportData->setExportIsCompletelyProcessed(true);
 				$this->exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);
 			}
-
+			
+			$this->exportData->increaseNumberOfExportRuns();
+			
 			return true;
 		}
 	}
 
 	/**
+	 * In each run the exporter processes one chunk. This method 
+	 * returns true if the current chunk is processed
 	 * @return boolean
 	 */
 	protected function getIsChunkProcessed() {
@@ -127,7 +129,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	}
 
 	/**
-	 * Returns the result for the current chunk
+	 * Returns the result for the current chunk.
 	 *
 	 * @return string
 	 */
@@ -137,6 +139,8 @@ class tx_l10nmgr_models_exporter_exporter {
 
 
 	/**
+	 * This method can be used internally to mark the chunk as processed.
+	 * 
 	 * @param boolean $isChunkProcessed
 	 */
 	protected function setIsChunkProcessed($isChunkProcessed) {
@@ -194,8 +198,6 @@ class tx_l10nmgr_models_exporter_exporter {
 		$this->exportData->removePagesIdsFromRemainingPages($pageIdCollection);
 	}
 
-
-
 	/**
 	 * This method performs on run of an export. It is polled via ajax to perform a complete export.
 	 * It returns an exportData object
@@ -207,11 +209,11 @@ class tx_l10nmgr_models_exporter_exporter {
 		$exportView				= $exportData->getInitializedExportView();
 		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
 
-		$res 					= $exporter->run();
+		$exporterWasRunning 	= $exporter->run();
 
-		if ($res) {
-			$exportData->increaseNumberOfExportRuns();
+		if ($exporterWasRunning) {
 
+			//now we write the exporter result to a file
 			$exportFile	= new tx_l10nmgr_models_exporter_exportFile();
 			$exportFile->setFilename($exportView->getFilename($exportData->getNumberOfExportRuns()));
 			$exportFile->setExportDataObject($exportData);

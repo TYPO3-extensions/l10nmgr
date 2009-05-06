@@ -32,6 +32,9 @@ class tx_l10nmgr_models_exporter_exportDataRepository extends tx_mvc_ddd_typo3_a
 	 */
 	protected $objectClassName = 'tx_l10nmgr_models_exporter_exportData';
 
+	/**
+	 * 
+	 */
 	protected function findByWhere($where,$groupby=false,$orderby=false,$limit=false,$add_enable_fields=true) {
 		$queryParts = array ();
 
@@ -81,7 +84,12 @@ class tx_l10nmgr_models_exporter_exportDataRepository extends tx_mvc_ddd_typo3_a
 	}
 
 	/**
-	 * Enter description here...
+	 * This method is used to find all exportData objects withour a given state in history.
+	 * In addition they need to have a given configurationId and a targetLanguageId.
+	 * 
+	 * @param string $state the workflow state.
+	 * @param int $configurationId uid of the configuration record.
+	 * @param int $targetLanguageId uid of the target language record.
 	 *
 	 */
 	public function findAllWithoutStateInHistoryByAssigendConfigurationAndTargetLanguage($state, $configurationId, $targetLanguageId, $add_enable_fields = true) {

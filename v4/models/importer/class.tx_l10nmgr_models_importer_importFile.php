@@ -60,6 +60,12 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 		return 'tx_l10nmgr_importfiles';
 	}
 
+	/**
+	 * The constructor initialized the importFile path with the configured 
+	 * value in the tsconfig.
+	 * 
+	 * @param array row from the database passed to the parent constructor
+	 */
 	public function __construct($row = array()){
 		parent::__construct($row);
 		$importFilePath = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', self::getTableName(), 'filename'));
@@ -92,7 +98,12 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
-	 * Returns the filename extension of a file
+	 * Returns the filename extension of a file.
+	 * This protected method is used to determine the filename extension from the importedFile.
+	 * 
+	 * @param string filename
+	 * @return string filename extension
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
 	protected function getFilenameExtension($filename){
 		return substr(strtolower($filename),strrpos($filename,'.') + 1);
@@ -130,7 +141,7 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
 	public function getAbsoluteFilename(){
-		$absolutepath = $this->getImportFilePath().$this->getFilename();
+		$absolutepath = $this->getImportFilePath().'/'.$this->getFilename();
 
 		return $absolutepath;
 	}
@@ -160,6 +171,9 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 						$filename = $zipper->getNameIndex($i);
 						$this->createImportFileFromArchiveContent($filename);
 					}
+					
+					//remove the zip itsself
+					$this->remove();
 					$zipper->close();
 				}else{
 					throw new tx_mvc_exception();
@@ -172,6 +186,17 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 		}
 	}
 
+	/**
+	 * This method should be used internally to remove the importFile from the database:
+	 * 
+	 * @param void
+	 * @return void
+	 */
+	protected function remove(){
+		$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
+		$importFileRepository->remove($this);
+	}
+	
 	/**
 	 * This method is used to create an importFileRecord from an importFile that is a zipfile.
 	 *

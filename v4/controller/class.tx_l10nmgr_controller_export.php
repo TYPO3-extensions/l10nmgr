@@ -39,12 +39,6 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_
 
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php';
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'interface/interface.tx_l10nmgr_interface_wordsCountable.php');
-
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableElement.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php');
-
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
 
@@ -236,7 +230,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @see ajaxPerformRunAction
 	 */
 	protected function performProgressableRun($exportData){
-		tx_l10nmgr_models_exporter_exporter::performExportRun($exportData, 5);
+		tx_l10nmgr_models_exporter_exporter::performExportRun($exportData,$this->configuration->get('pagesPerChunk'));
 	}
 
 }
