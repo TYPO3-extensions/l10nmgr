@@ -1,4 +1,4 @@
-<?php 
+<?php
 /***************************************************************
  *  Copyright notice
  *
@@ -40,7 +40,7 @@
  * @subpackage extensionkey
  * @access public
  */
- 
+
 require_once t3lib_extMgm::extPath('l10nmgr') . 'models/importer/class.tx_l10nmgr_models_importer_importData.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'models/importer/class.tx_l10nmgr_models_importer_importFile.php';
 
@@ -54,20 +54,20 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 	 */
 	protected function useTestDatabase($databaseName = null) {
 		$db = $GLOBALS ['TYPO3_DB'];
-		
+
 		if ($databaseName) {
 			$database = $databaseName;
 		} else {
 			$database = $this->testDatabase;
 		}
-		
+
 		if (! $db->sql_select_db ( $database )) {
 			die ( "Test Database not available" );
 		}
-		
+
 		return $db;
 	}
-		
+
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
 	 *
@@ -87,33 +87,35 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 
 	/**
 	 * This testcase is used to ensure that an exportFile which contains a zip can be unzipped.
-	 * 
+	 *
 	 * @param void
 	 * @return void
-	 * 
+	 *
 	 */
 	public function test_canExtractZip() {
-
-		$row['uid'] = 4711;
+		$row['uid']           = 4711;
 		$row['importdata_id'] = 1212;
-		$row['filename'] = 'canExtractZip.zip';
-			
-		$importFile = new tx_l10nmgr_models_importer_importFile($row);
-		$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
-		
-		$this->assertTrue($importFile->isZip(),'Testfile should be an zip file!');		
-		
-		$importFile->extractZIPAndCreateImportFileForEach();
+		$row['filename']      = 'canExtractZip.zip';
 
-		$fileHasBeenWritten = tx_mvc_validator_factory::getFileValidator()->isValid(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
-		
-		$this->assertTrue($fileHasBeenWritten);
+		$ImporterFile = new tx_l10nmgr_models_importer_importFile($row);
+		$ImporterFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
+
+		$this->assertTrue (
+			$ImporterFile->isZip(),
+			'Testfile should be an zip file!'
+		);
+
+		$ImporterFile->extractZIPAndCreateImportFileForEach();
+
+		$this->assertFileExists (
+			t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml'
+		);
 	}
-	
+
 	/**
 	 * This testcase is used to test that the remaining files of an importDataRecord can
 	 * be determined correctly.
-	 * 
+	 *
 	 * @param void
 	 * @return void
 	 * @author Timo Schmidt
@@ -121,45 +123,45 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 	public function test_canGetRemainingFilesFromImportData(){
 		$importData			= $this->getFixtureImportDataWithTwoFiles();
 		$remainingFilenames = $importData->getImportRemainingFilenames();
-				
+
 		$this->assertEquals(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/file1.xml',$remainingFilenames->offsetGet(0),'Wrong filename in remaining files of importData');
-		$this->assertEquals(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/file2.xml',$remainingFilenames->offsetGet(1),'Wrong filename in remaining files of importData');					
+		$this->assertEquals(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/file2.xml',$remainingFilenames->offsetGet(1),'Wrong filename in remaining files of importData');
 	}
 
 	/**
 	 * This testcase is used to test that filenames can be removed from a set of remaining filenames.
-	 * 
+	 *
 	 * @param void
 	 * @return void
 	 * @author Timo Schmidt
 	 */
 	public function test_canRemoveFilenamesFromRemainingFilenames(){
 		$importData		= $this->getFixtureImportDataWithTwoFiles();
-		$importData->removeFilenamesFromRemainingFilenames(new ArrayObject(array('file1.xml')));	
-		
+		$importData->removeFilenamesFromRemainingFilenames(new ArrayObject(array('file1.xml')));
+
 		$remainingFilenames = $importData->getImportRemainingFilenames();
-				
+
 		$this->assertEquals('file2.xml',$remainingFilenames->offsetGet(0),'Wrong filenames in remaining files of importData');
 	}
-	
+
 	/**
 	 * This method returns a fixture importData with two files in a zip file (file1.xml and file2.xml)
-	 * 
+	 *
 	 * @return tx_l10nmgr_models_importer_importData
 	 */
 	protected function getFixtureImportDataWithTwoFiles(){
 		$importFileRow['uid'] = 4712;
 		$importFileRow['importdata_id'] = 1313;
-		$importFileRow['filename'] = 'fixtureZIPWithTwoFiles.zip';		
-		
+		$importFileRow['filename'] = 'fixtureZIPWithTwoFiles.zip';
+
 		$importFile = new tx_l10nmgr_models_importer_importFile($importFileRow);
 		$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
 		$importFile->extractZIPAndCreateImportFileForEach();
 
-		//create a fixture importData		
+		//create a fixture importData
 		$importDataRow['uid'] = 1313;
 		$importData	= new tx_l10nmgr_models_importer_importData($importDataRow);
-		
+
 		return $importData;
 	}
 }
