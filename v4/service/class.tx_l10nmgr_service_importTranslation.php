@@ -113,11 +113,11 @@ class tx_l10nmgr_service_importTranslation {
 						$this->buildDataCommandArray($Element, $Field, $TranslationField);
 
 					} catch (tx_mvc_exception_argumentOutOfRange $e ) {
-						print $e->handle();
+						tx_mvc_common_debug::logException($e);
 					} catch (tx_mvc_exception_skipped $e) {
-						print $e->handle();
+						tx_mvc_common_debug::logException($e);
 					} catch (tx_mvc_exception $e) {
-						print $e->handle();
+						tx_mvc_common_debug::logException($e);
 					}
 				}
 			}
