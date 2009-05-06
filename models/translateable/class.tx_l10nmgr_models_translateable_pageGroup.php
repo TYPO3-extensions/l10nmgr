@@ -25,6 +25,8 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once(t3lib_extMgm::extPath('l10nmgr').'interface/interface.tx_l10nmgr_interface_wordsCountable.php');
+
 /**
  * A pageGroup is a logical group for elements of one page.
  * It provides the abillity to count all fields and words in the pageGroup.

@@ -23,7 +23,7 @@
  ***************************************************************/
 
 /**
- * documenation
+ * This class represents a collection of importFiles.
  *
  * {@inheritdoc}
  *

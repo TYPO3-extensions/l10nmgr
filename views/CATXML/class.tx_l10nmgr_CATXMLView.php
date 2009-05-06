@@ -298,6 +298,14 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 		return $this->xmlTool;
 	}
 
+	/**
+	 * This method is used to transform the data of the export for the correct presentation.
+	 * 
+	 * @var boolean 
+	 * @var boolean
+	 * 
+	 * @return string
+	 */
 	protected function getTransformedTranslationDataFromTranslateableField($skipXMLCheck,$useUTF8mode,$translateableField,$forcedSourceLanguage) {
 		$dataForTranslation = $translateableField->getDataForTranslation($forcedSourceLanguage);
 

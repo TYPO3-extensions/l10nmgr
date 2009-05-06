@@ -25,6 +25,11 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_importTranslation.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/class.tx_l10nmgr_domain_translationFactory.php';
+
+require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php';
+
 
 /**
  *
@@ -62,9 +67,24 @@ class tx_l10nmgr_models_importer_importer {
 	 */
 	public function __construct($importData){
 		$this->importData = $importData;
-		$this->exportData = $importData->getExportDataObject();
 	}
 
+	/**
+  	 * Initializes the internalExportdata property from the translationData
+  	 * 
+  	 * @param tx_l10nmgr_domain_translation_data $Translationdata
+  	 * @return tx_l10nmgr_models_exporter_exportData $exportData
+	 */
+	protected function initializeExportDataFromTranslationData($Translationdata){
+		$exportDataUid			= $Translationdata->getExportDataRecordUid();
+		tx_mvc_validator_factory::getIntValidator()->isValid($exportDataUid,true);
+		
+		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData		= $exportDataRepository->findById($exportDataUid);	
+
+		return $exportData;
+	}
+	
 	/**
 	 * This is the worker method of the importer, it uses the importData to get translationInform
 	 *
@@ -75,28 +95,29 @@ class tx_l10nmgr_models_importer_importer {
 	 */
 	public function run(){
 		$isRunning = false;
-
+		
 			//!TODO  maybe importData
 		if (! $this->importData->getImportIsCompletelyProcessed() ) {
-
-			if ( $this->importData->getIsCompletelyUnprocessed() ) {
+			
+			// determine the next file to import
+			$currentFile = $this->getNextFilename();
+						
+			$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
+			$TranslationData    = $TranslationFactory->create($currentFile);	
+			$exportData 		= $this->getExportDataFromTranslationData($TranslationData);
+			
+			if ( $this->importData->getImportIsCompletelyUnprocessed() ) {
 				/**
 				 * @internal  workflowStates depend on the exportData object therefore we have to use it to mark the import as started
 				 */
 				$this->exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTING);
-			}
-
-				// determine the next file to import
-			$currentFile = $this->getNextFile();
-
-			$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
-			$TranslationData    = $TranslationFactory->create($currentFile);
-
+			}		
+			
 				// get collection of pageIds to create a translateableInformation for the relevantPages from the imported file
-			$ImportPageIdCollection	= $TranslationData->getRelevantPageIds();
+			$ImportPageIdCollection	= $TranslationData->getPageIdCollection();
 
 				// create a dataProvider based on the exportData and the relevantPageIds of the importFile
-			$translateableFactoryDataProvider = $this->getTranslateableFactoryDataProviderFromExportData($ImportPageIdCollection);
+			$translateableFactoryDataProvider = $this->getTranslateableFactoryDataProviderFromPageIdCollectionAndExportData($ImportPageIdCollection,$exportData);
 			$translateableInformationFactory  = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 			$TranslateableInformation         = $translateableInformationFactory->create($translateableFactoryDataProvider);
 
@@ -104,12 +125,12 @@ class tx_l10nmgr_models_importer_importer {
 			$TranslationService = new tx_l10nmgr_service_importTranslation();
 			$TranslationService->save($TranslateableInformation, $TranslationData);
 
-			if ( $this->importData->countRemainingFiles() <= 0 ) {
+			if ( $this->importData->countRemainingImportFilenames() <= 0 ) {
 				$this->importData->setImportIsCompletelyProcessed(true);
 				$this->exportData->addWorkflowStat(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
 			}
 
-			$this->removeProcessedFile($currentFile);
+			$this->removeProcessedFilename($currentFile);
 			
 			$isRunning = true;
 		}
@@ -124,12 +145,10 @@ class tx_l10nmgr_models_importer_importer {
 	 * @access protected
 	 * @return tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider
 	 */
-	protected function getTranslateableFactoryDataProviderFromExportData($PageIdCollection) {
+	protected function getTranslateableFactoryDataProviderFromPageIdCollectionAndExportData($PageIdCollection, $exportData) {
 		$TranslatableDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider (
-			$this->exportData->getL10nConfigurationObject(),
-			$PageIdCollection,
-			$this->exportData->getTranslationLanguageObject(),
-			$this->exportData->getSourceLanguageObject()
+			$exportData,
+			$PageIdCollection
 		);
 
 		return $TranslatableDataProvider;
@@ -143,23 +162,32 @@ class tx_l10nmgr_models_importer_importer {
 	 */
 	protected function getNextFilename() {
 		$remainingFilenames = $this->importData->getImportRemainingFilenames();
+		$it = $remainingFilenames->getIterator();
 		
+		return $it->current();		
 	}
 
-	protected function saveProcessedFile($filename){
-		$this->importData->removeFilesFromRemainingFiles(new ArrayObject($filename));
+	/**
+	 * This method introduces the importData object to remove a file from the remaining filenames
+	 * that need to be processed.
+	 * 
+	 * @param string
+	 * @return void
+	 */
+	protected function removeProcessedFilename($filename){
+		$this->importData->removeFilenamesFromRemainingFilenames(new ArrayObject(array($filename)));
 	}
 	
 	/**
-	 *
+	 * This static method is used to process one importChunk of an importData object.
+	 * 
+	 * @param tx_l10nmgr_models_importer_importData $importData
 	 */
 	public static function performImportRun($importData){
 		$importer 	= new tx_l10nmgr_models_importer_importer($importData);
 		$res 		= $importer->run();
 
-
-		if ($res) { $exportData->increaseNumberOfImportRuns(); }
-
+		if ($res) { $importData->increaseNumberOfImportRuns(); }
 
 		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
 		$importDataRepository->save($importData);	

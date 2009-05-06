@@ -178,13 +178,11 @@ class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_datab
 		}
 		
 		$exporterResult = simplexml_load_string  ($result, 'SimpleXMLElement', LIBXML_NOCDATA );
-		
-		
+				
 		$this->assertEquals((int)$exporterResult->head->t3_wordCount,0,'There should not be any word in the export because there no new and changed elements left.');
-		
 		$this->assertEquals(count($exporterResult->children()),2,'Unexpected number of childnotes in export, there should only be a header in the export');
-		$this->assertEquals(count($exporterResult->pageGrp->children()),0,'There should only be one pageGroup without children because there is nothing to translate');
-		
+		$this->assertEquals(count($exporterResult->pageGrp->children()),0,'There should only be one pageGroup without children because there is nothing to translate');	
 	}
+
 }
 ?>

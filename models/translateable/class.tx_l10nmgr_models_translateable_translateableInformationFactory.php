@@ -1,5 +1,11 @@
 <?php
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider.php');
+require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider.php');
+
+require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
+require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php');
+require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableElement.php');
+require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php');
+
 
 /***************************************************************
  *  Copyright notice

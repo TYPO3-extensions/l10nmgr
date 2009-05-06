@@ -38,7 +38,7 @@ plugin.tx_l10nmgr_controller_export.configuration {
 		tcaFieldRenderer = 1
 		formElementRenderer = 0
 	}
-
+	pagesPerChunk = 1
 	loadJQuery = 1
 }
 
