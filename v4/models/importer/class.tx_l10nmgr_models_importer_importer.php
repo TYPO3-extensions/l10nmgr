@@ -71,20 +71,20 @@ class tx_l10nmgr_models_importer_importer {
 
 	/**
   	 * Initializes the internalExportdata property from the translationData
-  	 * 
+  	 *
   	 * @param tx_l10nmgr_domain_translation_data $Translationdata
   	 * @return tx_l10nmgr_models_exporter_exportData $exportData
 	 */
-	protected function initializeExportDataFromTranslationData($Translationdata){
+	protected function getExportDataFromTranslationData($Translationdata){
 		$exportDataUid			= $Translationdata->getExportDataRecordUid();
 		tx_mvc_validator_factory::getIntValidator()->isValid($exportDataUid,true);
-		
+
 		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
-		$exportData		= $exportDataRepository->findById($exportDataUid);	
+		$exportData		= $exportDataRepository->findById($exportDataUid);
 
 		return $exportData;
 	}
-	
+
 	/**
 	 * This is the worker method of the importer, it uses the importData to get translationInform
 	 *
@@ -95,24 +95,24 @@ class tx_l10nmgr_models_importer_importer {
 	 */
 	public function run(){
 		$isRunning = false;
-		
+
 			//!TODO  maybe importData
 		if (! $this->importData->getImportIsCompletelyProcessed() ) {
-			
+
 			// determine the next file to import
 			$currentFile = $this->getNextFilename();
-						
+
 			$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
-			$TranslationData    = $TranslationFactory->create($currentFile);	
+			$TranslationData    = $TranslationFactory->create($currentFile);
 			$exportData 		= $this->getExportDataFromTranslationData($TranslationData);
-			
+
 			if ( $this->importData->getImportIsCompletelyUnprocessed() ) {
 				/**
 				 * @internal  workflowStates depend on the exportData object therefore we have to use it to mark the import as started
 				 */
-				$this->exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTING);
-			}		
-			
+				$exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTING);
+			}
+
 				// get collection of pageIds to create a translateableInformation for the relevantPages from the imported file
 			$ImportPageIdCollection	= $TranslationData->getPageIdCollection();
 
@@ -127,11 +127,11 @@ class tx_l10nmgr_models_importer_importer {
 
 			if ( $this->importData->countRemainingImportFilenames() <= 0 ) {
 				$this->importData->setImportIsCompletelyProcessed(true);
-				$this->exportData->addWorkflowStat(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
+				$exportData->addWorkflowStat(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
 			}
 
 			$this->removeProcessedFilename($currentFile);
-			
+
 			$isRunning = true;
 		}
 
@@ -163,24 +163,24 @@ class tx_l10nmgr_models_importer_importer {
 	protected function getNextFilename() {
 		$remainingFilenames = $this->importData->getImportRemainingFilenames();
 		$it = $remainingFilenames->getIterator();
-		
-		return $it->current();		
+
+		return $it->current();
 	}
 
 	/**
 	 * This method introduces the importData object to remove a file from the remaining filenames
 	 * that need to be processed.
-	 * 
+	 *
 	 * @param string
 	 * @return void
 	 */
 	protected function removeProcessedFilename($filename){
 		$this->importData->removeFilenamesFromRemainingFilenames(new ArrayObject(array($filename)));
 	}
-	
+
 	/**
 	 * This static method is used to process one importChunk of an importData object.
-	 * 
+	 *
 	 * @param tx_l10nmgr_models_importer_importData $importData
 	 */
 	public static function performImportRun($importData){
@@ -190,7 +190,7 @@ class tx_l10nmgr_models_importer_importer {
 		if ($res) { $importData->increaseNumberOfImportRuns(); }
 
 		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
-		$importDataRepository->save($importData);	
+		$importDataRepository->save($importData);
 	}
 }
 
