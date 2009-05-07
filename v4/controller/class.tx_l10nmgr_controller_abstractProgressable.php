@@ -1,4 +1,4 @@
-<?php 
+<?php
 /***************************************************************
  *  Copyright notice
  *
@@ -47,24 +47,41 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	 */
 	protected $extensionKey = 'l10nmgr';
 
-
 	/**
 	 * @var string
 	 */
 	protected $argumentsNamespace = 'l10nmgr';
 
 	/**
-	 * 
+	 * @var string initial progress label
+	 */
+	protected $initalProgressLabel = 'Initializing...';
+
+	/**
+	 * Sets the initial progress label
+	 *
+	 * @param string initial progress label
+	 * @return void
+	 */
+	protected function setInitialProgressLabel($initalProgressLabel) {
+		$this->initalProgressLabel = $initalProgressLabel;
+	}
+
+	/**
+	 * Show progress action
+	 *
+	 * @param void
+	 * @return void
 	 */
 	public function showProgressAction(){
-		//this view is used in both controllers 
+		//this view is used in both controllers
 		$this->view = new tx_l10nmgr_view_showProgress();
 		$this->initializeView($this->view);
-				
+
 		$progressView = new tx_mvc_view_widget_progress();
 		$this->initializeView($progressView );
 		$progressView->setProgress(0);
-		$progressView->setProgressLabel('Preparing export...'); // TODO: move to locallang
+		$progressView->setProgressLabel($this->initalProgressLabel); // TODO: move to locallang
 		$progressView->setAjaxEnabled(true);
 		$progressView->setProgressUrl($this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('ajaxPerformRun')->useOverruledParameters()->makeUrl());
 		$progressView->setRedirectOnCompletedUrl('../mod1/index.php');
@@ -74,10 +91,15 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		$this->view->addBackendStylesHeaderData();
 
 	}
-	
-	
+
+	/**
+	 * Perform run action (via AJAX call)
+	 *
+	 * @param void
+	 * @return void
+	 */
 	public function ajaxPerformRunAction(){
-		
+
 		$subject = $this->getProgressableSubject();
 		$this->performProgressableRun($subject);
 
@@ -85,7 +107,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		$this->initializeView($progressView);
 		$percent = $subject->getProgressPercentage();
 		$progressView->setProgress($percent);
-		
+
 		if ($percent < 100) {
 			$progressView->setProgressLabel(round($subject->getProgressPercentage()). ' %');
 		} else {
