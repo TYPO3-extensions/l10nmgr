@@ -75,7 +75,7 @@
    <Column ss:AutoFitWidth="0" ss:Width="233.0"/>
    <Column ss:AutoFitWidth="0" ss:Width="151.0"/>
    <Column ss:AutoFitWidth="0" ss:Width="233.0"/>
-		<?= $this->getPageGroup(); ?>
+		<?= $this->getRenderedPageGroups(); ?>
   </Table>
   <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
    <PageSetup>

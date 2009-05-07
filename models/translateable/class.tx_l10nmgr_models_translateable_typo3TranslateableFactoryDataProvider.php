@@ -43,7 +43,7 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 	 * @var tx_l10nmgr_models_export_exportData
 	 */
 	protected $exportData;
-	
+
 	/**
 	 * @var tx_l10nmgr_tools
 	 */
@@ -51,7 +51,7 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param tx_l10nmgr_models_exporter_exportData exportData object
 	 * @param ArrayObject pageIdCollection
 	 */
@@ -76,10 +76,12 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 		$this->relevantTables	= array_intersect($this->tca_tables,$l10ncfg->getTableArray());
 		$this->excludeArray		= $l10ncfg->getExcludeArray();
 
+//		$pageIdCollection		= $this->addPagesFromIncludeListToPageIdCollection($pageIdCollection);
+
 		$this->addPageIdCollectionToRelevantPageIds($pageIdCollection);
 	}
 
-	
+
 	/**
 	 * @return boolean
 	 */
@@ -153,8 +155,6 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 	public function setTargetLanguage($targetLanguage) {
 		$this->targetLanguage = $targetLanguage;
 	}
-
-
 
 	/**
 	 * Method to set a workspace id where this export is relevant for.

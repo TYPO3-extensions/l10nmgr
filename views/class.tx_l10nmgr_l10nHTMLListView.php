@@ -27,9 +27,9 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
 
 /**
  * l10nHTMLListView:
- * 	renders accumulated informations for the browser: 
+ * 	renders accumulated informations for the browser:
  *	- Table with inline editing / links  etc...
- *	
+ *
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  * @author	Daniel Pötzinger <development@aoemedia.de>
@@ -39,31 +39,45 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  */
 class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 
-	
-	var $l10ncfgObj;	// 
+
+	var $l10ncfgObj;	//
 	var $sysLang;	// Internal array (=datarow of config record)
-	
+
 
 	//internal flags:
 	var $modeWithInlineEdit=FALSE;
 	var $modeShowEditLinks=FALSE;
-	
+
 	//function tx_l10nmgr_l10nHTMLListView($l10ncfgObj,$sysLang) {
 	public function __construct() {
-		global $BACK_PATH;		
+		global $BACK_PATH;
 		$this->doc = t3lib_div::makeInstance('noDoc');
-		$this->doc->backPath = $BACK_PATH;		
+		$this->doc->backPath = $BACK_PATH;
 		//parent::__construct($l10ncfgObj, null,$sysLang);
 	}
-	
-		
+
+
 	function setModeWithInlineEdit() {
-		$this->modeWithInlineEdit=TRUE;		
+		$this->modeWithInlineEdit=TRUE;
 	}
 	function setModeShowEditLinks() {
 		$this->modeShowEditLinks=TRUE;
 	}
-	
+
+
+	/**
+	 * Diff-compare markup
+	 *
+	 * @param	string		Old content
+	 * @param	string		New content
+	 * @return	string		Marked up string.
+	 */
+	function diffCMP($old, $new)	{
+			// Create diff-result:
+		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
+		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
+	}
+
 	/**
 	 * Render the module content in HTML
 	 *
@@ -73,17 +87,17 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 	 * @return	string		HTML content
 	 */
 	function renderOverview()	{
-		
+
 		global $LANG;
-		
+
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
-		$accum=$accumObj->getInfoArray();				
+		$accum=$accumObj->getInfoArray();
 		$l10ncfg = $this->l10ncfgObj;
-		
+
 
 		$output = '';
-		
+
 		$showSingle = t3lib_div::_GET('showSingle');
 
 		if ($l10ncfg->getData('displaymode')>0)	{
@@ -103,7 +117,7 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 
 						$FtableRows = array();
 						$flags = array();
-						
+
 						if (!$noAnalysis || $showSingle===$table.':'.$elementUid)	{
 							foreach($data['fields'] as $key => $tData)	{
 								if (is_array($tData))	{
@@ -134,8 +148,8 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 										$fieldCells[] = nl2br(htmlspecialchars($tData['defaultValue']));
 										$fieldCells[] = $edit && $this->modeWithInlineEdit ? ($tData['fieldType']==='text' ? '<textarea name="'.htmlspecialchars('translation['.$table.']['.$elementUid.']['.$key.']').'" cols="60" rows="5">'.t3lib_div::formatForTextarea($tData['translationValue']).'</textarea>' : '<input name="'.htmlspecialchars('translation['.$table.']['.$elementUid.']['.$key.']').'" value="'.htmlspecialchars($tData['translationValue']).'" size="60" />') : nl2br(htmlspecialchars($tData['translationValue']));
 										$fieldCells[] = $diff;
-									
-										
+
+
 										if ($page['header']['prevLang']) {
 											reset($tData['previewLanguageValues']);
 											$fieldCells[] = nl2br(htmlspecialchars(current($tData['previewLanguageValues'])));
@@ -146,9 +160,9 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 								}
 							}
 						}
-						
+
 						if (count($FtableRows) || $noAnalysis)	{
-							
+
 								// Link:
 							if ($this->modeShowEditLinks)	{
 								reset($data['fields']);
@@ -191,12 +205,12 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 
 		return $output;
 	}
-	
-	
+
+
 	protected function buildPageGroup(){
-		
+
 	}
-	
+
 	protected function getFilenamePrefix(){
 		return '';
 	}

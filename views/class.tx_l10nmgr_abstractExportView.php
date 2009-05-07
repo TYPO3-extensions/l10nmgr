@@ -46,25 +46,51 @@ abstract class tx_l10nmgr_abstractExportView extends tx_mvc_view_phpTemplate {
 	*	 flags for controlling the fields which should render in the output:
 	*/
 	protected $modeOnlyChanged=FALSE;
+
 	protected $modeNoHidden=FALSE;
+
 	protected $modeOnlyNew=FALSE;
 
 	protected $sysLang;
 
+	protected $pageGroups;
 
-	public function getPageGroup(){
-		return $this->pageGroup;
+	/**
+	 * This method is used to get the content of the rendered pagegroups to display it in the exportView.
+	 * The implementation of the renderPageGroups method sould write the result using setRenderedPageGroups
+	 *
+	 * @param void
+	 * @return string rendered pagegroups as steing
+	 */
+	public function getRenderedPageGroups(){
+		return $this->pageGroups;
 	}
 
-	protected function setPageGroup($pageGroup){
-		$this->pageGroup = $pageGroup;
+	/**
+	 * This method should be used internally from the implementation of the abstract renderPageGroups mehtod
+	 * to set the content for the rendered pagegroups.
+	 *
+	 * @param string the page group rendered in the export format.
+	 */
+	protected function setRenderedPageGroups($pageGroups){
+		$this->pageGroups = $pageGroups;
 	}
 
+	/**
+	 * Befor an implemetation of this abtract view is rendered will call renderPageGroups
+	 * to render the pageGroups for the current export format. This is needed to register error for the export header
+	 * during the export-
+	 */
 	public function preRenderProcessing(){
-		$this->buildPageGroup();
+		$this->renderPageGroups();
 	}
 
-	abstract protected function buildPageGroup();
+	/**
+	 * The implementation of this method should render the pageGroups in the export format
+	 * of this view and set it with setRenderedPageGroups(). In the template the method getRenderedPageGroups can be
+	 * used to read the rendering result for the pagegroups and include it in the export
+	 */
+	abstract protected function renderPageGroups();
 
 
 	/**
@@ -196,7 +222,7 @@ abstract class tx_l10nmgr_abstractExportView extends tx_mvc_view_phpTemplate {
 
 
 
-	abstract protected function getFilenamePrefix();
+	abstract protected function getExporttypePrefix();
 
 	/**
 	 * Returns the filename.
@@ -204,16 +230,23 @@ abstract class tx_l10nmgr_abstractExportView extends tx_mvc_view_phpTemplate {
 	 * @param string $enumerationPostfix
 	 * @return string
 	 */
-	public function getFilename($enumerationPostfix = 0){
+	public function getFilename($configurationPrefix,$postfix = 0){
 
-		$prefix = $this->getFilenamePrefix();
+		$exporttypePrefix = $this->getExporttypePrefix();
 		$targetLanguageId = $this->getTranslateableInformation()->getTargetLanguage()->getUid();
 
-		if ($enumerationPostfix != '') {
-			return $prefix . '_' . $targetLanguageId . '_' . date('dmy-Hi') . '_' . $enumerationPostfix . '.xml';
+		if ($postfix != '') {
+			$filename = $exporttypePrefix. '_' . $targetLanguageId . '_' . date('dmy-Hi') . '_' . $postfix . '.xml';
 		} else {
-			return $prefix . '_' . $targetLanguageId . '_' . date('dmy-Hi') . '.xml';
+			$filename = $exporttypePrefix. '_' .  $targetLanguageId . '_' . date('dmy-Hi') . '.xml';
 		}
+
+		//if
+		if($configurationPrefix != ''){
+			$filename = $configurationPrefix.'_'.$filename;
+		}
+
+		return $filename;
 	}
 
 	/**
@@ -356,18 +389,6 @@ abstract class tx_l10nmgr_abstractExportView extends tx_mvc_view_phpTemplate {
 		t3lib_div::writeFile($fileExportName,$fileContent);
 	}*/
 
-	/**
-	 * Diff-compare markup
-	 *
-	 * @param	string		Old content
-	 * @param	string		New content
-	 * @return	string		Marked up string.
-	 */
-	function diffCMP($old, $new)	{
-			// Create diff-result:
-		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
-		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
-	}
 
 }
 

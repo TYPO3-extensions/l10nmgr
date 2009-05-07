@@ -220,7 +220,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 	 *
 	 * @return string
 	 */
-	public function getFilenamePrefix() {
+	public function getExporttypePrefix() {
 		return 'catxml_export';
 	}
 
@@ -249,7 +249,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 	 * @param void
 	 * @return void
 	 */
-	protected function buildPageGroup() {
+	protected function renderPageGroups() {
 		global $LANG;
 
 		foreach ($this->getTranslateableInformation()->getPageGroups() as $pageGroup) { /* @var $pageGroup tx_l10nmgr_models_translateable_pageGroup */
@@ -282,7 +282,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 			$xml .= $pageEndTag;
 		}
 
-		$this->setPageGroup($xml);
+		$this->setRenderedPageGroups($xml);
 	}
 
 	/**
@@ -300,10 +300,10 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 
 	/**
 	 * This method is used to transform the data of the export for the correct presentation.
-	 * 
-	 * @var boolean 
+	 *
 	 * @var boolean
-	 * 
+	 * @var boolean
+	 *
 	 * @return string
 	 */
 	protected function getTransformedTranslationDataFromTranslateableField($skipXMLCheck,$useUTF8mode,$translateableField,$forcedSourceLanguage) {
@@ -311,8 +311,22 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 
 		if ($translateableField->needsTransformation()) {
 			$result = $this->findXMLTool()->RTE2XML($dataForTranslation);
+			try {
+//				$result = $this->findXMLTool()->toXML($dataForTranslation);
+			} catch (tx_mvc_exception_converter $e) {
+
+				if ($skipXMLCheck) {
+					$result = '<![CDATA['.$result.']]>';
+				} else {
+					//!TODO write internalNote to the meta area of the XML export file
+					tx_mvc_common_debug::logException($e);
+				}
+			}
+
+
 		} else {
 			$result = str_replace('&','&amp;',$dataForTranslation);
+//			$result = $this->findXMLTool()->entity_to_utf8($dataForTranslation, (bool) $useUTF8mode);
 
 			if ($useUTF8mode) {
 				$result = tx_l10nmgr_utf8tools::utf8_bad_strip($result);
