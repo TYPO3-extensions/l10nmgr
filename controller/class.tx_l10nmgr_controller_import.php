@@ -82,15 +82,15 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	 */
 	protected $mapParametersToArguments = array(
 		'createdRecord' => 'returnEditConf',
-	);	
-	
+	);
+
 	/**
 	 * These arguments should be kept since they are needed in the ajax polling action
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $keepArgumentKeys = array('importDataId');
-	
+
 	/**
 	 * Show the controll panel to give the user the options what he can do
 	 *
@@ -100,63 +100,63 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	 */
 	public function generateImportAction() {
 		//retrieve importdata record
-		$importDataId 						= tx_mvc_common_typo3::parseReturnEditConf($this->arguments['createdRecord'],'tx_l10nmgr_importdata');
-		
-		if(!empty($importDataId)){ 
-			$this->arguments['importDataId'] 	= $importDataId;
+		$importDataId = tx_mvc_common_typo3::parseReturnEditConf($this->arguments['createdRecord'],'tx_l10nmgr_importdata');
+
+		if(!empty($importDataId)){
+			$this->arguments['importDataId'] = $importDataId;
 		}
-		
+
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['importDataId'],true);
-		
-		$importDataRepository 	= new tx_l10nmgr_models_importer_importDataRepository();
-		$importData 			= $importDataRepository->findById($importDataId);
-		
+
+		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
+		$importData = $importDataRepository->findById($this->arguments['importDataId']);
+
 		/* Ensure, that all files are unzipped */
 		$importData->extractAllZipContent();
-	
+
 		$this->routeToAction('showProgressAction');
 	}
-		
+
 
 	/**
 	 * This method returns the detail view for the importData that is currently processed-
-	 * 
+	 *
 	 * @param void
-	 * @return 
-	 * 
+	 * @return
+	 *
 	 * @author Timo Schmidt
 	 */
 	protected function getProgressableSubjectView(){
 		$view = new tx_l10nmgr_view_importer_detail();
 		$this->initializeView($view);
-		$view->setImportData($this->getProgressableSubject());		
-		
+		$view->setImportData($this->getProgressableSubject());
+
 		return $view;
 	}
-	
+
 	/**
 	 * Returns the importData which should be progressed in the ajax function.
-	 * 
+	 *
 	 * @author Timo Schmidt
 	 * @return tx_l10nmgr_interface_progressable
 	 */
 	protected function getProgressableSubject(){
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['importDataId'],true);
-		
+
 		$importDataRepository 	= new tx_l10nmgr_models_importer_importDataRepository();
 		$importData 			= $importDataRepository->findById($this->arguments['importDataId']);
-		
+
 		return $importData;
 	}
-	
+
 	/**
 	 * Worker method called by ajaxPerformRunAction.
-	 * 
+	 *
 	 * @see ajaxPerformRunAction
 	 */
 	protected function performProgressableRun($importData){
 		tx_l10nmgr_models_importer_importer::performImportRun($importData);
-		
+
 	}
 }
 

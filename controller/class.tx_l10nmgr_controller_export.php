@@ -89,7 +89,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	/**
 	 * @var        string
 	 */
-	protected $argumentsNamespace = 'l10nmgr';
+	protected $argumentsNamespace = 'tx_l10nmgrexport';
 
 	/**
 	 * These arguments should be kept by the controller because
@@ -145,9 +145,9 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 			if (!$exportData->getCheckForExistingExports()) {
 				$l10Configuration = $exportData->getL10nConfigurationObject();
 				if (!$l10Configuration->hasIncompleteExports()) {
-					
+
 					//route to action from abstract controller
-					
+
 					#@see tx_l10nmgr_controller_abstractProgressable
 					$this->routeToAction('showProgressAction');
 				} else {
@@ -195,38 +195,38 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * This method returns a view for the subject that is progressable.
 	 * In case of the export this is a view which displays informations of the export
 	 * data.
-	 * 
+	 *
 	 * @param void
 	 * @return tx_mvc_view_widget_phpTemplateListView
 	 */
 	protected function getProgressableSubjectView(){
 		$view = new tx_l10nmgr_view_export_detail();
 		$this->initializeView($view);
-		$view->setExportData($this->getProgressableSubject());		
-		
+		$view->setExportData($this->getProgressableSubject());
+
 		return $view;
 	}
-	
+
 	/**
 	 * This method returns the progressableSubject. In case of the import
 	 * controller this is an exportData object.
-	 * 
+	 *
 	 * @return tx_l10nmgr_models_exporter_exportData
 	 */
 	protected function getProgressableSubject(){
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'],true);
-		
+
 		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData 			= $exportDataRepository->findById($this->arguments['exportDataId']);
-		
+
 		return $exportData;
 	}
-	
+
 	/**
 	 * Worker method called by ajaxPerformRunAction. It
 	 * performs the use case specific logic. In case of the exporter
 	 * this is the logic to export 5 files from the exportData.
-	 * 
+	 *
 	 * @see ajaxPerformRunAction
 	 */
 	protected function performProgressableRun($exportData){
