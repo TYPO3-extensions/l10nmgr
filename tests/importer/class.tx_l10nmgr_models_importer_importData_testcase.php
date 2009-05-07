@@ -148,7 +148,6 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 
 		$remainingFilenames = $importData->getImportRemainingFilenames();
 
-
 		$this->assertEquals(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/file2.xml',$remainingFilenames->getIterator()->current(),'Wrong filenames in remaining files of importData');
 	}
 

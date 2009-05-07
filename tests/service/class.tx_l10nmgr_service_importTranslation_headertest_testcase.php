@@ -1,4 +1,4 @@
-<?php 
+<?php
 /***************************************************************
  *  Copyright notice
  *
@@ -44,8 +44,8 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_servic
  * @subpackage l10nmgr
  * @access public
  */
- 
-class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpunit_database_testcase {	
+
+class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpunit_database_testcase {
 	/**
 	* This method overwrites the method of the baseclass to ensure that no live database will be used.
 	*
@@ -57,7 +57,7 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 		} else {
 			$database = $this->testDatabase;
 		}
-		
+
 		if (! $db->sql_select_db ( $database )) {
 			die ( "Test Database not available" );
 		}
@@ -71,13 +71,13 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 	function setUp() {
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
-		
+
 		// order of extension-loading is important !!!!
 		$this->importExtensions(array ('corefake','cms','l10nmgr','static_info_tables','templavoila','realurl','indexed_search','aoe_realurlpath','languagevisibility'));
-	
+
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
 		$this->TranslatableFactory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
-		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();	
+		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();
 	}
 
 	/**
@@ -88,34 +88,34 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
    		$this->dropDatabase();
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 	}
-	
+
 	/**
 	* Imports a fixture xml import file and uses the api to import it into typo3.
 	* After import there should be a translated page and a translated content element.
 	* <br> tag should be kept in the overlay after import.
-	* 
+	*
 	* @todo
 	*/
 	public function test_canImportserviceImportCorrectContentelement(){
 
 		$import = t3lib_extMgm::extPath('l10nmgr').'tests/service/fixtures/headertest/test__to_pt_BR_300409-113504_import.xml';
-			
+
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/pages.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/ttcontent.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/l10nconfiguration.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/exportdata.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/language.xml');
-							
+
 		$TranslationData = $this->TranslationFactory->create($import);
-	
+
 		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(67);
-	
+
 		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
 		$TranslatableInformation		  = $this->TranslatableFactory->create($translateableFactoryDataProvider);
-	
+
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
-		
+
 		##
 		# Check the content overlay
 		##
@@ -124,15 +124,14 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 
 		//there should be an overlay of the content element with the uid 619945
 		$this->assertEquals($contentOverlay['l18n_parent'],619945);
-		
+
 		//the sys_language_uid should be 2 for portugal
 		$this->assertEquals($contentOverlay['sys_language_uid'],2);
 
-		//the value of the translation should be 
+		//the value of the translation should be
 		$this->assertEquals($contentOverlay['header'],'This is a dirty header element & uses an <br> ampersand translated');
-		
 		//@todo check page overlay
-		
+
 	}
 }
 ?>
