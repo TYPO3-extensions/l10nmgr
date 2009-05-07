@@ -94,7 +94,6 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	 */
 	public function isXml(){
 		return ($this->getFilenameExtension($this->getAbsoluteFilename()) == 'xml');
-
 	}
 
 	/**

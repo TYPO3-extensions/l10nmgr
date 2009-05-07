@@ -16,6 +16,6 @@
 		<t3_formatVersion><? echo L10NMGR_FILEVERSION; ?></t3_formatVersion>
 	</head>
 
-	<?= $this->getPageGroup(); ?>
+	<?= $this->getRenderedPageGroups(); ?>
 
 </TYPO3L10N>

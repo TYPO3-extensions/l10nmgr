@@ -112,15 +112,15 @@ class tx_l10nmgr_models_exporter_exporter {
 				$this->exportData->setExportIsCompletelyProcessed(true);
 				$this->exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTED);
 			}
-			
+
 			$this->exportData->increaseNumberOfExportRuns();
-			
+
 			return true;
 		}
 	}
 
 	/**
-	 * In each run the exporter processes one chunk. This method 
+	 * In each run the exporter processes one chunk. This method
 	 * returns true if the current chunk is processed
 	 * @return boolean
 	 */
@@ -140,7 +140,7 @@ class tx_l10nmgr_models_exporter_exporter {
 
 	/**
 	 * This method can be used internally to mark the chunk as processed.
-	 * 
+	 *
 	 * @param boolean $isChunkProcessed
 	 */
 	protected function setIsChunkProcessed($isChunkProcessed) {
@@ -213,9 +213,10 @@ class tx_l10nmgr_models_exporter_exporter {
 
 		if ($exporterWasRunning) {
 
+			$prefix 	= $exportData->getL10nConfigurationObject()->getFilenameprefix();
 			//now we write the exporter result to a file
 			$exportFile	= new tx_l10nmgr_models_exporter_exportFile();
-			$exportFile->setFilename($exportView->getFilename($exportData->getNumberOfExportRuns()));
+			$exportFile->setFilename($exportView->getFilename($prefix,$exportData->getNumberOfExportRuns()));
 			$exportFile->setExportDataObject($exportData);
 			$exportFile->setContent($exporter->getResultForChunk());
 			$exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)

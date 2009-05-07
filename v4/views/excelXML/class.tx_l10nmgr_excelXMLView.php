@@ -32,15 +32,15 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
-	
+
 	protected $defaultTemplate = 'EXT:l10nmgr/templates/excelXML/excelxml.php';
-		
+
 	//internal flags:
 	var $modeOnlyChanged=FALSE;
-	
+
 	var $exportType = '0';
-	
-	
+
+
 	/**
 	 * Holds the number of rows of the excel export
 	 *
@@ -53,10 +53,10 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 	 *
 	 * @return string
 	 */
-	protected function getFilenamePrefix(){
+	protected function getExporttypePrefix(){
 		return 'excel_export';
 	}
-	
+
 	/**
 	 * Render the excel XML export
 	 *
@@ -66,13 +66,13 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 /*	function renderOld()	{
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
-		$accum=$accumObj->getInfoArray();	
+		$accum=$accumObj->getInfoArray();
 
 		$output = array();
 
 			// Traverse the structure and generate HTML output:
 		foreach($accum as $pId => $page)	{
-						
+
 			$output[]= '
 			<!-- Page header -->
 		   <Row>
@@ -118,7 +118,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 									$diff = str_replace('</span>','</Font>',$diff);
 								}
 								$diff.= ($tData['msg']?'[NOTE: '.htmlspecialchars($tData['msg']).']':'');
-								
+
 								if (!$this->modeOnlyChanged || !$noChangeFlag)	{
 									if(is_array($tData['previewLanguageValues']) && array_key_exists('previewLanguageValues',$tData)){
 										reset($tData['previewLanguageValues']);
@@ -149,7 +149,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 						    '.($page['header']['prevLang'] ? '<Cell ss:StyleID="s37"></Cell>' : '').'
 						   </Row>
 							';
-							
+
 							$output = array_merge($output, $fieldsForRecord);
 						}
 					}
@@ -167,21 +167,21 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 		$excelXML = t3lib_div::getUrl('../views/excelXML/excel_template.xml');
 		$excelXML = str_replace('###INSERT_ROWS###',implode('', $output), $excelXML);
 		$excelXML = str_replace('###INSERT_ROW_COUNT###',count($output), $excelXML);
-		
+
 		$this->saveExportFile($excelXML);
-		
+
 		return $excelXML;
 		exit;
 	}*/
-	
-	
+
+
 	/**
 	 * Builds the pageGroup for the view. Implementation of the abstract method.
 	 */
-	protected function buildPageGroup(){
+	protected function renderPageGroups(){
 		global $LANG;
 		$translateableInformation = $this->getTranslateableInformation();
-		
+
 		foreach($translateableInformation->getPageGroups() as $pageGroup){
 			$content .= '
 			<!-- Page header -->
@@ -194,7 +194,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 				<Cell ss:StyleID="s35"></Cell>
 		 		'.($translateableInformation->getSourceLanguageId() ? '<Cell ss:StyleID="s35"></Cell>' : '').'
 			</Row>';
-					
+
 			$this->rowCount++;
 
 			$content .= '
@@ -205,14 +205,14 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 				<Cell ss:StyleID="s38"><Data ss:Type="String">Translation:</Data></Cell>
 				<Cell ss:StyleID="s38"><Data ss:Type="String">Difference since last tr.:</Data></Cell>
 			'.($translateableInformation->getSourceLanguageId()  ? '<Cell ss:StyleID="s38"><Data ss:Type="String">Preview Language:</Data></Cell>' : '').'
-			</Row>';			
-			
+			</Row>';
+
 			$this->rowCount++;
-			
+
 			foreach($pageGroup->getTranslateableElements() as $translateableElement){
 				$table 					= $translateableElement->getTable();
 				$uid 					= $translateableElement->getUid();
-							
+
 				if($translateableElement->countFields() > 0){
 					$content = '<!-- Element header -->
 						<Row>
@@ -223,9 +223,9 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 							'.($translateableInformation->getSourceLanguageId() ? '<Cell ss:StyleID="s37"></Cell>' : '').'
 						</Row>';
 					$this->rowCount++;
-					
+
 				}
-				
+
 				foreach($translateableElement->getTranslateableFields() as $translateableField){
 					if (!$this->modeOnlyChanged || $translateableField->isChanged()){
 
@@ -238,9 +238,9 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 						$diffDefaultValue		= $translateableField->getDiffDefaultValue();
 						$noChangeFlag			= $translateableField->isChanged();
 						$message				= $translateableField->getMessage();
-							
+
 						$diff 					= $this->generateDiff($uidValue,$defaultValue,$diffDefaultValue,$noChangeFlag,$message);
-							
+
 						$content .= '
 							<!-- Translation row: -->
 								<Row ss:StyleID="s25">
@@ -251,25 +251,25 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 								<Cell ss:StyleID="s27"><Data ss:Type="String">'.$diff.'</Data></Cell>
 								'.($translateableInformation->getSourceLanguageId() ? '<Cell ss:StyleID="s27"><Data ss:Type="String">'.str_replace(chr(10),'&#10;',htmlspecialchars($previewLanguageValue)).'</Data></Cell>' : '').'
 						</Row>';
-						
+
 						$this->rowCount++;
-						
-							
-					 } 
-				 } 
-			 } 
-			$content .= '	
+
+
+					 }
+				 }
+			 }
+			$content .= '
 			<!-- Spacer row -->
 			<Row>
 				<Cell ss:Index="2"><Data ss:Type="String"></Data></Cell>
 			</Row>';
-			
+
 			$this->rowCount++;
 		}
-		
-		$this->setPageGroup($content);
-	}	
-	
+
+		$this->setRenderedPageGroups($content);
+	}
+
 	protected function generateDiff($uidValue,$defaultValue,$diffDefaultValue,$noChangeFlag,$message=''){
 		$diff = '';
 		if ($uidValue==='NEW')	{
@@ -285,11 +285,11 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 			$diff = str_replace('</span>','</Font>',$diff);
 		}
 		$diff.= ($message ? '[NOTE: '.htmlspecialchars($message).']':'');
-		
+
 		return $diff;
 	}
-	
-	
+
+
 	/**
 	 * Returns the number of rows in the excel file
 	 *
@@ -297,7 +297,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 	 */
 	protected function getRowCount(){
 		return $this->rowCount;
-	}	
+	}
 }
 
 
