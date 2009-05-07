@@ -32,6 +32,7 @@
         <sourceLangStaticId></sourceLangStaticId>
         <incfcewithdefaultlanguage>1</incfcewithdefaultlanguage>
         <filenameprefix>test</filenameprefix>
+        <tablelist>pages,tt_content</tablelist>
     </tx_l10nmgr_cfg> 
 <!-- Languages -->
     <sys_language>
@@ -42,6 +43,14 @@
         <title>Australia (English)</title>
         <flag>au.gif</flag>
         <static_lang_isocode>211</static_lang_isocode>
+ 	    <tx_languagevisibility_fallbackorder></tx_languagevisibility_fallbackorder>
+        <tx_languagevisibility_defaultvisibility>t</tx_languagevisibility_defaultvisibility>
+        <tx_languagevisibility_defaultvisibilityel>t</tx_languagevisibility_defaultvisibilityel>
+        <tx_languagevisibility_defaultvisibilityttnewsel>t</tx_languagevisibility_defaultvisibilityttnewsel>
+        <tx_languagevisibility_fallbackorderel></tx_languagevisibility_fallbackorderel>
+        <tx_languagevisibility_fallbackorderttnewsel></tx_languagevisibility_fallbackorderttnewsel>
+        <tx_languagevisibility_complexfallbacksetting>0</tx_languagevisibility_complexfallbacksetting>        
+        
     </sys_language>
     <static_countries>
         <uid>14</uid>
