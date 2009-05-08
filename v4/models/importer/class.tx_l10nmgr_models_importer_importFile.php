@@ -150,38 +150,48 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	 *
 	 * @param string importFilePath This is an optional path where the importfile should
 	 * be readed from. The paramater can be used for testing issues.
+	 * @return bool true if the extraction was successful
 	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
 	public function extractZIPAndCreateImportFileForEach(){
-		$absoluteImportFile 	= $this->getAbsoluteFilename();
 
-		if(tx_mvc_validator_factory::getFileValidator()->isValid($absoluteImportFile)){
-			if($this->isZip()){
-				//the record contains a valid file
-				$zipper = new ZipArchive();
+		if (class_exists('ZipArchive')) {
 
-				if($zipper->open($absoluteImportFile)){
-					//!TODO what should be done, when a file will be overwritten?
-					$zipper->extractTo($this->getImportFilePath());
+			$absoluteImportFile 	= $this->getAbsoluteFilename();
 
-					//create a new importFile for each xml file in the zip
-					for($i = 0; $i < $zipper->numFiles; $i++){
-						$filename = $zipper->getNameIndex($i);
-						$this->createImportFileFromArchiveContent($filename);
+			if(tx_mvc_validator_factory::getFileValidator()->isValid($absoluteImportFile)){
+				if($this->isZip()){
+					//the record contains a valid file
+					$zipper = new ZipArchive();
+
+					if($zipper->open($absoluteImportFile)){
+						//!TODO what should be done, when a file will be overwritten?
+						$zipper->extractTo($this->getImportFilePath());
+
+						//create a new importFile for each xml file in the zip
+						for($i = 0; $i < $zipper->numFiles; $i++){
+							$filename = $zipper->getNameIndex($i);
+							$this->createImportFileFromArchiveContent($filename);
+						}
+
+						//remove the zip itsself
+						$this->remove();
+						$zipper->close();
+					}else{
+						throw new tx_mvc_exception();
 					}
-
-					//remove the zip itsself
-					$this->remove();
-					$zipper->close();
 				}else{
-					throw new tx_mvc_exception();
+					throw new tx_mvc_exception_invalidArgument('The current file is not zipfile, therefore it cannot be unzipped.');
 				}
 			}else{
-				throw new tx_mvc_exception_invalidArgument('The current file is not zipfile, therefore it cannot be unzipped.');
+				throw new tx_mvc_exception_fileNotFound('invalid zip file '.$absoluteImportFile.' in import');
 			}
-		}else{
-			throw new tx_mvc_exception_fileNotFound('invalid zip file '.$absoluteImportFile.' in import');
+
+			return true;
+
+		} else {
+			return false;
 		}
 	}
 
