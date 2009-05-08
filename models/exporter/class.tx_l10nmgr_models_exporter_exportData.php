@@ -506,7 +506,7 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 */
 	public function getInitializedExportView() {
 
-		switch ($this->getExporttype()) {
+		switch ($this->getExport_type()) {
 
 			case 'xml' : {
 				$viewClass = new tx_l10nmgr_CATXMLView();

@@ -36,7 +36,7 @@
 			<label index="tx_l10nmgr_exportdata">L10N Manager exports</label>
 				<label index="tx_l10nmgr_exportdata.l10ncfg_id">Configuration</label>
 				<label index="tx_l10nmgr_exportdata.title">Title</label>
-				<label index="tx_l10nmgr_exportdata.exporttype">Format</label>
+				<label index="tx_l10nmgr_exportdata.export_type">Format</label>
 				<label index="tx_l10nmgr_exportdata.translation_lang">Target language</label>
 				<label index="tx_l10nmgr_exportdata.source_lang">Force source language</label>
 				<label index="tx_l10nmgr_exportdata.filename">File</label>

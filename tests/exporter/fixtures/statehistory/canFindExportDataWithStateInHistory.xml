@@ -94,7 +94,7 @@
 			<title>---</title>
 			<source_lang>0</source_lang>
 			<translation_lang>1</translation_lang>
-			<exportType>1</exportType>
+			<export_type>1</export_type>
 			<progress></progress>
 		</tx_l10nmgr_exportdata>
 
@@ -109,7 +109,7 @@
 			<title>SMB Segment</title>
 			<source_lang>0</source_lang>
 			<translation_lang>1</translation_lang>
-			<exportType>1</exportType>
+			<export_type>1</export_type>
 			<progress></progress>
 		</tx_l10nmgr_exportdata>				
 </testdatabase>

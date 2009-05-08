@@ -19,6 +19,6 @@
         <nohidden>0</nohidden>
         <noxmlcheck>1</noxmlcheck>
         <checkutf8>0</checkutf8>
-        <exporttype>xml</exporttype>
+        <export_type>xml</export_type>
     </tx_l10nmgr_exportdata>
 </testcase>

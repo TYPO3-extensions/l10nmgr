@@ -11,7 +11,7 @@
         <title>importer testcase</title>
         <source_lang>0</source_lang>
         <translation_lang>999</translation_lang>
-        <exportType>1</exportType>
+        <export_type>1</export_type>
         <filename>test__to_en_GB_280409-141428.xml</filename>
     </tx_l10nmgr_exportdata>
 </testdata>

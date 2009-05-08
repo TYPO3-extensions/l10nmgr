@@ -207,9 +207,9 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 				'maxitems' => 1,
 			)
 		),
-		'exporttype' => Array(
+		'export_type' => Array(
 			"exclude" => 1,
-			"label" => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.exporttype',
+			"label" => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.export_type',
 			"config" => Array (
                 "type" => "select",
                 "items" => Array (
@@ -311,8 +311,8 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		)
 	),
 	"types" => Array (
-		"xml" => Array("showitem" => "l10ncfg_id, title, exporttype;;1, --palette--;Languages;3, --palette--;Export Options;2"),
-		"xls" => Array("showitem" => "l10ncfg_id, title, exporttype, --palette--;Languages;3, --palette--;Export Options;2")
+		"xml" => Array("showitem" => "l10ncfg_id, title, export_type;;1, --palette--;Languages;3, --palette--;Export Options;2"),
+		"xls" => Array("showitem" => "l10ncfg_id, title, export_type, --palette--;Languages;3, --palette--;Export Options;2")
 	),
 	"palettes" => Array (
 		"1" => Array(
