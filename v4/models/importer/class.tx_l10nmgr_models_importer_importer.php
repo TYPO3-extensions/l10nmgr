@@ -106,6 +106,14 @@ class tx_l10nmgr_models_importer_importer {
 			$TranslationData    = $TranslationFactory->create($currentFile);
 			$exportData 		= $this->getExportDataFromTranslationData($TranslationData);
 
+			#check pre requirements
+			$targetLanguageFromExport = $exportData->getTranslationLanguageObject()->getUid();
+			$targetLanguageFromImport =	$TranslationData->getTargetLanguageUid();
+
+			if($targetLanguageFromExport != $targetLanguageFromImport){
+				throw new tx_mvc_exception_invalidArgument('The import has a diffrent target language the the export it results from');
+			}
+
 			if ( $this->importData->getImportIsCompletelyUnprocessed() ) {
 				/**
 				 * @internal  workflowStates depend on the exportData object therefore we have to use it to mark the import as started
