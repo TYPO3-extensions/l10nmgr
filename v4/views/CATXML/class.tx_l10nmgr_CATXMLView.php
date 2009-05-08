@@ -303,13 +303,14 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 	 *
 	 * @var boolean
 	 * @var boolean
-	 *
+	 * @todo this should be the new way
 	 * @return string
 	 */
 	protected function getTransformedTranslationDataFromTranslateableField($skipXMLCheck,$useUTF8mode,$translateableField,$forcedSourceLanguage) {
 		$dataForTranslation = $translateableField->getDataForTranslation($forcedSourceLanguage);
 
-		if ($translateableField->needsTransformation()) {
+	/* !TODO This should be the new way:
+	 * 	if ($translateableField->needsTransformation()) {
 			$result = $this->findXMLTool()->RTE2XML($dataForTranslation);
 			try {
 //				$result = $this->findXMLTool()->toXML($dataForTranslation);
@@ -343,7 +344,39 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 			}
 		}
 
-		return $result;
+		return $result;*/
+
+		$_isTranformedXML=FALSE;
+
+		// Following checks are not enough! Fields that could be transformed to be XML conform are not transformed! textpic fields are not isRTE=1!!! No idea why...
+		if ($translateableField->needsTransformation()) {
+			$dataForTranslationTranformed=$this->findXMLTool()->RTE2XML($dataForTranslation);
+			if ($dataForTranslationTranformed!==false) {
+				$_isTranformedXML=TRUE;
+				$dataForTranslation=$dataForTranslationTranformed;
+			}
+		}
+		if ($_isTranformedXML) {
+			return $dataForTranslation;
+		}
+		else {
+			//Substitute & with &amp; in non-RTE fields
+			$dataForTranslation=str_replace('&','&amp;',$dataForTranslation);
+
+			if ($useUTF8mode) {
+				$dataForTranslation=tx_l10nmgr_utf8tools::utf8_bad_strip($dataForTranslation);
+			}
+			if ($this->findXMLTool()->isValidXMLString($dataForTranslation)) {
+				return $dataForTranslation;
+			}
+			else {
+				if ($skipXMLCheck) {
+					return '<![CDATA['.$dataForTranslation.']]></data>';
+				} else {
+					throw new Exception();
+				}
+			}
+		}
 	}
 }
 

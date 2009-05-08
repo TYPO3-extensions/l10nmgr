@@ -55,6 +55,52 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_
 class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCAObject implements tx_l10nmgr_interface_progressable{
 
 	/**
+	 * @var string hold the absolute path to the folder where normal files should be exported to
+	 */
+	protected $absoluteFilePath;
+
+	/**
+	 * @var string holds the absolut path to the folder were zip files should be stored
+	 */
+	protected $abosluteZipPath;
+
+
+	/**
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @param string
+	 */
+	public function setAbsoluteFilePath($path){
+		$this->absoluteFilePath = $path;
+	}
+
+	/**
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return string
+	 */
+	protected function getAbsoluteFilePath(){
+		return $this->absoluteFilePath;
+	}
+
+	/**
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @param string path to exported zip files
+	 */
+	public function setAbsoluteZipPath($path){
+		$this->absoluteZipPath = $path;
+	}
+
+	/**
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return string returns the configured absolute path to the zip file
+	 */
+	protected function getAbsoluteZipPath(){
+		return $this->absoluteZipPath;
+	}
+
+	/**
 	 * Initialize the database object with
 	 * the table name of current object
 	 *
@@ -426,25 +472,24 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @return void
 	 */
 	public function createZip($fileName) {
-		
-		$zipPath	= tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportData::getTableName(), 'filename');
-		
-		$fullPath = PATH_site . $zipPath . '/' . $fileName;
+		$absoluteExportZipPath 	= $this->getAbsoluteZipPath();
+		$absoluteExportFilePath	= $this->getAbsoluteFilePath();
 
-		$zipper = new ZipArchive();
-		
-		$res = $zipper->open($fullPath, ZipArchive::CREATE);
+		$fullPath				= $absoluteExportZipPath.'/'.$fileName;
+
+		$zipper 				= new ZipArchive();
+		$res 					= $zipper->open($fullPath, ZipArchive::CREATE);
+
 		if ($res !== true) {
 			throw new Exception('Error while creating zipfile');
 		}
-		
-		$exportFilePath	= PATH_site . tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename');
+
 		foreach ($this->getExportFiles() as $exportFile) { /* @var $exportFile tx_l10nmgr_models_exporter_exportFile */
-			$zipper->addFile(t3lib_div::getFileAbsFileName($exportFilePath . '/' . $exportFile->getFilename()), $exportFile->getFilename());
+			$zipper->addFile(t3lib_div::getFileAbsFileName($absoluteExportFilePath . '/' . $exportFile->getFilename()), $exportFile->getFilename());
 		}
-		
+
 		$zipper->close();
-		
+
 		t3lib_div::fixPermissions($fullPath);
 
 		if (TYPO3_DLOG) t3lib_div::devLog('Created zip file', 'l10nmgr', 1);
@@ -564,5 +609,4 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 }
-
 ?>

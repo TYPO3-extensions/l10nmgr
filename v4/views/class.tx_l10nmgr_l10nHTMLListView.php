@@ -65,18 +65,7 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 	}
 
 
-	/**
-	 * Diff-compare markup
-	 *
-	 * @param	string		Old content
-	 * @param	string		New content
-	 * @return	string		Marked up string.
-	 */
-	function diffCMP($old, $new)	{
-			// Create diff-result:
-		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
-		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
-	}
+
 
 	/**
 	 * Render the module content in HTML

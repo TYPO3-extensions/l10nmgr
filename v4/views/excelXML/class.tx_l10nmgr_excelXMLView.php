@@ -187,7 +187,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 			<!-- Page header -->
 			<Row>
 				<Cell ss:Index="2" ss:StyleID="s35"><Data ss:Type="String">'.
-					htmlspecialchars($pageGroup->getPageTitle().' ['.$pageGroup->getPageId().']').
+					htmlspecialchars($pageGroup->getPageTitle().' ['.$pageGroup->getUid().']').
 				'</Data></Cell>
 				<Cell ss:StyleID="s35"></Cell>
 				<Cell ss:StyleID="s35"></Cell>
@@ -210,7 +210,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 			$this->rowCount++;
 
 			foreach($pageGroup->getTranslateableElements() as $translateableElement){
-				$table 					= $translateableElement->getTable();
+				$table 					= $translateableElement->getTableName();
 				$uid 					= $translateableElement->getUid();
 
 				if($translateableElement->countFields() > 0){

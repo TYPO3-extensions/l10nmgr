@@ -28,16 +28,21 @@
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowState.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php';
 
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportData.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportDataRepository.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFile.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFileRepository.php');
+
 
 /**
  * The exporter is responsible to export a set of pages as xml files
  *
- * class.tx_l10nmgr_models_exporter_Exporter.php
+ * class.tx_l10nmgr_models_exporter_exporter.php
  *
  * @author	 Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.class_name.php $
+ * @version $Id: class.tx_l10nmgr_models_exporter_exporter.php $
  * @date 01.04.2009 - 15:11:03
  * @package	TYPO3
  * @subpackage	extensionkey
@@ -65,8 +70,6 @@ class tx_l10nmgr_models_exporter_exporter {
 	 * @var string
 	 */
 	protected $resultForChunk = '';
-
-
 
 	/**
 	 * Constructor to create an instance of the exporter object
@@ -122,6 +125,8 @@ class tx_l10nmgr_models_exporter_exporter {
 	/**
 	 * In each run the exporter processes one chunk. This method
 	 * returns true if the current chunk is processed
+	 *
+	 * @author Timo Schmidt
 	 * @return boolean
 	 */
 	protected function getIsChunkProcessed() {
@@ -131,6 +136,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	/**
 	 * Returns the result for the current chunk.
 	 *
+	 * @author Timo Schmidt
 	 * @return string
 	 */
 	public function getResultForChunk() {
@@ -141,6 +147,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	/**
 	 * This method can be used internally to mark the chunk as processed.
 	 *
+	 * @author Timo Schmidt
 	 * @param boolean $isChunkProcessed
 	 */
 	protected function setIsChunkProcessed($isChunkProcessed) {
@@ -150,6 +157,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	/**
 	 * Retuns the internal exportDataObject
 	 *
+	 * @author Timo Schmidt
 	 * @return tx_l10nmgr_models_exporter_exportData
 	 */
 	public function getExportData() {
@@ -163,6 +171,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	/**
 	 * Builds a chunck of pageIds from the set of remaining pages of an export
 	 *
+	 * @author Timo Schmidt
 	 * @return ArrayObject
 	 */
 	protected function getNextPagesChunk() {
@@ -183,6 +192,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	/**
 	 * Returns the configuration option for the number of pages per chunck.
 	 *
+	 * @author Timo Schmidt
 	 * @return int
 	 */
 	protected function getNumberOfPagesPerChunk() {
@@ -200,23 +210,26 @@ class tx_l10nmgr_models_exporter_exporter {
 
 	/**
 	 * This method performs on run of an export. It is polled via ajax to perform a complete export.
-	 * It returns an exportData object
+	 * It saves the export to a file an returns a boolean value if a nother run is needed.
 	 *
-	 * @return tx_l10nmgr_models_exporter_exportData
+	 * @return boolean
 	 */
-	public static function performExportRun(tx_l10nmgr_models_exporter_exportData $exportData, $numberOfPagesPerChunk = 5) {
+	public static function performFileExportRun(tx_l10nmgr_models_exporter_exportData $exportData, $numberOfPagesPerChunk = 5,$zipExportPath='',$fileExportPath='') {
 
 		$exportView				= $exportData->getInitializedExportView();
 		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
 
+		$exportData->setAbsoluteZipPath($zipExportPath);
+		$exportData->setAbsoluteFilePath($fileExportPath);
+
 		$exporterWasRunning 	= $exporter->run();
 
 		if ($exporterWasRunning) {
-
 			$prefix 	= $exportData->getL10nConfigurationObject()->getFilenameprefix();
 			//now we write the exporter result to a file
 			$exportFile	= new tx_l10nmgr_models_exporter_exportFile();
 			$exportFile->setFilename($exportView->getFilename($prefix,$exportData->getNumberOfExportRuns()));
+			$exportFile->setAbsoluteFilePath($fileExportPath);
 			$exportFile->setExportDataObject($exportData);
 			$exportFile->setContent($exporter->getResultForChunk());
 			$exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
@@ -232,6 +245,8 @@ class tx_l10nmgr_models_exporter_exporter {
 
 		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportDataRepository->save($exportData);
+
+		return $exportData->getExportIsCompletelyProcessed();
 	}
 }
 

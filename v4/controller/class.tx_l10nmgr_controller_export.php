@@ -230,7 +230,10 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @see ajaxPerformRunAction
 	 */
 	protected function performProgressableRun($exportData){
-		tx_l10nmgr_models_exporter_exporter::performExportRun($exportData,$this->configuration->get('pagesPerChunk'));
+		$fileExportPath = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename'));
+		$zipExportPath	=  t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportData::getTableName(), 'filename'));
+
+		tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk'),$zipExportPath,$fileExportPath);
 	}
 
 }

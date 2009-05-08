@@ -26,6 +26,28 @@
 class tx_l10nmgr_models_exporter_exportFile extends tx_mvc_ddd_typo3_abstractTCAObject {
 
 	/**
+	 * @var string holds the absolute file path
+	 */
+	protected $absoluteFilePath;
+
+	/**
+	 * This method can be used to set a path where the exportFile should be written to
+	 *
+	 * @param string path where the file should be stored
+	 */
+	public function setAbsoluteFilePath($path){
+		$this->absoluteFilePath = $path;
+	}
+
+	/**
+	 * Internal method to read the configured export path
+	 * @return string
+	 */
+	protected function getAbsoluteFilePath(){
+		return $this->absoluteFilePath;
+	}
+
+	/**
 	 * Overwrite getDatabaseFieldNames to remove the "virtual files" that should not be stored in the database
 	 *
 	 * @return array array of field names to store in the database
@@ -88,11 +110,9 @@ class tx_l10nmgr_models_exporter_exportFile extends tx_mvc_ddd_typo3_abstractTCA
 			throw new LogicException('The exportfile has no content');
 		}
 
-		$path = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', $this->getTablename(), 'filename') . '/' . $this->row['filename']);
+		$path =  $this->getAbsoluteFilePath(). '/' . $this->row['filename'];
 		t3lib_div::writeFile($path, $this->row['content']);
 	}
 
-
 }
-
 ?>
