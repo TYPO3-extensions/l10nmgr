@@ -163,14 +163,29 @@ abstract class tx_l10nmgr_abstractExportView extends tx_mvc_view_phpTemplate {
 		return $this->exportType;
 	}
 
+	/**
+	 * This mehtod is used to configure the view to show only noHidden elements
+	 *
+	 * @param boolean
+	 */
 	public function setModeNoHidden($modeNoHidden = true) {
 		$this->modeNoHidden = $modeNoHidden;
 	}
 
+	/**
+	 * This method is used to configure the view to display only changed elements.
+	 *
+	 * @param boolean
+	 */
 	public function setModeOnlyChanged($setModeOnlyChanged = true) {
 		$this->modeOnlyChanged = $setModeOnlyChanged;
 	}
 
+	/**
+	 * This method is used to configure that only new elements should be displayed
+	 *
+	 * @param boolean
+	 */
 	public function setModeOnlyNew($setModeOnlyNew = true) {
 		$this->modeOnlyNew = $setModeOnlyNew;
 	}
@@ -227,10 +242,12 @@ abstract class tx_l10nmgr_abstractExportView extends tx_mvc_view_phpTemplate {
 	/**
 	 * Returns the filename.
 	 *
+	 * @param string prefix of the export filename. This method should be used to set the prefix
+	 * from the l10n configuration
 	 * @param string $enumerationPostfix
 	 * @return string
 	 */
-	public function getFilename($configurationPrefix,$postfix = 0){
+	public function getFilename($configurationPrefix='',$postfix = 0){
 
 		$exporttypePrefix = $this->getExporttypePrefix();
 		$targetLanguageId = $this->getTranslateableInformation()->getTargetLanguage()->getUid();
@@ -241,12 +258,24 @@ abstract class tx_l10nmgr_abstractExportView extends tx_mvc_view_phpTemplate {
 			$filename = $exporttypePrefix. '_' .  $targetLanguageId . '_' . date('dmy-Hi') . '.xml';
 		}
 
-		//if
-		if($configurationPrefix != ''){
-			$filename = $configurationPrefix.'_'.$filename;
-		}
+		//if theres a prefix, prepend it to the file
+		if($configurationPrefix != ''){ $filename = $configurationPrefix.'_'.$filename; }
 
 		return $filename;
+	}
+
+
+	/**
+	 * Diff-compare markup
+	 *
+	 * @param	string		Old content
+	 * @param	string		New content
+	 * @return	string		Marked up string.
+	 */
+	function diffCMP($old, $new)	{
+			// Create diff-result:
+		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
+		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
 	}
 
 	/**
@@ -396,6 +425,5 @@ abstract class tx_l10nmgr_abstractExportView extends tx_mvc_view_phpTemplate {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_abstractExportView.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_abstractExportView.php']);
 }
-
 
 ?>
