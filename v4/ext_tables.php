@@ -140,7 +140,7 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		'source_lang' => 'source_lang',
 		"default_sortby" => "ORDER BY title",
 		"delete" => "deleted",
-		'type' => 'exporttype',
+		'type' => 'export_type',
 		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
 		"iconfile" => t3lib_extMgm::extRelPath($_EXTKEY)."icon_tx_l10nmgr_cfg.gif",
 	),

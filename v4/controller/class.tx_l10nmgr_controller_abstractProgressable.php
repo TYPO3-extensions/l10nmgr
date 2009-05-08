@@ -100,23 +100,32 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	 */
 	public function ajaxPerformRunAction(){
 
-		$subject = $this->getProgressableSubject();
-		$this->performProgressableRun($subject);
+		try{
+			$subject = $this->getProgressableSubject();
+			$this->performProgressableRun($subject);
 
-		$progressView = new tx_mvc_view_widget_progressAjax();
-		$this->initializeView($progressView);
-		$percent = $subject->getProgressPercentage();
-		$progressView->setProgress($percent);
+			$progressView = new tx_mvc_view_widget_progressAjax();
+			$this->initializeView($progressView);
+			$percent = $subject->getProgressPercentage();
+			$progressView->setProgress($percent);
 
-		if ($percent < 100) {
-			$progressView->setProgressLabel(round($subject->getProgressPercentage()). ' %');
-		} else {
-			$progressView->setProgressLabel('Completed');
-			$progressView->setCompleted(true);
+			if ($percent < 100) {
+				$progressView->setProgressLabel(round($subject->getProgressPercentage()). ' %');
+			} else {
+				$progressView->setProgressLabel('Completed');
+				$progressView->setCompleted(true);
+			}
+			echo $progressView->render();
+
+		}catch(Exception $exception){
+			tx_mvc_common_debug::logException($exception);
+			echo json_encode(array(
+				'errorMessage' => $exception->getMessage(),
+				'file' => sprintf('%s (%s)', $exception->getFile(), $exception->getLine()),
+				'trace' => $exception->getTraceAsString()
+			));
+
 		}
-
-		echo $progressView->render();
-
 		exit();
 	}
 }

@@ -82,7 +82,7 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	title tinytext NOT NULL,
 	source_lang blob NOT NULL,
 	translation_lang blob NOT NULL,
-	exporttype tinytext NOT NULL,
+	export_type tinytext NOT NULL,
 	progress blob NOT NULL,
 	filename text NOT NULL,
 	exportfiles int(11) DEFAULT '0' NOT NULL,

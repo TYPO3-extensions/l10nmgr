@@ -47,7 +47,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 	 */
 	protected $internalMessages = array();
 
-	protected $exportType = '1';
+	protected $export_type = 'xml';
 
 	/**
 	 * @var boolean

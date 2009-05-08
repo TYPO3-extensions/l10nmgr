@@ -50,7 +50,7 @@
 							$editOnClickParams .= '&returnEditConf=1';
 							$editOnClickParams .= '&noView=1';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configuration->getUid();
-							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][exporttype]=xml';
+							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][export_type]=xml';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][title]='.$configuration->getTitle();
 							$editOnClickParams .= '&overrideVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configuration->getUid();
 							$redirectUrl = $extPath . 'export/index.php?tx_l10nmgrexport[action]=generateExport';
@@ -80,7 +80,7 @@
 							$editOnClickParams .= '&returnEditConf=1';
 							$editOnClickParams .= '&noView=1';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configuration->getUid();
-							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][exporttype]=xls';
+							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][export_type]=xls';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][title]='.$configuration->getTitle();
 							$editOnClickParams .= '&overrideVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configuration->getUid();
 							$redirectUrl = $extPath . 'export/index.php?tx_l10nmgrexport[action]=generateExport';
