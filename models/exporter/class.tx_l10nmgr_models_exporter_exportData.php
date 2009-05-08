@@ -469,33 +469,42 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 * Create one zip files including all export files
 	 *
 	 * @param string filename
-	 * @return void
+	 * @return bool true if the zip was created successfully
 	 */
 	public function createZip($fileName) {
-		$absoluteExportZipPath 	= $this->getAbsoluteZipPath();
-		$absoluteExportFilePath	= $this->getAbsoluteFilePath();
 
-		$fullPath				= $absoluteExportZipPath.'/'.$fileName;
+		if (class_exists('ZipArchive')) {
 
-		$zipper 				= new ZipArchive();
-		$res 					= $zipper->open($fullPath, ZipArchive::CREATE);
+			$absoluteExportZipPath 	= $this->getAbsoluteZipPath();
+			$absoluteExportFilePath	= $this->getAbsoluteFilePath();
 
-		if ($res !== true) {
-			throw new Exception('Error while creating zipfile');
+			$fullPath				= $absoluteExportZipPath.'/'.$fileName;
+
+
+
+			$zipper 				= new ZipArchive();
+			$res 					= $zipper->open($fullPath, ZipArchive::CREATE);
+
+			if ($res !== true) {
+				throw new Exception('Error while creating zipfile');
+			}
+
+			foreach ($this->getExportFiles() as $exportFile) { /* @var $exportFile tx_l10nmgr_models_exporter_exportFile */
+				$zipper->addFile(t3lib_div::getFileAbsFileName($absoluteExportFilePath . '/' . $exportFile->getFilename()), $exportFile->getFilename());
+			}
+
+			$zipper->close();
+
+			t3lib_div::fixPermissions($fullPath);
+
+			if (TYPO3_DLOG) t3lib_div::devLog('Created zip file', 'l10nmgr', 1);
+
+			// update exportdata record
+			$this->setFilename($fileName);
+			return true;
+		} else {
+			return false;
 		}
-
-		foreach ($this->getExportFiles() as $exportFile) { /* @var $exportFile tx_l10nmgr_models_exporter_exportFile */
-			$zipper->addFile(t3lib_div::getFileAbsFileName($absoluteExportFilePath . '/' . $exportFile->getFilename()), $exportFile->getFilename());
-		}
-
-		$zipper->close();
-
-		t3lib_div::fixPermissions($fullPath);
-
-		if (TYPO3_DLOG) t3lib_div::devLog('Created zip file', 'l10nmgr', 1);
-
-		// update exportdata record
-		$this->setFilename($fileName);
 	}
 
 	/**
