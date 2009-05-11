@@ -29,7 +29,6 @@ tx_mvc_common_classloader::loadAll();
 require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_field.php';
 
 /**
- * bla
  *
  * {@inheritdoc}
  *
