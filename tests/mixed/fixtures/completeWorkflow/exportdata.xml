@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testcase>
+  <!-- Tabelle tx_l10nmgr_exportdata -->
+    <tx_l10nmgr_exportdata>
+        <uid>97</uid>
+        <pid>22</pid>
+        <l10ncfg_id>383</l10ncfg_id>
+        <tstamp>1241704517</tstamp>
+        <crdate>1241704360</crdate>
+        <cruser_id>831</cruser_id>
+        <deleted>0</deleted>
+        <title>Fixture export</title>
+        <source_lang></source_lang>
+        <translation_lang>1</translation_lang>
+        <filename>catxml_export_1_070509-1555.xml.zip</filename>
+        <progress></progress>
+        <exportfiles>0</exportfiles>
+        <checkforexistingexports>0</checkforexistingexports>
+        <onlychangedcontent>0</onlychangedcontent>
+        <nohidden>0</nohidden>
+        <noxmlcheck>1</noxmlcheck>
+        <checkutf8>0</checkutf8>
+        <export_type>xml</export_type>
+    </tx_l10nmgr_exportdata>
+</testcase>
+

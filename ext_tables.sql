@@ -140,7 +140,7 @@ CREATE TABLE tx_l10nmgr_importfiles (
 	crdate int(11) DEFAULT '0' NOT NULL,
 	cruser_id int(11) DEFAULT '0' NOT NULL,
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
-	filename text NOT NULL,
+	filename text NOT NULL
 
 	PRIMARY KEY (uid),
 );

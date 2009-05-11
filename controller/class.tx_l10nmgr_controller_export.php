@@ -132,7 +132,8 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 		$exportDataId = tx_mvc_common_typo3::parseReturnEditConf($this->arguments['createdRecord'], 'tx_l10nmgr_exportdata');
 
 		if ($exportDataId !== false) {
-			$this->arguments['exportDataId'] = $exportDataId;
+			$this->arguments['exportDataId'] = intval( $exportDataId );
+			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'], true);
 
 			$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 			$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
@@ -162,6 +163,32 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 		}
 	}
 
+
+	/**
+	 * After an export is completed there should appear a list with all files. This method
+	 * is used to overwrite the redircet after completion.
+	 *
+	 * @todo
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @see showProgressAction
+	 */
+	protected function getRedirectUrlOnCompletion(){
+
+	}
+
+	/**
+	 * This method is used to show a list of files for a generated export.
+	 *
+	 * @author Timo Schmidt
+	 * @param void
+	 * @return string html content
+	 */
+	public function showExportDetailsAction(){
+		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'], true);
+		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
+		$this->view->setExportData($exportData);
+	}
+
 	/**
 	 * This method is used to show a list of existing exports.
 	 * It uses tx_l10nmgr_view_export_showExportList view because
@@ -172,6 +199,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @return void
 	 */
 	public function showNotReimportedExportsAction() {
+		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'], true);
 
 		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
