@@ -50,7 +50,20 @@ class tx_l10nmgr_controller_list extends tx_mvc_controller_action {
 	protected $argumentsNamespace = 'l10nmgr';
 
 
+	/**
+	 * This method is used to show the diffent configurations of the l10nmgr.
+	 *
+	 * @param void
+	 * @return void
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 *
+	 */
 	public function showConfigurationsAction() {
+
+		if($this->arguments['offset'] != 0){
+			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['offset'], true);
+		}
 
 		$configurationsRepository = new tx_l10nmgr_models_configuration_configurationRepository();
 
