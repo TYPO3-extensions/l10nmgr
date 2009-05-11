@@ -33,7 +33,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFile.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFileRepository.php');
 
-
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_div.php');
 /**
  * The exporter is responsible to export a set of pages as xml files
  *
@@ -215,7 +215,6 @@ class tx_l10nmgr_models_exporter_exporter {
 	 * @return boolean
 	 */
 	public static function performFileExportRun(tx_l10nmgr_models_exporter_exportData $exportData, $numberOfPagesPerChunk = 5,$zipExportPath='',$fileExportPath='') {
-
 		$exportView				= $exportData->getInitializedExportView();
 		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
 
