@@ -23,7 +23,8 @@
  ***************************************************************/
 
 /**
- * documenation
+ * This controller can be extended to realize controllers which need
+ * to progress a task with multiple calls to an ajax url.
  *
  * {@inheritdoc}
  *
@@ -84,17 +85,28 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		$progressView->setProgressLabel($this->initalProgressLabel); // TODO: move to locallang
 		$progressView->setAjaxEnabled(true);
 		$progressView->setProgressUrl($this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('ajaxPerformRun')->useOverruledParameters()->makeUrl());
-		$progressView->setRedirectOnCompletedUrl('../mod1/index.php');
+		$progressView->setRedirectOnCompletedUrl($this->getRedirectUrlOnCompletion());
 
 		$this->view->setProgressableSubjectView($this->getProgressableSubjectView());
 		$this->view->setProgressView($progressView);
 		$this->view->addBackendStylesHeaderData();
+	}
 
+	/**
+	 * This method is used to return the redirect url on completion of the export process.
+	 * overwrite it to change it in a sub-controller.
+	 *
+	 * @author Timo Schmidt <schmidt@aoemedia.de>
+ 	 * @return string
+	 */
+	protected function getRedirectUrlOnCompletion(){
+		return '../mod1/index.php';
 	}
 
 	/**
 	 * Perform run action (via AJAX call)
 	 *
+	 * @author Timo Schmidt
 	 * @param void
 	 * @return void
 	 */

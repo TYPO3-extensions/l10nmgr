@@ -199,6 +199,8 @@ class tx_l10nmgr_models_importer_importer {
 
 		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
 		$importDataRepository->save($importData);
+
+		return $importData->getImportIsCompletelyProcessed();
 	}
 }
 

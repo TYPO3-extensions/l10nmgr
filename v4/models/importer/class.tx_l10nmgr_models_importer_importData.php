@@ -119,10 +119,23 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	/**
 	 * This method can be used to determine, that an import is completly processed.
 	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return boolean
 	 */
 	public function getImportIsCompletelyProcessed(){
-		$this->getProgress('import_is_completely_processed');
+		return $this->getProgress('import_is_completely_processed');
+	}
+
+	/**
+	 * This internal method can be used to set a processing state of the importData.
+	 * The importData is completely processed when no remaining file is left.
+	 *
+	 * @author Timo Schmidt
+	 * @param boolean
+	 * @return void
+	 */
+	protected function setImportIsCompletelyProcessed($boolean){
+		$this->setProgress('import_is_completely_processed',$boolean);
 	}
 
 	/**
@@ -175,6 +188,10 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 		$remainingFilenames = $this->getImportRemainingFilenames();
 		$remainingFilenamesLeft = array_diff($this->getImportRemainingFilenames()->getArrayCopy(),$filenames->getArrayCopy());
 		$remainingFilenames ->exchangeArray($remainingFilenamesLeft);
+
+		if(count($remainingFilenamesLeft) == 0){
+			$this->setImportIsCompletelyProcessed(true);
+		}
 
 		$this->setProgress('import_remaining_filenames',$remainingFilenames );
 	}
