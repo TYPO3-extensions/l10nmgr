@@ -43,7 +43,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/class.tx_l10nmgr_domain_
  * @date $Date$
  * @since 24.04.2009 - 14:57:30
  * @see tx_phpunit_database_testcase
- * @category database testcase
+ * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
