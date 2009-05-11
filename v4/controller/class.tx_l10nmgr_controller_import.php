@@ -28,16 +28,18 @@ tx_mvc_common_classloader::loadAll();
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'controller/class.tx_l10nmgr_controller_abstractProgressable.php');
 
-
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFile.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importer.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importData.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importDataRepository.php');
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'view/import/class.tx_l10nmgr_view_importer_detail.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'view/class.tx_l10nmgr_view_showProgress.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_div.php');
 
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progress.php');
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progressAjax.php');
+
 
 /**
  * Controller to import different formats of translations back into the TYPO3 environment
@@ -114,7 +116,35 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 		/* Ensure, that all files are unzipped */
 		$importData->extractAllZipContent();
 
+		if($this->configuration->get('enable_dummyTranslateOnImport')){
+			$this->dummyTranslateImportData($importData);
+		}
+
 		$this->routeToAction('showProgressAction');
+	}
+
+	/**
+	 * This method is used to dummytranslate a file after import.
+	 *
+	 * @param tx_l10nmgr_models_importer_importData importData object which provides the files that should be translated.
+	 * @return void
+	 */
+	protected function dummyTranslateImportData(tx_l10nmgr_models_importer_importData $importData){
+		$fileExportPath = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename'));
+
+		$importFiles = $importData->getImportFiles();
+		foreach($importFiles as $importFile){
+			/** @var tx_l10nmgr_models_importer_importFile */
+			$sourceFilename 	= $importFile->getFilename();
+			$targetFilename		= 'dummytranslated_'.$importFile->getFilename();
+			$path 				= $importFile->getImportFilePath();
+
+			tx_l10nmgr_div::translate($path.'/'.$sourceFilename,$path.'/'.$targetFilename);
+			$importFile->setFilename($targetFilename);
+
+			$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
+			$importFileRepository->save($importFile);
+		}
 	}
 
 

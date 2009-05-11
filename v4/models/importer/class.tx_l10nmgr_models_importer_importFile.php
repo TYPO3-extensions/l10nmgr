@@ -116,7 +116,7 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	 * @return string
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
-	protected function getImportFilePath(){
+	public function getImportFilePath(){
 		return $this->importFilePath;
 	}
 
