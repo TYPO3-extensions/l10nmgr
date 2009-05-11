@@ -152,9 +152,8 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	 * This method returns the detail view for the importData that is currently processed-
 	 *
 	 * @param void
-	 * @return
-	 *
 	 * @author Timo Schmidt
+ 	 * @return tx_mvc_view_widget_phpTemplateListView
 	 */
 	protected function getProgressableSubjectView(){
 		$view = new tx_l10nmgr_view_importer_detail();
@@ -185,7 +184,7 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	 * @see ajaxPerformRunAction
 	 */
 	protected function performProgressableRun($importData){
-		tx_l10nmgr_models_importer_importer::performImportRun($importData);
+		return tx_l10nmgr_models_importer_importer::performImportRun($importData);
 
 	}
 }
