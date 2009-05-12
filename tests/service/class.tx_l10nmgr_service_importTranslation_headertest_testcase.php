@@ -81,8 +81,8 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 	}
 
 	/**
-	* Resets the test enviroment after the test.
-	*/
+	 * Resets the test enviroment after the test.
+	 */
 	function tearDown() {
 		$this->cleanDatabase();
    		$this->dropDatabase();
@@ -106,7 +106,7 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/exportdata.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/language.xml');
 
-		$TranslationData = $this->TranslationFactory->create($import);
+		$TranslationData = $this->TranslationFactory->create($import); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
 
 		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(67);
@@ -116,22 +116,29 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 
-		##
-		# Check the content overlay
-		##
-		$row 			= t3lib_beFunc::getRecord('tt_content',619945);
-		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 2);
+		$row 			= t3lib_beFunc::getRecord('tt_content', 619945);
+		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay (
+			$row,
+			'tt_content',
+			$TranslationData->getSysLanguageUid()
+		);
 
-		//there should be an overlay of the content element with the uid 619945
-		$this->assertEquals($contentOverlay['l18n_parent'],619945);
+			//there should be an overlay of the content element with the uid 619945
+		$this->assertEquals($contentOverlay['l18n_parent'], 619945);
 
-		//the sys_language_uid should be 2 for portugal
-		$this->assertEquals($contentOverlay['sys_language_uid'],2);
+			// the sys_language_uid should be 2 for portugal
+		$this->assertEquals (
+			$contentOverlay['sys_language_uid'],
+			$TranslationData->getSysLanguageUid()
+		);
 
-		//the value of the translation should be
-		$this->assertEquals($contentOverlay['header'],'This is a dirty header element & uses an <br> ampersand translated');
+			// the value of the translation should be
+		$this->assertEquals (
+			$contentOverlay['header'],
+			'This is a dirty header element & uses an <br /> ampersand translated ' // expected
+		);
+
 		//@todo check page overlay
-
 	}
 }
 ?>

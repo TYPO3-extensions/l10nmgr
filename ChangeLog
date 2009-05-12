@@ -1,3 +1,12 @@
+2009-05-12 Michael Klapper <michael.klapper@aoemedia.de>
+	* Add 'tx_l10nmgr_service_textConverter'
+	* Replace the old xmltools with "tx_l10nmgr_service_textConverter" on "tx_l10nmgr_domain_translationFactory".
+	* Replace the old xmltools with "tx_l10nmgr_service_textConverter" on "tx_l10nmgr_CATXMLView", improve Exception handling.
+	* Add test for "tx_l10nmgr_service_textConverter"
+	* Fix testcase "class.tx_l10nmgr_models_exporter_exporter_complex_testcase.php" on excepted value.
+	* Update code indention "tx_l10nmgr_models_importer_importData_testcase".
+	* Fix testcase "class.tx_l10nmgr_domain_translationFactory_xmlData_testcase.php", "class.tx_l10nmgr_service_importTranslation_headertest_testcase.php", "class.tx_l10nmgr_service_importTranslation_basic_testcase.php", "class.tx_l10nmgr_mixed_completeWorkflow_testcase.php" update expected value.
+	
 2009-05-04 Michael Klapper <michael.klapper@aoemedia.de>
 	* Refactor the translation package
 	  - Disable the markImported() 

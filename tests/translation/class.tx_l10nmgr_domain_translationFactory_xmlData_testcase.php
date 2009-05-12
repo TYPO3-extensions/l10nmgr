@@ -291,13 +291,13 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	public function fieldContainsRightContentWithoutCdataDataProvider() {
 		return array (
 			array (
-				'<p><a href="http://www.webex.co.uk/">WebEx Communications UK Ltd</a> <br/>20 Garrick Street <br/>London WC2E 9BT <br/>United Kingdom <br/>Tel: 0800 389 9772 <br/>Email: <a href="mailto:europe@webex.com">europe@webex.com</a> </p>',
+				'<link http://www.webex.co.uk/>WebEx Communications UK Ltd</link> <br />20 Garrick Street <br />London WC2E 9BT <br />United Kingdom <br />Tel: 0800 389 9772 <br />Email: <link europe@webex.com>europe@webex.com</link> ',
 				535,
 				'tt_content:' . 1693,
 				'tt_content:NEW/1/1693:bodytext'
 			),
 			array (
-				'<p>&nbsp;</p><h1>Your message has been sent</h1><p>&nbsp;</p><p>Thank you for your message.  We have forwarded your communication to the appropriate department.  If this is a technical support matter, please call our customer care line at<strong> 866-229-3239</strong> for immediate attention.  To speak with a sales representative, please call <strong>877-509-3239</strong>.</p>',
+				"\n" . '<h1>Your message has been sent</h1>' . "\n\n" . 'Thank you for your message.  We have forwarded your communication to the appropriate department.  If this is a technical support matter, please call our customer care line at<strong> 866-229-3239</strong> for immediate attention.  To speak with a sales representative, please call <strong>877-509-3239</strong>.',
 				19761,
 				'tt_content:' . 523511,
 				'tt_content:523531:bodytext'

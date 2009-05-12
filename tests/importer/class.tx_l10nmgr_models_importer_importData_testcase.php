@@ -23,7 +23,6 @@
  ***************************************************************/
 
 /**
- * documenation
  *
  * {@inheritdoc}
  *
@@ -131,8 +130,16 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 		$importData			= $this->getFixtureImportDataWithTwoFiles();
 		$remainingFilenames = $importData->getImportRemainingFilenames();
 
-		$this->assertEquals(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/file1.xml',$remainingFilenames->offsetGet(0),'Wrong filename in remaining files of importData');
-		$this->assertEquals(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/file2.xml',$remainingFilenames->offsetGet(1),'Wrong filename in remaining files of importData');
+		$this->assertEquals (
+			t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/fixtures/importFile/file1.xml',
+			$remainingFilenames->offsetGet(0),
+			'Wrong filename in remaining files of importData'
+		);
+		$this->assertEquals (
+			t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/fixtures/importFile/file2.xml',
+			$remainingFilenames->offsetGet(1),
+			'Wrong filename in remaining files of importData'
+		);
 	}
 
 	/**

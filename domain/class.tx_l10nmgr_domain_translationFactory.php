@@ -23,6 +23,7 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_data.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_textConverter.php';
 
 /**
  * Factory to build the translation object
@@ -83,6 +84,7 @@ class tx_l10nmgr_domain_translationFactory {
 	 */
 	private function exractTranslation(SimpleXMLElement $Pagerows) {
 		$PageCollection = new tx_l10nmgr_domain_translation_pageCollection();
+		$TextConverter = new tx_l10nmgr_service_textConverter(); /* @var $test tx_l10nmgr_xmltools */
 
 		foreach ($Pagerows as $pagerow) {
 			$Page = new tx_l10nmgr_domain_translation_page();
@@ -105,10 +107,11 @@ class tx_l10nmgr_domain_translationFactory {
 					foreach ($field->children() as $child) {
 						$content .= $child->asXML();
 					}
-					$Field->setContent($content);
+
+					$Field->setContent($TextConverter->toText($content));
 
 				} else {
-					$Field->setContent((string)$field);
+					$Field->setContent($TextConverter->toText((string)$field));
 				}
 
 				$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);

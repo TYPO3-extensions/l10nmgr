@@ -138,7 +138,7 @@ class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_datab
 		$this->assertEquals((string)$exporterResult->pageGrp->data[0],'headertest');
 
 		//this comes from a cdata tag
-		$this->assertEquals((string)$exporterResult->pageGrp->data[1],'This is a <br> dirty header element &amp; uses an ampersand');
+		$this->assertEquals((string)$exporterResult->pageGrp->data[1],'This is a <br> dirty header element & uses an ampersand');
 	}
 
 	/**
