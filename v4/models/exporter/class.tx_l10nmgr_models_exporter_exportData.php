@@ -62,15 +62,68 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	/**
 	 * @var string holds the absolut path to the folder were zip files should be stored
 	 */
-	protected $abosluteZipPath;
+	protected $absoluteZipPath;
 
+	/**
+	 * @var string
+	 */
+	protected $relativeFilePath;
+
+
+	/**
+	 * @var string
+	 */
+	protected $relativeZipPath;
+
+	/**
+
+	 */
+	public function __construct($row = array()){
+		parent::__construct($row);
+		$fileExportPath = tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename');
+		$zipExportPath	=  tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportData::getTableName(), 'filename');
+
+		$this->setRelativeFilePath($fileExportPath);
+		$this->setRelativeZipPath($zipExportPath);
+	}
+
+	/**
+	 *
+	 */
+	protected function setRelativeFilePath($path){
+		$this->relativeFilePath = $path;
+		$this->setAbsoluteFilePath(t3lib_div::getFileAbsFileName($path));
+	}
+
+	/**
+	 * Returns the relative file path
+	 * @return string
+	 */
+	public function getRelativeFilePath(){
+		return $this->relativeFilePath;
+	}
+
+	/**
+	 * @param string
+	 */
+	protected function setRelativeZipPath($path){
+		$this->relativeZipPath = $path;
+		$this->setAbsoluteZipPath(t3lib_div::getFileAbsFileName($path));
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRelativeZipPath(){
+		return $this->relativeZipPath;
+	}
 
 	/**
 	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @param string
 	 */
-	public function setAbsoluteFilePath($path){
+	protected function setAbsoluteFilePath($path){
 		$this->absoluteFilePath = $path;
 	}
 
@@ -87,7 +140,7 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @param string path to exported zip files
 	 */
-	public function setAbsoluteZipPath($path){
+	protected function setAbsoluteZipPath($path){
 		$this->absoluteZipPath = $path;
 	}
 
@@ -99,7 +152,16 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	protected function getAbsoluteZipPath(){
 		return $this->absoluteZipPath;
 	}
-
+	/**
+	 * This method can be used to get the download url of this file
+	 *
+	 * @return string url to download the file
+	 */
+	public function getDownloadUrl(){
+		$site 	= t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+		$url 	= $site.''.$this->getRelativeZipPath().'/'.$this->getFilename();
+		return $url;
+	}
 	/**
 	 * Initialize the database object with
 	 * the table name of current object

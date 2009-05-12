@@ -1,4 +1,4 @@
-<?php 
+<?php
 /***************************************************************
  *  Copyright notice
  *
@@ -23,7 +23,9 @@
  ***************************************************************/
 
 /**
- * documenation
+ * This view is used to display the details of an exportData record.
+ * An exportData record represents one export run.
+ *
  *
  * {@inheritdoc}
  *
@@ -41,7 +43,7 @@
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_view_export_detail extends tx_mvc_view_widget_phpTemplateListView {
+class tx_l10nmgr_view_export_showExportDetail extends tx_mvc_view_backendModule {
 
 	/**
 	 * The default template is used if o template is set
@@ -52,32 +54,124 @@ class tx_l10nmgr_view_export_detail extends tx_mvc_view_widget_phpTemplateListVi
 
 	/**
 	 * Holds the exportData record where the details should be displayed from
-	 * 
+	 *
 	 * @var tx_l10nmgr_models_exporter_exportData
 	 */
 	protected $exportData;
-	
+
+	/**
+	 * Holds a flag if files should be shown or not
+	 *
+	 * @var boolean
+	 */
+	protected $showFiles;
+
+	/**
+	 * Holds the state to display the link to the list or not
+	 *
+	 * @var boolean
+	 */
+	protected $showListLink;
+
+	/**
+	 * Holds the link to the listView
+	 *
+	 * @var string
+	 */
+	protected $listLink;
+
 	/**
 	 * Method to set the exportData record that should be used to display informations about.
-	 * 
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @param tx_l10nmgr_models_exporter_exportData exportData
 	 */
 	public function setExportData($exportData){
 		$this->exportData = $exportData;
 	}
-	
+
 	/**
 	 * Retrieves the configured exportData
-	 * 
-	 * @author Timo Schmidt
-	 * @return tx_l10nmgr_models_exporter_exportData 
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return tx_l10nmgr_models_exporter_exportData
 	 */
 	protected function getExportData(){
 		return $this->exportData;
 	}
-	
-	
+
+
+	/**
+	 * Method to configure the view to show files.
+	 *
+	 * @param void
+	 * @return void
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 */
+	public function showFiles(){
+		$this->showFiles = true;
+	}
+
+	/**
+	 * Configure the view to hide files
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @param void
+	 * @return void
+	 */
+	public function hideFiles(){
+		$this->showFiles  = false;
+	}
+
+	/**
+	 * Returns the state if files should be displayed or not.
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return boolean
+	 */
+	protected function getShowFiles(){
+		return $this->showFiles;
+	}
+
+	/**
+	 * Method to enable the link to the list view. This
+	 * is usefull when the detail view is shown at the end of an export.
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @param void
+	 * @return void
+	 */
+	public function showListLink(){
+		$this->showListLink = true;
+	}
+
+	/**
+	 * Mehtod to read the state if the list link should be shown or not
+	 *
+	 * @return boolean
+	 */
+	protected function getShowListLink(){
+		return $this->showListLink;
+	}
+
+	/**
+	 * Method to set a link to the list view.
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @param string
+	 */
+	public function setListLink($link){
+		$this->listLink = $link;
+	}
+
+	/**
+	 * Returns the link to the list view.
+	 *
+	 * @return string
+	 */
+	protected function getListLink(){
+		return $this->listLink;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/view/export/class.tx_l10nmgr_view_export_detail.php']) {
