@@ -52,7 +52,7 @@ class tx_l10nmgr_div {
 		$inputFileContent = file_get_contents($inputFile);
 
 		$outputFileContent = preg_replace_callback(
-			/* pattern */ '/<data(.*)>(.*)<\/data>/U',
+			/* pattern */ '/<data(.*)>(.*)<\/data>/misU',
 			/* callback */ $callback,
 			/* subject */ $inputFileContent
 		);

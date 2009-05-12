@@ -120,8 +120,23 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 			$this->dummyTranslateImportData($importData);
 		}
 
+		//@todo
+		//$this->handleImportDataPreprocessing($importData);
+
 		$this->routeToAction('showProgressAction');
 	}
+
+	//@todo
+	/*protected function handleImportDataPreprocessing($importData){
+		if (is_array ($TYPO3_CONF_VARS['SC_OPTIONS']['l10nmgr/controller/class.tx_l10nmgr_controller_import.php']['preProcessImportDataClass'])) {
+			foreach ($TYPO3_CONF_VARS['SC_OPTIONS']['l10nmgr/controller/class.tx_l10nmgr_controller_import.php']['preProcessImportDataClass'] as $classRef) {
+				$hookObj = &t3lib_div::getUserObj($classRef);
+				if (method_exists($hookObj, 'processImportData')) {
+					$hookObj->preProcessImportData($importData);
+				}
+			}
+		}
+	}*/
 
 	/**
 	 * This method is used to dummytranslate a file after import.
@@ -136,14 +151,17 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 		foreach($importFiles as $importFile){
 			/** @var tx_l10nmgr_models_importer_importFile */
 			$sourceFilename 	= $importFile->getFilename();
-			$targetFilename		= 'dummytranslated_'.$importFile->getFilename();
-			$path 				= $importFile->getImportFilePath();
 
-			tx_l10nmgr_div::translate($path.'/'.$sourceFilename,$path.'/'.$targetFilename);
-			$importFile->setFilename($targetFilename);
+			if(strpos($sourceFilename,'dummytranslated_') === false){
+				$targetFilename		= 'dummytranslated_'.$importFile->getFilename();
+				$path 				= $importFile->getImportFilePath();
 
-			$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
-			$importFileRepository->save($importFile);
+				tx_l10nmgr_div::translate($path.'/'.$sourceFilename,$path.'/'.$targetFilename);
+				$importFile->setFilename($targetFilename);
+
+				$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
+				$importFileRepository->save($importFile);
+			}
 		}
 	}
 

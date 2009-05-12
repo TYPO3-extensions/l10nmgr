@@ -65,9 +65,11 @@ class tx_l10nmgr_controller_list extends tx_mvc_controller_action {
 			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['offset'], true);
 		}
 
-		$configurationsRepository = new tx_l10nmgr_models_configuration_configurationRepository();
+		$this->checkflexFormXMLincludeDiffBaseSetting();
 
-		$paginationSubView = new tx_mvc_view_widget_pagination();
+		$configurationsRepository 	= new tx_l10nmgr_models_configuration_configurationRepository();
+		$paginationSubView 			= new tx_mvc_view_widget_pagination();
+
 		$this->initializeView($paginationSubView);
 
 		$paginationSubView->setCount($configurationsRepository->countAll());
@@ -80,7 +82,39 @@ class tx_l10nmgr_controller_list extends tx_mvc_controller_action {
 		$configurationsRepository = new tx_l10nmgr_models_configuration_configurationRepository();
 		$this->view->configurations = $configurationsRepository->findAll(true, 'crdate DESC', false, 30, $this->arguments['offset']);
 		$this->view->addBackendStylesHeaderData();
+	}
 
+	/**
+	 * Overwrites the controller method for exception handling to display the
+	 * exception in an error message box.
+	 *
+	 * @param Exception $exception
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 */
+	protected function handleException(Exception $exception){
+		tx_mvc_common_debug::logException($exception);
+
+		$view = $this->getViewForCurrentAction('outputErrorMessageAction');
+		$this->initializeView($view);
+
+		$view->exceptionClass = get_class($exception);
+		$view->setErrorMessage($exception->getMessage());
+		$view->addBackendStylesHeaderData();
+		$view->stackTrace = $exception->getTraceAsString();
+
+		$this->response->appendContent($view->render());
+	}
+
+	/**
+	 * This method is used to check the setup of the TYPO3 system to display an error message
+	 * if it is not configured correctly.
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 */
+	protected function checkflexFormXMLincludeDiffBaseSetting(){
+		if($GLOBALS['TYPO3_CONF_VARS']['BE']['flexFormXMLincludeDiffBase'] != 1){
+			throw new tx_mvc_exception_notSupported('Your TYPO3 configuration is deprecated please set $GLOBALS["TYPO3_CONF_VARS"]["BE"]["flexFormXMLincludeDiffBase"] to use the l10nmgr');
+		}
 	}
 
 }
