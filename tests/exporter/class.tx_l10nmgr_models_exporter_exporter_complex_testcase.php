@@ -105,6 +105,7 @@ class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_datab
 		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/exportdata.xml');
 
 		$expectedOutputfile = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/test__to_pt_BR_300409-113504_export.xml';
+		$outputFilePath = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/output.xml';
 
 		$exportdataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData				= $exportdataRepository->findById(67);
@@ -118,12 +119,11 @@ class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_datab
 		##
 		# Check test results
 		##
-				echo 'Debug in '.__FILE__.' at line '.__LINE__;
-				print('<pre>');
-				print_r($result);
-				print('</pre>');
+        file_put_contents($outputFilePath,$result);
+
 		//now we analyse the result of the exporter, it should be valid xml therefore we use simplexml to parse it
         $exporterResult = simplexml_load_string  ($result, 'SimpleXMLElement', LIBXML_NOCDATA );
+
 
         //check the iso code of the target language
         $this->assertEquals('PT',(string)$exporterResult->head->t3_targetLang,'Invalid ISO-Code of target language');
