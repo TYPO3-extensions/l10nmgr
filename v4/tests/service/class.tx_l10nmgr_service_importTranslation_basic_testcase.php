@@ -155,7 +155,11 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 	 * @return void
 	 */
 	public function test_canImportSerivceImportSimpleStructure() {
-		$this->assertTrue(empty($GLOBALS['TSFE']),"GLOBALS['TSFE'] is set but should not be set");
+
+		$this->assertTrue (
+			empty($GLOBALS['TSFE']),
+			"GLOBALS['TSFE'] is set but should not be set"
+		);
 
 		$this->importDataSet('/fixtures/basic/canImportServiceImportCorrectData_pages.xml');
 		$this->importDataSet('/fixtures/basic/canImportServiceImportCorrectData_tt_content.xml');
@@ -183,33 +187,32 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 		##
 		# Check the content overlay
 		##
-		$contentRow 			= t3lib_beFunc::getRecord('tt_content',619943);
+		$contentRow     = t3lib_beFunc::getRecord('tt_content',619943);
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($contentRow, 'tt_content', 1);
 
 		$this->assertEquals($contentOverlay['l18n_parent'],619943,'Overlay has not the expected l18n_parent');
-		$this->assertEquals($contentOverlay['bodytext'],'<p>Importer tt_content <STRONG>bodytext</STRONG> - Translated</p>');
+		$this->assertEquals($contentOverlay['bodytext'],'Importer tt_content <strong>bodytext</strong> - Translated');
 
 
 		##
 		# Check the fce-content overlay
 		##
-		$fceContentRow 		= t3lib_beFunc::getRecord('tt_content',619944);
-		$fceContentOverlay 	= tx_mvc_system_dbtools::getTYPO3RowOverlay($fceContentRow, 'tt_content', 1);
+		$fceContentRow     = t3lib_beFunc::getRecord('tt_content',619944);
+		$fceContentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($fceContentRow, 'tt_content', 1);
 
 		# get normal fields of flex content element
-		$field_header		= $fceContentOverlay['header'];
+		$field_header = $fceContentOverlay['header'];
 
 		# get content from flex
-		$flexObj 			= t3lib_div::makeInstance('t3lib_flexformtools');
-		$arrayStructure 	= t3lib_div::xml2array($fceContentOverlay['tx_templavoila_flex']);
+		$flexObj        = t3lib_div::makeInstance('t3lib_flexformtools');
+		$arrayStructure = t3lib_div::xml2array($fceContentOverlay['tx_templavoila_flex']);
 
-		$field_content		= $flexObj->getArrayValueByPath('data/sDEF/lDEF/field_content/vDEF',$arrayStructure);
-		$field_author		= $flexObj->getArrayValueByPath('data/sDEF/lDEF/field_author/vDEF',$arrayStructure);
+		$field_content = $flexObj->getArrayValueByPath('data/sDEF/lDEF/field_content/vDEF',$arrayStructure);
+		$field_author  = $flexObj->getArrayValueByPath('data/sDEF/lDEF/field_author/vDEF',$arrayStructure);
 
 		$this->assertEquals($field_header,'Teaserbox Testcase Headertext - Translated','Translated Headertest seems to be wrong in translation');
-		$this->assertEquals($field_content,'<p>Teaserbox Testcase Bodytext - Translated</p>','Retrieved wrong content from translated flexfield "content"');
+		$this->assertEquals($field_content,'Teaserbox Testcase Bodytext - Translated','Retrieved wrong content from translated flexfield "content"');
 		$this->assertEquals($field_author,'Teaserbox Author - Translated');
-
 	}
 }
 

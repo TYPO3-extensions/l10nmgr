@@ -1,0 +1,198 @@
+<?php
+/***************************************************************
+ *  Copyright notice
+ *
+ *  Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
+
+require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_textConverter.php';
+
+/**
+ * Testcase for text convert from RTE text to XML text and the way back.
+ *
+ * class.tx_l10nmgr_service_textConverter_toText_testcase.php
+ *
+ * {@inheritdoc}
+ *
+ * @author Michael Klapper <klapper@aoemedia.de>
+ * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
+ * @version $Id$
+ * @date $Date$
+ * @since 07.05.2009 - 14:24:19
+ * @see tx_phpunit_testcase
+ * @package TYPO3
+ * @subpackage tx_l10nmgr
+ * @access public
+ */
+class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testcase {
+
+	/**
+	 * @var tx_l10nmgr_service_textConverter
+	 */
+	protected $TextConverter = null;
+
+	/**
+	 * Initialize a fresh instance of the tx_l10nmgr_service_textConverter
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function setUp() {
+		$this->TextConverter = new tx_l10nmgr_service_textConverter();
+	}
+
+	/**
+	 * Reset the tx_l10nmgr_service_textConverter
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function tearDown() {
+		$this->TextConverter = null;
+	}
+
+	/**
+	 * Verify that the transformation of the a-tag incl. further parameter are made as expected into typolink tag.
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_transformationOfLinkWithFurtherParameterToTypolink() {
+		$fixtureText  = '<p><a href="http://mkl-webex.dev.aoeoffice.de/?id=3" target="target" class="class" title="title text" name="name">&gt;my link</a><strong>strong text</strong></p><p>test</p>';
+		$expectedText = '<link 3 target class "title text" name>>my link</link><strong>strong text</strong>'."\n" . 'test';
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toText (
+				$fixtureText
+			),
+			'Problem with the comvertion from HTML content (RTE) to the database.'
+		);
+	}
+
+	/**
+	 * This test verify that html entities are converted to UTF-8 character.
+	 *
+	 * Tested entities are:
+	 * - &amp;
+	 * - &nbsp;
+	 * - &auml;
+	 * - &quot;
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_transformBasicEntitiesToUTF8() {
+		$fixtureText  = '<p>&amp; &amp; &nbsp; ich&amp;du ä&quot;</p>';
+		$expectedText = '& & &nbsp; ich&du ä"';
+
+		$this->assertSame (
+			$expectedText,
+			$this->TextConverter->toText (
+				$fixtureText
+			),
+			'Entities not round trip converted as expected.'
+		);
+	}
+
+	/**
+	 * Test that the entities "&lt;", "&quot;" are conveted to "<" and """
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_verifyThatDoubleQuoteAndLowerSignAreTransformedToUTF8() {
+		$fixtureText  = '<p>here coms some .. 8747()/=&lt;=&quot;($<br /></p>';
+		$expectedText = 'here coms some .. 8747()/=<="($<br />';
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toText($fixtureText),
+			'The transormation toText work not as expected.'
+		);
+	}
+
+	/**
+	 * Take sure that the not closed "<br>" is transformed
+	 * to the XHTML valid empty tag like "<br />"
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_thatNoneClosedBrTagsAreClosed() {
+		$fixtureText  = '<p>here coms some .. 8747()/=&lt;=&quot;($<br></p>';
+		$expectedText = 'here coms some .. 8747()/=<="($<br />';
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toText($fixtureText),
+			'The transormation toText work not as expected.'
+		);
+	}
+
+	/**
+	 * Test that the htmlspecialchar "<", ">" and """ escaped with "&lt;","&gt;","&quot;"
+	 *
+	 * @access publc
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_transformBasicHtmlspecialCharToUTF8() {
+		$fixtureText  = '<p>&lt;&gt;&quot;<br /></p>';
+		$expectedText = '<>"<br />';
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toText($fixtureText),
+			'The transormation toText work not as expected.'
+		);
+	}
+
+	/**
+	 * Test that the htmlspecialchar are excaped while we import the text into flexform XML structure.
+	 *
+	 * @access publc
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_transformKeepBasicHtmlSpecialCharWhileWeImportForFlexForms() {
+		$fixtureText  = '<p>&lt;&gt;&quot;<br />&nbsp;</p>';
+		$expectedText = '&lt;&gt;&quot;&lt;br /&gt;&nbsp;';
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toText($fixtureText, true),
+			'The transormation toText for flexform fields work not as expected.'
+		);
+	}
+}
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_toText_testcase.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_toText_testcase.php']);
+}
+
+?>

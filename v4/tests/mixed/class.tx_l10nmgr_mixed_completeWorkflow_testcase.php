@@ -143,7 +143,6 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$this->removeDirectoryAndContent($zipImportPath);
 		$this->removeDirectoryAndContent($fileImportPath);
 
-
 		mkdir($fileExportPath,0777);
 		mkdir($zipExportPath,0777);
 		mkdir($fileImportPath,0777);
@@ -187,11 +186,8 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$this->assertEquals($contentOverlay['header'],'@translated Content element with typolink translated@','No correct translation for header found');
 
 		//bodytext
-		$expectedBodytextResult = "@translated This is a test! translated@&nbsp;\n\na b c&nbsp;\n&lt;/data&gt;\n!&quot;§$%&/()=?*+#'-_.:,;\n<link 24421 >Typolink</link>";
+		$expectedBodytextResult = "@translated This is a test! translated@&nbsp;\n\na b c&nbsp;\n</data>\n!\"§$%&/()=?*+#'-_.:,;\n<link 24421>Typolink</link>\n";
 		$this->assertEquals($contentOverlay['bodytext'],$expectedBodytextResult,'In expected result after import');
-
-
-		$this->fail('implement a testcase');
 	}
 
 	/**
