@@ -282,6 +282,23 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 		);
 	}
 
+	/**
+	 * Verify that no paragraph is wrapped around div-Tag.
+	 *
+	 * @access publc
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_dontSetParagraphAroundDivElements() {
+		$fixtureText  = '<div id="lipsum"> Lorem ipsum dolor sit amet, consectetur </div>';
+		$expectedText = $fixtureText;
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toXML($fixtureText),
+			'The transormation toXML work not as expected.'
+		);
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_toXML_testcase.php']) {
