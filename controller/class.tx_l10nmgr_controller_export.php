@@ -43,7 +43,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10
 require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_showExportList.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_detail.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_showExportDetail.php');
 require_once(t3lib_extMgm::extPath('l10nmgr').'view/class.tx_l10nmgr_view_showProgress.php');
 
 
@@ -173,7 +173,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @see showProgressAction
 	 */
 	protected function getRedirectUrlOnCompletion(){
-
+		return '../export/index.php'.$this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('showExportDetail')->useOverruledParameters()->makeUrl();
 	}
 
 	/**
@@ -183,10 +183,18 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @param void
 	 * @return string html content
 	 */
-	public function showExportDetailsAction(){
+	public function showExportDetailAction(){
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'], true);
-		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
+
+		$exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData 			= $exportDataRepository->findById($this->arguments['exportDataId']);
+
 		$this->view->setExportData($exportData);
+		$this->view->showFiles();
+		//@todo how can this be done with the link view helper?
+		$this->view->setListLink('../mod1/index.php');
+		$this->view->showListLink();
+		$this->view->addBackendStylesHeaderData();
 	}
 
 	/**
@@ -228,7 +236,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @return tx_mvc_view_widget_phpTemplateListView
 	 */
 	protected function getProgressableSubjectView(){
-		$view = new tx_l10nmgr_view_export_detail();
+		$view = new tx_l10nmgr_view_export_showExportDetail();
 		$this->initializeView($view);
 		$view->setExportData($this->getProgressableSubject());
 
@@ -258,10 +266,8 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @see ajaxPerformRunAction
 	 */
 	protected function performProgressableRun($exportData){
-		$fileExportPath = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename'));
-		$zipExportPath	=  t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportData::getTableName(), 'filename'));
 
-		return tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk'),$zipExportPath,$fileExportPath);
+		return tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk'));
 	}
 
 }

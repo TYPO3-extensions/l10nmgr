@@ -214,12 +214,9 @@ class tx_l10nmgr_models_exporter_exporter {
 	 *
 	 * @return boolean
 	 */
-	public static function performFileExportRun(tx_l10nmgr_models_exporter_exportData $exportData, $numberOfPagesPerChunk = 5,$zipExportPath='',$fileExportPath='') {
+	public static function performFileExportRun(tx_l10nmgr_models_exporter_exportData $exportData, $numberOfPagesPerChunk = 5) {
 		$exportView				= $exportData->getInitializedExportView();
 		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
-
-		$exportData->setAbsoluteZipPath($zipExportPath);
-		$exportData->setAbsoluteFilePath($fileExportPath);
 
 		$exporterWasRunning 	= $exporter->run();
 
@@ -228,7 +225,6 @@ class tx_l10nmgr_models_exporter_exporter {
 			//now we write the exporter result to a file
 			$exportFile	= new tx_l10nmgr_models_exporter_exportFile();
 			$exportFile->setFilename($exportView->getFilename($prefix,$exportData->getNumberOfExportRuns()));
-			$exportFile->setAbsoluteFilePath($fileExportPath);
 			$exportFile->setExportDataObject($exportData);
 			$exportFile->setContent($exporter->getResultForChunk());
 			$exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
