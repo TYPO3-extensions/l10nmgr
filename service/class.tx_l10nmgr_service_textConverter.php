@@ -79,6 +79,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		$this->HTMLparser->procOptions['allowTagsOutside ']     = 'img,hr,div';
 		$this->HTMLparser->procOptions['preserveDIVSections']   = true;
 
+			//!TODO configure the parser that xhtml_cleaning is used
 			//!TODO switch to use the RTE configuration from pageTSconfig - $this->HTMLparser->RTE_transform();
 			// Transform the content into valid XHTML style
 		$content = $this->HTMLparser->TS_transform_rte (
@@ -88,15 +89,8 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 			true
 		);
 
-		//!TODO configure the parser that xhtml_cleaning is used
-
-			//!FIXME replace this with a core "t3lib_parseHTML_proc" configuration
 			// this is needed while the "t3lib_parseHTML_proc" replaces all "&" to the entity "&amp;" he can find.
-		$content = str_replace (
-			array('&amp;lt;', '&amp;gt;', '&amp;quot;'),
-			array('&lt;',     '&gt;',     '&quot;'),
-			$content
-		);
+		$content = t3lib_div::deHSCentities($content);
 
 		try {
 			$this->isValidXML($content);
