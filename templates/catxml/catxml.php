@@ -1,5 +1,5 @@
 <?php echo'<?xml version="1.0" encoding="UTF-8"?>'; ?>
-<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp " "> ]>
+<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp "&#160;"> ]>
 <TYPO3L10N>
 	<head>
 		<?php $staticSourceLanguage = $this->l10ncfgObj->getStaticSourceLanguage(); ?>
