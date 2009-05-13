@@ -125,13 +125,12 @@ class tx_l10nmgr_models_importer_importer {
 			$ImportPageIdCollection	= $TranslationData->getPageIdCollection();
 
 				// create a dataProvider based on the exportData and the relevantPageIds of the importFile
-			$translateableFactoryDataProvider = $this->getTranslateableFactoryDataProviderFromPageIdCollectionAndExportData($ImportPageIdCollection,$exportData);
-			$translateableInformationFactory  = new tx_l10nmgr_models_translateable_translateableInformationFactory();
-			$TranslateableInformation         = $translateableInformationFactory->create($translateableFactoryDataProvider);
+			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
+			$TranlateableInformation 	= $factory->createFromExportDataAndPageIdCollection($exportData,$ImportPageIdCollection,$TranslationData->getWorkspaceId());
 
 				// Save the translation into the database
 			$TranslationService = new tx_l10nmgr_service_importTranslation();
-			$TranslationService->save($TranslateableInformation, $TranslationData);
+			$TranslationService->save($TranlateableInformation, $TranslationData);
 
 			if ( $this->importData->countRemainingImportFilenames() <= 0 ) {
 				$this->importData->setImportIsCompletelyProcessed(true);
@@ -144,22 +143,6 @@ class tx_l10nmgr_models_importer_importer {
 		}
 
 		return $isRunning;
-	}
-
-	/**
-	 * Create a dataProvider for the translateableInformationFactory from the current exportData
-	 *
-	 * @param ArrayObject $PageIdCollection
-	 * @access protected
-	 * @return tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider
-	 */
-	protected function getTranslateableFactoryDataProviderFromPageIdCollectionAndExportData($PageIdCollection, $exportData) {
-		$TranslatableDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider (
-			$exportData,
-			$PageIdCollection
-		);
-
-		return $TranslatableDataProvider;
 	}
 
 

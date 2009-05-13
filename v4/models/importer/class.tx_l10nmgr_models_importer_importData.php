@@ -159,7 +159,7 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @param void
 	 * @return array
 	 */
-	protected function getImportRemainingFilenames(){
+	public function getImportRemainingFilenames(){
 		if (!($this->getProgress('import_remaining_filenames') instanceof ArrayObject)) {
 
 			$remaining_files = new ArrayObject();
@@ -189,7 +189,7 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 *@param ArrayObject $filenames Collection of filenames to remove
 	 *@return void
 	 */
-	protected function removeFilenamesFromRemainingFilenames($filenames){
+	public function removeFilenamesFromRemainingFilenames($filenames){
 		$remainingFilenames = $this->getImportRemainingFilenames();
 		$remainingFilenamesLeft = array_diff($this->getImportRemainingFilenames()->getArrayCopy(),$filenames->getArrayCopy());
 		$remainingFilenames ->exchangeArray($remainingFilenamesLeft);
