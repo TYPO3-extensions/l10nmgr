@@ -25,7 +25,7 @@
 require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_textConverter.php';
 
 /**
- * Testcase for text convert from RTE text to XML text and the way back.
+ * Testcase for text convert from XML to database text.
  *
  * class.tx_l10nmgr_service_textConverter_toText_testcase.php
  *
@@ -157,7 +157,7 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testca
 	/**
 	 * Test that the htmlspecialchar "<", ">" and """ escaped with "&lt;","&gt;","&quot;"
 	 *
-	 * @access publc
+	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
@@ -175,7 +175,7 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testca
 	/**
 	 * Test that the htmlspecialchar are excaped while we import the text into flexform XML structure.
 	 *
-	 * @access publc
+	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
@@ -187,6 +187,57 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testca
 			$expectedText,
 			$this->TextConverter->toText($fixtureText, true),
 			'The transormation toText for flexform fields work not as expected.'
+		);
+	}
+
+	/**
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_transformAmpToUTF8WithoutParagraph() {
+		$fixtureText  = '&amp;';
+		$expectedText = '&';
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toText($fixtureText),
+			'The transormation &amp to & also when no paragraph is wrapped around.'
+		);
+	}
+
+	/**
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_transformNbspToUTF8WithoutParagraph() {
+		$fixtureText  = '&nbsp;';
+		$expectedText = '&nbsp;';
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toText($fixtureText),
+			'The transormation &amp to & also when no paragraph is wrapped around.'
+		);
+	}
+
+	/**
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_transformNbspToUTF8WithParagraph() {
+		$fixtureText  = '<p>&nbsp;</p>';
+		$expectedText = '';
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toText($fixtureText),
+			'The transormation &amp to & also when no paragraph is wrapped around.'
 		);
 	}
 }

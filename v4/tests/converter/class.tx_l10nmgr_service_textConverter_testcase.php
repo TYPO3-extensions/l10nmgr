@@ -25,9 +25,9 @@
 require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_textConverter.php';
 
 /**
- * Testcase for text convert from database text to XML text.
+ * This will test the round trip transformation of the textconverter.
  *
- * class.tx_l10nmgr_service_textConverter_toXML_testcase.php
+ * class.tx_l10nmgr_service_textConverter_testcase.php
  *
  * {@inheritdoc}
  *
@@ -42,7 +42,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_servic
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcase {
+class tx_l10nmgr_service_textConverter_testcase extends tx_phpunit_testcase {
 
 	/**
 	 * @var tx_l10nmgr_service_textConverter
@@ -101,132 +101,102 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 	}
 
 	/**
-	 * Test that valid XHTML styled break tags (empty element) are keeped by the converter.
+	 * Verify that the round transformation of an link is made as expected.
+	 *
+	 * That means that the typolink tag "<link>" is transformed to the corresponding "<a>" and back again to the "<link>" tag.
 	 *
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_keepValidBreakAndMaskTheLowerThanSign() {
-		$fixtureText     = 'here coms some .. 8747()/=<="($<br />';
-		$expectedText    = '<p>here coms some .. 8747()/=&lt;=&quot;($<br /></p>';
+	public function test_roundTransformationOfTypoLinkInlcudingNewlineCharacter() {
+		$fixtureText  = '<link 3>my link</link><strong>strong text</strong>'."\n" . 'test';
+		$expectedText = $fixtureText;
 
 		$this->assertEquals (
 			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
-			'The transormation toXML work not as expected.'
+			$this->TextConverter->toText (
+				$this->TextConverter->toXml($fixtureText)
+			),
+			'Transformation result is not equal to source.'
 		);
 	}
 
 	/**
-	 * The break tag with an closing tag will not removed while it's valid XML structure.
+	 * Verify that the round transformation of the link incl. the further parameter are made as expected.
+	 *
+	 * The link parameter should be placed in the link correct and transformed them back to the typolinktag correct.
 	 *
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_thatNoneEmptyElementStyledBreakTagsNotRemoved() {
-		$fixtureText  = 'here coms some .. 8747()/=<="($<br></br>';
-		//!TODO @dazi001 please clairify what should happend if there is a "<br></br>"
-		$expectedText = '<p>here coms some .. 8747()/=&lt;=&quot;($<br></br></p>';
+	public function test_roundTransformationOfTypoLinkWithFurtherParameterIncludingNewlineCharacter() {
+		$fixtureText  = '<link 3 target class "title text" name>>my link</link><strong>strong text</strong>'."\n" . 'test';
+		$expectedText = $fixtureText;
 
 		$this->assertEquals (
 			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
-			'The transormation toXML work not as expected.'
+			$this->TextConverter->toText (
+				$this->TextConverter->toXml($fixtureText)
+			),
+			'Transformation result is not equal to source.'
 		);
 	}
 
 	/**
-	 * Verify that an "tx_mvc_exception_converter" is thrown
-	 * if the given string is not XML conform.
+	 * This test verify that entitys are handled correct both ways.
 	 *
-	 * @expectedException tx_mvc_exception_converter
+	 * Tested entities are:
+	 * - &amp;
+	 * - &nbsp;
+	 * - &auml;
+	 *
+	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_throwExceptionOnInvalidClosedHTMLLineBreak() {
-		$fixtureText  = 'here coms some .. 8747()/=<="($<br>';
+	public function test_roundTransformationOfBasicEntities() {
+		$fixtureText           = '& &amp; &nbsp; ich&du &auml;';
+		$expectedXML           = '<p>&amp; &amp; &nbsp; ich&amp;du ä</p>';
+		$roundTripExpectedText = '& & &nbsp; ich&du ä';
 
-		$this->TextConverter->toXML($fixtureText);
+		$this->assertEquals (
+			$expectedXML,
+			$this->TextConverter->toXML($fixtureText),
+			'Convertion to XML produces unexpected text'
+		);
+
+		$this->assertEquals (
+			$roundTripExpectedText,
+			$this->TextConverter->toText (
+				$this->TextConverter->toXML($fixtureText)
+			),
+			'Entities not round trip converted as expected.'
+		);
 	}
 
 	/**
-	 * Test that the htmlspecialchar "<" escaped with "&lt;".
+	 * Verify that the retrieved content within div section are don't contains paragraph tags.
 	 *
 	 * @access publc
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_escapeTheLowerSignCorrect() {
-		$fixtureText  = '&lt;&gt;&quot;<br />';
-		$expectedText = '<p>&lt;&gt;&quot;<br /></p>';
-
-		$this->assertEquals (
-			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
-			'The transormation toXML work not as expected.'
-		);
-	}
-
-	/**
-	 * Verify that entities are converted to the UTF-8 charachter but
-	 * the htmlspechialchar "&amp;" is untouched.
-	 *
-	 * @access publc
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @return void
-	 */
-	public function test_convertEntiesToUTF8ButKeepTheHtmlSpecialCharAmp() {
-		$fixtureText  = '&auml;<br />&amp;';
-		$expectedText = '<p>ä<br />&amp;</p>';
-
-		$this->assertEquals (
-			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
-			'The transormation toXML work not as expected.'
-		);
-	}
-
-	/**
-	 * Verify that a unicode entity are convert to the UTF-8 charakter as well.
-	 *
-	 * @access publc
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @return void
-	 */
-	public function test_convertUnicodeCharacterToUTF8() {
-		$fixtureText  = '&auml;<br />&amp;&#x20AC;';
-		$expectedText = '<p>ä<br />&amp;€</p>';
-
-		$this->assertEquals (
-			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
-			'The transormation toXML work not as expected.'
-		);
-	}
-
-	/**
-	 * Verify that no paragraph is wrapped around div-Tag.
-	 *
-	 * @access publc
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @return void
-	 */
-	public function test_dontSetParagraphAroundDivElements() {
+	public function test_roundTransformationDontSetParagraphIntoDivElements() {
 		$fixtureText  = '<div id="lipsum"> Lorem ipsum dolor sit amet, consectetur </div>';
-		$expectedText = '<div id="lipsum"><p> Lorem ipsum dolor sit amet, consectetur </p></div>';
+		$expectedText = $fixtureText;
 
 		$this->assertEquals (
 			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
+			$this->TextConverter->toText($this->TextConverter->toXML($fixtureText)),
 			'The transormation toXML work not as expected.'
 		);
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_toXML_testcase.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_toXML_testcase.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_testcase.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_testcase.php']);
 }
 
 ?>
