@@ -65,7 +65,7 @@ class tx_l10nmgr_models_importer_importer {
 	 * @access public
 	 * @return void
 	 */
-	public function __construct($importData){
+	public function __construct(tx_l10nmgr_models_importer_importData $importData){
 		$this->importData = $importData;
 	}
 
@@ -75,7 +75,7 @@ class tx_l10nmgr_models_importer_importer {
   	 * @param tx_l10nmgr_domain_translation_data $Translationdata
   	 * @return tx_l10nmgr_models_exporter_exportData $exportData
 	 */
-	protected function getExportDataFromTranslationData($Translationdata){
+	protected function getExportDataFromTranslationData(tx_l10nmgr_domain_translation_data $Translationdata){
 		$exportDataUid			= $Translationdata->getExportDataRecordUid();
 		tx_mvc_validator_factory::getIntValidator()->isValid($exportDataUid,true);
 
@@ -111,7 +111,7 @@ class tx_l10nmgr_models_importer_importer {
 			$targetLanguageFromImport =	$TranslationData->getSysLanguageUid();
 
 			if($targetLanguageFromExport != $targetLanguageFromImport){
-				throw new tx_mvc_exception_invalidArgument('The import ('.$targetLanguageFromImport.') has a diffrent target language the the export ('.$targetLanguageFromExport.') it results from');
+				throw new tx_mvc_exception_invalidArgument('The import ('.$targetLanguageFromImport.') has a different target language as the export ('.$targetLanguageFromExport.') it results from');
 			}
 
 			if ( $this->importData->getImportIsCompletelyUnprocessed() ) {
