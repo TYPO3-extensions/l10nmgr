@@ -25,9 +25,12 @@
 require_once t3lib_extMgm::extPath('l10nmgr') . 'models/tools/class.tx_l10nmgr_utf8tools.php';
 require_once PATH_t3lib . 'class.t3lib_cs.php';
 
-
 /**
- * Converter for content
+ * Converter for content.
+ *
+ * Futher documentation about the transformations can be found here:
+ * - http://typo3.org/documentation/document-library/core-documentation/doc_core_api/4.2.0/view/5/2/
+ * - http://typo3.org/documentation/document-library/references/doc_core_tsref/4.2.0/view/1/5/#id4198758
  *
  * class.tx_l10nmgr_service_textConverter.php
  *
@@ -73,6 +76,8 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 
 			// convert any &amp; you'll find
 		$this->HTMLparser->procOptions['dontConvAmpInNBSP_rte'] = false;
+		$this->HTMLparser->procOptions['allowTagsOutside ']     = 'img,hr,div';
+		$this->HTMLparser->procOptions['preserveDIVSections']   = true;
 
 			//!TODO switch to use the RTE configuration from pageTSconfig - $this->HTMLparser->RTE_transform();
 			// Transform the content into valid XHTML style
@@ -147,6 +152,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 *
 	 * @param string $content XML string to convert
 	 * @param boolean $importFlexFieldValue OPTIONAL if an value for flexforms should be imported use this option to escape the htmlspecialchars
+	 *                                       This option is current not in use - while the TCEmain convert the htmlspecialchars self way.
 	 * @access public
 	 * @throws tx_mvc_exception_converter
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
@@ -170,7 +176,6 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		}
 
 		$this->HTMLparser->procOptions['HTMLparser_db.']['xhtml_cleaning'] = true;
-//		$this->HTMLparser->procOptions['HTMLparser_db.']['htmlSpecialChars'] = -1;
 
 		$content = $this->HTMLparser->TS_links_db (
 			$this->HTMLparser->TS_images_db (
@@ -185,6 +190,10 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 				'&nbsp;',
 				htmlspecialchars($content)
 			);
+		} else {
+				// we need this while the HTMLparser won't convert entities to their character if the value comes without "<p>"-Tags
+				// => check this option "$this->HTMLparser->procOptions['HTMLparser_db.']['htmlSpecialChars'] = -1;"
+			$content = htmlspecialchars_decode($content);
 		}
 
 		return $content;
