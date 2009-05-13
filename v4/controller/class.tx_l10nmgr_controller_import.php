@@ -111,7 +111,7 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['importDataId'],true);
 
 		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
-		$importData = $importDataRepository->findById($this->arguments['importDataId']);
+		$importData = $importDataRepository->findById($this->arguments['importDataId']); /* @var $importData tx_l10nmgr_models_importer_importData */
 
 		/* Ensure, that all files are unzipped */
 		$importData->extractAllZipContent();
@@ -148,8 +148,7 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 		$fileExportPath = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename'));
 
 		$importFiles = $importData->getImportFiles();
-		foreach($importFiles as $importFile){
-			/** @var tx_l10nmgr_models_importer_importFile */
+		foreach($importFiles as $importFile){ /* @var $importFile tx_l10nmgr_models_importer_importFile */
 			$sourceFilename 	= $importFile->getFilename();
 
 			if(strpos($sourceFilename,'dummytranslated_') === false){

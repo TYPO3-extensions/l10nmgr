@@ -32,6 +32,8 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_
 
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowState.php';
 require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFile.php';
+
 
 /**
  * An exportData object represents one export. Each export can have multiple files.
@@ -145,13 +147,13 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
-	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return string returns the configured absolute path to the zip file
 	 */
 	protected function getAbsoluteZipPath(){
 		return $this->absoluteZipPath;
 	}
+
 	/**
 	 * This method can be used to get the download url of this file
 	 *
@@ -162,6 +164,7 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 		$url 	= $site.''.$this->getRelativeZipPath().'/'.$this->getFilename();
 		return $url;
 	}
+
 	/**
 	 * Initialize the database object with
 	 * the table name of current object

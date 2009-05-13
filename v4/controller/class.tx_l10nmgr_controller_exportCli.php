@@ -24,7 +24,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('mvc').'mvc/controller/controller/class.tx_mvc_controller_cli.php');
+require_once(t3lib_extMgm::extPath('mvc').'mvc/controller/class.tx_mvc_controller_cli.php');
 
 /**
  * Export controller for cli
@@ -44,10 +44,10 @@ require_once(t3lib_extMgm::extPath('mvc').'mvc/controller/controller/class.tx_mv
 class tx_l10nmgr_controller_exportCli extends tx_mvc_controller_cli {
 
 	protected $cli_help = array(
-		'name' => 'Localization Manager exporter',
+		'name' => 'Localization Manager Exporter',
 		'synopsis' => '###OPTIONS###',
 		'options' => '',
-		'description' => 'Class with export functionality for l10nmgr',
+		'description' => 'Exports configurations to an export format',
 		'examples' => './cli_dispatch.phpsh l10nmgr_export --format=CATXML --config=l10ncfg --target=tlangs --workspace=wsid --hidden=TRUE --updated=FALSE',
 		'author' => 'Daniel Zielinski - L10Ntech.de, AOE media GmbH (c) 2009',
 		'license' => 'GNU GPL - free software!',
@@ -115,19 +115,31 @@ class tx_l10nmgr_controller_exportCli extends tx_mvc_controller_cli {
 	 */
 	public function initializeController() {
 
-		//$wsId = (string)$this->cli_args['_DEFAULT'][4];
-		$workspaceId = isset($this->arguments['--workspace']) ? $this->arguments['--workspace'][0] : '0';
-
-		tx_mvc_validator_factory::getIntGreaterThanValidator()->setMin(-1)->isValid($workspaceId, true);
-
 		// Force user to admin state
 		$GLOBALS['BE_USER']->user['admin'] = 1;
 
 		// Set workspace to the required workspace ID from CATXML:
-		$GLOBALS['BE_USER']->setWorkspace($wsId);
+		$GLOBALS['BE_USER']->setWorkspace($this->getWorkspaceId());
 	}
 
+	/**
+	 * Get workspace id
+	 *
+	 * @param void
+	 * @return int workspace id
+	 */
+	protected function getWorkspaceId() {
+		$workspaceId = isset($this->arguments['--workspace'] ) ? $this->arguments['--workspace'] [0] : '0';
+		tx_mvc_validator_factory::getIntGreaterThanValidator()->setMin(-1)->isValid($workspaceId, true);
+		return $workspaceId;
+	}
 
+	/**
+	 * Get format
+	 *
+	 * @param void
+	 * @return string format
+	 */
 	protected function getFormat() {
 		return isset($this->arguments['--format']) ? $this->arguments['--format'][0] : 'CATXML';
 	}
@@ -204,6 +216,12 @@ class tx_l10nmgr_controller_exportCli extends tx_mvc_controller_cli {
 		}
 	}
 
+	/**
+	 * Export to xml
+	 *
+	 * @param void
+	 * @return void
+	 */
 	public function catxmlExportAction() {
 		foreach ($this->getL10nConfigurationIds() as $l10nConfigurationId) {
 			foreach ($this->getTargetLanguages() as $targetLanguageId) {
@@ -234,9 +252,11 @@ class tx_l10nmgr_controller_exportCli extends tx_mvc_controller_cli {
 				$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 				$exportDataRepository->add($exportData);
 
+				$exporter = new tx_l10nmgr_models_exporter_exporter($exportData)
+
 				do {
 					$this->cli_echo(sprintf('%s%% finished'."\n", round($exportData->getProgressPercentage())));
-				} while (!tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk')););
+				} while (!tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk')));
 				$this->cli_echo(sprintf('%s%% finished'."\n", round($exportData->getProgressPercentage())));
 
 			}
