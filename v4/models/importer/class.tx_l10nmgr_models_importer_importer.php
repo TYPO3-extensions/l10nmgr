@@ -100,7 +100,7 @@ class tx_l10nmgr_models_importer_importer {
 		if (! $this->importData->getImportIsCompletelyProcessed() ) {
 
 			// determine the next file to import
-			$currentFile = $this->getNextFilename();
+			$currentFile = $this->importData->getNextFilename();
 
 			$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
 			$TranslationData    = $TranslationFactory->create($currentFile);
@@ -138,7 +138,7 @@ class tx_l10nmgr_models_importer_importer {
 				$exportData->addWorkflowStat(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
 			}
 
-			$this->removeProcessedFilename($currentFile);
+			$this->importData->removeProcessedFilename($currentFile);
 
 			$isRunning = true;
 		}
@@ -162,29 +162,7 @@ class tx_l10nmgr_models_importer_importer {
 		return $TranslatableDataProvider;
 	}
 
-	/**
-	 * Returns the next file for the import.
-	 *
-	 * @access protected
-	 * @return string $fileName
-	 */
-	protected function getNextFilename() {
-		$remainingFilenames = $this->importData->getImportRemainingFilenames();
-		$it = $remainingFilenames->getIterator();
 
-		return $it->current();
-	}
-
-	/**
-	 * This method introduces the importData object to remove a file from the remaining filenames
-	 * that need to be processed.
-	 *
-	 * @param string
-	 * @return void
-	 */
-	protected function removeProcessedFilename($filename){
-		$this->importData->removeFilenamesFromRemainingFilenames(new ArrayObject(array($filename)));
-	}
 
 	/**
 	 * This static method is used to process one importChunk of an importData object.

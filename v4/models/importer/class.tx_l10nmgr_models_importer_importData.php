@@ -50,6 +50,11 @@ require_once t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_
 class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCAObject implements tx_l10nmgr_interface_progressable  {
 
 	/**
+	 * @var string
+	 */
+	protected $currentFilename;
+
+	/**
 	 * Initialisize the database object with
 	 * the table name of current object
 	 *
@@ -154,7 +159,7 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @param void
 	 * @return array
 	 */
-	public function getImportRemainingFilenames(){
+	protected function getImportRemainingFilenames(){
 		if (!($this->getProgress('import_remaining_filenames') instanceof ArrayObject)) {
 
 			$remaining_files = new ArrayObject();
@@ -184,7 +189,7 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 *@param ArrayObject $filenames Collection of filenames to remove
 	 *@return void
 	 */
-	public function removeFilenamesFromRemainingFilenames($filenames){
+	protected function removeFilenamesFromRemainingFilenames($filenames){
 		$remainingFilenames = $this->getImportRemainingFilenames();
 		$remainingFilenamesLeft = array_diff($this->getImportRemainingFilenames()->getArrayCopy(),$filenames->getArrayCopy());
 		$remainingFilenames ->exchangeArray($remainingFilenamesLeft);
@@ -308,6 +313,64 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 */
 	public function getProgressPercentage(){
 		return (100 / $this->getImportTotalNumberOfFiles()) * ($this->getImportTotalNumberOfFiles() - $this->getImportNumberOfRemainingFilenames());
+	}
+
+	/**
+	 * Returns the output which should be displayed in the progress bar.
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return string
+	 */
+	public function getProgressOutput(){
+		$completeFilenameWithPath = $this->getCurrentFilename();
+		//remove path from filename
+		$displayFilename = substr($completeFilenameWithPath,strrpos($completeFilenameWithPath,'/')+1);
+		return '<strong>'.round($this->getProgressPercentage()).'</strong> % (Importing: '.$displayFilename.')';
+	}
+
+	/**
+	 * Method to set the filename that is currently processed
+	 *
+	 * @param string filename
+	 */
+	protected function setCurrentFilename($filename){
+		$this->currentFilename = $filename;
+	}
+
+	/**
+	 * Returns the filename that is currently processed
+	 *
+	 * @return string
+	 */
+	protected function getCurrentFilename(){
+		return $this->currentFilename;
+	}
+
+	/**
+	 * Returns the next file for the import.
+	 *
+	 * @access protected
+	 * @return string $fileName
+	 */
+	public function getNextFilename() {
+		$remainingFilenames = $this->getImportRemainingFilenames();
+		$it = $remainingFilenames->getIterator();
+		$filename =  $it->current();
+
+		$this->setCurrentFilename($filename);
+
+		return $filename;
+	}
+
+	/**
+	 * This method introduces the importData object to remove a file from the remaining filenames
+	 * that need to be processed.
+	 *
+	 * @param string
+	 * @return void
+	 */
+	public function removeProcessedFilename($filename){
+		$this->removeFilenamesFromRemainingFilenames(new ArrayObject(array($filename)));
 	}
 
 }
