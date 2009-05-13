@@ -109,6 +109,7 @@ class tx_l10nmgr_controller_list extends tx_mvc_controller_action {
 	 * This method is used to check the setup of the TYPO3 system to display an error message
 	 * if it is not configured correctly.
 	 *
+	 * @throws tx_mvc_exception_notSupported
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
 	protected function checkflexFormXMLincludeDiffBaseSetting(){

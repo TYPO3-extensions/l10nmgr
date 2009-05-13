@@ -263,6 +263,16 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
+	 * Returns the output which should be displayed in the progress bar.
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return string
+	 */
+	public function getProgressOutput(){
+		return round($this->getProgressPercentage()).' %';
+	}
+
+	/**
 	 * Returns the total number of pages which will be exported in this export run.
 	 *
 	 * @return int

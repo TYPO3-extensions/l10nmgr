@@ -68,6 +68,8 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		$this->initalProgressLabel = $initalProgressLabel;
 	}
 
+	public static $warningMessages;
+
 	/**
 	 * Show progress action
 	 *
@@ -114,15 +116,24 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 
 		try {
 			$subject = $this->getProgressableSubject();
+
+			set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);
 			$this->performProgressableRun($subject);
+			restore_error_handler();
 
 			$progressView = new tx_mvc_view_widget_progressAjax();
 			$this->initializeView($progressView);
 			$percent = $subject->getProgressPercentage();
+
 			$progressView->setProgress($percent);
 
+			if(is_array(self::$warningMessages)){
+				$warningMessage = implode('\n',self::$warningMessages);
+				$progressView->setWarningMessage($warningMessage);
+			}
+
 			if ($percent < 100) {
-				$progressView->setProgressLabel(round($subject->getProgressPercentage()). ' %');
+				$progressView->setProgressLabel($subject->getProgressOutput());
 			} else {
 				$progressView->setProgressLabel('Completed');
 				$progressView->setCompleted(true);
@@ -130,15 +141,40 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 			echo $progressView->render();
 
 		} catch(Exception $exception) {
+
 			tx_mvc_common_debug::logException($exception);
 			echo json_encode(array(
 				'errorMessage' => $exception->getMessage(),
 				'file' => sprintf('%s (%s)', $exception->getFile(), $exception->getLine()),
 				'trace' => $exception->getTraceAsString()
 			));
-
 		}
+
 		exit();
+	}
+
+	/**
+	* Custom error handler writes error to the dev log and adds error messages to an
+	* internal error message array.
+	*/
+	public function warningHandler($errno,$errstr,$file,$line){
+		$message = 'Error '.$errstr.'/ '.$errno. ' in '.$file.' on line '.$line;
+
+		self::$warningMessages[] = $message;
+
+        // write to TYPO3 devlog
+        if (TYPO3_DLOG) {
+            t3lib_div::devLog(
+                $message,
+                'l10nmgr',
+                3,
+                array(
+                    'file' => $file,
+                    'line' => $line,
+                    'trace' => get_call_stack(),
+                )
+            );
+        }
 	}
 }
 
