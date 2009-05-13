@@ -176,6 +176,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 				$this->HTMLparser->TS_transform_db($content, 0) // removes links from content if not called first!
 			)
 		);
+
 			// this is needed because the "t3lib_parseHTML_proc" dosn't recognise <br/> whitin <li> tags
 		$content = str_replace (
 			'<br/>',
