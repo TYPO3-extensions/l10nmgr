@@ -1,4 +1,7 @@
 2009-05-12 Michael Klapper <michael.klapper@aoemedia.de>
+	* Improve tx_l10nmgr_service_textConverter testcases
+
+2009-05-12 Michael Klapper <michael.klapper@aoemedia.de>
 	* Add 'tx_l10nmgr_service_textConverter'
 	* Replace the old xmltools with "tx_l10nmgr_service_textConverter" on "tx_l10nmgr_domain_translationFactory".
 	* Replace the old xmltools with "tx_l10nmgr_service_textConverter" on "tx_l10nmgr_CATXMLView", improve Exception handling.
