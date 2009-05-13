@@ -79,8 +79,8 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		$this->HTMLparser->procOptions['allowTagsOutside ']     = 'img,hr,div';
 		$this->HTMLparser->procOptions['preserveDIVSections']   = true;
 
-			//!TODO configure the parser that xhtml_cleaning is used
 			//!TODO switch to use the RTE configuration from pageTSconfig - $this->HTMLparser->RTE_transform();
+			//!TODO configure the parser that xhtml_cleaning is used
 			// Transform the content into valid XHTML style
 		$content = $this->HTMLparser->TS_transform_rte (
 			$this->HTMLparser->TS_links_rte (
@@ -208,7 +208,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		$vals    = array();
 		$index   = array();
 
-		$content = '<!DOCTYPE dummy [ <!ENTITY nbsp " "> ]><dummy>' . $content . '</dummy>';
+		$content = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE dummy [ <!ENTITY nbsp "&#160;"> ]><dummy>' . $content . '</dummy>';
 
 		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
 		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 0);
