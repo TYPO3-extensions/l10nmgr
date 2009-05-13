@@ -193,6 +193,27 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_phpunit_testcase {
 			'The transormation toXML work not as expected.'
 		);
 	}
+
+	/**
+	 * Verify that the dead links will not removed while transformating
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_roundTransformationKeepDeadLink() {
+		$fixtureRTE  = 'here comes some ... <link 92783928>this is my link</link>';
+
+		$transformed = $this->TextConverter->toText (
+			$this->TextConverter->toXML($fixtureRTE)
+		);
+
+		$this->assertEquals (
+			$transformed,
+			$fixtureRTE,
+			'transformation result is not as expected'
+		);
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_testcase.php']) {
