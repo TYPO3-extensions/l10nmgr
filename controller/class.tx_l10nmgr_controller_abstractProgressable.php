@@ -156,25 +156,19 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	/**
 	* Custom error handler writes error to the dev log and adds error messages to an
 	* internal error message array.
+	*
+	* @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	* @param int error code
+ 	* @param string error description
+	* @param string filename
+	* @param int line of code
 	*/
 	public function warningHandler($errno,$errstr,$file,$line){
-		$message = 'Error '.$errstr.'/ '.$errno. ' in '.$file.' on line '.$line;
+		$message = 'Warning: '.$errstr.'/ '.$errno. ' in '.$file.' on line '.$line;
 
 		self::$warningMessages[] = $message;
 
-        // write to TYPO3 devlog
-        if (TYPO3_DLOG) {
-            t3lib_div::devLog(
-                $message,
-                'l10nmgr',
-                3,
-                array(
-                    'file' => $file,
-                    'line' => $line,
-                    'trace' => get_call_stack(),
-                )
-            );
-        }
+
 	}
 }
 

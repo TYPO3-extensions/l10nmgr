@@ -100,10 +100,10 @@ class tx_l10nmgr_models_exporter_exporter {
 				$this->exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTING);
 			}
 
-			$pagesForChunk 				= $this->getNextPagesChunk();
-			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-			$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($this->exportData,$pagesForChunk );
-			$tranlateableInformation 	= $factory->create($typo3DataProvider);
+			$pagesForChunk 	= $this->getNextPagesChunk();
+
+			$factory 		= new tx_l10nmgr_models_translateable_translateableInformationFactory();
+			$tranlateableInformation = $factory->createFromExportDataAndPageIdCollection($this->exportData,$pagesForChunk);
 
 			$this->exportView->setTranslateableInformation($tranlateableInformation);
 
@@ -121,6 +121,8 @@ class tx_l10nmgr_models_exporter_exporter {
 			return true;
 		}
 	}
+
+
 
 	/**
 	 * In each run the exporter processes one chunk. This method

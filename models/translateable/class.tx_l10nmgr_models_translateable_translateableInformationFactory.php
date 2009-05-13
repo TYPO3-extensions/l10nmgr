@@ -49,6 +49,25 @@ require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_
 class tx_l10nmgr_models_translateable_translateableInformationFactory {
 
 	/**
+	 * Builds an translateableInformation from a given exportData object and a collection of page ids which should be exported.
+	 *
+	 * @param tx_l10nmgr_models_exporter_exportData $exportData
+	 * @param ArrayObject $pageIdCollection collection of page ids
+	 */
+	public function createFromExportDataAndPageIdCollection(tx_l10nmgr_models_exporter_exportData $exportData, ArrayObject $pageIdCollection, $workspaceId = NULL){
+		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData, $pageIdCollection );
+
+		if(!is_null($workspaceId)){
+			$typo3DataProvider->setWorkspaceId($workspaceId);
+		}
+
+		$tranlateableInformation 	= $this->createFromDataProvider($typo3DataProvider);
+
+
+		return $tranlateableInformation;
+	}
+
+	/**
 	 * This method is used, to create a translateableInformation object structure from a
 	 * configuration, a set of pageIds and a target and a previewLanguage.
 	 * Internally it iterates the pageIdCollection and fetches the information for a translation using the
@@ -60,7 +79,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 * @param tx_l10nmgr_models_language_language $previewLanguage
 	 * @todo we need to handle the include index
 	 */
-	public function create(tx_l10nmgr_interface_translateable_translateableFactoryDataProvider $dataProvider){
+	public function createFromDataProvider(tx_l10nmgr_interface_translateable_translateableFactoryDataProvider $dataProvider){
 
 		$this->dataProvider			= $dataProvider;
 

@@ -112,7 +112,7 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 		$exportData = $exportDataRepository->findById(67);
 
 		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
-		$TranslatableInformation		  = $this->TranslatableFactory->create($translateableFactoryDataProvider);
+		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 

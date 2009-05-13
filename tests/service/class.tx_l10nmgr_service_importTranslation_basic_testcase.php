@@ -175,7 +175,7 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 		$ExportData           = $ExportDataRepository->findById($TranslationData->getExportDataRecordUid());
 
 		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($ExportData, $TranslationData->getPageIdCollection());
-		$TranslatableInformation		  = $this->TranslatableFactory->create($translateableFactoryDataProvider);
+		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 
