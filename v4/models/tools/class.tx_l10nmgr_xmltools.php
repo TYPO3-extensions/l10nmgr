@@ -36,11 +36,11 @@ class tx_l10nmgr_xmltools {
 	/**
 	 * @var t3lib_parseHTML_proc
 	 */
-	protected $parseHTML = null;
+	protected $HTMLparser = null;
 
 	public function __construct() {
 		throw new Exception('Obsolete');
-		$this->parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
+		$this->HTMLparser = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 	}
 
 	/**
@@ -87,21 +87,14 @@ class tx_l10nmgr_xmltools {
 	 * @return	mixed		false if transformation failed, string with XML if all fine
 	 */
 	function RTE2XML($content, $withStripBadUTF8 = 0) {
-//		print __METHOD__ . '<pre>'; var_dump($content); exit("<br /><br /><br />------- end of debug.");
 
-		$CharSet = new t3lib_cs();
-		$content = htmlspecialchars($CharSet->entities_to_utf8($content, true));
-//		$content = $CharSet->entities_to_utf8($content, true);
+		$content = $this->HTMLparser->TS_images_rte($content);
+		$content = $this->HTMLparser->TS_links_rte($content);
+		$content = $this->HTMLparser->TS_transform_rte($content, 1);
 
-		$content = $this->parseHTML->TS_images_rte($content);
-		$content = $this->parseHTML->TS_links_rte($content);
-		$content = $this->parseHTML->TS_transform_rte($content,1);
-
-//		$content = $this->parseHTML->RTE_transform($content, array(), 'rte');
-		$content = t3lib_div::deHSCentities($content);
-//		print __METHOD__ . '<pre>'; var_dump($content); exit("<br /><br /><br />------- end of debug.");
-
-//		$content = str_replace($CharSet->entities_to_utf8('&nbsp;', true), '&nbsp;', $content);
+			//substitute & with &amp;
+		$content=str_replace('&','&amp;',$content);
+		$content=t3lib_div::deHSCentities($content);
 
 		if ($withStripBadUTF8 == 1) {
 			$content = tx_l10nmgr_utf8tools::utf8_bad_strip($content);
@@ -116,34 +109,36 @@ class tx_l10nmgr_xmltools {
 	/**
 	 * Transforms a XML back to RTE / reverse function of RTE2XML
 	 *
-	 *
 	 * @param	string		XMLString which should be transformed
 	 * @return	string		string with HTML
 	 */
 	function XML2RTE($xmlstring) {
-		//@todo fixed setting of Parser (TO-DO set it via typoscript)
+		//!TODO fixed setting of Parser (TO-DO set it via typoscript)
 
-			$this->parseHTML->procOptions['typolist']=FALSE;
-			$this->parseHTML->procOptions['typohead']=FALSE;
-			$this->parseHTML->procOptions['keepPDIVattribs']=TRUE;
-			$this->parseHTML->procOptions['dontConvBRtoParagraph']=TRUE;
+			//Added because import failed
+		$xmlstring=str_replace('<br/>','<br>',$xmlstring);
+		$xmlstring=str_replace('<br />','<br>',$xmlstring);
 
-			if (!is_array($this->parseHTML->procOptions['HTMLparser_db.'])) {
-				$this->parseHTML->procOptions['HTMLparser_db.']=array();
-			}
+		$this->HTMLparser->procOptions['typolist']=FALSE;
+		$this->HTMLparser->procOptions['typohead']=FALSE;
+		$this->HTMLparser->procOptions['keepPDIVattribs']=TRUE;
+		$this->HTMLparser->procOptions['dontConvBRtoParagraph']=TRUE;
 
-			$this->parseHTML->procOptions['HTMLparser_db.']['xhtml_cleaning']=TRUE;
-				//trick to preserve strong tags
-			$this->parseHTML->procOptions['denyTags']='strong';
-			$this->parseHTML->procOptions['preserveTables']=TRUE;
-			$this->parseHTML->procOptions['dontRemoveUnknownTags_db']=TRUE;
+		if (!is_array($this->HTMLparser->procOptions['HTMLparser_db.'])) {
+			$this->parseHTML->procOptions['HTMLparser_db.']=array();
+		}
 
-			$content = $this->parseHTML->TS_transform_db($xmlstring,$css=0); // removes links from content if not called first!
-			$content = $this->parseHTML->TS_images_db($content);
-			$content = $this->parseHTML->TS_links_db($content);
+		$this->HTMLparser->procOptions['HTMLparser_db.']['xhtml_cleaning']=TRUE;
+			//trick to preserve strong tags
+		$this->HTMLparser->procOptions['denyTags']='strong';
+		$this->HTMLparser->procOptions['preserveTables']=TRUE;
+		$this->HTMLparser->procOptions['dontRemoveUnknownTags_db']=TRUE;
 
-//			$content = $this->parseHTML->RTE_transform($xmlstring, array(), 'db');
-			return $content;
+		$content = $this->HTMLparser->TS_transform_db($xmlstring, 0); // removes links from content if not called first!
+		$content = $this->HTMLparser->TS_images_db($content);
+		$content = $this->HTMLparser->TS_links_db($content);
+
+		return $content;
 	}
 }
 
