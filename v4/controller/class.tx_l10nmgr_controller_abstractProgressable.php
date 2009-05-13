@@ -112,7 +112,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	 */
 	public function ajaxPerformRunAction(){
 
-		try{
+		try {
 			$subject = $this->getProgressableSubject();
 			$this->performProgressableRun($subject);
 
@@ -129,7 +129,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 			}
 			echo $progressView->render();
 
-		}catch(Exception $exception){
+		} catch(Exception $exception) {
 			tx_mvc_common_debug::logException($exception);
 			echo json_encode(array(
 				'errorMessage' => $exception->getMessage(),
