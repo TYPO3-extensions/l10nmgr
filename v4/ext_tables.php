@@ -54,7 +54,7 @@ plugin.tx_l10nmgr_controller_import.configuration {
 	templates{
 		form = EXT:l10nmgr/templates/import/form.php
 	}
-	
+
 	loadJQuery = 1
 }
 
@@ -135,6 +135,8 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
+		'versioningWS' => TRUE,
+		'origUid' => 't3_origuid',
 		'source_lang' => 'source_lang',
 		'translation_lang' => 'translation_lang',
 		'source_lang' => 'source_lang',
@@ -160,6 +162,8 @@ $TCA['tx_l10nmgr_exportfiles'] = Array (
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
+		'versioningWS' => TRUE,
+		'origUid' => 't3_origuid',
 		'default_sortby' => 'ORDER BY tstamp',
 		'delete' => 'deleted',
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
@@ -181,6 +185,9 @@ $TCA["tx_l10nmgr_importdata"] = Array (
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
+		'versioningWS' => TRUE,
+		'origUid' => 't3_origuid',
+
 		"default_sortby" => "ORDER BY tstamp",
 		"delete" => "deleted",
 		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",
@@ -200,6 +207,8 @@ $TCA['tx_l10nmgr_importfiles'] = Array (
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
+		'versioningWS' => TRUE,
+		'origUid' => 't3_origuid',
 		'default_sortby' => 'ORDER BY tstamp',
 		'delete' => 'deleted',
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
@@ -221,6 +230,8 @@ $TCA['tx_l10nmgr_workflowstates'] = Array (
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
+		'versioningWS' => TRUE,
+		'origUid' => 't3_origuid',
 		'default_sortby' => 'ORDER BY tstamp',
 		'delete' => 'deleted',
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',

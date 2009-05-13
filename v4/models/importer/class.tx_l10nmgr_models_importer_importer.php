@@ -107,12 +107,7 @@ class tx_l10nmgr_models_importer_importer {
 			$exportData 		= $this->getExportDataFromTranslationData($TranslationData);
 
 			#check pre requirements
-			$targetLanguageFromExport = $exportData->getTranslationLanguageObject()->getUid();
-			$targetLanguageFromImport =	$TranslationData->getSysLanguageUid();
-
-			if($targetLanguageFromExport != $targetLanguageFromImport){
-				throw new tx_mvc_exception_invalidArgument('The import ('.$targetLanguageFromImport.') has a different target language as the export ('.$targetLanguageFromExport.') it results from');
-			}
+			$this->checkImportConditions($this->importData, $exportData,$TranslationData);
 
 			if ( $this->importData->getImportIsCompletelyUnprocessed() ) {
 				/**
@@ -143,6 +138,64 @@ class tx_l10nmgr_models_importer_importer {
 		}
 
 		return $isRunning;
+	}
+
+	/**
+	 * This method is used to check the conditions before an import can start. It updates the importData with
+	 * the configurationId and the exportDataId if it is not set and was found in the import.
+	 *
+	 * @param tx_l10nmgr_models_importer_importData $importData represents an import run.
+	 * @param tx_l10nmgr_models_exporter_exportData $exportData represents an export run
+	 * @param tx_l10nmgr_domain_translation_data $TranslationData Hold the data of an import
+	 * @throws tx_mvc_exception_invalidArgument
+	 */
+	protected function checkImportConditions(tx_l10nmgr_models_importer_importData $importData, tx_l10nmgr_models_exporter_exportData $exportData, tx_l10nmgr_domain_translation_data $TranslationData){
+		$targetLanguageFromExport = $exportData->getTranslationLanguageObject()->getUid();
+		$targetLanguageFromImport =	$TranslationData->getSysLanguageUid();
+
+		if($targetLanguageFromExport != $targetLanguageFromImport){
+			throw new tx_mvc_exception_invalidArgument('The import ('.$targetLanguageFromImport.') has a different target language as the export ('.$targetLanguageFromExport.') it results from');
+		}
+
+		###
+
+		$importWorkspaceId	 	= $TranslationData->getWorkspaceId();
+		$currentUserWorkspaceId	= $GLOBALS['BE_USER']->workspace;
+
+		if($importWorkspaceId != $currentUserWorkspaceId){
+			throw new tx_mvc_exception_invalidArgument('The workspace id in the import ('.$importWorkspaceId.') is another workspace id then the workspace id of the current user ('.$currentUserWorkspaceId.')');
+		}
+
+		###
+		$saveImportData = false;
+
+		$exportDataIdFromImportData = $importData->getExportdata_id();
+		$exportDataIdFromImportFile = $TranslationData->getExportDataRecordUid();
+		if($exportDataIdFromImportData == 0){
+			$importData->setExportdata_id($exportDataIdFromImportFile);
+			$saveImportData = true;
+		}else{
+			if($exportDataIdFromImportData != $exportDataIdFromImportFile){
+				throw new tx_mvc_exception_invalidArgument('The exportdata_id of the importdata ('.$exportDataIdFromImportData.') was another then the exportData id of the import ('.$exportDataIdFromImportFile.')');
+			}
+		}
+
+		$configurationIdFromImportData = $importData->getConfiguration_id();
+		$configurationIdFromImportFile = $TranslationData->getL10ncfgUid();
+		if($configurationIdFromImportData == 0){
+			$importData->setConfiguration_id($configurationIdFromImportFile);
+			$saveImportData = true;
+		}else{
+			if($configurationIdFromImportData != $configurationIdFromImportFile){
+				throw new tx_mvc_exception_invalidArgument('The l10ncfg of the importdata ('.$configurationIdFromImportData.') was another then the l10ncfg id of the import ('.$configurationIdFromImportFile.')');
+			}
+		}
+
+		if($saveImportData){
+			$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
+			$importDataRepository->save($importData);
+		}
+
 	}
 
 
