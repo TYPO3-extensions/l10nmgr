@@ -39,8 +39,8 @@ class tx_l10nmgr_xmltools {
 	protected $parseHTML = null;
 
 	public function __construct() {
-		$this->parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 		throw new Exception('Obsolete');
+		$this->parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
 	}
 
 	/**
