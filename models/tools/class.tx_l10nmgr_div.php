@@ -70,13 +70,14 @@ class tx_l10nmgr_div {
 	public static function dummyTranslate($input) {
 
 		$content = $input[2];
+		$translation = " 金融服務";
 
 		if (strpos($content, ']]>') !== false) {
-			$content = str_replace(']]>', ' translated]]>', $content);
+			$content = str_replace(']]>', ' '.$translation.']]>', $content);
 		} elseif ($content == strip_tags($content)) {
-				$content .= ' translated';
+				$content .= ' '.$translation;
 		} else {
-			$content .= '<p>translated</p>';
+			$content .= '<p> '.$translation.'</p>';
 		}
 
 		return sprintf('<data%s>%s</data>', $input[1], $content);
