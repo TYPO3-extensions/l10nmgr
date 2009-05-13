@@ -159,21 +159,21 @@ class tx_xmltools_testcase extends tx_phpunit_testcase {
 	 * @return void
 	 */
 	public function test_transformationEntityTest()	{
-		$fixtureRTE = '& &amp; &nbsp; ich&du &auml;';
+		$fixtureRTE = '& &amp; &nbsp; ich&du';
 
 		$content = $this->XMLtools->RTE2XML($fixtureRTE);
 		$transformedXML = $content;
 
 		$this->assertEquals (
 			$transformedXML,
-			'<p>&amp; &amp; &nbsp; ich&amp;du ' . utf8_encode('ä') .'</p>',
+			'<p>&amp; &amp;amp; &nbsp; ich&amp;du</p>',
 			'entities transformed incorrect'
 		);
 
 		$transformedBackToRTEstyle = $this->XMLtools->XML2RTE($transformedXML);
 		$this->assertEquals (
 			$transformedBackToRTEstyle,
-			'& & &nbsp; ich&du ' . utf8_encode('ä'),
+			$fixtureRTE,
 			"transformation result is not equal to source."
 		);
 	}
