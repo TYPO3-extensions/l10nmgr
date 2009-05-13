@@ -32,6 +32,8 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'controller/class.tx_l10nmgr_contr
 // Load language support
 require_once(t3lib_extMgm::extPath('lang') . 'lang.php');
 $LANG = t3lib_div::makeInstance('language');
+$LANG->csConvObj = t3lib_div::makeInstance('t3lib_cs');
+
 
 $front = new tx_mvc_cliFrontController();
 $front->setExtensionKey('l10nmgr');
@@ -49,10 +51,5 @@ $front->setConfiguration(array(
 	)
 ));
 $front->process('exportCli');
-
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/export/index.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/export/index.php']);
-}
 
 ?>

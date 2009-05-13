@@ -32,12 +32,7 @@ class tx_l10nmgr_models_hooks_emailNotifier {
 
 			tx_mvc_validator_factory::getNotEmptyStringValidator()->isValid($emConf['email_recipient'], true);
 
-			// require_once (t3lib_extMgm::extPath ( 'lang', 'lang.php' ));
-			// $GLOBALS['LANG'] = t3lib_div::makeInstance ( 'language' );
-			if (! $GLOBALS['LANG']->csConvObj instanceof t3lib_cs) {
-				$GLOBALS['LANG']->csConvObj = t3lib_div::makeInstance('t3lib_cs');
-			}
-
+			tx_mvc_validator_factory::getInstanceValidator()->setClassOrInterface('language')->isValid($GLOBALS['LANG'], true);
 			$GLOBALS['LANG']->includeLLFile('EXT:l10nmgr/cli/locallang.xml');
 
 			// Get source & target language ISO codes
