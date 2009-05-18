@@ -136,7 +136,7 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testca
 	}
 
 	/**
-	 * Take sure that the not closed "<br>" is transformed
+	 * Make sure that the not closed "<br>" is transformed
 	 * to the XHTML valid empty tag like "<br />"
 	 *
 	 * @access public
@@ -155,6 +155,25 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testca
 	}
 
 	/**
+	 * Make sure that the not valid closed "<br/>" is transformed
+	 * to the XHTML valid empty tag like "<br />"
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_thatClosedBrTagsWithoutWhitespaceAreClosedCorrectly() {
+		$fixtureText  = '<p>here coms some .. 8747()/=&lt;=&quot;($<br/></p>';
+		$expectedText = 'here coms some .. 8747()/=<="($<br />';
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toText($fixtureText),
+			'The transormation toText work not as expected.'
+		);
+	}
+
+	/**
 	 * Test that the htmlspecialchar "<", ">" and """ escaped with "&lt;","&gt;","&quot;"
 	 *
 	 * @access public
@@ -163,6 +182,23 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testca
 	 */
 	public function test_transformBasicHtmlspecialCharToUTF8() {
 		$fixtureText  = '<p>&lt;&gt;&quot;<br /></p>';
+		$expectedText = '<>"<br />';
+
+		$this->assertEquals (
+			$expectedText,
+			$this->TextConverter->toText($fixtureText),
+			'The transormation toText work not as expected.'
+		);
+	}
+
+	/**
+	 *
+	 * @access public
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function test_transformBasicHtmlspecialBetweenParagraph() {
+		$fixtureText  = '<p>&lt;&gt;&quot;&lt;br /&gt;</p>';
 		$expectedText = '<>"<br />';
 
 		$this->assertEquals (
