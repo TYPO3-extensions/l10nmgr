@@ -115,7 +115,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 * @throws tx_mvc_exception_converter
 	 * @return string
 	 */
-	public function toRaw($content, $removeBrockenUTF8Charakter = false, $validateToXML = true, $convertAllEntitiesToUTF8 = false) {
+	public function toRaw($content, $removeBrockenUTF8Charakter = false, $validateToXML = true) {
 
 		$content = $this->entities_to_utf8($content, true);
 
@@ -276,7 +276,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	function entities_to_utf8($str, $alsoStdHtmlEnt=0) {
 
 		if ($alsoStdHtmlEnt) {
-			$trans_tbl = $this->getTranslationTable(); // Getting them in iso-8859-1 - but thats ok since this is observed below.
+			$trans_tbl = $this->getTranslationTable(true); // Getting them in iso-8859-1 - but thats ok since this is observed below.
 		}
 
 		$token = md5(microtime());
