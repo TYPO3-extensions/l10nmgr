@@ -57,6 +57,9 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 	 */
 	protected $useUTF8Mode;
 
+	/**
+	 * @var tx_l10nmgr_service_textConverter
+	 */
 	protected $xmlTool;
 
 	/**
@@ -108,21 +111,31 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 		$this->internalMessages[] = "\t\t" . '<t3_skippedItem>' . "\n\t\t\t\t" . '<t3_description>' . $message . '</t3_description>' . "\n\t\t\t\t" . '<t3_key>' . $key . '</t3_key>' . "\n\t\t\t" . '</t3_skippedItem>' . "\r";
 	}
 
+	/**
+	 * Internal method the get the registered messages of the export.
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @param void
+	 * @return string
+	 */
 	protected function getInternalMessagesXML() {
-		return implode("\n\t",$this->internalMessages);
+		$res = '';
+		if(is_array($this->internalMessages)){
+			$res = implode("\n\t",$this->internalMessages);
+		}
+
+		return $res;
 	}
 
 	/**
 	 * Internal method to build the pageGroupXML structure.
 	 *
 	 * @param void
-	 * @author Timo Schmidt
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	protected function renderPageGroups() {
-		global $LANG;
-
 		foreach ($this->getTranslateableInformation()->getPageGroups() as $pageGroup) { /* @var $pageGroup tx_l10nmgr_models_translateable_pageGroup */
 			$pageStartTag = "\t".sprintf('<pageGrp id="%d">', $pageGroup->getUid())."\n";
 			$xml .= $pageStartTag;
@@ -143,10 +156,12 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 							$xml .= $dataTag;
 
 						} catch(tx_mvc_exception_invalidContent $e) {
-							$this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'), $uid . '/' . $table . '/' . $key);
+							$this->setInternalMessage($e->getMessage(), $uid . '/' . $table . '/' . $key);
 						} catch(Exception $e) {
 							tx_mvc_common_debug::logException($e);
 						}
+					}else{
+						$this->setInternalMessage('Content not exported: Element is unchanged and option modeOnylChanged is active ', $uid . '/' . $table . '/' . $key);
 					}
 				}
 			}
@@ -194,7 +209,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 			if ($skipXMLCheck) {
 				$result = '<![CDATA[' . $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, false) . ']]>';
 			} else {
-				throw new tx_mvc_exception_invalidContent('Content could not transformed....');
+				throw new tx_mvc_exception_invalidContent('Content not exported: No valid XML and option skipXMLCheck not active.');
 			}
 		}
 
