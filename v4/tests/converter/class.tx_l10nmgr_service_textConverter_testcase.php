@@ -214,6 +214,24 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_phpunit_testcase {
 			'transformation result is not as expected'
 		);
 	}
+
+	/**
+	 * Verify that a simple Contentelement with a bullet list can be transformed.
+	 *
+	 * @access public
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return void
+	 */
+	public function test_transformBulletlistWithTypolinksAndEntity(){
+		$fixtureRTE 	= '<ul><li><link 25771 >WebEx Meeting Center</link></li><li><link 25611 >Who uses WebEx &amp; why?</link></li><li><link 24961 >Buy WebEx</link></li><li><link http://www.webex.com/go/live_demo >Live online demo</link></li><li><link http://www.webex.com/go/quick_tour 1050x700:resizable=0>Quick tour</link></li></ul>';
+		$expected		= '<ul><li><link 25771>WebEx Meeting Center</link></li><li><link 25611>Who uses WebEx & why?</link></li><li><link 24961>Buy WebEx</link></li><li><link http://www.webex.com/go/live_demo>Live online demo</link></li><li><link http://www.webex.com/go/quick_tour 1050x700:resizable=0>Quick tour</link></li></ul>';
+
+		$transformed = $this->TextConverter->toText (
+			$this->TextConverter->toXML($fixtureRTE)
+		);
+
+		$this->assertEquals($transformed,$expected,'translation result is not as expected');
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_testcase.php']) {

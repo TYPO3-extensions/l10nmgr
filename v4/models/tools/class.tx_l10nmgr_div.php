@@ -70,7 +70,7 @@ class tx_l10nmgr_div {
 	public static function dummyTranslate($input) {
 
 		$content = $input[2];
-		$translation = " 金融服務";
+		$translation = " 金";
 
 		if (strpos($content, ']]>') !== false) {
 			$content = str_replace(']]>', ' '.$translation.']]>', $content);
