@@ -86,10 +86,11 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 	 * The &nbsp; entity must be protected and can not be convertet to a simple " ".
 	 *
 	 * @access public
+	 * @test
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_convertTextToXML() {
+	public function convertTextToXML() {
 		$fixtureRTE  = '& &amp; &nbsp; =< &auml;';
 		$expectedXML = '<p>&amp; &amp; &nbsp; =&lt; ä</p>';
 
@@ -104,10 +105,11 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 	 * Test that valid XHTML styled break tags (empty element) are keeped by the converter.
 	 *
 	 * @access public
+	 * @test
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_keepValidBreakAndMaskTheLowerThanSign() {
+	public function keepValidBreakAndMaskTheLowerThanSign() {
 		$fixtureText     = 'here coms some .. 8747()/=<="($<br />';
 		$expectedText    = '<p>here coms some .. 8747()/=&lt;=&quot;($<br /></p>';
 
@@ -122,10 +124,11 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 	 * The break tag with an closing tag will not removed while it's valid XML structure.
 	 *
 	 * @access public
+	 * @test
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_thatNoneEmptyElementStyledBreakTagsNotRemoved() {
+	public function thatNoneEmptyElementStyledBreakTagsNotRemoved() {
 		$fixtureText  = 'here coms some .. 8747()/=<="($<br></br>';
 		//!TODO @dazi001 please clairify what should happend if there is a "<br></br>"
 		$expectedText = '<p>here coms some .. 8747()/=&lt;=&quot;($<br></br></p>';
@@ -142,10 +145,11 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 	 * if the given string is not XML conform.
 	 *
 	 * @expectedException tx_mvc_exception_converter
+	 * @test
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_throwExceptionOnInvalidClosedHTMLLineBreak() {
+	public function throwExceptionOnInvalidClosedHTMLLineBreak() {
 		$fixtureText  = 'here coms some .. 8747()/=<="($<br>';
 
 		$this->TextConverter->toXML($fixtureText);
@@ -155,10 +159,11 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 	 * Test that the htmlspecialchar "<" escaped with "&lt;".
 	 *
 	 * @access publc
+	 * @test
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_escapeTheLowerSignCorrect() {
+	public function escapeTheLowerSignCorrect() {
 		$fixtureText  = '&lt;&gt;&quot;<br />';
 		$expectedText = '<p>&lt;&gt;&quot;<br /></p>';
 
@@ -173,11 +178,12 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 	 * Verify that entities are converted to the UTF-8 charachter but
 	 * the htmlspechialchar "&amp;" is untouched.
 	 *
-	 * @access publc
+	 * @access public
+	 * @test
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_convertEntiesToUTF8ButKeepTheHtmlSpecialCharAmp() {
+	public function convertEntiesToUTF8ButKeepTheHtmlSpecialCharAmp() {
 		$fixtureText  = '&auml;<br />&amp;';
 		$expectedText = '<p>ä<br />&amp;</p>';
 
@@ -191,11 +197,12 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 	/**
 	 * Verify that a unicode entity are convert to the UTF-8 charakter as well.
 	 *
-	 * @access publc
+	 * @access public
+	 * @test
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_convertUnicodeCharacterToUTF8() {
+	public function convertUnicodeCharacterToUTF8() {
 		$fixtureText  = '&auml;<br />&amp;&#x20AC;';
 		$expectedText = '<p>ä<br />&amp;€</p>';
 
@@ -209,11 +216,12 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 	/**
 	 * Verify that no paragraph is wrapped around div-Tag.
 	 *
-	 * @access publc
+	 * @access public
+	 * @test
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function test_dontSetParagraphAroundDivElements() {
+	public function dontSetParagraphAroundDivElements() {
 		$fixtureText  = '<div id="lipsum"> Lorem ipsum dolor sit amet, consectetur </div>';
 		$expectedText = '<div id="lipsum"><p> Lorem ipsum dolor sit amet, consectetur </p></div>';
 
