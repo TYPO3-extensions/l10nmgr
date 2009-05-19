@@ -10,7 +10,7 @@
 		<title>Test Exportdata</title>
  		<source_lang>0</source_lang>
  		<translation_lang>999</translation_lang>
- 		<export_type>xml</export_type>
+ 		<export_type>1</export_type>
 	</tx_l10nmgr_exportdata>
     <sys_language>
         <uid>999</uid>

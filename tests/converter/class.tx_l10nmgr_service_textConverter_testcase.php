@@ -261,6 +261,46 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_phpunit_testcase {
 
 		$this->assertEquals($transformed,$expected,'translation result is not as expected');
 	}
+	
+	/**
+	 * This test should ensure that the is no empty line after a heading when a field
+	 * has beens converted to XML and back to Text.
+	 *
+	 * @access public
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return void
+	 */
+	public function test_roundTransformationRTEWithHeadingsAndLinebreaksAfter(){
+		$fixtureRTE 	= 	'<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'."\n".
+							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/ >Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\n".
+							'<link http://customer.com/ >Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
+		
+		$expectedResult =   '<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'."\n".
+							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/>Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\n".
+							'<link http://customer.com/>Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
+
+		$xmlResult		= $this->TextConverter->toXML($fixtureRTE);
+		
+		$transformed = $this->TextConverter->toText (
+			$xmlResult
+		);
+
+		$this->assertEquals (
+			$expectedResult,
+			$transformed,
+			'translation result is not expected'
+		);
+		try{
+			$this->TextConverter->isValidXML($xmlResult);
+			$this->TextConverter->isValidXML('<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2> It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. Ites far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://www.webex.com/go/buy_webex >Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.
+<link http://www.webex.com/go/webex_ft >Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.');
+			$isValidXML = true;
+		}catch(Exception $e){
+
+		}
+		
+		$this->assertTrue($isValidXML);
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_testcase.php']) {

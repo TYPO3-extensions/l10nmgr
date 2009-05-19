@@ -124,10 +124,9 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		}
 
 		if ($validateToXML === true) {
-
 			try {
 				$this->isValidXML($content);
-			} catch (tx_mvc_exception_invalidContent $e) {
+			} catch (tx_mvc_exception_invalidContent $e) {				
 				throw new tx_mvc_exception_converter($e->getMessage());
 			}
 		}

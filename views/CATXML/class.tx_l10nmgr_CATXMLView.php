@@ -142,7 +142,8 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 
 			foreach ($pageGroup->getTranslateableElements() as $translateableElement) { /* @var $translateableElement tx_l10nmgr_models_translateable_translateableElement */
 				 foreach ($translateableElement->getTranslateableFields() as $translateableField) { /* @var $translateableField tx_l10nmgr_models_translateable_translateableField */
-					if (!$this->modeOnlyChanged || $translateableField->isChanged()) {
+
+				 	if (!$this->modeOnlyChanged || $translateableField->isChanged()) {
 
 						try {
 							$table 		= $translateableElement->getTableName();

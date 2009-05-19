@@ -79,20 +79,20 @@ class tx_l10nmgr_models_exporter_exporter_basic_testcase extends tx_phpunit_data
 	 */
 	protected function useTestDatabase($databaseName = null) {
 		$db = $GLOBALS ['TYPO3_DB'];
-		
+
 		if ($databaseName) {
 			$database = $databaseName;
 		} else {
 			$database = $this->testDatabase;
 		}
-		
+
 		if (! $db->sql_select_db ( $database )) {
 			die ( "Test Database not available" );
 		}
-		
+
 		return $db;
 	}
-	
+
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
 	 *
@@ -112,39 +112,40 @@ class tx_l10nmgr_models_exporter_exporter_basic_testcase extends tx_phpunit_data
 
 	/**
 	 * This testcase is used to check that the exporter stops after an expected number of runs
-	 * 
+	 *
 	 * @param void
 	 * @return void
 	 * @author Timo Schmidt
 	 */
 	public function test_exporterTerminatesAfterExpectedNumberOfRuns(){
-			$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
-			$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportData.xml');
-			$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/exporterTerminatesAfterExpectedNumberOfRuns.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportData.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/exporterTerminatesAfterExpectedNumberOfRuns.xml');
 
-			$exportData = $this->getFixtureExportData();
-			
-			$view 		= new tx_l10nmgr_CATXMLView();
-			$view->setL10NConfiguration($exportData->getL10nConfigurationObject());
-			
+		$exportData = $this->getFixtureExportData();
+
+		$view 		= new tx_l10nmgr_CATXMLView();
+		$view->setL10NConfiguration($exportData->getL10nConfigurationObject());
+
+		$exporter 	= new tx_l10nmgr_models_exporter_exporter($exportData,1,$view);
+
+		$runCount = 0;
+		while($exporter->run()){
+			$exportData = $exporter->getExportData();
 			$exporter 	= new tx_l10nmgr_models_exporter_exporter($exportData,1,$view);
-			
-			$runCount = 0;
-			while($exporter->run()){
-				$exportData = $exporter->getExportData();
-				$exporter 	= new tx_l10nmgr_models_exporter_exporter($exportData,1,$view);
-				$runCount++;
-			}
+			$runCount++;
+
+		}
 
 		$this->assertEquals($runCount,3,'unexpected number of run counts in export');
 	}
-	
-	
+
+
 	/**
 	 * Method to check that the fixtureExportData can be loaded
-	 * 
+	 *
 	 * @param void
-	 * @return void 
+	 * @return void
 	 * @author Timo Schmidt
 	 *
 	 */
