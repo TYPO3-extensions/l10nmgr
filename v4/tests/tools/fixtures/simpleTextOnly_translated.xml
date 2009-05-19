@@ -14,10 +14,10 @@
 		<t3_formatVersion>1.1</t3_formatVersion>
 	</head>
 	<pageGrp id="1111">
-		<data table="pages" elementUid="1111" key="pages_language_overlay:NEW/1/1111:title">TextA translated</data>
+		<data table="pages" elementUid="1111" key="pages_language_overlay:NEW/1/1111:title">TextA 金</data>
 	</pageGrp>	<pageGrp id="178">
-		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:title">TextB translated</data>
-		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:subtitle">TextC translated</data>
-		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:subtitle"><p>TextC</p><p>translated</p></data>
-		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:subtitle"><![CDATA[TextD translated]]></data>
+		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:title">TextB 金</data>
+		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:subtitle">TextC 金</data>
+		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:subtitle"><p>TextC</p><p>金</p></data>
+		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:subtitle"><![CDATA[TextD 金]]></data>
 	</pageGrp></TYPO3L10N>
