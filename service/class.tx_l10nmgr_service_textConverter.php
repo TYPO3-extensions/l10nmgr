@@ -119,6 +119,14 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 
 		$content = $this->entities_to_utf8($content, true);
 
+			// Final clean up of linebreaks:
+			// Make sure no \r\n sequences has entered in the meantime...
+		$content = str_replace (
+			array(chr(13).chr(10), chr(10).chr(13)),
+			array(chr(10),         chr(10)),
+			$content
+		);
+
 		if ($removeBrockenUTF8Charakter === true) {
 			$content = tx_l10nmgr_utf8tools::utf8_bad_strip($content);
 		}
