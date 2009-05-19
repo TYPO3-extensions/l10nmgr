@@ -3,16 +3,21 @@
 	<pages>
 		<uid>4711</uid>
 		<pid>4710</pid>
-		<title>Translate Me 1</title>
+		<doktype>40</doktype>
+		<title>Translate Me 1</title>	
 	</pages>
 	<pages>
 		<uid>4712</uid>
 		<pid>4711</pid>
-		<title>Translate Me 2</title>
-	</pages>	
+		<doktype>40</doktype>
+		<title>Translate Me 2</title>	
+	</pages>
+	
 	<pages>
 		<uid>4713</uid>
 		<pid>4711</pid>
-		<title>Translate Me 3</title>		
+		<doktype>40</doktype>		
+ 	  <title>Translate Me 3</title>	
 	</pages>
+
 </ts_webex>

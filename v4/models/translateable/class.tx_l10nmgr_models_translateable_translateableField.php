@@ -332,12 +332,15 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 * This method returns the base data for the translation. In normal cases, this is
 	 * the content of the record in the default language.
 	 *
-	 * @param tx_l10nmgr_models_language_language$forcedSourceLanguageId
+	 * @param tx_l10nmgr_models_language_language $forcedSourceLanguageId
 	 */
-	public function getDataForTranslation(tx_l10nmgr_models_language_language $forcedSourceLanguage = null){
+	public function getDataForTranslation($forcedSourceLanguage = 0){
 		//dtermine ssourcefield depending in sourceLanguage
-		$dataForTranslation = $this->determinFieldContentByLanguage($forcedSourceLanguage);
-
+		if($forcedSourceLanguage instanceof tx_l10nmgr_models_language_language){
+			$dataForTranslation = $this->determinFieldContentByLanguageId($forcedSourceLanguage->getUid());
+		}else{
+			$dataForTranslation = $this->determinFieldContentByLanguageId(0);
+		}
 		return $dataForTranslation;
 	}
 
@@ -347,9 +350,9 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 * @param tx_l10nmgr_models_language_language $forcedSourceLanguage
 	 * @return string
 	 */
-	protected function determinFieldContentByLanguage(tx_l10nmgr_models_language_language $forcedSourceLanguage = null){
+	protected function determinFieldContentByLanguageId($forcedSourceLanguageId = 0){
 		if ($forcedSourceLanguage) {
-			$dataForTranslation =	$this->getPreviewLanguageValueByLanguageId($forcedSourceLanguage->getUid());
+			$dataForTranslation =	$this->getPreviewLanguageValueByLanguageId($forcedSourceLanguageId);
 		}
 		else {
 			$dataForTranslation	=	$this->default_value;

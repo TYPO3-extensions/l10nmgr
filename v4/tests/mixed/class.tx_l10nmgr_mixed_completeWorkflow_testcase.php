@@ -76,10 +76,8 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		t3lib_div::loadTCA('tx_l10nmgr_importfiles');
 
-		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/import';
 
-		$GLOBALS['TCA']['tx_l10nmgr_exportfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export';
-		$GLOBALS['TCA']['tx_l10nmgr_exportdata']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export/zip';
+
 
 	}
 
@@ -92,6 +90,77 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 	}
 
+	
+
+	/**
+	 * This testcase should check that the importer creates no empty line (<p>&nbsp;</p> after importing
+	 * an element with a heading (<h2>) in the bodytext.
+	 * 
+	 * @test
+	 */
+	public function importerDoesNotCreatesEmptyRowAfterHeading(){
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/pages.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/ttcontent.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/exportdata.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/language.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/l10nconfiguration.xml');
+
+		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/import';
+		
+		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData 			= $exportDataRepository->findById(67);
+		
+		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData,1,$exportData->getInitializedExportView());
+		$exporter->run();
+		
+		$exportedResult 		= $exporter->getResultForChunk();
+		
+		##
+		# WRITE EXPORT TO FILE
+		##
+		$fileImportPath 		= 	t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/import';
+		$tempfile 				= $fileImportPath.'/temp.xml';
+		
+		$this->removeDirectoryAndContent($fileImportPath);
+		mkdir($fileImportPath,0777);
+
+		$exportedResult = str_replace('anywhere','anywhere translated@', $exportedResult);
+		
+		file_put_contents($tempfile,$exportedResult);
+
+		###
+		# RUN IMPORT
+		###
+		$importData	= new tx_l10nmgr_models_importer_importData();
+		$importData->setConfiguration_id(384);
+		$importData->setExportdata_id(67);
+		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
+		$importDataRepository->add($importData);
+				
+		$importFile = new tx_l10nmgr_models_importer_importFile();
+		$importFile->setFilename('temp.xml');
+		$importFile->setImportdata_id($importData->getUid());
+		$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
+		$importFileRepository->add($importFile);		
+		
+		$importer 	= new tx_l10nmgr_models_importer_importer($importData);
+		$res 		= $importer->run();
+		$this->assertTrue($res, 'Import seems to work incorrect ');
+
+		$row 			= t3lib_beFunc::getRecord('tt_content',619945);
+		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 2);
+
+		$expectedResult = 	'<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere translated@.</h2>'."\n".
+							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://www.webex.com/go/buy_webex>Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\n".
+							'<link http://www.webex.com/go/webex_ft>Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
+		
+		error_log($expectedResult."\n\n".$contentOverlay['bodytext'],1,'timo.schmidt@aoemedia.de');
+		$this->assertEquals($contentOverlay['bodytext'],$expectedResult,'unexpected import result');
+		
+		
+	}
+	
+	
 	/**
 	* The base for this testcase is the following structure:
  	*
@@ -108,13 +177,17 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
  	*  <li>page 2 (Subpage of page 1 -> Testpage l10nmgr 33154):</li>
 	* </ul>
 	*
+	* @test
 	* @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	* @param void
 	* @return void
 	*
 	*/
-	public function test_testCompleteLocalisationWorkflow(){
-
+	public function completeLocalisationWorkflow(){
+		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/import';
+		$GLOBALS['TCA']['tx_l10nmgr_exportfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export';
+		$GLOBALS['TCA']['tx_l10nmgr_exportdata']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export/zip';
+		
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/pages.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/ttcontent.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/exportdata.xml');
@@ -127,6 +200,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		/** @var tx_l10nmgr_models_exporter_exportData */
 		$exportData				= $exportDataRepository->findById(97);
+
 
 		//create export folders
 		$fileExportPath = 	t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export';
@@ -147,7 +221,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		mkdir($zipExportPath,0777);
 		mkdir($fileImportPath,0777);
 		mkdir($zipImportPath,0777);
-
+		
 		$this->assertFileExists($fileExportPath);
 		$this->assertFileExists($zipExportPath);
 
@@ -169,6 +243,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		while(!tx_l10nmgr_models_importer_importer::performImportRun($importData)){
 			$runcountImport++;
 		}
+
 
 		$this->assertEquals($runcountExport, $runcountImport,'The import should have the same runcount as the export');
 
@@ -240,6 +315,8 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 
 		$importData = new tx_l10nmgr_models_importer_importData();
+		$importData->setExportdata_id($exportData->getUid());
+		$importData->setConfiguration_id(0);
 		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
 		$importDataRepository->add($importData);
 
