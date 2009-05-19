@@ -300,6 +300,7 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.noxmlcheck',
 			'config' => Array (
 				'type' => 'check',
+				'default' => '1'
 			)
 		),
 		'checkutf8' => Array(
