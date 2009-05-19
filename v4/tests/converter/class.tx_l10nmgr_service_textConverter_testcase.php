@@ -271,12 +271,12 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_phpunit_testcase {
 	 * @return void
 	 */
 	public function test_roundTransformationRTEWithHeadingsAndLinebreaksAfter(){
-		$fixtureRTE 	= 	'<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'."\n".
-							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/ >Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\n".
+		$fixtureRTE 	= 	'<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'."\r\n".
+							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/ >Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\r\n".
 							'<link http://customer.com/ >Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
 		
-		$expectedResult =   '<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'."\n".
-							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/>Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\n".
+		$expectedResult =   '<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'."\r\n".
+							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/>Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\r\n".
 							'<link http://customer.com/>Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
 
 		$xmlResult		= $this->TextConverter->toXML($fixtureRTE);
@@ -285,11 +285,14 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_phpunit_testcase {
 			$xmlResult
 		);
 
+		
+		
 		$this->assertEquals (
 			$expectedResult,
 			$transformed,
 			'translation result is not expected'
 		);
+
 		try{
 			$this->TextConverter->isValidXML($xmlResult);
 
@@ -297,7 +300,6 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_phpunit_testcase {
 		}catch(Exception $e){
 
 		}
-		
 		$this->assertTrue($isValidXML);
 	}
 }
