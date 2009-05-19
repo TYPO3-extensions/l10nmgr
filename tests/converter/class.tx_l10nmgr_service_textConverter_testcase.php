@@ -292,8 +292,7 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_phpunit_testcase {
 		);
 		try{
 			$this->TextConverter->isValidXML($xmlResult);
-			$this->TextConverter->isValidXML('<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2> It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. Ites far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://www.webex.com/go/buy_webex >Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.
-<link http://www.webex.com/go/webex_ft >Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.');
+
 			$isValidXML = true;
 		}catch(Exception $e){
 
