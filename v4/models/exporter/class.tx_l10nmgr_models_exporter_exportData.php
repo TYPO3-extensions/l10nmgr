@@ -549,30 +549,26 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	public function createZip($fileName) {
 
 		if (class_exists('ZipArchive')) {
-
 			$absoluteExportZipPath 	= $this->getAbsoluteZipPath();
 			$absoluteExportFilePath	= $this->getAbsoluteFilePath();
 
-			$fullPath				= $absoluteExportZipPath.'/'.$fileName;
-
-
-
-			$zipper 				= new ZipArchive();
+			$fullPath	= $absoluteExportZipPath.'/'.$fileName;
+			$zipper 	= new ZipArchive();
+			
+			if(is_file($fullPath)){ unlink($fullPath); }
 			$res 					= $zipper->open($fullPath, ZipArchive::CREATE);
-
-			if ($res !== true) {
+			
+			if ($res !== true) {			
 				throw new Exception('Error while creating zipfile');
 			}
 
 			foreach ($this->getExportFiles() as $exportFile) { /* @var $exportFile tx_l10nmgr_models_exporter_exportFile */
 				$zipper->addFile(t3lib_div::getFileAbsFileName($absoluteExportFilePath . '/' . $exportFile->getFilename()), $exportFile->getFilename());
 			}
-
+			
 			$zipper->close();
 
 			t3lib_div::fixPermissions($fullPath);
-
-			if (TYPO3_DLOG) t3lib_div::devLog('Created zip file', 'l10nmgr', 1);
 
 			// update exportdata record
 			$this->setFilename($fileName);
@@ -589,9 +585,7 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @return tx_l10nmgr_abstractExportView
 	 */
 	public function getInitializedExportView() {
-
 		switch ($this->getExport_type()) {
-
 			case 'xml' : {
 				$viewClass = new tx_l10nmgr_CATXMLView();
 				$viewClass->setSkipXMLCheck($this->getNoxmlcheck());
