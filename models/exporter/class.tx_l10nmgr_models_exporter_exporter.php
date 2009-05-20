@@ -235,10 +235,11 @@ class tx_l10nmgr_models_exporter_exporter {
 			$exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
 			$exportFileRepository->add($exportFile);
 		}
-
+		
+		
 		if ($exportData->getExportIsCompletelyProcessed()) {
 			$exportData->createZip($exportView->getFilename('') . '.zip');
-
+			
 			// postProcessingHook
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'])) {
 				foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'] as $userFunc) {
@@ -246,7 +247,7 @@ class tx_l10nmgr_models_exporter_exporter {
 					t3lib_div::callUserFunction($userFunc, $params, $exporter);
 				}
 			}
-
+			
 		}
 
 		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();

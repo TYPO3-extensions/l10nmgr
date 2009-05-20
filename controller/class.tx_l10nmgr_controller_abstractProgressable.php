@@ -118,7 +118,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 			$subject = $this->getProgressableSubject();
 
 			set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);
-			$this->performProgressableRun($subject);
+			$completed = $this->performProgressableRun($subject);
 			restore_error_handler();
 
 			$progressView = new tx_mvc_view_widget_progressAjax();
@@ -132,7 +132,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 				$progressView->setWarningMessage($warningMessage);
 			}
 
-			if ($percent < 100) {
+			if (!$completed) {
 				$progressView->setProgressLabel($subject->getProgressOutput());
 			} else {
 				$progressView->setProgressLabel('Completed');
