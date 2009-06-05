@@ -172,7 +172,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @see showProgressAction
 	 */
-	protected function getRedirectUrlOnCompletion(){
+	protected function getRedirectUrlOnCompletion() {
 		return '../export/index.php'.$this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('showExportDetail')->useOverruledParameters()->makeUrl();
 	}
 
@@ -183,7 +183,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @param void
 	 * @return string html content
 	 */
-	public function showExportDetailAction(){
+	public function showExportDetailAction() {
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'], true);
 
 		$exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
@@ -235,7 +235,8 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @param void
 	 * @return tx_mvc_view_widget_phpTemplateListView
 	 */
-	protected function getProgressableSubjectView(){
+	protected function getProgressableSubjectView() {
+
 		$view = new tx_l10nmgr_view_export_showExportDetail();
 		$this->initializeView($view);
 		$view->setExportData($this->getProgressableSubject());
@@ -249,7 +250,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 *
 	 * @return tx_l10nmgr_models_exporter_exportData
 	 */
-	protected function getProgressableSubject(){
+	protected function getProgressableSubject() {
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'],true);
 
 		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
@@ -265,7 +266,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 *
 	 * @see ajaxPerformRunAction
 	 */
-	protected function performProgressableRun($exportData){
+	protected function performProgressableRun($exportData) {
 
 		return tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk'));
 	}

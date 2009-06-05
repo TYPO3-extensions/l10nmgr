@@ -42,38 +42,38 @@
  * @subpackage	extensionkey
  * @access public
  */
-class tx_l10nmgr_view_export_showExportProgress extends tx_mvc_view_backendModule { 
+class tx_l10nmgr_view_export_showExportProgress extends tx_mvc_view_backendModule {
 	/**
 	 * The default template is used if o template is set
 	 *
 	 * @var        string
 	 */
 	protected $defaultTemplate = 'EXT:l10nmgr/templates/export/progress.php';
-	
+
 	/**
 	 * This method is used to add the progressView to the exportView
 	 *
 	 * @param tx_l10nmgr_view_export_progress $progressView
 	 */
-	public function setProgressView(tx_mvc_view_widget_progress  $progressView){
+	public function setProgressView(tx_mvc_view_widget_progress $progressView) {
 		$this->progressView = $progressView;
 	}
-	
+
 	/**
 	 * This method is used to set an exportData object which represents the current export.
 	 *
 	 * @param tx_l10nmgr_models_export_exportData
 	 */
-	public function setExportData($exportData){
+	public function setExportData($exportData) {
 		$this->exportData = $exportData;
 	}
-	
+
 	/**
 	 * Returns the current exportData object to display it in the view
 	 *
 	 * @return tx_l10nmgr_models_export_exportDtaa
 	 */
-	protected function getExportData(){
+	protected function getExportData() {
 		return $this->exportData;
 	}
 }

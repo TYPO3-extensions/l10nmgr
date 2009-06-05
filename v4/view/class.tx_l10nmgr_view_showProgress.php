@@ -25,11 +25,7 @@
  ***************************************************************/
 
 /**
- * description
- *
- * {@inheritdoc }
- *
- * class.class_name.php
+ * Show progress view
  *
  * @author	 Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -42,53 +38,51 @@
  * @subpackage	extensionkey
  * @access public
  */
-class tx_l10nmgr_view_showProgress extends tx_mvc_view_backendModule { 
+class tx_l10nmgr_view_showProgress extends tx_mvc_view_backendModule {
+
 	/**
-	 * The default template is used if o template is set
-	 *
-	 * @var        string
+	 * @var string The default template is used if o template is set
 	 */
 	protected $defaultTemplate = 'EXT:l10nmgr/templates/progress.php';
 
-	
 	/**
-	 * Holds a progressView
+	 * @var tx_mvc_view_abstractView Holds a progressView
 	 */
 	protected $progressView;
-	
+
 	/**
 	 * Holds a progressable subject view, which shows information about the progressable item
 	 */
 	protected $progressableSubjectView;
-	
-	
+
 	/**
 	 * This method is used to add the progressView to the exportView
 	 *
 	 * @param tx_l10nmgr_view_export_progress $progressView
 	 */
-	public function setProgressView(tx_mvc_view_widget_progress  $progressView){
+	public function setProgressView(tx_mvc_view_widget_progress  $progressView) {
 		$this->progressView = $progressView;
 	}
-	
+
 	/**
 	 * This method is used to add a subview which provides informations about
 	 * the progressable subject.
-	 * 
-	 * @param
+	 *
+	 * @param tx_mvc_view_abstractView progressable subject view
+	 * @return void
 	 */
-	public function setProgressableSubjectView($progressableSubjectView){
+	public function setProgressableSubjectView(tx_mvc_view_abstractView $progressableSubjectView) {
 		$this->progressableSubjectView = $progressableSubjectView;
 	}
-	
+
 	/**
 	 * Returns the assigned progressableSubjectView. This
 	 * view should provide Informations about the progressable
 	 * Item.
-	 * 
-	 * @return 
+	 *
+	 * @return tx_mvc_view_abstractView
 	 */
-	protected function getProgressableSubjectView(){
+	protected function getProgressableSubjectView() {
 		return $this->progressableSubjectView;
 	}
 }
