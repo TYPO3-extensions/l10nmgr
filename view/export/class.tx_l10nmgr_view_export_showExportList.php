@@ -42,7 +42,7 @@
  * @subpackage	extensionkey
  * @access public
  */
-class tx_l10nmgr_view_export_showExportList extends tx_mvc_view_backendModule{
+class tx_l10nmgr_view_export_showExportList extends tx_mvc_view_backendModule {
 
 	/**
 	 * The default template is used if o template is set
@@ -52,28 +52,28 @@ class tx_l10nmgr_view_export_showExportList extends tx_mvc_view_backendModule{
 	protected $defaultTemplate = 'EXT:l10nmgr/templates/export/list.php';
 
 	protected $title = 'List of incomplete exports';
-	
+
 	/**
 	 * @var ArrayObject exportData collection
 	 */
 	protected $exportDataCollection;
-	
-	
+
+
 	/**
 	 * This method is used to set a collection of exportData objects.
 	 *
 	 * @param ArrayObject $exportDataCollection
 	 */
-	public function setExportDataCollection(ArrayObject $exportDataCollection){
+	public function setExportDataCollection(ArrayObject $exportDataCollection) {
 		$this->exportDataCollection = $exportDataCollection;
 	}
-	
+
 	/**
 	 * Returns a collection of exportData objects.
 	 *
 	 * @return ArrayObject
 	 */
-	protected function getExportDataCollection(){
+	protected function getExportDataCollection() {
 		return $this->exportDataCollection;
 	}
 }
