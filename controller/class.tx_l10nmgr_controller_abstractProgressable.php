@@ -76,7 +76,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	 * @param void
 	 * @return void
 	 */
-	public function showProgressAction(){
+	public function showProgressAction() {
 		//this view is used in both controllers
 		$this->view = new tx_l10nmgr_view_showProgress();
 		$this->initializeView($this->view);
@@ -95,13 +95,21 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	}
 
 	/**
+	 * Get progressable subject view
+	 *
+	 * @param void
+	 * @return
+	 */
+	abstract protected function getProgressableSubjectView();
+
+	/**
 	 * This method is used to return the redirect url on completion of the export process.
 	 * overwrite it to change it in a sub-controller.
 	 *
 	 * @author Timo Schmidt <schmidt@aoemedia.de>
  	 * @return string
 	 */
-	protected function getRedirectUrlOnCompletion(){
+	protected function getRedirectUrlOnCompletion() {
 		return '../mod1/index.php';
 	}
 
@@ -112,7 +120,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	 * @param void
 	 * @return void
 	 */
-	public function ajaxPerformRunAction(){
+	public function ajaxPerformRunAction() {
 
 		try {
 			$subject = $this->getProgressableSubject();
@@ -127,7 +135,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 
 			$progressView->setProgress($percent);
 
-			if(is_array(self::$warningMessages)){
+			if(is_array(self::$warningMessages)) {
 				$warningMessage = implode('\n',self::$warningMessages);
 				$progressView->setWarningMessage($warningMessage);
 			}
@@ -163,7 +171,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	* @param string filename
 	* @param int line of code
 	*/
-	public function warningHandler($errno,$errstr,$file,$line){
+	public function warningHandler($errno,$errstr,$file,$line) {
 		$message = 'Warning: '.$errstr.'/ '.$errno. ' in '.$file.' on line '.$line;
 
 		self::$warningMessages[] = $message;
