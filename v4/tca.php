@@ -237,7 +237,7 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 			"config" => Array (
                 "type" => "select",
                 "foreign_table" => "sys_language",
-                "foreign_table_where" => "ORDER BY sys_language.sorting",
+                "foreign_table_where" => "ORDER BY sys_language.title",
                 "size" => 1,
                 "minitems" => 0,
                 "maxitems" => 1,
@@ -252,7 +252,7 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
                     Array("-- default --",0),
                 ),
                 "foreign_table" => "sys_language",
-                "foreign_table_where" => "ORDER BY sys_language.sorting",
+                "foreign_table_where" => "ORDER BY sys_language.title",
                 "size" => 1,
                 "minitems" => 0,
                 "maxitems" => 1,

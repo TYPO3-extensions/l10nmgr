@@ -10,7 +10,7 @@ CREATE TABLE tx_l10nmgr_cfg (
 	title tinytext NOT NULL,
 	depth int(11) DEFAULT '0' NOT NULL,
 	displaymode int(11) DEFAULT '0' NOT NULL,
-	tablelist varchar(80) DEFAULT '' NOT NULL,
+	tablelist TEXT DEFAULT '' NOT NULL,
 	exclude text NOT NULL,
 	include text NOT NULL,
 	flexformdiff mediumtext NOT NULL,
