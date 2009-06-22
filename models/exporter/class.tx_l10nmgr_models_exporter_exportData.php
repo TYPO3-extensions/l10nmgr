@@ -554,26 +554,61 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 
 			$fullPath	= $absoluteExportZipPath.'/'.$fileName;
 			$zipper 	= new ZipArchive();
-			
-			if(is_file($fullPath)){ unlink($fullPath); }
-			$res 					= $zipper->open($fullPath, ZipArchive::CREATE);
-			
-			if ($res !== true) {			
-				throw new Exception('Error while creating zipfile');
+
+			if(is_file($fullPath)) {
+				unlink($fullPath);
 			}
+			$res = $zipper->open($fullPath, ZipArchive::CREATE);
+			if ($res !== true) {
+				throw new Exception(sprintf('Error while creating zipfile (Error code: "%s")', $res));
+			}
+
+			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Creating new zip file "%s"', $fullPath), 'l10nmgr', 1);
+
+			$fileCounter = 0;
 
 			foreach ($this->getExportFiles() as $exportFile) { /* @var $exportFile tx_l10nmgr_models_exporter_exportFile */
-				$zipper->addFile(t3lib_div::getFileAbsFileName($absoluteExportFilePath . '/' . $exportFile->getFilename()), $exportFile->getFilename());
+				$sourceFileName = $exportFile->getFilename();
+				$sourceFile = t3lib_div::getFileAbsFileName($absoluteExportFilePath . '/' . $sourceFileName);
+				if (!is_file($sourceFile)) {
+					throw new Exception(sprintf('File "%s" not found (for adding to zip archive)', $sourceFile));
+				}
+
+				// due to a file descriptor limit we close and reopen the zip file after 100 added files
+				if ($fileCounter++ > 100) {
+					$fileCounter = 0;
+					$res = $zipper->close();
+					if ($res !== true) {
+						throw new Exception('Error while closing zip file');
+					}
+					$res = $zipper->open($fullPath, ZipArchive::CREATE);
+					if ($res !== true) {
+						throw new Exception(sprintf('Error while reopen zipfile (Error code: "%s")', $res));
+					}
+				}
+
+				$res = $zipper->addFile($sourceFile, $sourceFileName);
+				if ($res !== true) {
+					throw new Exception(sprintf('Error while adding file "%s" to archive', $sourceFileName));
+				}
 			}
-			
-			$zipper->close();
+
+			$res = $zipper->close();
+			if ($res !== true) {
+				throw new Exception('Error while closing zip file');
+			}
 
 			t3lib_div::fixPermissions($fullPath);
+
+			if (!is_file($fullPath)) {
+				throw new Exception(sprintf('Zip file "%s" not found', $fullPath));
+			}
 
 			// update exportdata record
 			$this->setFilename($fileName);
 			return true;
 		} else {
+			if (TYPO3_DLOG) t3lib_div::devLog('No zipfile created because class "ZipArchive" is not available', 'l10nmgr', 3);
 			return false;
 		}
 	}
