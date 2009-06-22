@@ -1,3 +1,9 @@
+2009-06-22 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Changed field definition for tablelist in table tx_l10nmgr_cfg to accomodate more tables to export
+	
+2009-05-13 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Changed XML2RTE for CLI import (substitute url in <link) [models/tools/class.l10nmgr.xmltools.php]
+	
 2009-03-30 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* CLI import file XML or ZIP (local file) TODO: If http:// or ftp://...
 	* Unzip file (not Win compatible)
@@ -149,7 +155,7 @@
 	* first modifications for a view in the backend, it doesn`t work until now.
 	* call the function checkExports() in cm1/index.php
 
-2008-04-09 Daniel Pötzinger <poetzinger@aoemedia.de>
+2008-04-09 Daniel Pï¿½tzinger <poetzinger@aoemedia.de>
 	* small modifiktions to abstraktExportView (add constructor)
 	* let HTMLListView also extend abstraktExportView
 
@@ -181,14 +187,14 @@
 	* Fix the option "export from source language"
 	* Change the handling and format of skiped elements wich are not include to the XML export
 
-2008-03-26 Daniel Pötzinger <poetzinger@aoemedia.de>
+2008-03-26 Daniel Pï¿½tzinger <poetzinger@aoemedia.de>
 	* add ImportManager Class
 	* add checks and support for old XML CAT Version
 
 2008-03-23 Andreas Otto <andreas.otto@dkd.de>
 	*Increased version number of branch v3 to 3.0.0-dev.
 
-2008-03-14 Daniel Pötzinger
+2008-03-14 Daniel Pï¿½tzinger
 	*seperate XML<->RTE Transformations to xmltools
 	*CATXML: add <head> part to XML, with wordcount and correct fieldcount
 	*UnitTest: add first Unit Test for xmltools class
@@ -201,19 +207,19 @@
 	*CATXML: Added nbsp entity declaration. Now preserving &nbsp;
 	*CATXML: Fixed import (added missing elementUid attribute in export, now parsing pageGrp element)
 
-2008-02-22 Daniel Pötzinger
+2008-02-22 Daniel Pï¿½tzinger
 	*CATXML: fixes to RTE field transformations (setup of processing)
 	*CATXML: robustnesscheck for utf8 and valid xml
 
 
-2008-02-15 Daniel Pötzinger
+2008-02-15 Daniel Pï¿½tzinger
 	* introduce new FCE translationMode: <langDatabaseOverlay>1</langDatabaseOverlay>
 	* => therefore allow translation of flexforms also for overlay records
 	* begin to work on tools class to get the translationDetails for this new translationMode
 	TODO: refactor tools class (e.g. translationDetailsRepository as main class with several helperclasses)
 				diffCalculation for this kind of FCEs
 
-2008-02-01 Daniel Pötzinger
+2008-02-01 Daniel Pï¿½tzinger
 	* add detection for RTE field in tools class
 	* change detection of flexible CE by CType and not by language==-1 (All)
 	* use rte field in CATXML export to check if transformations should be used
@@ -221,12 +227,12 @@
 	* add transformation attribut to CATXML (to flag if a transformation is required)
 	* fix import of CATXML with xml data (no cdata): new function _getXMLFromTreeArray in translationdatafactory
 
-2008-02-01 Kasper Sk¿rh¿j
+2008-02-01 Kasper Skï¿½rhï¿½j
 	* Added --noFlush flag to command line cleaner tool, extended --pid to accept comma separated list of PIDs
 	* Added Context Sensitive Item "L10Nmgr tools" which expands to a submenu with items 'Create priority', 'Manage priorities','Update Index','Flush Translations'. These functions were requested by Dassault.
 	* For flushing to really work for flexforms (clearing the vDEFbase value) it needs the latest TYPO3 core for a modication to tcemain (clear_flexFormData_vDEFbase)
 
-2008-01-18 Daniel Pötzinger
+2008-01-18 Daniel Pï¿½tzinger
 	* restructuring the main BE-Modul (cm1) and splitting it in a Domainmodel + MVC (description and UML is provided in doc)
 
 2007-12-05 Daniel Zielinski <d.zielinski@l10ntech.de>
@@ -239,7 +245,7 @@
 
 2007-11-13 Daniel Zielinski <d.zielinski@l10ntech.de>
 
-	* Added XML settings files for across (www.across.net) and DéjàVu (www.atril.com).
+	* Added XML settings files for across (www.across.net) and Dï¿½jï¿½Vu (www.atril.com).
 	* All settings files now in one folder.
 
 2007-10-30 Daniel Zielinski <d.zielinski@l10ntech.de>
@@ -250,7 +256,7 @@
 
 2007-10-23 Daniel Zielinski <d.zielinski@l10ntech.de>
 
-	* Added simple XML export. Thanks to Daniel Pötzinger.
+	* Added simple XML export. Thanks to Daniel Pï¿½tzinger.
 	* Changed file naming using ISO-2-Letter code instead of syslanguage names.
 	* Added xml:lang attribute to <TYPO3LOC> element.
 	* Added settings file for SDLTrados TagEditor to cm1.
@@ -259,7 +265,7 @@
 	* Modified l10nmgr_cfg table. Added source language selection field.
 	* Added CSH functionality.
 
-2007-10-20 Kasper Skårhøj
+2007-10-20 Kasper Skï¿½rhï¿½j
 
 	* Committed work I did on this extension for Dassault in August and October. This includes:
 	* A "Translation Tasks" module which is destined to be a "task center" for translators including listing of explicitly set priorities by webmasters.
@@ -271,6 +277,6 @@
 
 	* Applied patch to file cm1/index.php: Make it possible to import XML files that were created with OpenOffice.org.
 
-06-11-29 Kasper Skårhøj  <kasperYYYY@typo3.com>
+06-11-29 Kasper Skï¿½rhï¿½j  <kasperYYYY@typo3.com>
 
 	* Initial release

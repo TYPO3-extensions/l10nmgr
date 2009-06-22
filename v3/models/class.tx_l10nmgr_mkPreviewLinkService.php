@@ -56,6 +56,7 @@ class tx_l10nmgr_mkPreviewLinkService {
 
 		$ttlHours = intval($GLOBALS['BE_USER']->getTSConfigVal('options.workspaces.previewLinkTTLHours'));
 		$ttlHours = ($ttlHours ? $ttlHours : 24*2);
+		//no_cache=1 ???
 		$params = 'id='.$this->pageIds[0].'&L='.$this->sysLang.'&ADMCMD_previewWS='.$this->workspaceId.'&serverlink='.$serverlink;
 		$previewUrl = $baseUrl.'index.php?ADMCMD_prev='.t3lib_BEfunc::compilePreviewKeyword($params, $GLOBALS['BE_USER']->user['uid'],60*60*$ttlHours);
 		
