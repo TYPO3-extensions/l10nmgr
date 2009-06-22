@@ -53,5 +53,3 @@ service_user =
 service_pwd = 
 # cat=basic/service/40; type=string; label=Encryption key for CLI authentication
 service_enc = 
-# cat=basic/service/50; type=string; label=Ontram JS lib URL 
-service_ontramJS = 
