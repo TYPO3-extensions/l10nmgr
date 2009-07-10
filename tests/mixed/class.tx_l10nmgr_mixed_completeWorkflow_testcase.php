@@ -76,10 +76,6 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		);
 
 		t3lib_div::loadTCA('tx_l10nmgr_importfiles');
-
-
-
-
 	}
 
 	/**

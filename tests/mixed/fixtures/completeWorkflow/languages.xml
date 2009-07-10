@@ -9,8 +9,6 @@
         <title>Australia (English)</title>
         <flag>au.gif</flag>
         <static_lang_isocode>211</static_lang_isocode>
-        <tx_aoewebex_regions_uid>0</tx_aoewebex_regions_uid>
-        <tx_aoewebex_domain>http://www.webex.com.au/</tx_aoewebex_domain>
         <tx_languagevisibility_fallbackorder>13,999</tx_languagevisibility_fallbackorder>
         <tx_languagevisibility_defaultvisibility>f</tx_languagevisibility_defaultvisibility>
         <tx_languagevisibility_defaultvisibilityel>f</tx_languagevisibility_defaultvisibilityel>

@@ -31,11 +31,7 @@
         <is_siteroot>0</is_siteroot>
         <php_tree_stop>0</php_tree_stop>
         <tx_impexp_origuid>0</tx_impexp_origuid>
-        <url></url>
         <hidden>0</hidden>
-        <starttime>0</starttime>
-        <endtime>0</endtime>
-        <urltype>1</urltype>
         <shortcut>0</shortcut>
         <shortcut_mode>0</shortcut_mode>
         <no_cache>0</no_cache>

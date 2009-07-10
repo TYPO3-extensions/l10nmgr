@@ -66,18 +66,17 @@ class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_datab
 	*
 	*/
 	function setUp() {
-		global $TYPO3_CONF_VARS;
-		$TYPO3_CONF_VARS = array();
 		
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
+		
 		$this->importStdDB();
 	
 		$GLOBALS['TYPO3_DB']->debugOutput = 1;
 		$GLOBALS['TYPO3_DB']->storeLastBuildQuery = 1;
 
-		$GLOBALS['TYPO3_CONF_VARS'] = array();
 		
+		var_dump($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['phpunit']['importStdDB_additionalFiles']);
 		// order of extension-loading is important !!!!
 		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','indexed_search'));
 		
@@ -169,10 +168,6 @@ class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_datab
 		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/l10nconfiguration.xml');
 		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/exportdata.xml');
 
-		echo "Debug".__FILE__." ".__LINE__;
-		print('<pre>');
-		print_r($TYPO3_CONF_VARS);					
-		print('</pre>');
 				
 		
 		$import = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/fixture-import.xml';
