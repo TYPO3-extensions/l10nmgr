@@ -68,10 +68,11 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	function setUp() {
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
-
+		$this->importStdDB();
+		
 		// order of extension-loading is important !!!!
 		$this->importExtensions (
-			array ('corefake','cms','l10nmgr','static_info_tables','templavoila', 'aoe_webex_tableextensions', 'languagevisibility', 'syslog', 'realurl', 'indexed_search', 'aoe_realurlpath')
+			array ('cms','l10nmgr','static_info_tables','templavoila', 'aoe_webex_tableextensions', 'languagevisibility', 'syslog', 'realurl', 'indexed_search', 'aoe_realurlpath')
 		);
 
 		t3lib_div::loadTCA('tx_l10nmgr_importfiles');
@@ -85,8 +86,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	* Resets the test enviroment after the test.
 	*/
 	function tearDown() {
-		$this->cleanDatabase();
-   		$this->dropDatabase();
+
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 	}
 

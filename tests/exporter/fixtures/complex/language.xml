@@ -8,14 +8,7 @@
         <title>Brazil (Português)</title>
         <flag>br.gif</flag>
         <static_lang_isocode>189</static_lang_isocode>
-	    <tx_languagevisibility_fallbackorder></tx_languagevisibility_fallbackorder>
-        <tx_languagevisibility_defaultvisibility>t</tx_languagevisibility_defaultvisibility>
-        <tx_languagevisibility_defaultvisibilityel>t</tx_languagevisibility_defaultvisibilityel>
-        <tx_languagevisibility_defaultvisibilityttnewsel>t</tx_languagevisibility_defaultvisibilityttnewsel>
-        <tx_languagevisibility_fallbackorderel></tx_languagevisibility_fallbackorderel>
-        <tx_languagevisibility_fallbackorderttnewsel></tx_languagevisibility_fallbackorderttnewsel>
-        <tx_languagevisibility_complexfallbacksetting>0</tx_languagevisibility_complexfallbacksetting>        
-    </sys_language>
+   </sys_language>
     <static_languages>
         <uid>189</uid>
         <pid>0</pid>
