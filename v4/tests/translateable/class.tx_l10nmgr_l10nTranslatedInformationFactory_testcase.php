@@ -62,13 +62,12 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 	public function setUp() {
 		$this->createDatabase ();
 		$db = $this->useTestDatabase ();
-
-		$this->importExtensions ( array ('corefake', 'cms', 'l10nmgr', 'static_info_tables', 'templavoila' ) );
+		$this->importStdDB();
+		
+		$this->importExtensions ( array ('cms', 'l10nmgr', 'static_info_tables', 'templavoila' ) );
 	}
 
 	public function tearDown() {
-		$this->cleanDatabase ();
-		$this->dropDatabase ();
 		$GLOBALS ['TYPO3_DB']->sql_select_db ( TYPO3_db );
 	}
 
@@ -202,10 +201,7 @@ class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_dat
 
 			$this->assertEquals('l18n',$headerField->getDiffDefaultValue(),'Incorrect diffDefaultValue');
 		}catch(Exception $e){
-			echo "Debug".__FILE__." ".__LINE__;
-			print('<pre>');
-			print_r($e->getTrace());
-			print('</pre>');
+
 			 $e->getTrace();
 
 		}

@@ -67,17 +67,17 @@ class tx_l10nmgr_models_exporter_exporter_ownpagetype_testcase extends tx_phpuni
 	function setUp() {
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
-
+		$this->importStdDB();
+		
 		// order of extension-loading is important !!!!
-		$this->importExtensions(array('corefake','cms','l10nmgr','static_info_tables','templavoila'));
+		$this->importExtensions(array('cms','l10nmgr','static_info_tables','templavoila'));
 	}
 
 	/**
 	* Resets the test enviroment after the test.
 	*/
 	function tearDown() {
-		$this->cleanDatabase();
-   		$this->dropDatabase();
+
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 	}
 

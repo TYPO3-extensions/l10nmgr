@@ -41,6 +41,7 @@
  * @access public
  */
 
+
 class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_database_testcase {
 	/**
 	* This method overwrites the method of the baseclass to ensure that no live database will be used.
@@ -65,11 +66,21 @@ class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_datab
 	*
 	*/
 	function setUp() {
+		global $TYPO3_CONF_VARS;
+		$TYPO3_CONF_VARS = array();
+		
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
+		$this->importStdDB();
+	
+		$GLOBALS['TYPO3_DB']->debugOutput = 1;
+		$GLOBALS['TYPO3_DB']->storeLastBuildQuery = 1;
 
+		$GLOBALS['TYPO3_CONF_VARS'] = array();
+		
 		// order of extension-loading is important !!!!
-		$this->importExtensions(array ('corefake','cms','l10nmgr','static_info_tables','templavoila','realurl','indexed_search','aoe_realurlpath','languagevisibility'));
+		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','indexed_search'));
+		
 
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
 		$this->TranslatableFactory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
@@ -80,8 +91,8 @@ class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_datab
 	* Resets the test enviroment after the test.
 	*/
 	function tearDown() {
-		$this->cleanDatabase();
-   		$this->dropDatabase();
+
+   		
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 	}
 
@@ -158,6 +169,12 @@ class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_datab
 		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/l10nconfiguration.xml');
 		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/exportdata.xml');
 
+		echo "Debug".__FILE__." ".__LINE__;
+		print('<pre>');
+		print_r($TYPO3_CONF_VARS);					
+		print('</pre>');
+				
+		
 		$import = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/fixture-import.xml';
 
 		$TranslationData = $this->TranslationFactory->create($import);

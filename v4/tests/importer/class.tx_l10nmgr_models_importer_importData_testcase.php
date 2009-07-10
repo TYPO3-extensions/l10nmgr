@@ -74,13 +74,13 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 	public function setUp(){
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
-
-		$this->importExtensions(array('l10nmgr','corefake'));
+		$this->importStdDB();
+		
+		$this->importExtensions(array('l10nmgr'));
 	}
 
 	public function tearDown(){
-		$this->cleanDatabase();
-		$this->dropDatabase();
+
 		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 	}
 
