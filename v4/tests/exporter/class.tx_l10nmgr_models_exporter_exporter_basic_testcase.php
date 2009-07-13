@@ -71,27 +71,6 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/CATXML/class.tx_l10nmgr_CAT
  */
 class tx_l10nmgr_models_exporter_exporter_basic_testcase extends tx_phpunit_database_testcase {
 
-	/**
-	 * Changes current database to test database
-	 *
-	 * @param string $databaseName Overwrite test database name
-	 * @return object
-	 */
-	protected function useTestDatabase($databaseName = null) {
-		$db = $GLOBALS ['TYPO3_DB'];
-
-		if ($databaseName) {
-			$database = $databaseName;
-		} else {
-			$database = $this->testDatabase;
-		}
-
-		if (! $db->sql_select_db ( $database )) {
-			die ( "Test Database not available" );
-		}
-
-		return $db;
-	}
 
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase

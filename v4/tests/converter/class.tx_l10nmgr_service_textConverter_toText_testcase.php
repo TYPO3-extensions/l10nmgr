@@ -105,8 +105,8 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testca
 	 * @return void
 	 */
 	public function test_transformBasicEntitiesToUTF8() {
-		$fixtureText  = '<p>&amp; &amp; &nbsp; ich&amp;du ä&quot;</p>';
-		$expectedText = '& & &nbsp; ich&du ä"';
+		$fixtureText  = '<p>&amp; &amp; &nbsp; ich&amp;du ï¿½&quot;</p>';
+		$expectedText = '& & &nbsp; ich&du ï¿½"';
 
 		$this->assertSame (
 			$expectedText,

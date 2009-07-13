@@ -65,32 +65,6 @@ class tx_l10nmgr_service_importTranslation_testcase extends tx_phpunit_database_
 	private $TranslationService = null;
 
 	/**
-	 * Changes current database to test database
-	 *
-	 * If the test database can not be created exit the process
-	 *
-	 * @param string $databaseName OPTIONAL default is null - Overwrite test database name
-	 * @access protected
-	 * @uses t3lib_db
-	 * @return t3lib_db
-	 */
-	protected function useTestDatabase($databaseName = null) {
-		$Database = $GLOBALS ['TYPO3_DB'];
-
-		if ($databaseName) {
-			$database = $databaseName;
-		} else {
-			$database = $this->testDatabase;
-		}
-
-		if (! $Database->sql_select_db ( $database )) {
-			exit("Test Database not available");
-		}
-
-		return $Database;
-	}
-
-	/**
 	 * The setup method create the test database and
 	 * loads the basic tables into the testdatabase
 	 *
@@ -100,9 +74,12 @@ class tx_l10nmgr_service_importTranslation_testcase extends tx_phpunit_database_
 	public function setUp() {
 		$this->createDatabase();
 		$this->useTestDatabase ();
-
+		
+		$GLOBALS['TYPO3_DB']->debugOutput = TRUE;		
+		$this->importStdDB();
+		
 		$this->importExtensions (
-			array ('corefake','cms','l10nmgr','static_info_tables','templavoila', 'aoe_webex_tableextensions', 'languagevisibility', 'syslog', 'realurl', 'indexed_search', 'aoe_realurlpath')
+			array ('cms','l10nmgr','static_info_tables','templavoila','realurl',  'aoe_realurlpath','cc_devlog')
 		);
 
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
@@ -119,8 +96,6 @@ class tx_l10nmgr_service_importTranslation_testcase extends tx_phpunit_database_
 	 * @return void
 	 */
 	public function tearDown() {
-		$this->cleanDatabase();
-		$this->dropDatabase();
 		$GLOBALS ['TYPO3_DB']->sql_select_db(TYPO3_db);
 	}
 

@@ -43,44 +43,22 @@
 
 
 class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_database_testcase {
-	/**
-	* This method overwrites the method of the baseclass to ensure that no live database will be used.
-	*
-	*/
-	protected function useTestDatabase($databaseName = null) {
-		$db = $GLOBALS ['TYPO3_DB'];
-		if ($databaseName) {
-			$database = $databaseName;
-		} else {
-			$database = $this->testDatabase;
-		}
 
-		if (! $db->sql_select_db ( $database )) {
-			die ( "Test Database not available" );
-		}
-		return $db;
-	}
 
 	/**
 	* Creates the test environment.
 	*
 	*/
-	function setUp() {
-		
+	function setUp() {	
 		$this->createDatabase();
-		$db = $this->useTestDatabase();
-		
+		$db = $this->useTestDatabase();	
 		$this->importStdDB();
 	
 		$GLOBALS['TYPO3_DB']->debugOutput = 1;
-		$GLOBALS['TYPO3_DB']->storeLastBuildQuery = 1;
 
-		
-		var_dump($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['phpunit']['importStdDB_additionalFiles']);
 		// order of extension-loading is important !!!!
-		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','indexed_search'));
+		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','aoe_realurlpath','cc_devlog'));
 		
-
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
 		$this->TranslatableFactory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();
@@ -90,9 +68,7 @@ class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_datab
 	* Resets the test enviroment after the test.
 	*/
 	function tearDown() {
-
-   		
-   		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
+		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 	}
 
 	/**
