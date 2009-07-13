@@ -43,23 +43,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_
  */
 
 class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_testcase {
-	/**
-	* This method overwrites the method of the baseclass to ensure that no live database will be used.
-	*
-	*/
-	protected function useTestDatabase($databaseName = null) {
-		$db = $GLOBALS ['TYPO3_DB'];
-		if ($databaseName) {
-			$database = $databaseName;
-		} else {
-			$database = $this->testDatabase;
-		}
 
-		if (! $db->sql_select_db ( $database )) {
-			die ( "Test Database not available" );
-		}
-		return $db;
-	}
 
 	/**
 	* Creates the test environment.
@@ -68,11 +52,13 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	function setUp() {
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
+
+		$GLOBALS['TYPO3_DB']->debugOutput = TRUE;
 		$this->importStdDB();
 		
 		// order of extension-loading is important !!!!
 		$this->importExtensions (
-			array ('cms','l10nmgr','static_info_tables','templavoila', 'aoe_webex_tableextensions', 'languagevisibility', 'syslog', 'realurl', 'indexed_search', 'aoe_realurlpath')
+			array ('cms','l10nmgr','static_info_tables','templavoila', 'realurl', 'aoe_realurlpath','cc_devlog')
 		);
 
 		t3lib_div::loadTCA('tx_l10nmgr_importfiles');
