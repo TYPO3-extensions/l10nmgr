@@ -79,9 +79,10 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testca
 	 * @return void
 	 */
 	public function test_transformationOfLinkWithFurtherParameterToTypolink() {
-		$fixtureText  = '<p><a href="http://mkl-webex.dev.aoeoffice.de/?id=3" target="target" class="class" title="title text" name="name">&gt;my link</a><strong>strong text</strong></p><p>test</p>';
+		
+		$fixtureText  = '<p><a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'?id=3" target="target" class="class" title="title text" name="name">&gt;my link</a><strong>strong text</strong></p><p>test</p>';
 		$expectedText = '<link 3 target class "title text" name>>my link</link><strong>strong text</strong>'."\n" . 'test';
-
+		
 		$this->assertEquals (
 			$expectedText,
 			$this->TextConverter->toText (
