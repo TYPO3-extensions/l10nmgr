@@ -186,15 +186,19 @@ class tx_l10nmgr_translate extends t3lib_SCbase {
 			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/tabs.js') . '"></script>
 			<link rel="stylesheet" type="text/css" href="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/tabs.css') . '" />';
 
-
+		$params 	= t3lib_div::_GP('l10nmgr');
+		$cfgId 		= intval($params['configurationId']);
+		
+			
 			// Find l10n configuration record:
 
 		$l10nmgrCfgRepository = t3lib_div::makeInstance( 'tx_l10nmgr_models_configuration_configurationRepository' );
-		$l10ncfgObj = $l10nmgrCfgRepository->findById($this->id);
+		$l10ncfgObj = $l10nmgrCfgRepository->findById($cfgId);
 		if ($l10ncfgObj instanceof tx_l10nmgr_models_configuration_configuration) {
-
-				// Setting page id
-			$this->id = $l10ncfgObj->getData('pid');
+			/* @var $l10ncfgObj tx_l10nmgr_models_configuration_configuration */
+			$this->id = $l10ncfgObj->getPid();
+			
+			// Setting page id
 			$this->perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
 			$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
 			$access = is_array($this->pageinfo) ? 1 : 0;

@@ -39,7 +39,6 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  */
 class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 
-
 	var $l10ncfgObj;	//
 	var $sysLang;	// Internal array (=datarow of config record)
 
@@ -55,7 +54,13 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 		$this->doc->backPath = $BACK_PATH;
 		//parent::__construct($l10ncfgObj, null,$sysLang);
 	}
-
+	
+	protected function renderPageGroups(){}
+	
+	protected function getExporttypePrefix(){
+		return 'html';
+	}
+	
 
 	function setModeWithInlineEdit() {
 		$this->modeWithInlineEdit=TRUE;
@@ -63,9 +68,6 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 	function setModeShowEditLinks() {
 		$this->modeShowEditLinks=TRUE;
 	}
-
-
-
 
 	/**
 	 * Render the module content in HTML
