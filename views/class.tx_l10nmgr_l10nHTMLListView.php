@@ -38,7 +38,8 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
-
+	protected $pageId;
+	
 	var $l10ncfgObj;	//
 	var $sysLang;	// Internal array (=datarow of config record)
 
@@ -54,6 +55,7 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 		$this->doc->backPath = $BACK_PATH;
 		//parent::__construct($l10ncfgObj, null,$sysLang);
 	}
+	
 	
 	protected function renderPageGroups(){}
 	
@@ -169,7 +171,7 @@ class tx_l10nmgr_l10nHTMLListView extends tx_l10nmgr_abstractExportView {
 							} else $editLink = '';
 
 							$tableRows[] = '<tr class="bgColor3">
-								<td colspan="2" style="width:300px;"><a href="'.htmlspecialchars('index.php?id='.t3lib_div::_GET('id').'&showSingle='.rawurlencode($table.':'.$elementUid)).'">'.htmlspecialchars($table.':'.$elementUid).'</a>'.$editLink.'</td>
+								<td colspan="2" style="width:300px;"><a href="'.htmlspecialchars('index.php?id='.intval($this->l10ncfgObj->getPid()).'&l10nmgr[configurationId]='.intval($this->l10ncfgObj->getUid()).'&showSingle='.rawurlencode($table.':'.$elementUid)).'">'.htmlspecialchars($table.':'.$elementUid).'</a>'.$editLink.'</td>
 								<td colspan="3" style="width:200px;">'.htmlspecialchars(t3lib_div::arrayToLogString($flags)).'</td>
 							</tr>';
 
