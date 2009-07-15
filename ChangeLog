@@ -1,4 +1,5 @@
 2009-07-45 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Adjusted path to l10nmgr tools in CLI cleaner
 	* Added substitution of <hr> to <hr /> in RTE2XML transformation and the other way around in XML2RTE
 
 2009-06-22 Daniel Zielinski <d.zielinski@l10ntech.de>
