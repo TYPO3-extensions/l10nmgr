@@ -72,8 +72,11 @@ class tx_l10nmgr_xmltools {
 		$content = $this->parseHTML->TS_images_rte($content);
 		$content = $this->parseHTML->TS_links_rte($content);
 		$content = $this->parseHTML->TS_transform_rte($content,$css=1);
+		
 		//substitute & with &amp;
 		$content=str_replace('&','&amp;',$content);
+		$content=str_replace('<hr>','<hr />',$content);
+		
 		$content=t3lib_div::deHSCentities($content);
 		if ($withStripBadUTF8==1) {
 			$content=tx_l10nmgr_utf8tools::utf8_bad_strip($content);
@@ -98,6 +101,9 @@ class tx_l10nmgr_xmltools {
 			//Added because import failed
 			$xmlstring=str_replace('<br/>','<br>',$xmlstring);
 			$xmlstring=str_replace('<br />','<br>',$xmlstring);
+			
+			$xmlstring=str_replace('<hr/>','<hr>',$xmlstring);
+			$xmlstring=str_replace('<hr />','<hr>',$xmlstring);
 
 			$this->parseHTML->procOptions['typolist']=FALSE;
 			$this->parseHTML->procOptions['typohead']=FALSE;
