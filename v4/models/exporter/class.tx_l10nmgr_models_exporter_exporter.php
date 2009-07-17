@@ -220,10 +220,12 @@ class tx_l10nmgr_models_exporter_exporter {
 		$exportView				= $exportData->getInitializedExportView();
 		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
 
+		$prefix 	= $exportData->getL10nConfigurationObject()->getFilenameprefix();
+		
 		$exporterWasRunning 	= $exporter->run();
 
 		if ($exporterWasRunning) {
-			$prefix 	= $exportData->getL10nConfigurationObject()->getFilenameprefix();
+			
 			//now we write the exporter result to a file
 			$exportFile	= new tx_l10nmgr_models_exporter_exportFile();
 			$exportFile->setFilename($exportView->getFilename($prefix,$exportData->getNumberOfExportRuns()));
@@ -238,7 +240,7 @@ class tx_l10nmgr_models_exporter_exporter {
 		
 		
 		if ($exportData->getExportIsCompletelyProcessed()) {
-			$exportData->createZip($exportView->getFilename('') . '.zip');
+			$exportData->createZip($exportView->getFilename($prefix) . '.zip');
 			
 			// postProcessingHook
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'])) {
