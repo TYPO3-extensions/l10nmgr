@@ -103,27 +103,27 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	public function generateImportAction() {
 		//retrieve importdata record
 		$importDataId = tx_mvc_common_typo3::parseReturnEditConf($this->arguments['createdRecord'],'tx_l10nmgr_importdata');
+		$this->arguments['importDataId'] = $importDataId;
+	
+		if(tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['importDataId'])){
 
-		if(!empty($importDataId)){
-			$this->arguments['importDataId'] = $importDataId;
+			$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
+			$importData = $importDataRepository->findById($this->arguments['importDataId']); /* @var $importData tx_l10nmgr_models_importer_importData */
+	
+			/* Ensure, that all files are unzipped */
+			$importData->extractAllZipContent();
+	
+			if($this->configuration->get('enable_dummyTranslateOnImport')){
+				$this->dummyTranslateImportData($importData);
+			}
+	
+			//@todo
+			//$this->handleImportDataPreprocessing($importData);
+	
+			$this->routeToAction('showProgressAction');
+		}else{
+			header('Location: '. $this->getRedirectUrlOnCompletion());
 		}
-
-		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['importDataId'],true);
-
-		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
-		$importData = $importDataRepository->findById($this->arguments['importDataId']); /* @var $importData tx_l10nmgr_models_importer_importData */
-
-		/* Ensure, that all files are unzipped */
-		$importData->extractAllZipContent();
-
-		if($this->configuration->get('enable_dummyTranslateOnImport')){
-			$this->dummyTranslateImportData($importData);
-		}
-
-		//@todo
-		//$this->handleImportDataPreprocessing($importData);
-
-		$this->routeToAction('showProgressAction');
 	}
 
 	//@todo
