@@ -113,10 +113,56 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	 */
 	public function getExcludeArray(){
 		$excludeArray = array_flip(array_unique(t3lib_div::trimExplode(',',$this->getData('exclude'),1)));
-
-		return $excludeArray;
+		$allExcludes = array();
+		
+		foreach($excludeArray as $excludeElement => $value){
+			//is value a page?
+			if(substr($excludeElement,0,6) == 'pages:'){
+				$recursiveExcludes = $this->expandExcludeString(substr($excludeElement,6));
+				$allExcludes = array_merge($allExcludes,array_flip($recursiveExcludes));				
+			}else{
+				$allExcludes[$excludeElement] = $value;
+			}
+		}
+				
+		return $allExcludes;
 	}
 
+	/**
+	 * Expands an exclude string (eg pages:4711+) to all pages in the tree recursiv.
+	 * 
+	 * @param string
+	 * @return array
+	 */
+	public function expandExcludeString($excludeString) {
+		// internal static caches;
+		$pidList = array();
+
+		/* @var $tree t3lib_pageTree */
+		$tree = t3lib_div::makeInstance('t3lib_pageTree');
+		$perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
+		$tree->init('AND ' . $perms_clause);
+
+		list($pid, $depth) = t3lib_div::trimExplode('+', $excludeString);
+
+		// default is "page only" = "depth=0"
+		if (empty($depth)) {
+			$depth = ( stristr($excludeString,'+')) ? 99 : 0;
+		}
+
+		$pidList[] = 'pages:'.$pid;
+
+		if ($depth > 0) {			
+			$tree->getTree($pid, $depth);
+			foreach ($tree->tree as $data) {
+				$pidList[] = 'pages:'.$data['row']['uid'];
+			}
+		}
+		
+		return array_unique($pidList);
+	}	
+	
+	
 	/**
 	 * Each l10nconfig can define an includeList this method returns the includeList as array.
 	 *
