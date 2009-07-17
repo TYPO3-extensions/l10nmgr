@@ -115,7 +115,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 * @throws tx_mvc_exception_converter
 	 * @return string
 	 */
-	public function toRaw($content, $removeBrockenUTF8Charakter = false, $validateToXML = true) {
+	public function toRaw($content, $removeBrockenUTF8Charakter = false, $validateToXML = true, $convertEntities = false) {
 
 		$content = $this->entities_to_utf8($content, true);
 
@@ -130,7 +130,11 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		if ($removeBrockenUTF8Charakter === true) {
 			$content = tx_l10nmgr_utf8tools::utf8_bad_strip($content);
 		}
-
+		
+		if($convertEntities) {
+			$content = htmlspecialchars($content);
+		}
+		
 		if ($validateToXML === true) {
 			try {
 				$this->isValidXML($content);
