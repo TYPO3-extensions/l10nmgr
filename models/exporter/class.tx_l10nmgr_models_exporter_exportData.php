@@ -429,7 +429,10 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 *
 	 * @param string workflowstate
 	 */
-	public function addWorkflowState($stateName){
+	public function addWorkflowState($stateName) {
+
+		sleep(1); // this is a workaround to make sure that the new workflow state gets a timestamp that is younger than the previous one
+
 		$workflowState = new tx_l10nmgr_models_exporter_workflowState();
 		$workflowState->setExportdata_id($this->getUid());
 		$workflowState->setState($stateName);
