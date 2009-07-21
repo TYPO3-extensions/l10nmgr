@@ -221,11 +221,11 @@ class tx_l10nmgr_models_exporter_exporter {
 		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
 
 		$prefix 	= $exportData->getL10nConfigurationObject()->getFilenameprefix();
-		
+
 		$exporterWasRunning 	= $exporter->run();
 
 		if ($exporterWasRunning) {
-			
+
 			//now we write the exporter result to a file
 			$exportFile	= new tx_l10nmgr_models_exporter_exportFile();
 			$exportFile->setFilename($exportView->getFilename($prefix,$exportData->getNumberOfExportRuns()));
@@ -237,11 +237,11 @@ class tx_l10nmgr_models_exporter_exporter {
 			$exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
 			$exportFileRepository->add($exportFile);
 		}
-		
-		
+
+
 		if ($exportData->getExportIsCompletelyProcessed()) {
 			$exportData->createZip($exportView->getFilename($prefix) . '.zip');
-			
+
 			// postProcessingHook
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'])) {
 				foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'] as $userFunc) {
@@ -249,7 +249,7 @@ class tx_l10nmgr_models_exporter_exporter {
 					t3lib_div::callUserFunction($userFunc, $params, $exporter);
 				}
 			}
-			
+
 		}
 
 		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
