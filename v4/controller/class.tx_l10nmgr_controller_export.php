@@ -138,7 +138,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 			$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 			$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
 
-			$exportData->setTitle(sprintf('%s [%s->%s]', $exportData->getTitle(), $exportData->getSourceIsoCode(), $exportData->getTranslationIsoCode()));
+			$exportData->setTitle(sprintf('%s [%s->%s] (site:%s)', $exportData->getTitle(), $exportData->getSourceIsoCode(), $exportData->getTranslationIsoCode(), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']));
 			$exportDataRepository->save($exportData);
 
 			$this->arguments['configurationId'] = $exportData->getL10ncfg_id();
