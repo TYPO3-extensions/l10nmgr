@@ -252,7 +252,8 @@ class tx_l10nmgr_controller_exportCli extends tx_mvc_controller_cli {
 				$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 				$exportDataRepository->add($exportData);
 
-				$exporter = new tx_l10nmgr_models_exporter_exporter($exportData)
+				//TODO incomplete ...
+//				$exporter = new tx_l10nmgr_models_exporter_exporter($exportData);
 
 				do {
 					$this->cli_echo(sprintf('%s%% finished'."\n", round($exportData->getProgressPercentage())));
