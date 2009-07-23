@@ -192,7 +192,7 @@ class tx_l10nmgr_service_importTranslation {
 	protected function processDataMapCommands() {
 
 			// Now, submitting translation data:
-		$TCEmain = t3lib_div::makeInstance('t3lib_TCEmain');
+		$TCEmain = t3lib_div::makeInstance('t3lib_TCEmain'); /* @var $TCEMain t3lib_TCEmain */
 		$TCEmain->stripslashes_values        = false;
 		$TCEmain->dontProcessTransformations = true;
 
