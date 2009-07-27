@@ -70,7 +70,7 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_phpunit_testcas
 	public function tearDown() {
 		$this->TextConverter = null;
 	}
-	
+
 	/**
 	 * toRaw is supposed to unify the format of the linebreaks
 	 *
@@ -80,7 +80,7 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_phpunit_testcas
 	 * @return void
 	 */
 	public function newlineReplacementTowardsUnixFormatWork() {
-		
+
 		$fixtureText = array("line1\nline2","line1\n\rline2","line1\r\nline2");
 		$expectedText = "line1\nline2";
 
@@ -100,10 +100,10 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_phpunit_testcas
 			'Mac Newline is lost during transformation'
 		);
 	}
-	
+
 	/**
 	 * we expect to get an exception whenever the created XML isn't valid
-	 * 
+	 *
 	 *
 	 * @access public
 	 * @test
@@ -117,7 +117,7 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_phpunit_testcas
 		$fixtureText = chr(7);		// Bell-Character ASCII 7 is no valid XML
 		$this->TextConverter->toRaw($fixtureText);
 	}
-	
+
 	/**
 	 * Ensure that the API works as supposed and nothing is broken - it this behavious was changed this might cause lot's of problems within other tests and functions
 	 *
@@ -128,17 +128,15 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_phpunit_testcas
 	 */
 	public function entitiesArenTConvertedByDefault() {
 		$fixtureText = '<xml attr="blub">&amp;</xml>';
-		
+
 		$this->assertEquals (
 			$fixtureText,
 			$this->TextConverter->toRaw($fixtureText),
 			''
 		);
 	}
-	
+
 	/**
-	 * 
-	 * 
 	 *
 	 * @access public
 	 * @test
@@ -149,7 +147,7 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_phpunit_testcas
 	public function entitiesAreConvertedOptional() {
 		$fixtureText = '<xml attr="blub">&amp;<[CDATA[</xml>';
 		$expectedText = '&lt;xml attr=&quot;blub&quot;&gt;&amp;amp;&lt;[CDATA[&lt;/xml&gt;';
-		
+
 		$this->assertEquals (
 			$expectedText,
 			$this->TextConverter->toRaw($fixtureText, null, null, true),
