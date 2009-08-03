@@ -70,7 +70,17 @@ class tx_l10nmgr_models_exporter_exporter {
 	 * @var string
 	 */
 	protected $resultForChunk = '';
+	
+	/**
+	 * @var boolean indicates if the exporter was running or not.
+	 */
+	protected $wasRunning = false;
 
+	/**
+	 * @var int number of fields in exportfile
+	 */
+	protected $currentNumberOfFields;
+	
 	/**
 	 * Constructor to create an instance of the exporter object
 	 *
@@ -100,11 +110,12 @@ class tx_l10nmgr_models_exporter_exporter {
 				$this->exportData->addWorkflowState(tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_EXPORTING);
 			}
 
-			$pagesForChunk 	= $this->getNextPagesChunk();
+			$pagesForChunk 					= $this->getNextPagesChunk();
+			$factory 						= new tx_l10nmgr_models_translateable_translateableInformationFactory();
+			$tranlateableInformation 		= $factory->createFromExportDataAndPageIdCollection($this->exportData,$pagesForChunk);
 
-			$factory 		= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-			$tranlateableInformation = $factory->createFromExportDataAndPageIdCollection($this->exportData,$pagesForChunk);
-
+			$this->currentNumberOfFields 	= $tranlateableInformation->countFields();
+						
 			$this->exportView->setTranslateableInformation($tranlateableInformation);
 
 			$this->resultForChunk 		= $this->exportView->render();
@@ -118,6 +129,7 @@ class tx_l10nmgr_models_exporter_exporter {
 
 			$this->exportData->increaseNumberOfExportRuns();
 
+			$this->wasRunning = true;
 			return true;
 		}
 	}
@@ -146,6 +158,20 @@ class tx_l10nmgr_models_exporter_exporter {
 	}
 
 
+	/**
+	 * Counts the items which haven been exported in the current chunk.
+	 * 
+	 * @param void
+	 * @return int
+	 */
+	protected function countItemsForChunk(){
+		if(!$this->wasRunning){
+			throw new Exception('export has did not run export->run() has to be called first');
+		}else{
+			return $this->currentNumberOfFields;
+		}
+	}
+	
 	/**
 	 * This method can be used internally to mark the chunk as processed.
 	 *
@@ -220,11 +246,12 @@ class tx_l10nmgr_models_exporter_exporter {
 		$exportView				= $exportData->getInitializedExportView();
 		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
 
-		$prefix 	= $exportData->getL10nConfigurationObject()->getFilenameprefix();
+		$prefix 				= $exportData->getL10nConfigurationObject()->getFilenameprefix();
 
 		$exporterWasRunning 	= $exporter->run();
-
-		if ($exporterWasRunning) {
+		$numberOfItemsInChunk	= $exporter->countItemsForChunk();
+		
+		if ($exporterWasRunning && $numberOfItemsInChunk > 0) {
 
 			//now we write the exporter result to a file
 			$exportFile	= new tx_l10nmgr_models_exporter_exportFile();

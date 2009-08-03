@@ -217,18 +217,19 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	public function getExportPageIdCollection() {
 
 		$this->exportPageIdCollection = new ArrayObject();
-		$tree = $this->getExportTree();
+		$tree 			= $this->getExportTree();
+		$excludeArray	= $this->getExcludeArray();		
 
 		//$tree->tree contains pages of the tree
 		foreach($tree->tree as $treeitem){
 			$treerow = $treeitem['row'];
-			$this->exportPageIdCollection->append(intval($treerow['uid']));
+			if(is_array($excludeArray) && !array_key_exists('pages:'.$treerow['uid'],$excludeArray)){
+				$this->exportPageIdCollection->append(intval($treerow['uid']));
+			}
 		}
 
 		return $this->exportPageIdCollection;
 	}
-
-
 
 	/**
 	 * An l10nConfiguration consists of a startingpoint an a depth. Internally the pagetree is used to determine
@@ -336,9 +337,6 @@ class tx_l10nmgr_models_configuration_configuration extends tx_mvc_ddd_typo3_abs
 			return $this->row['sourceLangStaticObject'];
 		}
 	}
-
-
-
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/configuration/class.tx_l10nmgr_models_configuration_configuration.php'])	{

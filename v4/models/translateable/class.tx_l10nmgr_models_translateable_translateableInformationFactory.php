@@ -53,6 +53,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 *
 	 * @param tx_l10nmgr_models_exporter_exportData $exportData
 	 * @param ArrayObject $pageIdCollection collection of page ids
+	 * @return tx_l10nmgr_models_translateable_translateableInformation
 	 */
 	public function createFromExportDataAndPageIdCollection(tx_l10nmgr_models_exporter_exportData $exportData, ArrayObject $pageIdCollection, $workspaceId = NULL){
 		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData, $pageIdCollection );
@@ -62,7 +63,6 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 		}
 
 		$tranlateableInformation 	= $this->createFromDataProvider($typo3DataProvider);
-
 
 		return $tranlateableInformation;
 	}
@@ -77,6 +77,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 * @param ArrayObject $pageIdCollection A set of pageIds. This set of pageIds is used, to create a translateable Information of the contentelments in these pages.
 	 * @param tx_l10nmgr_models_language_language $targetLanguage
 	 * @param tx_l10nmgr_models_language_language $previewLanguage
+	 * @return tx_l10nmgr_models_translateable_translateableInformation
 	 * @todo we need to handle the include index
 	 */
 	public function createFromDataProvider(tx_l10nmgr_interface_translateable_translateableFactoryDataProvider $dataProvider){
@@ -123,7 +124,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 						$pageGroup->addTranslateableElement($translateablePageElement);
 					}
 				}
-
+				
 				$translateableInformation->addPageGroup($pageGroup);
 			}
 		}
@@ -136,7 +137,8 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 * end the method returns the whole initialzid translateableElement.
 	 *
 	 * @param string name of the table
-	 * @param
+	 * @param int uid
+	 * @return tx_l10nmgr_models_translateable_translateableElement
 	 *
 	 */
 	protected function getTranslateableElementFromDataProvider($table,$uid){
