@@ -148,12 +148,14 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 						try {
 							$table 		= $translateableElement->getTableName();
 							$uid 		= $translateableElement->getUid();
+							$cType 		= $translateableElement->getCType();
+							$fieldType  = $translateableField->getFieldType();
 							$key 		= $translateableField->getIdentityKey();
 							$data		= $this->getTransformedTranslationDataFromTranslateableField($this->getSkipXMLCheck(), $this->getUseUTF8Mode(),$translateableField,$this->forcedSourceLanguage);
 							$needsTrafo = $translateableField->needsTransformation();
 							$transformationAttribute = $needsTrafo ? ' transformations="1"' : '';
 
-							$dataTag 	= "\t\t".sprintf('<data table="%s" elementUid="%d" key="%s"%s>%s</data> ',$table,$uid,$key,$transformationAttribute,$data)."\n";
+							$dataTag 	= "\t\t".sprintf('<data table="%s" elementUid="%d" cType="%s" fieldType="%s" key="%s"%s>%s</data> ',$table,$uid,$cType,$fieldType,$key,$transformationAttribute,$data)."\n";
 							$xml .= $dataTag;
 
 						} catch(tx_mvc_exception_invalidContent $e) {

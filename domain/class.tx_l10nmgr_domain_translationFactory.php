@@ -111,7 +111,11 @@ class tx_l10nmgr_domain_translationFactory {
 					$Field->setContent($TextConverter->toText($content));
 
 				} else {
-					$Field->setContent($TextConverter->toText((string)$field));
+
+					if ( $this->isCurrentElementOfCTypeHTML($field['cType'], $uid, $table, $Field->getFieldPath()) )
+						$Field->setContent((string)$field);
+					else
+						$Field->setContent($TextConverter->toText((string)$field));
 				}
 
 				$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);
@@ -124,6 +128,38 @@ class tx_l10nmgr_domain_translationFactory {
 
 		$this->TranslationData->setPageCollection($PageCollection);
 	}
+
+
+	/**
+	 * Indicate that the current field is of type HTML.
+	 *
+	 * If the ctype field is empty, the detection work only for table tt_content.
+	 *
+	 * @param string $cType
+	 * @param integer $parentRecordUid
+	 * @param string $table
+	 * @param string $column
+	 * @param string $keyPath For example "pages_language_overlay:NEW/1/1111:title"
+	 * @return boolean
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function isCurrentElementOfCTypeHTML($cType, $parentRecordUid, $table, $keyPath) {
+		$isHTML = false;
+		list(,,$column,) = explode(':', $keyPath);
+
+		if ( (string)$cType == 'html' ) {
+				$isHTML = true;
+		} elseif ( (string)$cType == '' && $table == 'tt_content' && $column == 'bodytext') {
+			$recordArray = t3lib_BEfunc::getRecord($table, $parentRecordUid);
+
+			if ( is_array($recordArray) && array_key_exists('CType', $recordArray) && $recordArray['CType'] === 'html' ) {
+				$isHTML = true;
+			}
+		}
+
+		return $isHTML;
+	}
+
 
 	/**
 	 * If the Element for the current table and uid combination not exists a new instance
