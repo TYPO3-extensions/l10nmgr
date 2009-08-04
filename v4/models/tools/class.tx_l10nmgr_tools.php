@@ -221,6 +221,13 @@ class tx_l10nmgr_tools {
 
 			// Initialize:
 		$tInfo = $this->t8Tools->translationInfo($table,$row['uid'],$sysLang);
+
+		if ($table == 'tt_content') {
+			$tInfo['CType'] = $row['CType'];
+		} else {
+			$tInfo['CType'] = 'default';
+		}
+
 		$this->detailsOutput = array();
 		$this->flexFormDiff = $flexFormDiff;
 
@@ -236,7 +243,6 @@ class tx_l10nmgr_tools {
 			//												useOverlay (for 	elements with classic overlay record)
 			//												noTranslation
 			$translationModes=$this->_detectTranslationModes($tInfo,$table,$row);
-
 
 			foreach ($translationModes as $translationMode) {
 				switch ($translationMode) {
@@ -260,7 +266,7 @@ class tx_l10nmgr_tools {
 
 							if ($TCA[$tInfo['translation_table']]['ctrl']['transOrigDiffSourceField'])	{
 								$diffArray = unserialize($translationRecord[$TCA[$tInfo['translation_table']]['ctrl']['transOrigDiffSourceField']]);
-			#					debug($diffArray);
+//								debug($diffArray);
 							} else {
 								$diffArray = array();
 							}

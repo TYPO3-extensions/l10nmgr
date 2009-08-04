@@ -12,7 +12,7 @@ if (TYPO3_MODE=='BE')    {
 }
 
 //! increase with every change to XML Format
-define('L10NMGR_FILEVERSION','1.1');
+define('L10NMGR_FILEVERSION','1.2');
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['lowlevel']['cleanerModules']['tx_l10nmgr_index'] = array('EXT:l10nmgr/class.tx_l10nmgr_index.php:tx_l10nmgr_index');
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_l10nmgr'] = 'EXT:l10nmgr/class.l10nmgr_tcemain_hook.php:&tx_l10nmgr_tcemain_hook';

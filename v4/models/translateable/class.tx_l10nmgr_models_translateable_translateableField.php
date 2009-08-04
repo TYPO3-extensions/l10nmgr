@@ -251,6 +251,13 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getFieldType() {
+		return $this->fieldType;
+	}
+
+	/**
 	 * @param boolean $isRTE
 	 */
 	public function setIsRTE($isRTE) {

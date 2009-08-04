@@ -212,9 +212,9 @@ class tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider impl
 	 *  @param string tablename of the element
 	 *  @param int uid of the element
 	 */
-	public function getTranslationDetailsByTablenameAndElementId($tablename,$elementid){
-		if(!self::isInIncludeOrExcludeArray($this->excludeArray,$tablename,$elementid)){
-			//this is need because 'pages' and other tables need to be handled diffrent
+	public function getTranslationDetailsByTablenameAndElementId($tablename,$elementid) {
+		if(!self::isInIncludeOrExcludeArray($this->excludeArray,$tablename,$elementid)) {
+			// this is need because 'pages' and other tables need to be handled diffrent
 			$tablerow = $tablename=='pages' ? t3lib_BEfunc::getRecord($tablename,$elementid) : $this->t8Tools->getSingleRecordToTranslate($tablename,$elementid);
 
 			t3lib_BEfunc::workspaceOL($tablename,$tablerow);

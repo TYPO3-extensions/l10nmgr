@@ -153,6 +153,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 		$translateableElement->setLogs($translationDetails['log']);
 
 		$translateableElement->setUid($translationInfo['uid']);
+		$translateableElement->setCType($translationInfo['CType']);
 		$translateableElement->setSysLanguageUid($translationInfo['sys_language_uid']);
 		$translateableElement->setTranslationTable($translationInfo['translation_table']);
 		$translateableElement->setTranslations($translationInfo['translations']);

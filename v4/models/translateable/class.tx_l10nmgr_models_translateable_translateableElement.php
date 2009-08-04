@@ -59,6 +59,11 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	/**
 	 * @var string
 	 */
+	protected $cType = null;
+
+	/**
+	 * @var string
+	 */
 	protected $table;
 
 
@@ -96,6 +101,20 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	 * @var int
 	 */
 	protected $countedFields;
+
+	/**
+	 * @return string
+	 */
+	public function getCType() {
+		return $this->cType;
+	}
+
+	/**
+	 * @param string $cType
+	 */
+	public function setCType($cType) {
+		$this->cType = $cType;
+	}
 
 	/**
 	 * Constructor
