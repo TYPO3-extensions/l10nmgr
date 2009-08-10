@@ -304,63 +304,6 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_phpunit_testcase {
 		}
 		$this->assertTrue($isValidXML);
 	}
-	
-	public function test_getXMLContentWorkForSimpleContent() {
-		$output ='the content ';
-		$input = '<data>'.$output.'</data>';
-
-		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
-	}
-	
-	public function test_getXMLContentWorkForNestedContent() {
-		$output ='<p>the content </p>';
-		$input = '<data>'.$output.'</data>';
-
-		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
-	}
-	
-	public function test_getXMLContentWorkForMixedContent() {
-		$input = "<?xml version=\"1.0\"?><!DOCTYPE TYPO3L10N [ <!ENTITY nbsp \"&#160;\"> ]><data>mixed <p> &nbsp;the \ncontent&quot;</p> &quot;content </data>";
-		$output ="mixed <p> &nbsp;the \ncontent\"</p> \"content ";
-
-		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
-	}
-
-	public function test_getXMLContentWorkForEntityContent() {
-		$input = "<data>blub&lt;huhu&gt;bla&lt;/huhu&gt;blub</data>";
-		$output ="blub<huhu>bla</huhu>blub";
-		
-		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
-	}
-	public function test_getXMLContentWorkForRandomUnicodeContent() {
-		$input = "<data>€ ".chr(0xe2).chr(0x80).chr(0x94)."</data>";
-		$output ="€ ".chr(0xe2).chr(0x80).chr(0x94);
-		
-		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
-	}
-	public function test_getXMLContentWorkForCDATAContent() {
-		$input = "<data><![CDATA[ &lt;br /&gt;new line ]]></data>";
-		$output =" &lt;br /&gt;new line ";
-		
-		$realoutp=$this->TextConverter->getXMLContent(new SimpleXMLElement($input));
-		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
-	}
-	
-	public function test_getXMLContentWorkForCDATAContentWithinRoundtrip() {
-		$input = "<data><![CDATA[ &lt;br /&gt;new line ]]></data>";
-		$output =" <br />new line ";
-		
-		$realoutp=$this->TextConverter->toText($this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
-		$this->assertEquals($output,$realoutp);
-	}
-	
-	public function test_getXMLContentWorkForRandomCDATAContent() {
-		$input = "<data><![CDATA[ € ".chr(0xe2).chr(0x80).chr(0x94)."]]></data>";
-		$output =" € ".chr(0xe2).chr(0x80).chr(0x94);
-		
-		$realoutp=$this->TextConverter->getXMLContent(new SimpleXMLElement($input));
-		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
-	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_service_textConverter_testcase.php']) {
