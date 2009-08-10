@@ -96,26 +96,19 @@ class tx_l10nmgr_domain_translationFactory {
 			foreach ($pagerow->children() as $field) {
 				$table = (string)$field['table'];
 				$uid   = (int)$field['elementUid'];
-
 				$Field   = new tx_l10nmgr_domain_translation_field();
 				$Field->setFieldPath((string)$field['key']);
 
 				if ( ((int)$field['transformations'] === 1) ) {
 					$Field->setTransformation(true);
-					$content = '';
-						// get the HTML markup without CDATA
-					foreach ($field->children() as $child) {
-						$content .= $child->asXML();
-					}
-
-					$Field->setContent($TextConverter->toText($content));
-
+					$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field,true)));
 				} else {
 
-					if ( $this->isCurrentElementOfCTypeHTML($field['cType'], $uid, $table, $Field->getFieldPath()) )
-						$Field->setContent((string)$field);
-					else
-						$Field->setContent($TextConverter->toText((string)$field));
+					if ( $this->isCurrentElementOfCTypeHTML($field['cType'], $uid, $table, $Field->getFieldPath()) ) {
+						$Field->setContent($TextConverter->getXMLContent($field));
+					} else {
+						$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field)));
+					}
 				}
 
 				$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);
@@ -128,7 +121,6 @@ class tx_l10nmgr_domain_translationFactory {
 
 		$this->TranslationData->setPageCollection($PageCollection);
 	}
-
 
 	/**
 	 * Indicate that the current field is of type HTML.
@@ -147,6 +139,30 @@ class tx_l10nmgr_domain_translationFactory {
 		$isHTML = false;
 		list(,,$column,) = explode(':', $keyPath);
 
+		switch($table)  {
+			case 'tt_content':
+				if( ((string)$cType == 'html') && ($column == 'bodytext') ) {
+					$isHTML = true;
+				} elseif ( (string)$cType == 'templavoila_pi1' ) {
+					//TODO check FCE datasource
+				} elseif ( (string)$cType == '' && $column == 'bodytext') {
+					$recordArray = t3lib_BEfunc::getRecord($table, $parentRecordUid);
+
+					if ( is_array($recordArray) && array_key_exists('CType', $recordArray) && $recordArray['CType'] === 'html' ) {
+						$isHTML = true;
+					}
+				}
+			break;
+			default:
+				if($GLOBALS['TCA'][$table]['columns'][$column]['config']['type'] == 'flex') {
+					//TODO check flex datasource	
+				} elseif( array_key_exists('l10nTransformationType', $GLOBALS['TCA'][$table]['columns'][$column]['config']) ) {
+					$isHTML = ($GLOBALS['TCA'][$table]['columns'][$column]['config']['l10nTransformationType']=='html');
+				}
+		}
+		
+		
+/*
 		if ( (string)$cType == 'html' ) {
 				$isHTML = true;
 		} elseif ( (string)$cType == '' && $table == 'tt_content' && $column == 'bodytext') {
@@ -156,7 +172,7 @@ class tx_l10nmgr_domain_translationFactory {
 				$isHTML = true;
 			}
 		}
-
+*/
 		return $isHTML;
 	}
 

@@ -206,13 +206,19 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 			if ($translateableField->needsTransformation()) {
 				$result = $this->TextConverter()->toXML($dataForTranslation);
 			} else {
-				$result = $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, true, true);
+				$result = $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, true, false);
 			}
 		} catch (tx_mvc_exception_converter $e) {
-			if ($skipXMLCheck) {
-				$result = '<![CDATA[' . $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, false) . ']]>';
-			} else {
-				throw new tx_mvc_exception_invalidContent('Content not exported: No valid XML and option skipXMLCheck not active.');
+			
+			try {
+				$result = $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, true, true);
+				
+			} catch(tx_mvc_exception_converter $e) {
+				if ($skipXMLCheck) {
+					$result = '<![CDATA[' . $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, false) . ']]>';
+				} else {
+					throw new tx_mvc_exception_invalidContent('Content not exported: No valid XML and option skipXMLCheck not active.');
+				}
 			}
 		}
 

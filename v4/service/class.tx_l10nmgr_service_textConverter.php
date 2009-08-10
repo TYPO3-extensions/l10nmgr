@@ -109,6 +109,8 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 *
 	 * @param string $content Plain input to convert into valid XML
 	 * @param boolean $removeBrockenUTF8Charakter DEFAULT is false
+	 * @param boolean $validateToXML
+	 * @param boolean $convertEntities
 	 * @access public
 	 * @uses txl10nmgr_service_textConverter::entities_to_utf8
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
@@ -309,6 +311,28 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		}
 
 		return implode('',$parts);
+	}
+	
+	
+	/**
+	 * Get the contents of a SimpleXMLElement as string (XML)
+	 *
+	 * @param SimpleXMLElement $field
+	 * @return the content of the SimpleXMLElement
+	 */
+	public function getXMLContent( SimpleXMLElement $field ) {
+		if(count($field->children())>0) {
+			$fieldXML = str_replace("<?xml version=\"1.0\"?>\n",'',$field->asXML());
+			
+			if(preg_match('/^<!DOCTYPE/',$fieldXML)) {
+				$fieldXML = substr($fieldXML,strpos($fieldXML,"]>")+3);
+			}
+			$content = substr($fieldXML,strpos($fieldXML,'>')+1,strrpos($fieldXML,'<')-strpos($fieldXML,'>')-1);
+			if(substr($content,0,9)=='<![CDATA[') $content = substr($content,9,-3);
+		} else {
+			$content = (string)$field;
+		}
+		return $content;
 	}
 }
 
