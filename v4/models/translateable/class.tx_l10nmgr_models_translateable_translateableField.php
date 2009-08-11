@@ -92,6 +92,11 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	protected $isRTE;
 
 	/**
+	 * @var boolean
+	 */
+	protected $isHTML;
+
+	/**
 	 * Holds the fieldname of the field
 	 *
 	 * @var string
@@ -265,6 +270,13 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	}
 
 	/**
+	 * @param boolean $isRTE
+	 */
+	public function setIsHTML($isHTML) {
+		$this->isHTML = $isHTML;
+	}
+
+	/**
 	 * @param string $message
 	 */
 	public function setMessage($message) {
@@ -384,6 +396,19 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 */
 	public function needsTransformation(){
 		return (($this->fieldType =='text') &&  $this->isRTE);
+	}
+
+	/**
+	 * A field with the type text from the RTE needs a Transformation
+	 *
+	 * @return boolean
+	 */
+	public function getTransformationType(){
+		//TODO autodetection should be done here instead of using t8tools
+		
+		if($this->needsTransformation())	return 'text';
+		if($this->isHTML)	return 'html';
+		return 'plain';
 	}
 
 	/**

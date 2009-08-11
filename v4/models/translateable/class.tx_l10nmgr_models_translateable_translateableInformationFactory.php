@@ -179,7 +179,8 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 				$translateableField->setReadOnly($translationField['readOnly']);
 				$translateableField->setFieldType($translationField['fieldType']);
 				$translateableField->setIsRTE($translationField['isRTE']);
-
+				$translateableField->setIsHTML($translationField['isHTML']);
+				
 				//if it is changed and we jus what changed elements OR if we don't care about that an element was changed
 				//@todo does this also work for the export at import time? in the old version new and changed elements where only excluded in the view
 				if($translateableField->isChanged() && $this->dataProvider->getOnlyNewAndChanged() || !$this->dataProvider->getOnlyNewAndChanged() ) {
