@@ -98,17 +98,18 @@ class tx_l10nmgr_domain_translationFactory {
 				$uid   = (int)$field['elementUid'];
 				$Field   = new tx_l10nmgr_domain_translation_field();
 				$Field->setFieldPath((string)$field['key']);
-
-				if ( ((int)$field['transformations'] === 1) ) {
-					$Field->setTransformation(true);
-					$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field,true)));
-				} else {
-
-					if ( $this->isCurrentElementOfCTypeHTML($field['cType'], $uid, $table, $Field->getFieldPath()) ) {
-						$Field->setContent($TextConverter->getXMLContent($field));
-					} else {
-						$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field)));
-					}
+				$Field->detectTransformationType($field,$this->TranslationData->getFormatVersion());
+				
+				switch($Field->getTransformationType($uid,true)) {
+					case 'html':
+							$Field->setContent($TextConverter->getXMLContent($field));
+						break;
+					case 'text':
+							$Field->setTransformation(true);
+							$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field,true)));
+						break;
+					default:
+							$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field)));
 				}
 
 				$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);

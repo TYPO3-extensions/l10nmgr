@@ -559,7 +559,8 @@ class tx_l10nmgr_tools {
 												'msg' => $msg,
 												'readOnly' => $TCEformsCfg['l10n_display']=='defaultAsReadonly',
 												'fieldType' => $TCEformsCfg['config']['type'],
-												'isRTE'=>$this->_isRTEField($key,$TCEformsCfg,$contentRow)
+												'isRTE'=>$this->_isRTEField($key,$TCEformsCfg,$contentRow),
+												'isHTML'=>$this->_isHTMLField($key,$TCEformsCfg,$contentRow)
 											);
 									} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; ->filters[noIntegers] was set and dataValue "'.$dataValue.'" was an integer';
 								} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; ->filters[noEmptyValues] was set and dataValue "'.$dataValue.'" was empty and no translation found either.';
@@ -595,6 +596,29 @@ class tx_l10nmgr_tools {
 			if ($kFieldName=='bodytext') {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check if the field is an RTE in the Backend
+	 *
+	 * @param	string		Key is a combination of table, uid, field and structure path, identifying the field
+	 * @param	array		TCA configuration for field
+	 * @return	boolean
+	 */
+	function _isHTMLField($key,$TCEformsCfg,$contentRow) {
+		if (!is_array($contentRow)) {
+			return false;
+		}
+
+		if (($contentRow['CType']=='html')) {
+			list(,,$kFieldName) = explode(':',$key);
+			if ($kFieldName=='bodytext') {
+				return true;
+			}
+		} elseif (array_key_exists('l10nTransformationType',$TCEformsCfg['config']) && $TCEformsCfg['config']['l10nTransformationType']) {
+			return true;
 		}
 		return false;
 	}

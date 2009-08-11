@@ -75,6 +75,14 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 	 * @var boolean
 	 */
 	protected $transformation = false;
+	
+	/**
+	 * Indicate what kind of modification is needed for the
+	 * imported content
+	 *
+	 * @var boolean
+	 */
+	protected $transformationType = 'plain';
 
 	/**
 	 * Reason for skipping the entity
@@ -187,6 +195,54 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 		$this->transformation = $transformation;
 	}
 
+	/**
+	 * Enable initialisation of the field transformationssetting
+	 *
+	 * @param SimpleXMLElement $elem - the importdata
+	 * @param String $xmlVersion - the used import format
+	 * @return Boolean - determindes wether the XML detection was successful or not
+	 */
+	public function detectTransformationType(SimpleXMLElement $elem, $xmlVersion='1.2') {
+		$foundSettingInXML = false;
+		foreach($elem->attributes() as $key=>$value) {
+			if( ($key == 'transformationType') && in_array((string)$value,array('plain','text','html')) ) {
+				$this->transformationType = (string)$value;
+				$foundSettingInXML=true;
+				break;
+			}
+			if(version_compare($xmlVersion,'1.2','<') && ($key=="transformations")) {
+				$this->transformationType = 'text';
+				$foundSettingInXML=true;
+			}
+		}
+		return $foundSettingInXML;
+	}
+	
+	public function getTransformationType($parentUid=NULL,$autoDetectHtml=false) {
+		$isHTML = false;
+		if($autoDetectHtml) {
+			list($table,$uidPart,$field,) = explode(':',$this->fieldPath);
+			$cfg = $GLOBALS['TCA'][$table]['columns'][$field];
+			if(is_array($cfg['config']) && array_key_exists('l10nTransformationType',$cfg['config']) && $cfg['config']['l10nTransformationType']) {
+				$isHTML=true;
+			} elseif(($table=='tt_content') && ($field='bodytext')) {
+				if(substr($uidPart,0,3)=='NEW') {
+					list(,,$uid,)=explode('/',$uidPart);
+				} else {
+					$uid=intval($parentUid);
+				}
+				$record = t3lib_BEfunc::getRecord($table,$uid);
+				if($record['CType']=='html') {
+					$isHTML=true;
+				}
+			}
+		}
+		
+		return $isHTML?'html':$this->transformationType;
+		
+	}
+	
+	
 	/**
 	 * @param string $content
 	 * @access public
