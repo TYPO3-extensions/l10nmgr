@@ -240,7 +240,7 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 					$flexObj = t3lib_div::makeInstance('t3lib_flexformtools');
 					$flexObj->traverseFlexFormXMLData($table,$field,$record,$this,'getTransformationType_flexFormCallBack');
 					$isHTML = $this->_flexformTransFormationTypeCache[$flexPath]=='html';
-				} elseif(($table=='tt_content') && ($field='bodytext')) {
+				} elseif(($table=='tt_content') && ($field=='bodytext')) {
 					if($record['CType']=='html') {
 						$isHTML=true;
 					}

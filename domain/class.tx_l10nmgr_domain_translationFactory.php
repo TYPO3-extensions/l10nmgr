@@ -98,9 +98,9 @@ class tx_l10nmgr_domain_translationFactory {
 				$uid   = (int)$field['elementUid'];
 				$Field   = new tx_l10nmgr_domain_translation_field();
 				$Field->setFieldPath((string)$field['key']);
-				$Field->detectTransformationType($field,$this->TranslationData->getFormatVersion());
+				$needsAutoDetection = !$Field->detectTransformationType($field,$this->TranslationData->getFormatVersion());
 				
-				switch($Field->getTransformationType($uid,true)) {
+				switch($Field->getTransformationType($uid,$needsAutoDetection)) {
 					case 'html':
 							$Field->setContent($TextConverter->getXMLContent($field));
 						break;
