@@ -413,7 +413,7 @@ class tx_l10nmgr_tools {
 
 						// For "flex" fieldtypes we need to traverse the structure looking for file and db references of course!
 					if ($conf['type']=='flex')	{
-						// We might like to add the filter that detects if record is tt_content/CType is "tx_flex...:" since otherwise we would translate flexform content that might be hidden if say the record had a DS set but was later changed back to "Text w/Image" or so... But probably this is a rare case.
+						//TODO We might like to add the filter that detects if record is tt_content/CType is "tx_flex...:" since otherwise we would translate flexform content that might be hidden if say the record had a DS set but was later changed back to "Text w/Image" or so... But probably this is a rare case.
 
 							// Get current data structure to see if translation is needed:
 						$dataStructArray = t3lib_BEfunc::getFlexFormDS($conf, $row, $table);

@@ -124,61 +124,6 @@ class tx_l10nmgr_domain_translationFactory {
 	}
 
 	/**
-	 * Indicate that the current field is of type HTML.
-	 *
-	 * If the ctype field is empty, the detection work only for table tt_content.
-	 *
-	 * @param string $cType
-	 * @param integer $parentRecordUid
-	 * @param string $table
-	 * @param string $column
-	 * @param string $keyPath For example "pages_language_overlay:NEW/1/1111:title"
-	 * @return boolean
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 */
-	protected function isCurrentElementOfCTypeHTML($cType, $parentRecordUid, $table, $keyPath) {
-		$isHTML = false;
-		list(,,$column,) = explode(':', $keyPath);
-
-		switch($table)  {
-			case 'tt_content':
-				if( ((string)$cType == 'html') && ($column == 'bodytext') ) {
-					$isHTML = true;
-				} elseif ( (string)$cType == 'templavoila_pi1' ) {
-					//TODO check FCE datasource
-				} elseif ( (string)$cType == '' && $column == 'bodytext') {
-					$recordArray = t3lib_BEfunc::getRecord($table, $parentRecordUid);
-
-					if ( is_array($recordArray) && array_key_exists('CType', $recordArray) && $recordArray['CType'] === 'html' ) {
-						$isHTML = true;
-					}
-				}
-			break;
-			default:
-				if($GLOBALS['TCA'][$table]['columns'][$column]['config']['type'] == 'flex') {
-					//TODO check flex datasource	
-				} elseif( array_key_exists('l10nTransformationType', $GLOBALS['TCA'][$table]['columns'][$column]['config']) ) {
-					$isHTML = ($GLOBALS['TCA'][$table]['columns'][$column]['config']['l10nTransformationType']=='html');
-				}
-		}
-		
-		
-/*
-		if ( (string)$cType == 'html' ) {
-				$isHTML = true;
-		} elseif ( (string)$cType == '' && $table == 'tt_content' && $column == 'bodytext') {
-			$recordArray = t3lib_BEfunc::getRecord($table, $parentRecordUid);
-
-			if ( is_array($recordArray) && array_key_exists('CType', $recordArray) && $recordArray['CType'] === 'html' ) {
-				$isHTML = true;
-			}
-		}
-*/
-		return $isHTML;
-	}
-
-
-	/**
 	 * If the Element for the current table and uid combination not exists a new instance
 	 * of the tx_l10nmgr_domain_translation_element will be create.
 	 *
