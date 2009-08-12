@@ -34,7 +34,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10
  *
  * class.tx_l10nmgr_domain_translation_field_testcase.php
  *
- * @author Michael Klapper <michael.klapper@aoemedia.de>
+ * @author Tolleiv Nietsch <tolleiv.nietsch@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id$
@@ -136,7 +136,7 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 	}
 
 	public function test_canAutoDetectHTMLTransformationForExistingHtmlContentElement() {
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_testcase_ttcontent.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
 		$path = array(
 			'table' => 'tt_content',
 			'uid'=>'2',
@@ -150,7 +150,7 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 	}
 
 	public function test_canAutoDetectHTMLTransformationForNewHtmlContentElement() {
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_testcase_ttcontent.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
 		$path = array(
 			'table' => 'tt_content',
 			'uid'=>'NEW/1/1',
@@ -164,7 +164,7 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 	}
 
 	public function test_canAutoDetectNonHTMLTransformationForExistingHtmlContentElement() {
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_testcase_ttcontent.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
 		$path = array(
 			'table' => 'tt_content',
 			'uid'=>'11',
@@ -178,7 +178,7 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 	}
 
 	public function test_canAutoDetectNonHTMLTransformationForNewHtmlContentElement() {
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_testcase_ttcontent.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
 		$path = array(
 			'table' => 'tt_content',
 			'uid'=>'NEW/1/10',
@@ -188,6 +188,22 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		$this->Field->setFieldPath(implode(':',$path));
 		$this->assertEquals(implode(':',$path),$this->Field->getFieldPath());
 		$this->assertEquals('plain',$this->Field->getTransformationType(10,true));
+		
+	}
+
+	public function test_canAutoDetectHTMLTransformationForFlexformField() {
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/tx_templavoila_datastructure.xml');
+		$path = array(
+			'table' => 'tt_content',
+			'uid'=>'22',
+			'field' => 'tx_templavoila_flex',
+			'path' => 'data/sDEF/lDEF/field_author/vDEF'
+		);
+		
+		$this->Field->setFieldPath(implode(':',$path));
+		$this->assertEquals(implode(':',$path),$this->Field->getFieldPath());
+		$this->assertEquals('html',$this->Field->getTransformationType($path['uid'],true));
 		
 	}
 

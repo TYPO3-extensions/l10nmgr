@@ -221,25 +221,42 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 	public function getTransformationType($parentUid=NULL,$autoDetectHtml=false) {
 		$isHTML = false;
 		if($autoDetectHtml) {
-			list($table,$uidPart,$field,) = explode(':',$this->fieldPath);
+			list($table,$uidPart,$field,$flexPath) = explode(':',$this->fieldPath);
 			$cfg = $GLOBALS['TCA'][$table]['columns'][$field];
+
 			if(is_array($cfg['config']) && array_key_exists('l10nTransformationType',$cfg['config']) && $cfg['config']['l10nTransformationType']) {
 				$isHTML=true;
-			} elseif(($table=='tt_content') && ($field='bodytext')) {
+			} else {
+
 				if(substr($uidPart,0,3)=='NEW') {
 					list(,,$uid,)=explode('/',$uidPart);
 				} else {
 					$uid=intval($parentUid);
 				}
 				$record = t3lib_BEfunc::getRecord($table,$uid);
-				if($record['CType']=='html') {
-					$isHTML=true;
+
+				if(is_array($cfg['config']) && ($cfg['config']['type']=='flex')) {
+					$this->_flexformTransFormationTypeCache=array();
+					$flexObj = t3lib_div::makeInstance('t3lib_flexformtools');
+					$flexObj->traverseFlexFormXMLData($table,$field,$record,$this,'getTransformationType_flexFormCallBack');
+					$isHTML = $this->_flexformTransFormationTypeCache[$flexPath]=='html';
+				} elseif(($table=='tt_content') && ($field='bodytext')) {
+					if($record['CType']=='html') {
+						$isHTML=true;
+					}
 				}
 			}
 		}
 		
 		return $isHTML?'html':$this->transformationType;
 		
+	}
+	
+	
+	public function getTransformationType_flexFormCallBack($dsArr, $dataValue, $PA, $structurePath, &$pObj) {
+		if(array_key_exists('l10nTransformationType',$dsArr['TCEforms']['config'])) {
+			$this->_flexformTransFormationTypeCache[$structurePath]=$dsArr['TCEforms']['config']['l10nTransformationType'];
+		}
 	}
 	
 	
