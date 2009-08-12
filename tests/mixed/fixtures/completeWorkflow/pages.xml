@@ -409,9 +409,6 @@
         &lt;/sheet&gt;
     &lt;/data&gt;
 &lt;/T3FlexForms&gt;</tx_templavoila_flex>
-        <tx_realurl_pathsegment></tx_realurl_pathsegment>
-        <static_filename></static_filename>
-        <tx_languagevisibility_visibility>a:20:{i:0;s:1:&quot;-&quot;;i:1;s:1:&quot;-&quot;;i:2;s:1:&quot;-&quot;;i:3;s:1:&quot;-&quot;;i:4;s:1:&quot;-&quot;;i:5;s:1:&quot;-&quot;;i:6;s:1:&quot;-&quot;;i:7;s:1:&quot;-&quot;;i:8;s:1:&quot;-&quot;;i:9;s:1:&quot;-&quot;;i:10;s:1:&quot;-&quot;;i:11;s:1:&quot;-&quot;;i:12;s:1:&quot;-&quot;;i:13;s:1:&quot;t&quot;;i:21;s:1:&quot;-&quot;;i:31;s:1:&quot;-&quot;;i:41;s:1:&quot;-&quot;;i:51;s:1:&quot;-&quot;;i:61;s:1:&quot;-&quot;;i:71;s:1:&quot;-&quot;;}</tx_languagevisibility_visibility>
         <t3ver_move_id>0</t3ver_move_id>
     </pages>
     <pages>
@@ -822,11 +819,6 @@
         &lt;/sheet&gt;
     &lt;/data&gt;
 &lt;/T3FlexForms&gt;</tx_templavoila_flex>
-        <tx_realurl_pathsegment></tx_realurl_pathsegment>
-        <tx_aoerealurlpath_overridepath></tx_aoerealurlpath_overridepath>
-        <tx_aoerealurlpath_overridesegment></tx_aoerealurlpath_overridesegment>
-        <tx_aoerealurlpath_excludefrommiddle>0</tx_aoerealurlpath_excludefrommiddle>
-        <tx_languagevisibility_visibility>a:20:{i:0;s:1:&quot;-&quot;;i:1;s:1:&quot;-&quot;;i:2;s:1:&quot;-&quot;;i:3;s:1:&quot;-&quot;;i:4;s:1:&quot;-&quot;;i:5;s:1:&quot;-&quot;;i:6;s:1:&quot;-&quot;;i:7;s:1:&quot;-&quot;;i:8;s:1:&quot;-&quot;;i:9;s:1:&quot;-&quot;;i:10;s:1:&quot;-&quot;;i:11;s:1:&quot;-&quot;;i:12;s:1:&quot;-&quot;;i:13;s:1:&quot;t&quot;;i:21;s:1:&quot;-&quot;;i:31;s:1:&quot;-&quot;;i:41;s:1:&quot;-&quot;;i:51;s:1:&quot;-&quot;;i:61;s:1:&quot;-&quot;;i:71;s:1:&quot;-&quot;;}</tx_languagevisibility_visibility>
         <t3ver_move_id>0</t3ver_move_id>
     </pages>
 </testcase>

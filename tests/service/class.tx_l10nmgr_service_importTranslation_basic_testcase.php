@@ -47,7 +47,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_servic
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_service_importTranslation_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_database_testcase {
 
 	/**
 	 * @var tx_l10nmgr_domain_translationFactory
@@ -74,10 +74,10 @@ class tx_l10nmgr_service_importTranslation_testcase extends tx_phpunit_database_
 	public function setUp() {
 		$this->createDatabase();
 		$this->useTestDatabase ();
-		
-		$GLOBALS['TYPO3_DB']->debugOutput = TRUE;		
+
+		$GLOBALS['TYPO3_DB']->debugOutput = TRUE;
 		$this->importStdDB();
-		
+
 		$this->importExtensions (
 			array ('cms','l10nmgr','static_info_tables','templavoila','realurl',  'aoe_realurlpath','cc_devlog')
 		);

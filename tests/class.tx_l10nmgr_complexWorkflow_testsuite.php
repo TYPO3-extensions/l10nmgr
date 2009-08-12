@@ -22,15 +22,11 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/class.tx_l10nmgr_domain_translation_field_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/class.tx_l10nmgr_domain_translation_fieldCollection_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/class.tx_l10nmgr_domain_translation_element_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/class.tx_l10nmgr_domain_translation_elementCollection_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/class.tx_l10nmgr_domain_translation_page_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/class.tx_l10nmgr_domain_translation_pageCollection_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/class.tx_l10nmgr_domain_translation_data_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/class.tx_l10nmgr_domain_translationFactory_basic_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/class.tx_l10nmgr_domain_translationFactory_xmlData_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/mixed/class.tx_l10nmgr_mixed_completeWorkflow_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/class.tx_l10nmgr_models_importer_importData_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/class.tx_l10nmgr_models_importer_importFile_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/service/class.tx_l10nmgr_service_importTranslation_basic_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/service/class.tx_l10nmgr_service_importTranslation_headertest_testcase.php';
 
 /**
  * Static test suite for the translation package
@@ -50,7 +46,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/class.tx_l10n
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_translation_testsuite extends tx_phpunit_testsuite {
+class tx_l10nmgr_complexWorkflow_testsuite extends tx_phpunit_testsuite {
 
 	/**
 	 * Constructs the test suite handler.
@@ -62,17 +58,32 @@ class tx_l10nmgr_translation_testsuite extends tx_phpunit_testsuite {
 	public function __construct() {
 
 		$this->setName('Translation package');
-		$this->addTestSuite('tx_l10nmgr_domain_translation_page_testcase');
-		$this->addTestSuite('tx_l10nmgr_domain_translation_fieldCollection_testcase');
-		$this->addTestSuite('tx_l10nmgr_domain_translationFactory_xmlData_testcase');
-		$this->addTestSuite('tx_l10nmgr_domain_translation_elementCollection_testcase');
-		$this->addTestSuite('tx_l10nmgr_domain_translation_pageCollection_testcase');
-		$this->addTestSuite('tx_l10nmgr_domain_translationFactory_basic_testcase');
-		$this->addTestSuite('tx_l10nmgr_domain_translation_data_testcase');
-		$this->addTestSuite('tx_l10nmgr_domain_translation_element_testcase');
-		$this->addTestSuite('tx_l10nmgr_domain_translation_field_transformation_testcase');
-		$this->addTestSuite('tx_l10nmgr_domain_translation_field_testcase');
+		$this->addTestSuite('tx_l10nmgr_mixed_completeWorkflow_testcase');
+		$this->addTestSuite('tx_l10nmgr_models_importer_importData_testcase');
+		$this->addTestSuite('tx_l10nmgr_models_importer_importFile_testcase');
+		$this->addTestSuite('tx_l10nmgr_service_importTranslation_basic_testcase');
+		$this->addTestSuite('tx_l10nmgr_service_importTranslation_headertest_testcase');
+/*		
+		
 
+./
+./tools/class.tx_l10nmgr_div_testcase.php
+./
+./
+./translateable/class.tx_l10nmgr_l10nTranslatedInformationFactory_testcase.php
+./translateable/class.tx_l10nmgr_models_translateable_translateableField_testcase.php
+./
+./configuration/class.tx_l10nmgr_models_configuration_Configuration_testcase.php
+./converter/tx_xmltools_testcase.php
+./exporter/class.tx_l10nmgr_models_exporter_exporter_testcase.php
+./exporter/class.tx_l10nmgr_models_exporter_exporter_basic_testcase.php
+./exporter/class.tx_l10nmgr_models_exporter_exporter_ownpagetype_testcase.php
+./exporter/class.tx_l10nmgr_models_exporter_exportDataRepository_testcase.php
+./exporter/class.tx_l10nmgr_models_exporter_exporter_complex_testcase.php
+
+*/		
+		
+		
 	}
 
 	/**

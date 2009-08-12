@@ -79,10 +79,10 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testca
 	 * @return void
 	 */
 	public function test_transformationOfLinkWithFurtherParameterToTypolink() {
-		
+
 		$fixtureText  = '<p><a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'?id=3" target="target" class="class" title="title text" name="name">&gt;my link</a><strong>strong text</strong></p><p>test</p>';
 		$expectedText = '<link 3 target class "title text" name>>my link</link><strong>strong text</strong>'."\n" . 'test';
-		
+
 		$this->assertEquals (
 			$expectedText,
 			$this->TextConverter->toText (
@@ -274,7 +274,24 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_phpunit_testca
 		$this->assertEquals (
 			$expectedText,
 			$this->TextConverter->toText($fixtureText),
-			'The transormation &amp to & also when no paragraph is wrapped around.'
+			''
+		);
+	}
+
+	/**
+	 * @access public
+	 * @test
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return void
+	 */
+	public function convertDirtyHeaderValue() {
+		$fixture  = '<p>This is a dirty header element &amp; uses an <br> ampersand translated </p>';
+		$expected = 'This is a dirty header element & uses an <br /> ampersand translated ';
+
+		$this->assertEquals (
+			$expected,
+			$this->TextConverter->toText($fixture),
+			''
 		);
 	}
 }

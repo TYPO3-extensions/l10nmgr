@@ -33,7 +33,7 @@ require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.
  *
  */
 
-class tx_l10nmgr_translateableInformationFactory_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_database_testcase {
 
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase

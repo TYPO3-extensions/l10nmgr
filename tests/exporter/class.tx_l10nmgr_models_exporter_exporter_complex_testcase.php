@@ -27,7 +27,7 @@
  *
  * {@inheritdoc}
  *
- * class.tx_l10nmgr_model_exporter_export_complex_testcase.php
+ * class.tx_l10nmgr_models_exporter_export_complex_testcase.php
  *
  * @author Timo Schmidt <schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -42,7 +42,7 @@
  */
 
 
-class tx_l10nmgr_model_exporter_export_complex_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_database_testcase {
 
 
 	/**
