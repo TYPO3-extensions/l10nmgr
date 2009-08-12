@@ -26,6 +26,8 @@ require_once t3lib_extMgm::extPath('mvc') . 'common/class.tx_mvc_common_classloa
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/converter/class.tx_l10nmgr_service_textConverter_testcase.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/converter/class.tx_l10nmgr_service_textConverter_toXML_testcase.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/converter/class.tx_l10nmgr_service_textConverter_toText_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/converter/class.tx_l10nmgr_service_textConverter_toRaw_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/converter/class.tx_l10nmgr_service_textConverter_getXMLContent_testcase.php';
 
 /**
  * Static test suite for the "tx_l10nmgr_service_textConverter"
@@ -61,6 +63,8 @@ class tx_l10nmgr_service_textConverter_testsuite extends tx_phpunit_testsuite {
 		$this->addTestSuite('tx_l10nmgr_service_textConverter_testcase');
 		$this->addTestSuite('tx_l10nmgr_service_textConverter_toXML_testcase');
 		$this->addTestSuite('tx_l10nmgr_service_textConverter_toText_testcase');
+		$this->addTestSuite('tx_l10nmgr_service_textConverter_toRaw_testcase');
+		$this->addTestSuite('tx_l10nmgr_service_textConverter_getXMLContent_testcase');
 	}
 
 	/**
