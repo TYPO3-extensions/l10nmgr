@@ -73,6 +73,11 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		$this->Field = null;
 	}
 
+	/**
+	 * check whether the detection-method returns success or fails
+	 * after we made the attempt to detect it automatically
+	 *
+	 */
 	public function test_transformationDetectionsReturnsStateOfProcess() {
 		
 		$xmlTrue = new SimpleXMLElement('<data transformationType="plain">datadatadata</data>');
@@ -82,6 +87,11 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		$this->assertEquals(false,$this->Field->detectTransformationType($xmlFalse));
 	}
 
+	/**
+	 * check whether the normal plain transformaiton attribute is passed on
+	 * within XML
+	 *
+	 */
 	public function test_canDetectPlainTransformationFromXML() {
 		
 		$xml = new SimpleXMLElement('<data transformationType="plain">datadatadata</data>');
@@ -91,6 +101,11 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		
 	}
 
+	/**
+	 * check whether the normal text transformaiton attribute is passed on
+	 * within XML
+	 *
+	 */
 	public function test_canDetectTextTransformationFromXML() {
 		
 		$xml = new SimpleXMLElement('<data transformationType="text">datadatadata</data>');
@@ -100,6 +115,10 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		
 	}
 
+	/**
+	 * check whether the old transformations attribute from XML version 1.1 is passed on and detected as text transformation
+	 *
+	 */
 	public function test_canDetectTextTransformationFromXML_v1_1() {
 		
 		$xml = new SimpleXMLElement('<data transformations="1">datadatadata</data>');
@@ -109,6 +128,11 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		
 	}
 
+	/**
+	 * check whether the normal html transformaiton attribute is passed on
+	 * within XML
+	 *
+	 */
 	public function test_canDetectHTMLTransformationFromXML() {
 		
 		$xml = new SimpleXMLElement('<data transformationType="html">datadatadata</data>');
@@ -118,6 +142,10 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		
 	}
 
+	/**
+	 * check whether the auto detection works for TCA fields with the l10nTransformationType attribute
+	 *
+	 */
 	public function test_canAutoDetectHTMLTransformationForTcaField() {
 		
 		$path = array(
@@ -135,6 +163,10 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		
 	}
 
+	/**
+	 * check whether the auto detection works for the tt_content html-element (bodytext field)
+	 *
+	 */
 	public function test_canAutoDetectHTMLTransformationForExistingHtmlContentElement() {
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
 		$path = array(
@@ -146,9 +178,30 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		$this->Field->setFieldPath(implode(':',$path));
 		$this->assertEquals(implode(':',$path),$this->Field->getFieldPath());
 		$this->assertEquals('html',$this->Field->getTransformationType(1,true));
-		
 	}
 
+	/**
+	 * check whether the auto detection works for the tt_content html-element (header field)
+	 * test is supposed to assure that we've no false positives for these fields
+	 * 
+	 */
+	public function test_canAutoDetectHTMLTransformationForExistingHtmlContentElement2() {
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
+		$path = array(
+			'table' => 'tt_content',
+			'uid'=>'2',
+			'field' => 'header'
+		);
+		
+		$this->Field->setFieldPath(implode(':',$path));
+		$this->assertEquals(implode(':',$path),$this->Field->getFieldPath());
+		$this->assertEquals('plain',$this->Field->getTransformationType(1,true));
+	}
+
+	/**
+	 * check whether the autodetection works for new fields as well
+	 *
+	 */
 	public function test_canAutoDetectHTMLTransformationForNewHtmlContentElement() {
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
 		$path = array(
@@ -163,6 +216,11 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		
 	}
 
+	/**
+	 * check whether the autodetection works for non-html fields
+	 * avoid false-positives
+	 *
+	 */
 	public function test_canAutoDetectNonHTMLTransformationForExistingHtmlContentElement() {
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
 		$path = array(
@@ -177,6 +235,10 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		
 	}
 
+	/**
+	 * check whether the autodetection works for new fields as well
+	 *
+	 */
 	public function test_canAutoDetectNonHTMLTransformationForNewHtmlContentElement() {
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
 		$path = array(
@@ -191,6 +253,10 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		
 	}
 
+	/**
+	 * check whether the autodetection works for flexformfields
+	 *
+	 */
 	public function test_canAutoDetectHTMLTransformationForFlexformField() {
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/tx_templavoila_datastructure.xml');
@@ -207,6 +273,31 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		
 	}
 
+	/**
+	 * check whether the autodetection works for new flexformfields
+	 *
+	 */
+	public function test_canAutoDetectHTMLTransformationForNewFlexformField() {
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/ttcontent.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/translation/fixtures/field_transformation/tx_templavoila_datastructure.xml');
+		$path = array(
+			'table' => 'tt_content',
+			'uid'=>'NEW/1/22',
+			'field' => 'tx_templavoila_flex',
+			'path' => 'data/sDEF/lDEF/field_author/vDEF'
+		);
+		
+		$this->Field->setFieldPath(implode(':',$path));
+		$this->assertEquals(implode(':',$path),$this->Field->getFieldPath());
+		$this->assertEquals('plain',$this->Field->getTransformationType(22,true));
+		
+	}
+
+
+	/**
+	 * make sure that the systems handles wrong transformationType attributes as supposed
+	 *
+	 */
 	public function test_wrongTransformationAttributeDefaultsToPlain() {
 		
 		$xml = new SimpleXMLElement('<data transformationType="wrongsetting">datadatadata</data>');
