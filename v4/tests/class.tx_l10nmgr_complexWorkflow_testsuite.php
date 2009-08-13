@@ -57,7 +57,7 @@ class tx_l10nmgr_complexWorkflow_testsuite extends tx_phpunit_testsuite {
 	 */
 	public function __construct() {
 
-		$this->setName('Translation package');
+		$this->setName('Complex Workflow package');
 		$this->addTestSuite('tx_l10nmgr_mixed_completeWorkflow_testcase');
 		$this->addTestSuite('tx_l10nmgr_models_importer_importData_testcase');
 		$this->addTestSuite('tx_l10nmgr_models_importer_importFile_testcase');

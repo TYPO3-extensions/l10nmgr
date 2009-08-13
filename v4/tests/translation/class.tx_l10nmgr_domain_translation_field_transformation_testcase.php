@@ -289,7 +289,7 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_php
 		
 		$this->Field->setFieldPath(implode(':',$path));
 		$this->assertEquals(implode(':',$path),$this->Field->getFieldPath());
-		$this->assertEquals('plain',$this->Field->getTransformationType(22,true));
+		$this->assertEquals('html',$this->Field->getTransformationType(22,true));
 		
 	}
 
