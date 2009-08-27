@@ -57,6 +57,12 @@ class tx_l10nmgr_models_importer_importer {
 	 */
 	protected $exportData;
 
+	
+	/**
+	 * @var boolean 
+	 */
+	protected static $workspaceCheck;
+	
 	/**
 	 * This method is used to create an import of a given
 	 * tx_l10nmgr_models_importer_importData.
@@ -141,6 +147,30 @@ class tx_l10nmgr_models_importer_importer {
 	}
 
 	/**
+	 * This method is used to check if the import of data is allowed
+	 * into a target workspace which was not the source workspace.
+	 * 
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return boolean
+	 */
+	protected static function getWorkspaceCheckState(){
+		return self::$workspaceCheck;
+	}
+	
+	
+	/**
+	 * This method is used to configure the importer to disallow imports
+	 * into a target workspace which was not the source workspace.
+	 * 
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @param void
+	 * @return void
+	 */
+	public static function enableWorkspaceCheck(){
+		self::$workspaceCheck = true;
+	}
+	
+	/**
 	 * This method is used to check the conditions before an import can start. It updates the importData with
 	 * the configurationId and the exportDataId if it is not set and was found in the import.
 	 *
@@ -162,7 +192,7 @@ class tx_l10nmgr_models_importer_importer {
 		$importWorkspaceId	 	= $TranslationData->getWorkspaceId();
 		$currentUserWorkspaceId	= $GLOBALS['BE_USER']->workspace;
 
-		if($importWorkspaceId != $currentUserWorkspaceId){
+		if($this->getWorkspaceCheckState() && ($importWorkspaceId != $currentUserWorkspaceId)){
 			throw new tx_mvc_exception_invalidArgument('The workspace id in the import ('.$importWorkspaceId.') is another workspace id then the workspace id of the current user ('.$currentUserWorkspaceId.')');
 		}
 
