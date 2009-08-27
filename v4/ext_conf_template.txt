@@ -6,6 +6,9 @@
 # cat=basic/enable/5; type=boolean[1]; label=Dummytranslate on import.
 enable_dummyTranslateOnImport = 0
 
+# cat=basic/enable/10; type=boolean[1]; label= Enables a check that the target workspace of an import is the same as the workspace of an export.
+enable_workspaceCheck = 1
+
 # cat=basic/enable/10; type=boolean[1]; label=Enable hidden languages: Decide whether to make available hidden system languages for export/import.
 enable_hidden_languages = 0
 

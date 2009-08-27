@@ -113,9 +113,11 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 			/* Ensure, that all files are unzipped */
 			$importData->extractAllZipContent();
 	
+			
 			if($this->configuration->get('enable_dummyTranslateOnImport')){
 				$this->dummyTranslateImportData($importData);
 			}
+			
 	
 			//@todo
 			//$this->handleImportDataPreprocessing($importData);
@@ -201,6 +203,9 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	 * @see ajaxPerformRunAction
 	 */
 	protected function performProgressableRun($importData){
+		if($this->configuration->get('enable_workspaceCheck') == 1){
+			tx_l10nmgr_models_importer_importer::enableWorkspaceCheck();
+		}
 		return tx_l10nmgr_models_importer_importer::performImportRun($importData);
 
 	}
