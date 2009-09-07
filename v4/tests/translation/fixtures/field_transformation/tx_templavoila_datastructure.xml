@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
--
-- phpMyAdmin XML Dump
-- version 2.6.4-pl3
-- http://www.phpmyadmin.net
--
-- Host: mysql-master.aoe-works.de
-- Erstellungszeit: 28. April 2009 um 18:50
-- Server Version: 5.0.51
-- PHP-Version: 5.2.4-2ubuntu5.5
--->
-
-<!--
 - Datenbank: `t3_webex_sandbox`
 -->
 <t3_webex_sandbox>
