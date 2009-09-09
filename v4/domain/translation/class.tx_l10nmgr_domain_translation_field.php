@@ -75,7 +75,7 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 	 * @var boolean
 	 */
 	protected $transformation = false;
-	
+
 	/**
 	 * Indicate what kind of modification is needed for the
 	 * imported content
@@ -217,8 +217,17 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 		}
 		return $foundSettingInXML;
 	}
-	
-	public function getTransformationType($parentUid=NULL,$autoDetectHtml=false) {
+
+	/**
+	 * Retrieve the data transformation.
+	 *
+	 * @param integer $parentUid Uid of the parent record
+	 * @param boolean $autoDetectHtml DEFAULT is false
+	 * @return string Possible values are "html", "plain", "text" the value "text" represent RTE-text - DEFAULT value are "plain"
+	 *
+	 * @author Tolleiv Nietsch <tolleiv.nietsch@aoemedia.de>
+	 */
+	public function getTransformationType($parentUid = 0, $autoDetectHtml=false) {
 		$isHTML = false;
 		if($autoDetectHtml) {
 			list($table,$uidPart,$field,$flexPath) = explode(':',$this->fieldPath);
@@ -247,19 +256,29 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 				}
 			}
 		}
-		
+
 		return $isHTML?'html':$this->transformationType;
-		
+
 	}
-	
-	
-	public function getTransformationType_flexFormCallBack($dsArr, $dataValue, $PA, $structurePath, &$pObj) {
+
+	/**
+	 * Flexform callback
+	 *
+	 * @param array $dsArr Position of the flex into the datastructure
+	 * @param mixed $dataValue Field value
+	 * @param t3lib_flexformtools $PA
+	 * @param $structurePath
+	 * @param $pObj
+	 * @return void
+	 *
+	 * @author Tolleiv Nietsch <tolleiv.nietsch@aoemedia.de>
+	 */
+	protected function getTransformationType_flexFormCallBack($dsArr, $dataValue, $PA, $structurePath, &$pObj) {
 		if(array_key_exists('l10nTransformationType',$dsArr['TCEforms']['config'])) {
 			$this->_flexformTransFormationTypeCache[$structurePath]=$dsArr['TCEforms']['config']['l10nTransformationType'];
 		}
 	}
-	
-	
+
 	/**
 	 * @param string $content
 	 * @access public
