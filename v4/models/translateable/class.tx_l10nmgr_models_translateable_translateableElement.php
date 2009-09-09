@@ -74,6 +74,8 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 
 	/**
 	 * @var int
+	 * @deprecated
+	 * @todo Should be removed after relevance check
 	 */
 	protected $sys_language_uid;
 
@@ -195,6 +197,9 @@ class tx_l10nmgr_models_translateable_translateableElement  implements tx_l10nmg
 	 * Method to configure a language uid.
 	 *
 	 * @param int $id
+	 *
+	 * @deprecated
+	 * @todo Should be removed after relevance check
 	 */
 	public function setSysLanguageUid($id){
 		$this->sys_language_uid = $id;
