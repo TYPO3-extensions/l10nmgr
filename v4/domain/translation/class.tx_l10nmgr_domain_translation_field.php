@@ -264,6 +264,8 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 	/**
 	 * Flexform callback
 	 *
+	 * This method must be public becaus it will called from outside!
+	 *
 	 * @param array $dsArr Position of the flex into the datastructure
 	 * @param mixed $dataValue Field value
 	 * @param t3lib_flexformtools $PA
@@ -273,7 +275,7 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 	 *
 	 * @author Tolleiv Nietsch <tolleiv.nietsch@aoemedia.de>
 	 */
-	protected function getTransformationType_flexFormCallBack($dsArr, $dataValue, $PA, $structurePath, &$pObj) {
+	public function getTransformationType_flexFormCallBack($dsArr, $dataValue, $PA, $structurePath, &$pObj) {
 		if(array_key_exists('l10nTransformationType',$dsArr['TCEforms']['config'])) {
 			$this->_flexformTransFormationTypeCache[$structurePath]=$dsArr['TCEforms']['config']['l10nTransformationType'];
 		}
