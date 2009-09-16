@@ -1,12 +1,4 @@
 <?php
-require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider.php');
-
-require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
-require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php');
-require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableElement.php');
-require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php');
-
-
 /***************************************************************
  *  Copyright notice
  *
@@ -32,6 +24,13 @@ require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider.php');
+
+require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
+require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php');
+require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableElement.php');
+require_once (t3lib_extMgm::extPath('l10nmgr') . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php');
+
 /**
  * The factory is used to create a valid translateableInformation Object
  *  *
@@ -53,6 +52,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 *
 	 * @param tx_l10nmgr_models_exporter_exportData $exportData
 	 * @param ArrayObject $pageIdCollection collection of page ids
+	 * @param integer $workspaceId DEFAULT is null
 	 * @return tx_l10nmgr_models_translateable_translateableInformation
 	 */
 	public function createFromExportDataAndPageIdCollection(tx_l10nmgr_models_exporter_exportData $exportData, ArrayObject $pageIdCollection, $workspaceId = NULL){
@@ -61,7 +61,6 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 		if(!is_null($workspaceId)){
 			$typo3DataProvider->setWorkspaceId($workspaceId);
 		}
-
 		$tranlateableInformation 	= $this->createFromDataProvider($typo3DataProvider);
 
 		return $tranlateableInformation;
@@ -81,7 +80,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 * @todo we need to handle the include index
 	 */
 	public function createFromDataProvider(tx_l10nmgr_interface_translateable_translateableFactoryDataProvider $dataProvider){
-
+//!TODO change parameter $dataprovider handling...
 		$this->dataProvider			= $dataProvider;
 
 		$translateableInformation 	= new tx_l10nmgr_models_translateable_translateableInformation();
@@ -124,7 +123,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 						$pageGroup->addTranslateableElement($translateablePageElement);
 					}
 				}
-				
+
 				$translateableInformation->addPageGroup($pageGroup);
 			}
 		}
@@ -139,7 +138,6 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 	 * @param string name of the table
 	 * @param int uid
 	 * @return tx_l10nmgr_models_translateable_translateableElement
-	 *
 	 */
 	protected function getTranslateableElementFromDataProvider($table,$uid){
 
@@ -161,7 +159,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 
 		$translationFields = $translationDetails['fields'];
 		if(is_array($translationFields)){
-			foreach($translationFields as $key => $translationField){
+			foreach($translationFields as $key => $translationField) {
 
 				//@todo refactor determination of fieldName
 				list(,$uidString,$fieldName) = explode(':',$key);
@@ -180,7 +178,7 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 				$translateableField->setFieldType($translationField['fieldType']);
 				$translateableField->setIsRTE($translationField['isRTE']);
 				$translateableField->setIsHTML($translationField['isHTML']);
-				
+
 				//if it is changed and we jus what changed elements OR if we don't care about that an element was changed
 				//@todo does this also work for the export at import time? in the old version new and changed elements where only excluded in the view
 				if($translateableField->isChanged() && $this->dataProvider->getOnlyNewAndChanged() || !$this->dataProvider->getOnlyNewAndChanged() ) {
@@ -192,7 +190,6 @@ class tx_l10nmgr_models_translateable_translateableInformationFactory {
 		return $translateableElement;
 	}
 }
-
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php']);
