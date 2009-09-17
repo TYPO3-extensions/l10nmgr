@@ -27,7 +27,6 @@
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'interface/interface.tx_l10nmgr_interface_wordsCountable.php');
 
-
 /**
  * description
  *
@@ -181,7 +180,6 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 		$this->uidValue = $uidValue;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -198,9 +196,11 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 
 	/**
 	 * @param string $identity_key
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @param integer $forceLanguageUid DEFAULT 0
 	 * @access public
 	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function setIdentityKey($identity_key) {
 		$this->identity_key = $identity_key;
@@ -405,7 +405,7 @@ class tx_l10nmgr_models_translateable_translateableField implements tx_l10nmgr_i
 	 */
 	public function getTransformationType(){
 		//TODO autodetection should be done here instead of using t8tools
-		
+
 		if($this->needsTransformation())	return 'text';
 		if($this->isHTML)	return 'html';
 		return 'plain';
