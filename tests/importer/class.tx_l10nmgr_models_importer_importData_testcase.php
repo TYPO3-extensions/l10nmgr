@@ -54,7 +54,7 @@ class tx_l10nmgr_models_importer_importData_testcase extends tx_phpunit_database
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 		$this->importStdDB();
-		
+
 		$this->importExtensions(array('l10nmgr'));
 	}
 
