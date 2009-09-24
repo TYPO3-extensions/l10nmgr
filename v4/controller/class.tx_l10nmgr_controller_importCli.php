@@ -109,7 +109,7 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 	 */
 	public function defaultAction() {
 
-		if (isset($this->arguments['--help']) || isset($this->arguments['-h'])) {
+		if (isset($this->arguments['--help']) || isset($this->arguments['-h']) || !isset($this->arguments['--file']) ) {
 
 			return $this->routeToAction('helpAction');
 
