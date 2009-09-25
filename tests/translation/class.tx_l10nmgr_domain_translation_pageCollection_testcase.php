@@ -44,6 +44,10 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10
  */
 class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_phpunit_testcase {
 
+	const INDEX_FIRST  = 'tt_content:1:header';
+	const INDEX_SECOND = 'tt_content:1:subheader';
+	const INDEX_THIRD  = 'tt_content:1:bodytext';
+
 	/**
 	 * @var tx_l10nmgr_domain_translation_pageCollection
 	 */
@@ -105,9 +109,9 @@ class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_phpunit_t
 	protected function fixtureFieldCollection() {
 
 		$FieldCollection = new tx_l10nmgr_domain_translation_fieldCollection();
-		$FieldCollection->offsetSet('first', $this->fixtureField());
-		$FieldCollection->offsetSet('second', $this->fixtureField());
-		$FieldCollection->offsetSet('third', $this->fixtureField());
+		$FieldCollection->offsetSet(self::INDEX_FIRST, $this->fixtureField());
+		$FieldCollection->offsetSet(self::INDEX_SECOND, $this->fixtureField());
+		$FieldCollection->offsetSet(self::INDEX_THIRD, $this->fixtureField());
 
 		return $FieldCollection;
 	}
@@ -147,7 +151,7 @@ class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_phpunit_t
 	protected function fixtureElementCollection() {
 
 		$ElementCollection = new tx_l10nmgr_domain_translation_elementCollection();
-		$ElementCollection->offsetSet('first', $this->fixtureElement());
+		$ElementCollection->offsetSet(self::INDEX_FIRST, $this->fixtureElement());
 
 		return $ElementCollection;
 	}
@@ -207,36 +211,36 @@ class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_phpunit_t
 	 */
 	public function test_indicateRightImportStateOnImportedElementsContainingThePageCollection() {
 
-		$this->PageCollection->offsetSet('first', $this->fixturePage());
+		$this->PageCollection->offsetSet(self::INDEX_FIRST, $this->fixturePage());
 
 		$this->assertFalse (
 			($this->PageCollection->isImported()),
 			'tx_l10nmgr_domain_translation_pageCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->PageCollection->offsetGet('first')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('first')->markImported();
-		$this->PageCollection->offsetGet('first')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('second')->markImported();
+		$this->PageCollection->offsetGet(self::INDEX_FIRST)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_FIRST)->markImported();
+		$this->PageCollection->offsetGet(self::INDEX_FIRST)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_SECOND)->markImported();
 
 		$this->assertFalse (
 			($this->PageCollection->isImported()),
 			'tx_l10nmgr_domain_translation_pageCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->PageCollection->offsetGet('first')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('third')->markImported();
+		$this->PageCollection->offsetGet(self::INDEX_FIRST)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_THIRD)->markImported();
 		$this->assertTrue (
 			($this->PageCollection->isImported()),
 			'tx_l10nmgr_domain_translation_pageCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->PageCollection->offsetSet('second', $this->fixturePage());
+		$this->PageCollection->offsetSet(self::INDEX_SECOND, $this->fixturePage());
 		$this->assertFalse (
 			($this->PageCollection->isImported()),
 			'tx_l10nmgr_domain_translation_pageCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->PageCollection->offsetGet('second')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('first')->markImported();
-		$this->PageCollection->offsetGet('second')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('second')->markImported();
-		$this->PageCollection->offsetGet('second')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('third')->markImported();
+		$this->PageCollection->offsetGet(self::INDEX_SECOND)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_FIRST)->markImported();
+		$this->PageCollection->offsetGet(self::INDEX_SECOND)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_SECOND)->markImported();
+		$this->PageCollection->offsetGet(self::INDEX_SECOND)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_THIRD)->markImported();
 		$this->assertTrue (
 			($this->PageCollection->isImported()),
 			'tx_l10nmgr_domain_translation_pageCollection contains the wrong imported state on unprocessed field containing the collection.'
@@ -255,15 +259,15 @@ class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_phpunit_t
 	 */
 	public function test_indicateRightImportStateOnSkippedElemnetsContainingThePageCollection() {
 
-		$this->PageCollection->offsetSet('first', $this->fixturePage());
+		$this->PageCollection->offsetSet(self::INDEX_FIRST, $this->fixturePage());
 
 		$this->assertFalse (
 			($this->PageCollection->isImported()),
 			'tx_l10nmgr_domain_translation_pageCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->PageCollection->offsetGet('first')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('first')->markImported();
-		$this->PageCollection->offsetGet('first')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('second')->markImported();
+		$this->PageCollection->offsetGet(self::INDEX_FIRST)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_FIRST)->markImported();
+		$this->PageCollection->offsetGet(self::INDEX_FIRST)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_SECOND)->markImported();
 
 		$this->assertFalse (
 			($this->PageCollection->isImported()),
@@ -272,7 +276,7 @@ class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_phpunit_t
 
 		try {
 
-			$this->PageCollection->offsetGet('first')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('third')->markSkipped('Skipped while testing it.');
+			$this->PageCollection->offsetGet(self::INDEX_FIRST)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_THIRD)->markSkipped('Skipped while testing it.');
 
 		} catch (tx_mvc_exception_skipped $e) {
 
@@ -281,15 +285,15 @@ class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_phpunit_t
 				'tx_l10nmgr_domain_translation_pageCollection contains the wrong imported state on unprocessed field containing the collection.'
 			);
 
-			$this->PageCollection->offsetSet('second', $this->fixturePage());
+			$this->PageCollection->offsetSet(self::INDEX_SECOND, $this->fixturePage());
 			$this->assertFalse (
 				($this->PageCollection->isImported()),
 				'tx_l10nmgr_domain_translation_pageCollection contains the wrong imported state on unprocessed field containing the collection.'
 			);
 
-			$this->PageCollection->offsetGet('second')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('first')->markImported();
-			$this->PageCollection->offsetGet('second')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('second')->markImported();
-			$this->PageCollection->offsetGet('second')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('third')->markImported();
+			$this->PageCollection->offsetGet(self::INDEX_SECOND)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_FIRST)->markImported();
+			$this->PageCollection->offsetGet(self::INDEX_SECOND)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_SECOND)->markImported();
+			$this->PageCollection->offsetGet(self::INDEX_SECOND)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_THIRD)->markImported();
 			$this->assertTrue (
 				($this->PageCollection->isImported()),
 				'tx_l10nmgr_domain_translation_pageCollection contains the wrong imported state on unprocessed field containing the collection.'
@@ -310,7 +314,7 @@ class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_phpunit_t
 	 * @return void
 	 */
 	public function test_throwsExceptionOnWrongTypeGivenToThePageCollectionUsingOffsetSet() {
-		$this->PageCollection->offsetSet('first', new stdClass());
+		$this->PageCollection->offsetSet(self::INDEX_FIRST, new stdClass());
 	}
 
 	/**

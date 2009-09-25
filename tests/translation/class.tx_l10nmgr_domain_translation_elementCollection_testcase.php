@@ -44,6 +44,10 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10
  */
 class tx_l10nmgr_domain_translation_elementCollection_testcase extends tx_phpunit_testcase {
 
+	const INDEX_FIRST  = 'tt_content:1:header';
+	const INDEX_SECOND = 'tt_content:1:subheader';
+	const INDEX_THIRD  = 'tt_content:1:bodytext';
+
 	/**
 	 * @var tx_l10nmgr_domain_translation_elementCollection
 	 */
@@ -105,9 +109,9 @@ class tx_l10nmgr_domain_translation_elementCollection_testcase extends tx_phpuni
 	protected function fixtureFieldCollection() {
 
 		$FieldCollection = new tx_l10nmgr_domain_translation_fieldCollection();
-		$FieldCollection->offsetSet('first', $this->fixtureField());
-		$FieldCollection->offsetSet('second', $this->fixtureField());
-		$FieldCollection->offsetSet('third', $this->fixtureField());
+		$FieldCollection->offsetSet(self::INDEX_FIRST, $this->fixtureField());
+		$FieldCollection->offsetSet(self::INDEX_SECOND, $this->fixtureField());
+		$FieldCollection->offsetSet(self::INDEX_THIRD, $this->fixtureField());
 
 		return $FieldCollection;
 	}
@@ -172,36 +176,36 @@ class tx_l10nmgr_domain_translation_elementCollection_testcase extends tx_phpuni
 	 */
 	public function test_indicateRightImportStateOnImportedElementsContainingTheElementCollection() {
 
-		$this->ElementCollection->offsetSet('first', $this->fixtureElement());
+		$this->ElementCollection->offsetSet(self::INDEX_FIRST, $this->fixtureElement());
 
 		$this->assertFalse (
 			($this->ElementCollection->isImported()),
 			'tx_l10nmgr_domain_translation_elementCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->ElementCollection->offsetGet('first')->getFieldCollection()->offsetGet('first')->markImported();
-		$this->ElementCollection->offsetGet('first')->getFieldCollection()->offsetGet('second')->markImported();
+		$this->ElementCollection->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_FIRST)->markImported();
+		$this->ElementCollection->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_SECOND)->markImported();
 
 		$this->assertFalse (
 			($this->ElementCollection->isImported()),
 			'tx_l10nmgr_domain_translation_elementCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->ElementCollection->offsetGet('first')->getFieldCollection()->offsetGet('third')->markImported();
+		$this->ElementCollection->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_THIRD)->markImported();
 		$this->assertTrue (
 			($this->ElementCollection->isImported()),
 			'tx_l10nmgr_domain_translation_elementCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->ElementCollection->offsetSet('second', $this->fixtureElement());
+		$this->ElementCollection->offsetSet(self::INDEX_SECOND, $this->fixtureElement());
 		$this->assertFalse (
 			($this->ElementCollection->isImported()),
 			'tx_l10nmgr_domain_translation_elementCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->ElementCollection->offsetGet('second')->getFieldCollection()->offsetGet('first')->markImported();
-		$this->ElementCollection->offsetGet('second')->getFieldCollection()->offsetGet('second')->markImported();
-		$this->ElementCollection->offsetGet('second')->getFieldCollection()->offsetGet('third')->markImported();
+		$this->ElementCollection->offsetGet(self::INDEX_SECOND)->getFieldCollection()->offsetGet(self::INDEX_FIRST)->markImported();
+		$this->ElementCollection->offsetGet(self::INDEX_SECOND)->getFieldCollection()->offsetGet(self::INDEX_SECOND)->markImported();
+		$this->ElementCollection->offsetGet(self::INDEX_SECOND)->getFieldCollection()->offsetGet(self::INDEX_THIRD)->markImported();
 		$this->assertTrue (
 			($this->ElementCollection->isImported()),
 			'tx_l10nmgr_domain_translation_elementCollection contains the wrong imported state on unprocessed field containing the collection.'
@@ -220,15 +224,15 @@ class tx_l10nmgr_domain_translation_elementCollection_testcase extends tx_phpuni
 	 */
 	public function test_indicateRightImportStateOnSkippedElemnetsContainingTheElementCollection() {
 
-		$this->ElementCollection->offsetSet('first', $this->fixtureElement());
+		$this->ElementCollection->offsetSet(self::INDEX_FIRST, $this->fixtureElement());
 
 		$this->assertFalse (
 			($this->ElementCollection->isImported()),
 			'tx_l10nmgr_domain_translation_elementCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->ElementCollection->offsetGet('first')->getFieldCollection()->offsetGet('first')->markImported();
-		$this->ElementCollection->offsetGet('first')->getFieldCollection()->offsetGet('second')->markImported();
+		$this->ElementCollection->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_FIRST)->markImported();
+		$this->ElementCollection->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_SECOND)->markImported();
 
 		$this->assertFalse (
 			($this->ElementCollection->isImported()),
@@ -237,7 +241,7 @@ class tx_l10nmgr_domain_translation_elementCollection_testcase extends tx_phpuni
 
 		try {
 
-			$this->ElementCollection->offsetGet('first')->getFieldCollection()->offsetGet('third')->markSkipped('Skipped while testing it.');
+			$this->ElementCollection->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_THIRD)->markSkipped('Skipped while testing it.');
 
 		} catch (tx_mvc_exception_skipped $e) {
 
@@ -246,15 +250,15 @@ class tx_l10nmgr_domain_translation_elementCollection_testcase extends tx_phpuni
 				'tx_l10nmgr_domain_translation_elementCollection contains the wrong imported state on unprocessed field containing the collection.'
 			);
 
-			$this->ElementCollection->offsetSet('second', $this->fixtureElement());
+			$this->ElementCollection->offsetSet(self::INDEX_SECOND, $this->fixtureElement());
 			$this->assertFalse (
 				($this->ElementCollection->isImported()),
 				'tx_l10nmgr_domain_translation_elementCollection contains the wrong imported state on unprocessed field containing the collection.'
 			);
 
-			$this->ElementCollection->offsetGet('second')->getFieldCollection()->offsetGet('first')->markImported();
-			$this->ElementCollection->offsetGet('second')->getFieldCollection()->offsetGet('second')->markImported();
-			$this->ElementCollection->offsetGet('second')->getFieldCollection()->offsetGet('third')->markImported();
+			$this->ElementCollection->offsetGet(self::INDEX_SECOND)->getFieldCollection()->offsetGet(self::INDEX_FIRST)->markImported();
+			$this->ElementCollection->offsetGet(self::INDEX_SECOND)->getFieldCollection()->offsetGet(self::INDEX_SECOND)->markImported();
+			$this->ElementCollection->offsetGet(self::INDEX_SECOND)->getFieldCollection()->offsetGet(self::INDEX_THIRD)->markImported();
 			$this->assertTrue (
 				($this->ElementCollection->isImported()),
 				'tx_l10nmgr_domain_translation_elementCollection contains the wrong imported state on unprocessed field containing the collection.'
@@ -275,7 +279,7 @@ class tx_l10nmgr_domain_translation_elementCollection_testcase extends tx_phpuni
 	 * @return void
 	 */
 	public function test_throwsExceptionOnWrongTypeGivenToTheElementCollectionUsingOffsetSet() {
-		$this->ElementCollection->offsetSet('first', new stdClass());
+		$this->ElementCollection->offsetSet(self::INDEX_FIRST, new stdClass());
 	}
 
 	/**
