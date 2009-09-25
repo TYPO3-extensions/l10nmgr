@@ -44,21 +44,53 @@
 
 class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_database_testcase {
 
+	/**
+	 * Temporary store for the indexed_search registered HOOKS.
+	 *
+	 * The hooks must be reset because they produce an side effect on the tests which is not desired.
+	 *
+	 * @var array
+	 */
+	private $indexedSearchHook = array();
 
 	/**
-	* Creates the test environment.
-	*
-	*/
-	function setUp() {	
+	 * @var tx_l10nmgr_domain_translationFactory
+	 */
+	protected $TranslationFactory  = null;
+
+	/**
+	 * @var tx_l10nmgr_models_translateable_translateableInformationFactory
+	 */
+	protected $TranslatableFactory = null;
+
+	/**
+	 * @var tx_l10nmgr_service_importTranslation
+	 */
+	protected $TranslationService  = null;
+
+	/**
+	 * Creates the test environment.
+	 *
+	 */
+	function setUp() {
+
+			// unset the indexed_search hooks
+		if (t3lib_extMgm::isLoaded('indexed_search')) {
+			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
+			$this->indexedSearchHook['processDatamapClass'] = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch'];
+			unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch']);
+			unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch']);
+		}
+
 		$this->createDatabase();
-		$db = $this->useTestDatabase();	
+		$db = $this->useTestDatabase();
 		$this->importStdDB();
-	
+
 		$GLOBALS['TYPO3_DB']->debugOutput = 1;
 
 		// order of extension-loading is important !!!!
 		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','aoe_realurlpath','cc_devlog'));
-		
+
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
 		$this->TranslatableFactory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
 		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();
@@ -69,6 +101,12 @@ class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_da
 	*/
 	function tearDown() {
 		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
+
+			// restore the indexed_search hooks
+		if (t3lib_extMgm::isLoaded('indexed_search')) {
+			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch']  = $this->indexedSearchHook['processCmdmapClass'];
+			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch'] = $this->indexedSearchHook['processDatamapClass'];
+		}
 	}
 
 	/**
@@ -90,9 +128,6 @@ class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_da
 		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/l10nconfiguration.xml');
 		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/exportdata.xml');
 
-		$expectedOutputfile = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/test__to_pt_BR_300409-113504_export.xml';
-		$outputFilePath = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/output.xml';
-
 		$exportdataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData				= $exportdataRepository->findById(67);
 
@@ -105,11 +140,8 @@ class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_da
 		##
 		# Check test results
 		##
-        file_put_contents($outputFilePath,$result);
-
 		//now we analyse the result of the exporter, it should be valid xml therefore we use simplexml to parse it
         $exporterResult = simplexml_load_string  ($result, 'SimpleXMLElement', LIBXML_NOCDATA );
-
 
         //check the iso code of the target language
         $this->assertEquals('PT',(string)$exporterResult->head->t3_targetLang,'Invalid ISO-Code of target language');
@@ -135,7 +167,6 @@ class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_da
 	 * @param void
 	 * @return void
 	 * @author Timo Schmidt
-	 *
 	 */
 	public function test_isExportEmptyAfterReimpoertingExportAndExportingOnlyNewAndChangedElements(){
 		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/pages.xml');
@@ -144,8 +175,6 @@ class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_da
 		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/l10nconfiguration.xml');
 		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/exportdata.xml');
 
-				
-		
 		$import = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/fixture-import.xml';
 
 		$TranslationData = $this->TranslationFactory->create($import);
@@ -173,6 +202,26 @@ class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_da
 		$this->assertEquals((int)$exporterResult->head->t3_wordCount,0,'There should not be any word in the export because there no new and changed elements left.');
 		$this->assertEquals(count($exporterResult->children()),2,'Unexpected number of childnotes in export, there should only be a header in the export');
 		$this->assertEquals(count($exporterResult->pageGrp->children()),0,'There should only be one pageGroup without children because there is nothing to translate');
+	}
+
+	/**
+	 *
+	 * @access public
+	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function importTranslationWithForcedLanguageUid() {
+		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/forcedLanguage/pages.xml');
+		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/forcedLanguage/ttcontent.xml');
+		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/forcedLanguage/language.xml');
+		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/forcedLanguage/l10nconfiguration.xml');
+		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/forcedLanguage/exportdata.xml');
+
+		$import = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/forcedLanguage/fixture-import.xml';
+
+		//!TODO implement this test
+
 	}
 
 }
