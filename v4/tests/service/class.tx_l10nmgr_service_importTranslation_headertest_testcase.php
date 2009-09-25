@@ -46,10 +46,20 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_servic
  */
 
 class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpunit_database_testcase {
+
 	/**
-	* This method overwrites the method of the baseclass to ensure that no live database will be used.
-	*
-	*/
+	 * Temporary store for the indexed_search registered HOOKS.
+	 *
+	 * The hooks must be reset because they produce an side effect on the tests which is not desired.
+	 *
+	 * @var array
+	 */
+	private $indexedSearchHook = array();
+
+	/**
+	 * This method overwrites the method of the baseclass to ensure that no live database will be used.
+	 *
+	 */
 	protected function useTestDatabase($databaseName = null) {
 		$db = $GLOBALS ['TYPO3_DB'];
 		if ($databaseName) {
@@ -69,6 +79,15 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 	*
 	*/
 	function setUp() {
+
+			// unset the indexed_search hooks
+		if (t3lib_extMgm::isLoaded('indexed_search')) {
+			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
+			$this->indexedSearchHook['processDatamapClass'] = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch'];
+			unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch']);
+			unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch']);
+		}
+
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 
@@ -88,6 +107,12 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 		$this->cleanDatabase();
    		$this->dropDatabase();
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
+
+			// restore the indexed_search hooks
+		if (t3lib_extMgm::isLoaded('indexed_search')) {
+			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch']  = $this->indexedSearchHook['processCmdmapClass'];
+			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch'] = $this->indexedSearchHook['processDatamapClass'];
+		}
 	}
 
 	/**

@@ -44,18 +44,35 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_
 
 class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_testcase {
 
+	/**
+	 * Temporary store for the indexed_search registered HOOKS.
+	 *
+	 * The hooks must be reset because they produce an side effect on the tests which is not desired.
+	 *
+	 * @var array
+	 */
+	private $indexedSearchHook = array();
 
 	/**
-	* Creates the test environment.
-	*
-	*/
+	 * Creates the test environment.
+	 *
+	 */
 	function setUp() {
+
+			// unset the indexed_search hooks
+		if (t3lib_extMgm::isLoaded('indexed_search')) {
+			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
+			$this->indexedSearchHook['processDatamapClass'] = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch'];
+			unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch']);
+			unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch']);
+		}
+
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 
 		$GLOBALS['TYPO3_DB']->debugOutput = TRUE;
 		$this->importStdDB();
-		
+
 		// order of extension-loading is important !!!!
 		$this->importExtensions (
 			array ('cms','l10nmgr','static_info_tables','templavoila', 'realurl', 'aoe_realurlpath','cc_devlog')
@@ -65,19 +82,25 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	}
 
 	/**
-	* Resets the test enviroment after the test.
-	*/
+	 * Resets the test enviroment after the test.
+	 */
 	function tearDown() {
 
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
+
+   			// restore the indexed_search hooks
+		if (t3lib_extMgm::isLoaded('indexed_search')) {
+			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch']  = $this->indexedSearchHook['processCmdmapClass'];
+			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch'] = $this->indexedSearchHook['processDatamapClass'];
+		}
 	}
 
-	
+
 
 	/**
 	 * This testcase should check that the importer creates no empty line (<p>&nbsp;</p> after importing
 	 * an element with a heading (<h2>) in the bodytext.
-	 * 
+	 *
 	 * @test
 	 */
 	public function importerDoesNotCreatesEmptyRowAfterHeading(){
@@ -88,26 +111,26 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/l10nconfiguration.xml');
 
 		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/import';
-		
+
 		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData 			= $exportDataRepository->findById(67);
-		
+
 		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData,1,$exportData->getInitializedExportView());
 		$exporter->run();
-		
+
 		$exportedResult 		= $exporter->getResultForChunk();
-		
+
 		##
 		# WRITE EXPORT TO FILE
 		##
 		$fileImportPath 		= 	t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/import';
 		$tempfile 				= $fileImportPath.'/temp.xml';
-		
+
 		$this->removeDirectoryAndContent($fileImportPath);
 		mkdir($fileImportPath,0777);
 
 		$exportedResult = str_replace('anywhere','anywhere translated@', $exportedResult);
-		
+
 		file_put_contents($tempfile,$exportedResult);
 
 		###
@@ -118,13 +141,13 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$importData->setExportdata_id(67);
 		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
 		$importDataRepository->add($importData);
-				
+
 		$importFile = new tx_l10nmgr_models_importer_importFile();
 		$importFile->setFilename('temp.xml');
 		$importFile->setImportdata_id($importData->getUid());
 		$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
-		$importFileRepository->add($importFile);		
-		
+		$importFileRepository->add($importFile);
+
 		$importer 	= new tx_l10nmgr_models_importer_importer($importData);
 		$res 		= $importer->run();
 		$this->assertTrue($res, 'Import seems to work incorrect ');
@@ -135,13 +158,13 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$expectedResult = 	'<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere translated@.</h2>'."\n".
 							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://www.webex.com/go/buy_webex>Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\n".
 							'<link http://www.webex.com/go/webex_ft>Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
-		
+
 		$this->assertEquals($contentOverlay['bodytext'],$expectedResult,'unexpected import result');
-		
-		
+
+
 	}
-	
-	
+
+
 	/**
 	* The base for this testcase is the following structure:
  	*
@@ -168,7 +191,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/import';
 		$GLOBALS['TCA']['tx_l10nmgr_exportfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export';
 		$GLOBALS['TCA']['tx_l10nmgr_exportdata']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export/zip';
-		
+
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/pages.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/ttcontent.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/exportdata.xml');
@@ -202,7 +225,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		mkdir($zipExportPath,0777);
 		mkdir($fileImportPath,0777);
 		mkdir($zipImportPath,0777);
-		
+
 		$this->assertFileExists($fileExportPath);
 		$this->assertFileExists($zipExportPath);
 
@@ -236,6 +259,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		//get overlay for 619634
 		$row 			= t3lib_beFunc::getRecord('tt_content',619634);
+
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1);
 
 		//header
@@ -243,8 +267,9 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		//bodytext
 		$expectedBodytextResult = "@translated This is a test! translated@&nbsp;\n\na b c&nbsp;\n</data>\n!\"§$%&/()=?*+#'-_.:,;\n<link 24421>Typolink</link>\n";
+
 		$this->assertEquals($contentOverlay['bodytext'],$expectedBodytextResult,'In expected result after import');
-	}	
+	}
 	/**
 	* The base for this testcase is the following structure:
  	*
@@ -272,7 +297,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = $basePath.'import';
 		$GLOBALS['TCA']['tx_l10nmgr_exportfiles']['columns']['filename']['config']['uploadfolder'] = $basePath.'export';
 		$GLOBALS['TCA']['tx_l10nmgr_exportdata']['columns']['filename']['config']['uploadfolder'] = $basePath.'export/zip';
-		
+
 		$this->importDataSet($basePath.'pages.xml');
 		$this->importDataSet($basePath.'ttcontent.xml');
 		$this->importDataSet($basePath.'exportdata.xml');
@@ -306,7 +331,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		mkdir($zipExportPath,0777);
 		mkdir($fileImportPath,0777);
 		mkdir($zipImportPath,0777);
-		
+
 		$this->assertFileExists($fileExportPath);
 		$this->assertFileExists($zipExportPath);
 
@@ -321,7 +346,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$this->assertEquals(1,$runcountExport,'Unexpected number of exportRuns');
 
 		$this->prepareImportFilesFromExportData($exportData, $fileExportPath, $fileImportPath);
-		
+
 		$importData = $this->createFixtureImportDataWithImportFile($exportData);
 
 		$runcountImport = 1;
@@ -339,18 +364,18 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$this->removeDirectoryAndContent($zipImportPath);
 		$this->removeDirectoryAndContent($fileImportPath);
 */
-		
+
 		// Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et &lt;link http://www.aoemedia.de/ - - linktitle&gt;dolore &lt;/link&gt;magna aliquyam erat, sed diam voluptua.
 
 		$row 			= t3lib_beFunc::getRecord('tt_content',624071);
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1);
 		$expectedResult = "Lorem ipsum <link http://www.aoemedia.de/ - - linktitle>dolore </link> sit amet...";
-		$this->assertEquals($expectedResult, $contentOverlay['bodytext'],'Result after import did not match the expectations');
+		$this->assertEquals($expectedResult, $contentOverlay['bodytext'],'1 Result after import did not match the expectations');
 
 		$row 			= t3lib_beFunc::getRecord('tt_content',624072);
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1);
 		$expectedResult = "<div style=\"color:green\">";
-		$this->assertEquals($expectedResult, $contentOverlay['bodytext'],'Result after import did not match the expectations');		
+		$this->assertEquals($expectedResult, $contentOverlay['bodytext'],'Result after import did not match the expectations');
 
 		$row 			= t3lib_beFunc::getRecord('tt_content',624074);
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1);
@@ -434,7 +459,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		return $importData;
 	}
-	
+
 	/**
 	 * This helpermethod is used to replace
 	 *
@@ -460,9 +485,9 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 //		$contentFile1	= str_replace('This is a test!','@translated This is a test! translated@',$contentFile1);
 //		$contentFile1 	= str_replace('Content element with typolink','@translated Content element with typolink translated@',$contentFile1);
 		file_put_contents($importFile1,$contentFile1);
-	}	
-	
-	
+	}
+
+
 	/**
 	 * This private method is used to create an importData and Importfile records for the imported
 	 * files.
