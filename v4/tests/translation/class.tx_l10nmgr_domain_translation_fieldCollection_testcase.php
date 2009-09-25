@@ -127,15 +127,15 @@ class tx_l10nmgr_domain_translation_fieldCollection_testcase extends tx_phpunit_
 	 * @return void
 	 */
 	public function test_indicateRightImportStateOnImportedFieldsContainingTheFieldCollection() {
-
-		$this->FieldCollection->offsetSet('first', $this->fixtureField());
+		$index = 'tt_content:12:title';
+		$this->FieldCollection->offsetSet($index, $this->fixtureField());
 
 		$this->assertFalse (
 			($this->FieldCollection->isImported()),
 			'tx_l10nmgr_domain_translation_fieldCollection contains the wrong imported state on unprocessed field containing the collection.'
 		);
 
-		$this->FieldCollection->offsetGet('first')->markImported();
+		$this->FieldCollection->offsetGet($index)->markImported();
 
 		$this->assertTrue (
 			($this->FieldCollection->isImported()),
@@ -149,21 +149,27 @@ class tx_l10nmgr_domain_translation_fieldCollection_testcase extends tx_phpunit_
 	 *
 	 * Expected is an true isImported state of the FieldCollection
 	 *
+	 * @test
+	 *
 	 * @access public
+	 * @return void
+	 *
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @return unknown
 	 */
 	public function test_indicateRightImportStateOnSkippedFieldContainingTheFieldCollection() {
-
-		$this->FieldCollection->offsetSet('first', $this->fixtureField());
-		$this->FieldCollection->offsetSet('second', $this->fixtureField());
-		$this->FieldCollection->offsetSet('third', $this->fixtureField());
+		$indexFirst  = 'tt_content:12:title';
+		$indexSecond = 'tt_content:12:body';
+		$indexThird  = 'tt_content:12:subheader';
+		$indexFour   = 'tt_content:1:title';
+		$this->FieldCollection->offsetSet($indexFirst, $this->fixtureField());
+		$this->FieldCollection->offsetSet($indexSecond, $this->fixtureField());
+		$this->FieldCollection->offsetSet($indexThird, $this->fixtureField());
 
 		try {
 
-			$this->FieldCollection->offsetGet('first')->markImported();
-			$this->FieldCollection->offsetGet('second')->markImported();
-			$this->FieldCollection->offsetGet('third')->markSkipped('Field is skipped while testing it.');
+			$this->FieldCollection->offsetGet($indexFirst)->markImported();
+			$this->FieldCollection->offsetGet($indexSecond)->markImported();
+			$this->FieldCollection->offsetGet($indexThird)->markSkipped('Field is skipped while testing it.');
 
 		} catch (tx_mvc_exception_skipped $e) {
 
@@ -173,13 +179,13 @@ class tx_l10nmgr_domain_translation_fieldCollection_testcase extends tx_phpunit_
 			);
 
 				// Field is not marked as imported
-			$this->FieldCollection->offsetSet('four', $this->fixtureField());
+			$this->FieldCollection->offsetSet($indexFour, $this->fixtureField());
 			$this->assertFalse (
 				($this->FieldCollection->isImported()),
 				'tx_l10nmgr_domain_translation_fieldCollection contains the wrong imported state on unprocessed field containing the collection.'
 			);
 
-			$this->FieldCollection->offsetGet('four')->markImported();
+			$this->FieldCollection->offsetGet($indexFour)->markImported();
 			$this->assertTrue (
 				($this->FieldCollection->isImported()),
 				'tx_l10nmgr_domain_translation_fieldCollection contains the wrong imported state on unprocessed field containing the collection.'
@@ -194,42 +200,42 @@ class tx_l10nmgr_domain_translation_fieldCollection_testcase extends tx_phpunit_
 	/**
 	 * Verify that an exception is thrown when the wrong type is given to the offsetSet method
 	 *
-	 * @access public
 	 * @expectedException InvalidArgumentException
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @test
+	 *
+	 * @access public
 	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function test_throwsExceptionOnWrongTypeGivenToTheFieldCollectionUsingOffsetSet() {
 		$this->FieldCollection->offsetSet('first', new stdClass());
 	}
 
 	/**
-	 * Verify that an exception is thrown when the wrong type is given to the append method
+	 * @expectedException Exception
+	 * @test
 	 *
 	 * @access public
-	 * @expectedException InvalidArgumentException
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
-	public function test_throwsExceptionOnWrongTypeGivenToTheFieldCollectionUsingAppend() {
+	public function throwsExceptionOnWrongTypeGivenToTheFieldCollectionUsingAppend() {
 		$this->FieldCollection->append(new stdClass());
 	}
 
 	/**
-	 * Verify that the returned value by offsetGet are of the right type.
+	 * @expectedException Exception
+	 * @test
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
-	public function test_retriveRightTypeOfObjectFromTheFieldCollectionUsingOffsetGet() {
+	public function throwsExceptionWhileAccessingDeprecatedMethod() {
 		$this->FieldCollection->append($this->fixtureField());
-
-		$this->assertType (
-			'tx_l10nmgr_domain_translation_field',
-			$this->FieldCollection->offsetGet(0),
-			'Object of wrong type returned using the offsetGet method of the tx_l10nmgr_domain_translaiton_fieldCollection.'
-		);
 	}
 }
 
