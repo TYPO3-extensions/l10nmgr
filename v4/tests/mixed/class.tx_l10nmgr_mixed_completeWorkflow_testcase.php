@@ -369,8 +369,12 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		$row 			= t3lib_beFunc::getRecord('tt_content',624071);
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1);
-		$expectedResult = "Lorem ipsum <link http://www.aoemedia.de/ - - linktitle>dolore </link> sit amet...";
-		$this->assertEquals($expectedResult, $contentOverlay['bodytext'],'1 Result after import did not match the expectations');
+		$expectedResult1 = 'Lorem ipsum <link http://www.aoemedia.de/ - - linktitle>dolore </link> sit amet...';
+		$expectedResult2 = 'Lorem ipsum <link http://www.aoemedia.de/ - - "linktitle">dolore </link> sit amet...';
+		$this->assertTrue (
+			( ($expectedResult1 == $contentOverlay['bodytext']) || ($expectedResult2 == $contentOverlay['bodytext']) ),
+			'1 Result after import did not match the expectations'
+		);
 
 		$row 			= t3lib_beFunc::getRecord('tt_content',624072);
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1);
