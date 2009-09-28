@@ -270,6 +270,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		$this->assertEquals($contentOverlay['bodytext'],$expectedBodytextResult,'In expected result after import');
 	}
+
 	/**
 	* The base for this testcase is the following structure:
  	*
