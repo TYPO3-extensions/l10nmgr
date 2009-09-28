@@ -80,7 +80,7 @@ class tx_l10nmgr_models_exporter_exporter_basic_testcase extends tx_phpunit_data
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 		$this->importStdDB();
-		
+
 		$this->importExtensions(array('cms','l10nmgr','static_info_tables','templavoila'));
 	}
 
