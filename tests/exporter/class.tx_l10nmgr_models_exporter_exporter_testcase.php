@@ -78,17 +78,17 @@ class tx_l10nmgr_models_exporter_exporter_testcase extends tx_phpunit_database_t
 	 */
 	protected function useTestDatabase($databaseName = null) {
 		$db = $GLOBALS ['TYPO3_DB'];
-		
+
 		if ($databaseName) {
 			$database = $databaseName;
 		} else {
 			$database = $this->testDatabase;
 		}
-		
+
 		if (! $db->sql_select_db ( $database )) {
 			die ( "Test Database not available" );
 		}
-		
+
 		return $db;
 	}
 	/**
@@ -99,7 +99,7 @@ class tx_l10nmgr_models_exporter_exporter_testcase extends tx_phpunit_database_t
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 		$this->importStdDB();
-		
+
 		$this->importExtensions(array('cms','l10nmgr','static_info_tables','templavoila'));
 	}
 
@@ -114,15 +114,16 @@ class tx_l10nmgr_models_exporter_exporter_testcase extends tx_phpunit_database_t
 			$this->importDataSet(dirname(__FILE__). '/fixtures/exporterTerminatesAfterExpectedNumberOfRuns.xml');
 
 			$exportData = $this->getFixtureExportData();
-			
+
 			$view 		= new tx_l10nmgr_CATXMLView();
 			$view->setL10NConfiguration($exportData->getL10nConfigurationObject());
-			
+
 			$exporter 	= new tx_l10nmgr_models_exporter_exporter($exportData,1,$view);
-			
+
 			$runCount = 0;
 			while($exporter->run()){
 				$exportData = $exporter->getExportData();
+
 				$exporter 	= new tx_l10nmgr_models_exporter_exporter($exportData,1,$view);
 				$runCount++;
 			}
@@ -130,7 +131,7 @@ class tx_l10nmgr_models_exporter_exporter_testcase extends tx_phpunit_database_t
 		$this->assertEquals($runCount,3,'unexpected number of run counts in export');
 	}
 
-	
+
 	/**
 	 * Method to check that the fixtureExportData can be loaded
 	 *
