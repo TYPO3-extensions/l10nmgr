@@ -120,7 +120,6 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 	* After import there should be a translated page and a translated content element.
 	* <br> tag should be kept in the overlay after import.
 	*
-	* @todo
 	*/
 	public function test_canImportserviceImportCorrectContentelement(){
 
