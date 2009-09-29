@@ -164,7 +164,13 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 			'This is a dirty header element & uses an <br /> ampersand translated ' // expected
 		);
 
-		//@todo check page overlay
+			// check page overlay
+		$recordOverlayArray = t3lib_BEfunc::getRecordLocalization('pages_language_overlay', 33155, 2, 'AND pid='.intval(33155));
+		$this->assertEquals(
+			'headertest translated',
+			$recordOverlayArray[0]['title'],
+			'Check the pages_language_overlay record!'
+		);
 	}
 
 	/**
@@ -217,16 +223,14 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 			'This is a dirty header element & uses an <br /> ampersand translated ',
 			__LINE__
 		);
-/*
-			// the value of the translation should be
-			t3lib_div::debug($contentOverlay['bodytext']);
-		$this->assertEquals (
-			$contentOverlay['bodytext'],
-			'Show <br />prospects what you <ul><li><br /></li></ul>have to offer in a live WebEx session. Keep them engaged with real-time web presentations. Better than a phone call. Faster and more cost effective than traveling to each prospect. Sell smarter, not harder to reach your goals. <ul style="margin-left: 40px;"><li>Make lively, engaging sales presentations over the web.</li><li>Demonstrate your application live for your pass control, so they can try it. </li><li>Review and finalize contracts together.</li><li>Bring key stakeholders and decision makers into the meeting from wherever they are.</li><li>Bring subject matter expert into any call to resolve issues instantly.</li><li>Conduct regular sales team meetings between geographically <br /><br />scattered staff <br />members.<br /><br /> </li></ul>',
-			__LINE__
+
+			// check page overlay
+		$recordOverlayArray = t3lib_BEfunc::getRecordLocalization('pages_language_overlay', 33155, 2, 'AND pid='.intval(33155));
+		$this->assertEquals(
+			'headertest translated',
+			$recordOverlayArray[0]['title'],
+			'Check the pages_language_overlay record!'
 		);
-*/
-		//@todo check page overlay
 	}
 }
 ?>
