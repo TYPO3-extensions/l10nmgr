@@ -268,7 +268,13 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 			'This is a dirty header element & uses an <br /> ampersand translated ' // expected
 		);
 
-		//@todo check page overlay
+		// check page overlay
+		$recordOverlayArray = t3lib_BEfunc::getRecordLocalization('pages_language_overlay', 33155, 2, 'AND pid='.intval(33155));
+		$this->assertEquals(
+			'headertest translated',
+			$recordOverlayArray[0]['title'],
+			'Check the pages_language_overlay record!'
+		);
 	}
 
 }
