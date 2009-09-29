@@ -224,7 +224,6 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 	* <br> tag should be kept in the overlay after import.
 	*
 	* @test
-	* @todo
 	*/
 	public function canImportserviceImportCorrectContentelementWithHeader(){
 
