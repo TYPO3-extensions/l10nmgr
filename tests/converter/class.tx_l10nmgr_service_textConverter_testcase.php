@@ -317,7 +317,7 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_phpunit_testcase {
 	 */
 	public function keepEmptyDivTagWhileRoundTripTransformation() {
 
-		$fixtureElement   = '<div style="width: 233px; height: 11px; background: url(http://static.webex.com/ft/images/bg-box-b.gif) 0 0 no-repeat;"></div>';
+		$fixtureElement   = '<div style="width: 233px; height: 11px; background: url(http://example.com/bg-box-b.gif) 0 0 no-repeat;"></div>';
 		$expectedElement  = $fixtureElement;
 		$roundTripElement = $this->TextConverter->toText (
 			$this->TextConverter->toXML($fixtureElement)
