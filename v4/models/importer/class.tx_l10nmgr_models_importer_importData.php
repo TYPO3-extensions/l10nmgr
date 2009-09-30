@@ -373,6 +373,23 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 		$this->removeFilenamesFromRemainingFilenames(new ArrayObject(array($filename)));
 	}
 
+	/**
+	 * Get the forced target language uid
+	 *
+	 * @access public
+	 * @return integer DEFAULT is 0
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function getForceTargetLanguageUid() {
+		$forceLangUid = 0;
+
+		if (is_array($this->row) && array_key_exists('force_target_lang', $this->row)) {
+			$forceLangUid = t3lib_div::intval_positive($this->row['force_target_lang']);
+		}
+
+		return $forceLangUid;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/models/importer/class.tx_l10nmgr_models_importer_importData.php']) {

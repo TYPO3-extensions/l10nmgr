@@ -38,7 +38,8 @@
 				<label index="tx_l10nmgr_exportdata.title">Title</label>
 				<label index="tx_l10nmgr_exportdata.export_type">Format</label>
 				<label index="tx_l10nmgr_exportdata.translation_lang">Target language</label>
-				<label index="tx_l10nmgr_exportdata.source_lang">Force source language</label>
+				<label index="tx_l10nmgr_importdata.source_lang">Force source language</label>
+				<label index="tx_l10nmgr_importdata.force_target_lang">Force target language - Use only if you know what your do!!</label>
 				<label index="tx_l10nmgr_exportdata.filename">File</label>
 				<label index="tx_l10nmgr_exportdata.checkforexistingexports">Check for already exported content</label>
 				<label index="tx_l10nmgr_exportdata.onlychangedcontent">New/Changed content only</label>

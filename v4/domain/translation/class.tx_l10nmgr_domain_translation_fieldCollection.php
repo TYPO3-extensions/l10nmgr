@@ -53,8 +53,9 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject implemen
 	 * Mark entity as processed for the import
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function markImported() {
 //!TODO refactor this, the object should not allowed to set his own isImported state to true
@@ -68,8 +69,9 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject implemen
 	 * is indicated as true while nothing more is to processed.
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return boolean
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function isImported() {
 
@@ -90,46 +92,82 @@ class tx_l10nmgr_domain_translation_fieldCollection extends ArrayObject implemen
 	}
 
 	/**
-	 * @example Index key pages_language_overlay:NEW/1/1111:title
-	 * @access public
+	 *
+	 * @param string $index Index key for example "pages_language_overlay:NEW/1/1111:title"
+	 *
 	 * @throws tx_mvc_exception_argumentOutOfRange
+	 *
+	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 *
 	 * @return tx_l10nmgr_domain_translation_field
 	 */
 	public function offsetGet($index) {
+		$key   = $index;
+		$index =  $this->extractFieldIdentifier($index);
 
 		if (! parent::offsetExists($index)) {
-			throw new tx_mvc_exception_argumentOutOfRange('Index "' . var_export($index, true) . '" for tx_l10nmgr_domain_translation_field are not available');
+			throw new tx_mvc_exception_argumentOutOfRange('Index "' . var_export($index . ' (' . $key . ')', true) . '" for tx_l10nmgr_domain_translation_field are not available');
 		}
-
 		return parent::offsetGet($index);
+	}
+
+	/**
+	 * Extract the field name inlcuding the flexform path from the given unique id.
+	 *
+	 * @param string $key For example "pages_language_overlay:NEW/1/1111:title"
+	 *
+	 * @access protected
+	 * @return string Like "title" or "tx_templavoiloa_flex:..."
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function extractFieldIdentifier($key) {
+
+		$field = $flexPointer = '';
+		list($first, $second, $field, $flexPointer) = explode(':', $key);
+
+		return $field . ((! is_null($flexPointer)) ? ':' . $flexPointer : '');
 	}
 
 	/**
 	 *
 	 * @param string $index Field path like "pages_language_overlay:NEW/1/1111:title"
 	 * @param tx_l10nmgr_domain_translation_field $Field
+	 *
 	 * @throws InvalidArgumentException
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 *
+	 * @access public
 	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function offsetSet($index, $Field) {
 
 		if (! $Field instanceof tx_l10nmgr_domain_translation_field ) {
 			throw new InvalidArgumentException('Wrong parameter type given, "tx_l10nmgr_domain_translation_field" expected!');
 		}
+		$index =  $this->extractFieldIdentifier($index);
 
 		parent::offsetSet($index, $Field);
 	}
 
 	/**
+	 * @deprecated This method can not be used any more, because we need the key build from the identity_key (cmd string)
 	 *
 	 * @param tx_l10nmgr_domain_translation_field $Field
+	 *
+	 * @throws Exception
 	 * @throws InvalidArgumentException
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 *
+	 * @access public
 	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function append($Field) {
+
+		throw new Exception('Not supported: Please use offsetSet!');
 
 		if (! $Field instanceof tx_l10nmgr_domain_translation_field ) {
 			throw new InvalidArgumentException('Wrong parameter type given, "tx_l10nmgr_domain_translation_field" expected!');

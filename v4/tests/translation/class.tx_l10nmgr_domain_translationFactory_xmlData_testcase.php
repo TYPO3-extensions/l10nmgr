@@ -101,7 +101,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	public function test_translationDataContainsRightAmountOfPages() {
 		$importFile = dirname(__FILE__) . '/fixtures/files/validContent/canImportServiceImportCorrectDataFixtureImport.xml';
 
-		$TranslationData = $this->TranslationFactory->create($importFile);
+		$TranslationData = $this->TranslationFactory->create($importFile); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
 
 		$this->assertEquals (
 			2,
@@ -348,7 +348,6 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 			array (0, 'tt_content:' . 1693, 'tt_content:NEW/1/1693:bodytext'), // provides an invalid page uid
 			array (535, 'invalidTableName:' . 1693, 'tt_content:NEW/1/1693:bodytext'), // provides an invalid mixed key to access the element record
 			array (535, 'tt_content:' . 0, 'tt_content:NEW/1/1693:bodytext'), // provides an invalid mixed key to access the element record
-			array (535, 'tt_content:' . 1693, 'invalidTableName:NEW/1/1693:bodytext'), // provides invalid path key
 		);
 	}
 
@@ -366,6 +365,65 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	 */
 	public function test_throwsExceptionWhileAccessingNotAvailableIndexOfTranslationDataCollection($fixturePageId, $fixtureElementId, $fixtureFieldPath) {
 		$this->TranslationData->getPageCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldPath)->getContent();
+	}
+
+	/**
+	 * Take sure that the TranslationFactory builds the TranslationData object with the right injected "forced target language uid"
+	 *
+	 * @access public
+	 * @return void
+	 *
+	 * @test
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function forceTranslatationUidToTranslationData() {
+		$importFile = dirname(__FILE__) . '/fixtures/files/validContent/canImportServiceImportCorrectDataFixtureImport.xml';
+		$forcedTargetLanguageUid = 2;
+
+		$TranslationData = $this->TranslationFactory->create($importFile, $forcedTargetLanguageUid); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
+
+		$this->assertEquals (
+			$forcedTargetLanguageUid,
+			$TranslationData->getSysLanguageUid(),
+			'The TranslationData must be contain the right $forcedTargetLanguageUid "' . $forcedTargetLanguageUid . '".'
+		);
+
+		$this->assertEquals (
+			2,
+			$TranslationData->getPageIdCollection()->count(),
+			'The TranslationFactory should find 2 page items but contains: "' . $TranslationData->getPageIdCollection()->count() . '".'
+		);
+	}
+
+	/**
+	 * Take sure that the TranslationFactory builds the TranslationData object with the right target language uid
+	 *
+	 * @access public
+	 * @return void
+	 *
+	 * @test
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function translationDataHoldsTheRightTargetLanguageUid() {
+		$importFile = dirname(__FILE__) . '/fixtures/files/validContent/canImportServiceImportCorrectDataFixtureImport.xml';
+		$forcedTargetLanguageUid  = 2;
+		$fixtureTargetLanguageUid = 1;
+
+		$TranslationData = $this->TranslationFactory->create($importFile); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
+
+		$this->assertEquals (
+			$fixtureTargetLanguageUid,
+			$TranslationData->getSysLanguageUid(),
+			'The TranslationData must be contain the right target language uid "' . $fixtureTargetLanguageUid . '".'
+		);
+
+		$TranslationData = $this->TranslationFactory->create($importFile, $forcedTargetLanguageUid); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
+
+		$this->assertEquals (
+			$forcedTargetLanguageUid,
+			$TranslationData->getSysLanguageUid(),
+			'The TranslationData must be contain the right target language uid "' . $forcedTargetLanguageUid . '".'
+		);
 	}
 }
 

@@ -57,12 +57,12 @@ class tx_l10nmgr_models_importer_importer {
 	 */
 	protected $exportData;
 
-	
+
 	/**
-	 * @var boolean 
+	 * @var boolean
 	 */
 	protected static $workspaceCheck;
-	
+
 	/**
 	 * This method is used to create an import of a given
 	 * tx_l10nmgr_models_importer_importData.
@@ -85,8 +85,8 @@ class tx_l10nmgr_models_importer_importer {
 		$exportDataUid			= $Translationdata->getExportDataRecordUid();
 		tx_mvc_validator_factory::getIntValidator()->isValid($exportDataUid,true);
 
-		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
-		$exportData		= $exportDataRepository->findById($exportDataUid);
+		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportData		      = $exportDataRepository->findById($exportDataUid);
 
 		return $exportData;
 	}
@@ -105,14 +105,14 @@ class tx_l10nmgr_models_importer_importer {
 			//!TODO  maybe importData
 		if (! $this->importData->getImportIsCompletelyProcessed() ) {
 
-			// determine the next file to import
+				// determine the next file to import
 			$currentFile = $this->importData->getNextFilename();
 
 			$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
-			$TranslationData    = $TranslationFactory->create($currentFile);
+			$TranslationData    = $TranslationFactory->create($currentFile, $this->importData->getForceTargetLanguageUid());
 			$exportData 		= $this->getExportDataFromTranslationData($TranslationData);
 
-			#check pre requirements
+				// check pre requirements
 			$this->checkImportConditions($this->importData, $exportData,$TranslationData);
 
 			if ( $this->importData->getImportIsCompletelyUnprocessed() ) {
@@ -126,8 +126,8 @@ class tx_l10nmgr_models_importer_importer {
 			$ImportPageIdCollection	= $TranslationData->getPageIdCollection();
 
 				// create a dataProvider based on the exportData and the relevantPageIds of the importFile
-			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory();
-			$TranlateableInformation 	= $factory->createFromExportDataAndPageIdCollection($exportData,$ImportPageIdCollection,$TranslationData->getWorkspaceId());
+			$factory                 = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+			$TranlateableInformation = $factory->createFromExportDataAndPageIdCollection($exportData,$ImportPageIdCollection,$TranslationData->getWorkspaceId());
 
 				// Save the translation into the database
 			$TranslationService = new tx_l10nmgr_service_importTranslation();
@@ -139,7 +139,6 @@ class tx_l10nmgr_models_importer_importer {
 			}
 
 			$this->importData->removeProcessedFilename($currentFile);
-
 			$isRunning = true;
 		}
 
@@ -149,19 +148,19 @@ class tx_l10nmgr_models_importer_importer {
 	/**
 	 * This method is used to check if the import of data is allowed
 	 * into a target workspace which was not the source workspace.
-	 * 
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return boolean
 	 */
 	protected static function getWorkspaceCheckState(){
 		return self::$workspaceCheck;
 	}
-	
-	
+
+
 	/**
 	 * This method is used to configure the importer to disallow imports
 	 * into a target workspace which was not the source workspace.
-	 * 
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @param void
 	 * @return void
@@ -169,7 +168,7 @@ class tx_l10nmgr_models_importer_importer {
 	public static function enableWorkspaceCheck(){
 		self::$workspaceCheck = true;
 	}
-	
+
 	/**
 	 * This method is used to check the conditions before an import can start. It updates the importData with
 	 * the configurationId and the exportDataId if it is not set and was found in the import.

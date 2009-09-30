@@ -44,6 +44,10 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10
  */
 class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 
+	const INDEX_FIRST  = 'tt_content:1:header';
+	const INDEX_SECOND = 'tt_content:1:subheader';
+	const INDEX_THIRD  = 'tt_content:1:bodytext';
+
 	/**
 	 * @var tx_l10nmgr_domain_translation_data
 	 */
@@ -106,9 +110,9 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 	protected function fixtureFieldCollection() {
 
 		$FieldCollection = new tx_l10nmgr_domain_translation_fieldCollection();
-		$FieldCollection->offsetSet('first', $this->fixtureField());
-		$FieldCollection->offsetSet('second', $this->fixtureField());
-		$FieldCollection->offsetSet('third', $this->fixtureField());
+		$FieldCollection->offsetSet(self::INDEX_FIRST, $this->fixtureField());
+		$FieldCollection->offsetSet(self::INDEX_SECOND, $this->fixtureField());
+		$FieldCollection->offsetSet(self::INDEX_THIRD, $this->fixtureField());
 
 		return $FieldCollection;
 	}
@@ -150,7 +154,7 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 	protected function fixtureElementCollection() {
 
 		$ElementCollection = new tx_l10nmgr_domain_translation_elementCollection();
-		$ElementCollection->offsetSet('first', $this->fixtureElement());
+		$ElementCollection->offsetSet(self::INDEX_FIRST, $this->fixtureElement());
 
 		return $ElementCollection;
 	}
@@ -181,7 +185,7 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 	protected function fixturePageCollection() {
 
 		$PageCollection = new tx_l10nmgr_domain_translation_pageCollection();
-		$PageCollection->offsetSet('first', $this->fixturePage());
+		$PageCollection->offsetSet(self::INDEX_FIRST, $this->fixturePage());
 
 		return $PageCollection;
 	}
@@ -213,9 +217,9 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 		$fixtureFieldCount = 12;
 		$fixtureFormatVersion = '1.2';
 		$fixtureL10ncfgUid = 9;
-		$fixtureSourceLanguageISOcode = 'en';
+		$fixtureSourceLanguageIsoCode = 'en';
 		$fixtureSysLanguageUid = 3;
-		$fixtureTargetLanguageUid = 4;
+		$fixtureTargetLanguageIsoCode = '_3';
 		$fixtureWordCount = 99;
 		$fixtureWorkspaceId = -1;
 
@@ -225,9 +229,9 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 		$this->Data->setFieldCount($fixtureFieldCount);
 		$this->Data->setFormatVersion($fixtureFormatVersion);
 		$this->Data->setL10ncfgUid($fixtureL10ncfgUid);
-		$this->Data->setSourceLanguageISOcode($fixtureSourceLanguageISOcode);
-		$this->Data->setSysLanguageUid($fixtureSysLanguageUid);
-		$this->Data->setTargetLanguageUid($fixtureTargetLanguageUid);
+		$this->Data->setSourceLanguageIsoCode($fixtureSourceLanguageIsoCode);
+		$this->Data->setTargetSysLanguageUid($fixtureSysLanguageUid);
+		$this->Data->setTargetLanguageIsoCode($fixtureTargetLanguageIsoCode);
 		$this->Data->setWordCount($fixtureWordCount);
 		$this->Data->setWorkspaceId($fixtureWorkspaceId);
 
@@ -257,9 +261,9 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 			'tx_l10nmgr_domain_translation_data member "l10ncfgUid" contains wrong value'
 		);
 		$this->assertEquals (
-			$fixtureSourceLanguageISOcode,
-			$this->Data->getSourceLanguageISOcode(),
-			'tx_l10nmgr_domain_translation_data member "sourceLanguageISOcode" contains wrong value'
+			$fixtureSourceLanguageIsoCode,
+			$this->Data->getSourceLanguageIsoCode(),
+			'tx_l10nmgr_domain_translation_data member "fixtureSourceLanguageIsoCode" contains wrong value'
 		);
 		$this->assertEquals (
 			$fixtureSysLanguageUid,
@@ -267,8 +271,8 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 			'tx_l10nmgr_domain_translation_data member "sysLanguageUid" contains wrong value'
 		);
 		$this->assertEquals (
-			$fixtureTargetLanguageUid,
-			$this->Data->getTargetLanguageUid(),
+			$fixtureTargetLanguageIsoCode,
+			$this->Data->getTargetLanguageIsoCode(),
 			'tx_l10nmgr_domain_translation_data member "targetLanguageUid" contains wrong value'
 		);
 		$this->assertEquals (
@@ -293,10 +297,12 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 	 * Verify that the Data contains the right isImported state.
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
+	 *
+	 * @test
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
-	public function test_verifyTheRightIsImportedStateOnDataWhichContainsFilledFieldCollection() {
+	public function verifyTheRightIsImportedStateOnDataWhichContainsFilledFieldCollection() {
 		$this->assertFalse (
 			($this->Data->isImported()),
 			'tx_l10nmgr_domain_translation_data contains the wrong isImported state.'
@@ -308,8 +314,8 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 			'tx_l10nmgr_domain_translation_data contains the wrong isImported state.'
 		);
 
-		$this->Data->getPageCollection()->offsetGet('first')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('first')->markImported();
-		$this->Data->getPageCollection()->offsetGet('first')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('second')->markImported();
+		$this->Data->getPageCollection()->offsetGet(self::INDEX_FIRST)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_FIRST)->markImported();
+		$this->Data->getPageCollection()->offsetGet(self::INDEX_FIRST)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_SECOND)->markImported();
 
 		$this->assertFalse (
 			($this->Data->isImported()),
@@ -318,7 +324,7 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 
 		try {
 
-			$this->Data->getPageCollection()->offsetGet('first')->getElementCollection()->offsetGet('first')->getFieldCollection()->offsetGet('third')->markSkipped('Skipped while testing.');
+			$this->Data->getPageCollection()->offsetGet(self::INDEX_FIRST)->getElementCollection()->offsetGet(self::INDEX_FIRST)->getFieldCollection()->offsetGet(self::INDEX_THIRD)->markSkipped('Skipped while testing.');
 
 		} catch (tx_mvc_exception_skipped $e) {
 
@@ -332,6 +338,26 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_phpunit_testcase {
 
 		$this->fail('tx_l10nmgr_domain_translation_data can not marked as skipped.');
 	}
+
+	/**
+	 * Test overwrite the target language uid.
+	 *
+	 * @access public
+	 * @return void
+	 *
+	 * @test
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function canForceTargetLanguageHandled() {
+
+		$this->Data->setTargetSysLanguageUid(1);
+
+		$this->assertEquals(1, $this->Data->getSysLanguageUid(), 'Target language UID are not set as expected.');
+
+		$this->Data->setForceTargetLanguageUid(2);
+		$this->assertEquals(2, $this->Data->getSysLanguageUid(), 'Target language UID are not set as expected.');
+	}
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/translation/class.tx_l10nmgr_domain_translation_data_testcase.php']) {

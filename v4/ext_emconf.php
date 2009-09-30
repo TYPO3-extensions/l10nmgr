@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Module for managing localization import and export',
 	'category' => 'module',
 	'shy' => 0,
-	'version' => '4.0.13',
+	'version' => '4.1.0',
 	'dependencies' => 'static_info_tables, mvc, picocontainer',
 	'conflicts' => '',
 	'priority' => '',
@@ -35,7 +35,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'constraints' => array(
 		'depends' => array(
 			'static_info_tables' => '',
-			'mvc' => '0.2.13',
+			'mvc' => '0.2.16',
 			'php' => '5.2.0-0.0.0',
 		),
 		'conflicts' => array(
