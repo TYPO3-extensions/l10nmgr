@@ -62,7 +62,7 @@
 						<!-- Import XML -->
 						<?php
 							$editOnClickParams  = '&edit[tx_l10nmgr_importdata][' . $configuration->getPid() . ']=new';
-							$editOnClickParams .= '&columnsOnly=configuration_id,importfiles';
+							$editOnClickParams .= '&columnsOnly=configuration_id,force_target_lang,importfiles';
 							$editOnClickParams .= '&returnEditConf=1';
 							$editOnClickParams .= '&noView=1';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();

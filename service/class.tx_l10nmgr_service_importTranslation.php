@@ -22,6 +22,8 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once t3lib_extMgm::extPath('l10nmgr') . '/service/class.tx_l10nmgr_service_detectRecord.php';
+
 /**
  * Translation base
  *
@@ -92,9 +94,11 @@ class tx_l10nmgr_service_importTranslation {
 	 *
 	 * @param tx_l10nmgr_models_translateable_translateableInformation $TranslatableInformation
 	 * @param tx_l10nmgr_domain_translation_data $TranslationData
+	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function save(tx_l10nmgr_models_translateable_translateableInformation $TranslatableInformation, tx_l10nmgr_domain_translation_data $TranslationData) {
 
@@ -105,14 +109,31 @@ class tx_l10nmgr_service_importTranslation {
 
 			foreach ($TranslatableElementsCollection as $Element) {
 				$TranslatableFieldsCollection = $Element->getTranslateableFields();
+				$DetectRecordService          = t3lib_div::makeInstance('tx_l10nmgr_service_detectRecord'); /* @var $DetectRecordService tx_l10nmgr_service_detectRecord */
 
-				foreach ($TranslatableFieldsCollection as $Field) {
-
+				foreach ($TranslatableFieldsCollection as $Field) { /* @var $Field tx_l10nmgr_models_translateable_translateableField */
 					try {
 						$TranslationField = $TranslationData->findByTableUidAndKey($Page->getUid(), $Element->getTableName(), $Element->getUid(), $Field->getIdentityKey());
-						$this->buildDataCommandArray($Element, $Field, $TranslationField);
 
+						try {
+							$Field->setIdentityKey (
+								$DetectRecordService->verifyIdentityKey (
+									$Field->getIdentityKey(),
+									$TranslationData->getSysLanguageUid(),
+									$Element->getUid()
+								)
+							);
+						} catch (tx_mvc_exception_skipped $e) {
+							tx_mvc_common_debug::logException($e);
+							$TranslationField->markSkipped($e->getMessage());
+						}
+
+						$this->buildDataCommandArray($Element, $Field, $TranslationField);
 					} catch (tx_mvc_exception_argumentOutOfRange $e ) {
+
+						//!TODO add proper error handling and make them visible during the user interface -
+						// furthermore it would be greate to save the events to the importData record inforation for later statistical usage.
+						// this will only then happend if an "$Field->getIdentityKey()" value are not availible into the "$TranslationData" collection.
 						tx_mvc_common_debug::logException($e);
 					} catch (tx_mvc_exception_skipped $e) {
 						tx_mvc_common_debug::logException($e);
@@ -137,11 +158,13 @@ class tx_l10nmgr_service_importTranslation {
 	 * Remap new translated elements to their l18n_parent records
 	 *
 	 * @todo Find name for it
+	 * @todo Get rid od that magic and make it  right
+	 *
 	 * @access protected
 	 * @return void
 	 */
 	protected function blackBoxDoNotModifyIt() {
-		$TCEmain = t3lib_div::makeInstance('t3lib_TCEmain');
+		$TCEmain = t3lib_div::makeInstance('t3lib_TCEmain'); /* @var $TCEmain t3lib_TCEmain */
 		$TCEmain->stripslashes_values = false;
 
 		if (count($this->TCEmain_cmd))	{
@@ -153,7 +176,8 @@ class tx_l10nmgr_service_importTranslation {
 		}
 
 		tx_mvc_common_debug::debug($TCEmain->copyMappingArray_merged, '$TCEmain->copyMappingArray_merged', self::SHOW_DEBUG_INFORMATION);
-		tx_mvc_common_debug::debug($this->TCEmain_data,'==> $TCEmain_data', self::SHOW_DEBUG_INFORMATION);
+		tx_mvc_common_debug::debug($this->TCEmain_data, '$TCEmain_data', self::SHOW_DEBUG_INFORMATION);
+		tx_mvc_common_debug::debug($this->TCEmain_cmd, '$this->TCEmain_cmd', self::SHOW_DEBUG_INFORMATION);
 
 			// Remap new translated elements to their l18n_parent records
 		foreach (array_keys($this->TCEmain_data) as $tableName)	{
@@ -170,7 +194,7 @@ class tx_l10nmgr_service_importTranslation {
 						$this->TCEmain_data[$tableName][t3lib_BEfunc::wsMapId($tableName, $TCEmain->copyMappingArray_merged[$tableName][$cmdl18nParentRecordUid])] = $fields;
 					} else {
 
-						//!FIXME change error handling
+							//!FIXME change error handling
 						print "HERE NOT LOCALIZED!!!";
 						debug('Record "'.$tableName.':'.$cmdl18nParentRecordUid.'" was NOT localized as it should have been!');
 					}
@@ -209,6 +233,7 @@ class tx_l10nmgr_service_importTranslation {
 	 * @param tx_l10nmgr_models_translateable_translateableElement $Element
 	 * @param tx_l10nmgr_models_translateable_translateableField $Field
 	 * @param tx_l10nmgr_domain_translation_field $TranslationField
+	 *
 	 * @access protected
 	 * @return void
 	 */

@@ -386,7 +386,7 @@ $TCA['tx_l10nmgr_exportfiles'] = Array (
 $TCA["tx_l10nmgr_importdata"] = Array (
 	"ctrl" => $TCA["tx_l10nmgr_importdata"]["ctrl"],
 	"interface" => Array (
-		"showRecordFieldList" => "configuration_id, exportdata_id, importfiles"
+		"showRecordFieldList" => "configuration_id, exportdata_id, force_target_lang, importfiles"
 	),
 	"feInterface" => $TCA["tx_l10nmgr_importdata"]["feInterface"],
 	"columns" => Array (
@@ -414,6 +414,22 @@ $TCA["tx_l10nmgr_importdata"] = Array (
 				'maxitems' => 1,
 			)
 		),
+		"force_target_lang" => Array (
+			"exclude" => 1,
+			"displayCond" => 'HIDE_FOR_NON_ADMINS',
+			"label" => "LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_importdata.force_target_lang",
+			"config" => Array (
+                "type" => "select",
+                "foreign_table" => "sys_language",
+                "foreign_table_where" => "ORDER BY sys_language.title",
+                "size" => 1,
+                "minitems" => 0,
+                "maxitems" => 1,
+				"items" => array(
+					array('', 0),
+				),
+            )
+		),
 		'importfiles' => Array(
 			'exclude' => 1,
 			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_importdata.importfiles',
@@ -427,7 +443,12 @@ $TCA["tx_l10nmgr_importdata"] = Array (
 		)
 	),
 	"types" => Array (
-		"0" => Array("showitem" => "configuration_id, exportdata_id, importfiles")
+		"0" => Array("showitem" => "configuration_id, exportdata_id, --palette--;;1,  importfiles")
+	),
+	"palettes" => Array (
+		"1" => Array(
+			"showitem" => 'force_target_lang',
+		)
 	)
 );
 
@@ -450,6 +471,7 @@ $TCA['tx_l10nmgr_importfiles'] = Array (
 				'maxitems' => 1,
 			)
 		),
+
 		'filename' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_importfiles.filename',

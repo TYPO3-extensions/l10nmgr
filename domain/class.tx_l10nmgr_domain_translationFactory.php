@@ -51,11 +51,12 @@ class tx_l10nmgr_domain_translationFactory {
 	 * Build a translation data object from given XML data structure
 	 *
 	 * @param string $fullQualifiedFileName
+	 * @param integer $forceTargetLanguageUid OPTIONAL If is set the targetLanguageUid will be overwritten with the forced languageUid
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return tx_l10nmgr_domain_translation_data
 	 */
-	public function create($fullQualifiedFileName) {
+	public function create($fullQualifiedFileName, $forceTargetLanguageUid = 0) {
 
 		if (! tx_mvc_validator_factory::getFileValidator()->isValid($fullQualifiedFileName)) {
 			throw new tx_mvc_exception_fileNotFound('The given filename: "' . var_export($fullQualifiedFileName, true) . '" not found!');
@@ -67,6 +68,9 @@ class tx_l10nmgr_domain_translationFactory {
 		}
 
 		$this->TranslationData = new tx_l10nmgr_domain_translation_data();
+
+			// force the target sys_language_uid
+		$this->TranslationData->setForceTargetLanguageUid($forceTargetLanguageUid);
 
 		$this->extractMetaData($TranslationXML->head);
 		$this->exractTranslation($TranslationXML->pageGrp);
@@ -96,10 +100,10 @@ class tx_l10nmgr_domain_translationFactory {
 			foreach ($pagerow->children() as $field) {
 				$table = (string)$field['table'];
 				$uid   = (int)$field['elementUid'];
-				$Field   = new tx_l10nmgr_domain_translation_field();
+				$Field = new tx_l10nmgr_domain_translation_field();
 				$Field->setFieldPath((string)$field['key']);
 				$needsAutoDetection = !$Field->detectTransformationType($field,$this->TranslationData->getFormatVersion());
-				
+
 				switch($Field->getTransformationType($uid,$needsAutoDetection)) {
 					case 'html':
 							$Field->setContent($TextConverter->getXMLContent($field));
@@ -164,8 +168,8 @@ class tx_l10nmgr_domain_translationFactory {
 
 		foreach ($Head as $metaData) {
 			$this->TranslationData->setL10ncfgUid((int)$metaData->t3_l10ncfg);
-			$this->TranslationData->setSysLanguageUid((int)$metaData->t3_sysLang);
-			$this->TranslationData->setTargetLanguageUid((int)$metaData->t3_targeLang);
+			$this->TranslationData->setTargetSysLanguageUid((int)$metaData->t3_sysLang);
+			$this->TranslationData->setTargetLanguageIsoCode((string)$metaData->t3_targetLang);
 			$this->TranslationData->setSourceLanguageISOcode((string)$metaData->t3_sourceLang);
 			$this->TranslationData->setBaseUrl((string)$metaData->baseURL);
 			$this->TranslationData->setWorkspaceId((int)$metaData->t3_workspaceId);

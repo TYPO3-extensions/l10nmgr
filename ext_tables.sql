@@ -154,6 +154,7 @@ CREATE TABLE tx_l10nmgr_importdata (
 	
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	progress blob NOT NULL,
+	force_target_lang tinyint(4) NOT NULL,
 	importfiles int(11) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),

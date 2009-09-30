@@ -68,7 +68,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 *
 	 * @var integer
 	 */
-	protected $sysLanguageUid = 0;
+	protected $targetSysLanguageUid = 0;
 
 	/**
 	 * Column "lg_iso_2" of the "static_language" database table
@@ -77,14 +77,14 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @see $this->sysLanguage
 	 * @var string
 	 */
-	protected $sourceLanguageISOcode = '';
+	protected $sourceLanguageIsoCode = '';
 
 	/**
 	 * Uid of the sys_language where the translation should be imported into
 	 *
-	 * @var integer
+	 * @var string
 	 */
-	protected $targetLanguageUid = 0;
+	protected $targetLanguageIsoCode = 0;
 
 	/**
 	 * Base url from the exported system
@@ -140,6 +140,26 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @var tx_l10nmgr_domain_translation_pageCollection
 	 */
 	protected $PageCollection = null;
+
+	/**
+	 * If is set the sysLanguageUid will be overwritten with the forced $this->forceTargetLanguageUid
+	 *
+	 * @var integer
+	 */
+	protected $forceTargetLanguageUid = 0;
+
+	/**
+	 * Set the new forced target language uid
+	 *
+	 * @param integer $targetLanguageUid
+	 * @access public
+	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function setForceTargetLanguageUid($targetLanguageUid) {
+		$this->forceTargetLanguageUid = t3lib_div::intval_positive($targetLanguageUid);
+	}
 
 	/**
 	 * Write import success information about the chilg elements
@@ -283,7 +303,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @return integer
 	 */
 	public function getSysLanguageUid() {
-		return $this->sysLanguageUid;
+		return ( $this->forceTargetLanguageUid > 0 ) ? $this->forceTargetLanguageUid : $this->targetSysLanguageUid;
 	}
 
 	/**
@@ -291,8 +311,8 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string
 	 */
-	public function getSourceLanguageISOcode() {
-		return $this->sourceLanguageISOcode;
+	public function getSourceLanguageIsoCode() {
+		return $this->sourceLanguageIsoCode;
 	}
 
 	/**
@@ -300,8 +320,8 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return integer
 	 */
-	public function getTargetLanguageUid() {
-		return $this->targetLanguageUid;
+	public function getTargetLanguageIsoCode() {
+		return $this->targetLanguageIsoCode;
 	}
 
 	/**
@@ -384,13 +404,13 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	}
 
 	/**
-	 * @param integer $sysLanguageUid
+	 * @param integer $targetSysLanguageUid
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function setSysLanguageUid($sysLanguageUid) {
-		$this->sysLanguageUid = $sysLanguageUid;
+	public function setTargetSysLanguageUid($targetSysLanguageUid) {
+		$this->targetSysLanguageUid = $targetSysLanguageUid;
 	}
 
 	/**
@@ -399,18 +419,18 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function setSourceLanguageISOcode($sourceLanguageISOcode) {
-		$this->sourceLanguageISOcode = $sourceLanguageISOcode;
+	public function setSourceLanguageIsoCode($sourceLanguageIsoCode) {
+		$this->sourceLanguageIsoCode = $sourceLanguageIsoCode;
 	}
 
 	/**
-	 * @param integer $targetLanguageUid
+	 * @param string $targetLanguageIsoCode
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
-	public function setTargetLanguageUid($targetLanguageUid) {
-		$this->targetLanguageUid = $targetLanguageUid;
+	public function setTargetLanguageIsoCode($targetLanguageIsoCode) {
+		$this->targetLanguageIsoCode = $targetLanguageIsoCode;
 	}
 
 	/**

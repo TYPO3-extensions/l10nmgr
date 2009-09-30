@@ -1,10 +1,5 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
-/* if (TYPO3_MODE=="BE")    {
-
-	t3lib_extMgm::addModule('txl10nmgrM1','','top',t3lib_extMgm::extPath($_EXTKEY).'mod1/');
-	t3lib_extMgm::addModule("txl10nmgrM2",'txl10nmgrM1',"top",t3lib_extMgm::extPath($_EXTKEY)."mod2/");
-}*/
 
 if (TYPO3_MODE=='BE')   {
         $extPath = t3lib_extMgm::extPath($_EXTKEY);
@@ -25,7 +20,6 @@ if (TYPO3_MODE=='BE')   {
         }
         t3lib_extMgm::addModule('txl10nmgrM3', '', '', $extPath.'mod3/');
         t3lib_extMgm::addModule('txl10nmgrM3', 'txl10nmgrM1', 'bottom', $extPath.'mod1/');
-        //t3lib_extMgm::addModule('txl10nmgrM3', 'txl10nmgrM4', 'bottom', $extPath.'translate/');
         t3lib_extMgm::addModule('txl10nmgrM3', 'txl10nmgrM2', 'bottom', $extPath.'mod2/');
 
         //add tsconfig for the export mvc controller
