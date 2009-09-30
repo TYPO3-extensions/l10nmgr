@@ -70,7 +70,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	 * @var string
 	 */
 	protected $resultForChunk = '';
-	
+
 	/**
 	 * @var boolean indicates if the exporter was running or not.
 	 */
@@ -80,7 +80,7 @@ class tx_l10nmgr_models_exporter_exporter {
 	 * @var int number of fields in exportfile
 	 */
 	protected $currentNumberOfFields;
-	
+
 	/**
 	 * Constructor to create an instance of the exporter object
 	 *
@@ -115,7 +115,7 @@ class tx_l10nmgr_models_exporter_exporter {
 			$tranlateableInformation 		= $factory->createFromExportDataAndPageIdCollection($this->exportData,$pagesForChunk);
 
 			$this->currentNumberOfFields 	= $tranlateableInformation->countFields();
-						
+
 			$this->exportView->setTranslateableInformation($tranlateableInformation);
 
 			$this->resultForChunk 		= $this->exportView->render();
@@ -160,7 +160,7 @@ class tx_l10nmgr_models_exporter_exporter {
 
 	/**
 	 * Counts the items which haven been exported in the current chunk.
-	 * 
+	 *
 	 * @param void
 	 * @return int
 	 */
@@ -171,7 +171,7 @@ class tx_l10nmgr_models_exporter_exporter {
 			return $this->currentNumberOfFields;
 		}
 	}
-	
+
 	/**
 	 * This method can be used internally to mark the chunk as processed.
 	 *
@@ -250,7 +250,7 @@ class tx_l10nmgr_models_exporter_exporter {
 
 		$exporterWasRunning 	= $exporter->run();
 		$numberOfItemsInChunk	= $exporter->countItemsForChunk();
-		
+
 		if ($exporterWasRunning && $numberOfItemsInChunk > 0) {
 
 			//now we write the exporter result to a file
