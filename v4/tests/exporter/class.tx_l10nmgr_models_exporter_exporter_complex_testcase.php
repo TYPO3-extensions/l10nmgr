@@ -110,23 +110,39 @@ class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_da
 	}
 
 	/**
+	 * Import dataset into test database
+	 *
+	 * This will only work if the fixture locate at the same directory level as the testcase.
+	 *
+	 * @example $this->importDataSet('/fixtures/__FILENAME__.xml');
+	 * @param string $pathToFile The path beginning from the current location of the testcase
+	 * @access protected
+	 * @return void
+	 */
+	protected function importDataSet($pathToFile) {
+		parent::importDataSet(dirname ( __FILE__ ) . $pathToFile);
+	}
+
+	/**
 	* This testcase should ensure, that the exporter can create a simple export from
 	* a given database state.
 	*
-	* @param void
-	* @return void
-	* @author Timo Schmidt <timo.schmidt@aoemedia.de>
-	*
 	* @todo we need to ensure that the result in tests/exporter/fixtures/complex/test__to_pt_BR_300409-113504_export.xml is really the result when "noxmlcheck" in exportData has the value 1, i think it should be the result when "noxmlcheck" has the value 0
+	*
+	* @test
+	*
+	* @return void
+	*
+	* @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	*/
-	public function test_canExporterCreateCorrectFileFromGivenStructure(){
+	public function canExporterCreateCorrectFileFromGivenStructure(){
 		//created without option "do not check xml"
 
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/pages.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/ttcontent.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/language.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/l10nconfiguration.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/exportdata.xml');
+		$this->importDataset('/fixtures/complex/pages.xml');
+		$this->importDataset('/fixtures/complex/ttcontent.xml');
+		$this->importDataset('/fixtures/complex/language.xml');
+		$this->importDataset('/fixtures/complex/l10nconfiguration.xml');
+		$this->importDataset('/fixtures/complex/exportdata.xml');
 
 		$exportdataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData				= $exportdataRepository->findById(67);
@@ -164,16 +180,19 @@ class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_da
 	 * If we start an export with only new and changed elemnts then, this export should be empty.
 	 * This testcase should simulate this situation.
 	 *
-	 * @param void
+	 * @test
+	 *
+	 * @access public
 	 * @return void
+	 *
 	 * @author Timo Schmidt
 	 */
-	public function test_isExportEmptyAfterReimpoertingExportAndExportingOnlyNewAndChangedElements(){
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/pages.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/ttcontent.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/language.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/l10nconfiguration.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/exportdata.xml');
+	public function isExportEmptyAfterReimpoertingExportAndExportingOnlyNewAndChangedElements(){
+		$this->importDataset('/fixtures/complex/pages.xml');
+		$this->importDataset('/fixtures/complex/ttcontent.xml');
+		$this->importDataset('/fixtures/complex/language.xml');
+		$this->importDataset('/fixtures/complex/l10nconfiguration.xml');
+		$this->importDataset('/fixtures/complex/exportdata.xml');
 
 		$import = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/fixture-import.xml';
 
@@ -203,26 +222,5 @@ class tx_l10nmgr_models_exporter_exporter_complex_testcase extends tx_phpunit_da
 		$this->assertEquals(count($exporterResult->children()),2,'Unexpected number of childnotes in export, there should only be a header in the export');
 		$this->assertEquals(count($exporterResult->pageGrp->children()),0,'There should only be one pageGroup without children because there is nothing to translate');
 	}
-
-	/**
-	 *
-	 * @access public
-	 * @return void
-	 *
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 */
-	public function importTranslationWithForcedLanguageUid() {
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/forcedLanguage/pages.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/forcedLanguage/ttcontent.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/forcedLanguage/language.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/forcedLanguage/l10nconfiguration.xml');
-		$this->importDataset(t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/forcedLanguage/exportdata.xml');
-
-		$import = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/forcedLanguage/fixture-import.xml';
-
-		//!TODO implement this test
-
-	}
-
 }
 ?>
