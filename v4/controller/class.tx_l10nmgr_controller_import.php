@@ -86,12 +86,13 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 		'createdRecord' => 'returnEditConf',
 	);
 
+	
 	/**
 	 * These arguments should be kept since they are needed in the ajax polling action
 	 *
 	 * @var array
 	 */
-	protected $keepArgumentKeys = array('importDataId');
+	protected $keepArgumentKeys = array('importDataId','warningCount');
 
 	/**
 	 * Show the controll panel to give the user the options what he can do

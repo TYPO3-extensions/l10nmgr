@@ -250,9 +250,12 @@ class tx_l10nmgr_models_exporter_exporter {
 
 		$exporterWasRunning 	= $exporter->run();
 		$numberOfItemsInChunk	= $exporter->countItemsForChunk();
-
+		$exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
+		
 		if ($exporterWasRunning && $numberOfItemsInChunk > 0) {
-
+			//add the number of items in the current chunk to the whole number of items
+			$exportData->addNumberOfItems($numberOfItemsInChunk);
+			
 			//now we write the exporter result to a file
 			$exportFile	= new tx_l10nmgr_models_exporter_exportFile();
 			$exportFile->setFilename($exportView->getFilename($prefix,$exportData->getNumberOfExportRuns()));
@@ -261,22 +264,23 @@ class tx_l10nmgr_models_exporter_exporter {
 			$exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
 			$exportFile->write();
 
-			$exportFileRepository = new tx_l10nmgr_models_exporter_exportFileRepository();
 			$exportFileRepository->add($exportFile);
 		}
 
-
 		if ($exportData->getExportIsCompletelyProcessed()) {
-			$exportData->createZip($exportView->getFilename($prefix) . '.zip');
-
-			// postProcessingHook
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'])) {
-				foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'] as $userFunc) {
-					$params = array();
-					t3lib_div::callUserFunction($userFunc, $params, $exporter);
+			if($exportData->getNumberOfItems() > 0){
+				$exportData->createZip($exportView->getFilename($prefix) . '.zip');
+	
+				// postProcessingHook
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'])) {
+					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'] as $userFunc) {
+						$params = array();
+						t3lib_div::callUserFunction($userFunc, $params, $exporter);
+					}
 				}
+			}else{
+				throw new tx_mvc_exception_skipped('The export has no items therefore no xml files have been created an no zip. Please check your export configuration');
 			}
-
 		}
 
 		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();

@@ -473,6 +473,30 @@ class tx_l10nmgr_models_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 		$this->setProgress('export_number_of_runs',$value);
 	}
 
+	
+	/**
+	 * Adds a number of processed items to the export data
+	 * used to determine if any data has been exported
+	 * 
+	 * @param int
+	 * @return void
+	 */
+	public function addNumberOfItems($itemsInChunk){
+		$currentItemsInChunk = $this->getNumberOfItems();
+		$currentItemsInChunk += $itemsInChunk;
+		$this->setProgress('NumProcessedItems',$currentItemsInChunk);
+	}
+	
+	/**
+	 * Returns the overall number of all processed items.
+	 * 
+	 * @param void
+	 * @return integer
+	 */
+	public function getNumberOfItems(){
+		return $this->getProgress('NumProcessedItems');
+	}
+	
 	/**
 	 * Get the source language object
 	 *

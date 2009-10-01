@@ -97,7 +97,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 *
 	 * @var unknown_type
 	 */
-	protected $keepArgumentKeys = array('noHidden','noXMLCheck','checkUTF8','selectedExportFormat','exportDataId');
+	protected $keepArgumentKeys = array('noHidden','noXMLCheck','checkUTF8','selectedExportFormat','exportDataId','warningCount');
 
 	/**
 	 * @var array mapping external parameters to arguments
@@ -176,6 +176,13 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 		return '../export/index.php'.$this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('showExportDetail')->useOverruledParameters()->makeUrl();
 	}
 
+	/**
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 */
+	protected function getRedirectUrlOnAbort(){
+		return '../mod1/index.php';		
+	}
+	
 	/**
 	 * This method is used to show a list of files for a generated export.
 	 *
@@ -267,8 +274,9 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @see ajaxPerformRunAction
 	 */
 	protected function performProgressableRun($exportData) {
-
-		return tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk'));
+		$res = tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk'));
+		
+		return $res;
 	}
 
 }
