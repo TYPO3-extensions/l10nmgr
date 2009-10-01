@@ -120,6 +120,23 @@ class tx_l10nmgr_models_exporter_exporter_basic_testcase extends tx_phpunit_data
 		$this->assertEquals($runCount,3,'unexpected number of run counts in export');
 	}
 
+	
+	
+	/**
+	 * We only load the export configuration and exportdata, no content is in the database therefore the export should be empty.
+	 * 
+	 * @expectedException tx_mvc_exception_skipped
+	 * @author Timo Schmidt 
+	 * @test
+	 */
+	public function exporterThrowsExceptionOnEmptyExport(){
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportData.xml');
+
+		$exportData = $this->getFixtureExportData();
+		
+		 tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,1);
+	}
 
 	/**
 	 * Method to check that the fixtureExportData can be loaded

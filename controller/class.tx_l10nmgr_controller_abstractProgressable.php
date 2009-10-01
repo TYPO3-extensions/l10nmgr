@@ -68,8 +68,24 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		$this->initalProgressLabel = $initalProgressLabel;
 	}
 
+	/**
+	 * Holds the received warning messages during the import.
+	 * 
+	 * @var array
+	 */
 	public static $warningMessages;
 
+	/**
+	 * (non-PHPdoc)
+	 * @see mvc/controller/tx_mvc_controller_action#initializeArguments()
+	 */
+	protected function initializeArguments(){
+		if(!isset($this->arguments['warningCount'] )){
+			$this->arguments['warningCount'] = 0;
+		}
+		parent::initializeArguments();
+	}
+	
 	/**
 	 * Show progress action
 	 *
@@ -88,6 +104,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		$progressView->setAjaxEnabled(true);
 		$progressView->setProgressUrl($this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('ajaxPerformRun')->useOverruledParameters()->makeUrl());
 		$progressView->setRedirectOnCompletedUrl($this->getRedirectUrlOnCompletion());
+		$progressView->setRedirectOnAbortUrl($this->getRedirectUrlOnAbort());
 
 		$this->view->setProgressableSubjectView($this->getProgressableSubjectView());
 		$this->view->setProgressView($progressView);
@@ -114,6 +131,15 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	}
 
 	/**
+
+	 * @author Timo Schmidt <schmidt@aoemedia.de>
+ 	 * @return string
+	 */
+	protected function getRedirectUrlOnAbort() {
+		return '../mod1/index.php';
+	}	
+	
+	/**
 	 * Perform run action (via AJAX call)
 	 *
 	 * @author Timo Schmidt
@@ -121,43 +147,47 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	 * @return void
 	 */
 	public function ajaxPerformRunAction() {
-
+		$progressView = new tx_mvc_view_widget_progressAjax();
+		
 		try {
+			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['warningCount'],true);	
 			$subject = $this->getProgressableSubject();
 
 			set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);
 			$completed = $this->performProgressableRun($subject);
 			restore_error_handler();
 
-			$progressView = new tx_mvc_view_widget_progressAjax();
 			$this->initializeView($progressView);
 			$percent = $subject->getProgressPercentage();
-
 			$progressView->setProgress($percent);
 
 			if(is_array(self::$warningMessages)) {
-				$warningMessage = implode('\n',self::$warningMessages);
-				$progressView->setWarningMessage($warningMessage);
+				$warningMessage = implode('<br/><br/>',self::$warningMessages);
+				$progressView->setWarningMessage($warningMessage);		
+				$this->arguments['warningCount']++;
 			}
 
-			if (!$completed) {
-				$progressView->setProgressLabel($subject->getProgressOutput());
-			} else {
+			if ($completed) {
 				$progressView->setProgressLabel('Completed');
 				$progressView->setCompleted(true);
+				
+				if($this->arguments['warningCount'] > 0){
+					$progressView->setCompleteMessage('Task has been finished with '.$this->arguments['warningCount'].' warnings. Click "Ok" to be redirected to the overview.');
+				}
+			} else {
+				$progressView->setProgressLabel($subject->getProgressOutput());
 			}
-			echo $progressView->render();
-
-		} catch(Exception $exception) {
-
-			tx_mvc_common_debug::logException($exception);
-			echo json_encode(array(
-				'errorMessage' => $exception->getMessage(),
-				'file' => sprintf('%s (%s)', $exception->getFile(), $exception->getLine()),
-				'trace' => $exception->getTraceAsString()
-			));
+		}  catch(Exception $e) {
+			tx_mvc_common_debug::logException($e);
+			
+			$progressView->setAborted(true);
+			$progressView->setAbortMessage($e->getMessage());
 		}
+		
+		//update the progress url, maybe the number of warnings has changed
+		$progressView->setProgressUrl($this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('ajaxPerformRun')->useOverruledParameters()->makeUrl());
 
+		echo $progressView->render();
 		exit();
 	}
 
@@ -173,10 +203,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	*/
 	public function warningHandler($errno,$errstr,$file,$line) {
 		$message = 'Warning: '.$errstr.'/ '.$errno. ' in '.$file.' on line '.$line;
-
 		self::$warningMessages[] = $message;
-
-
 	}
 }
 
