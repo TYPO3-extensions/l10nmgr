@@ -87,6 +87,29 @@ class tx_l10nmgr_service_detectRecord {
 	}
 
 	/**
+	 * @param string $recordTableName
+	 * @param integer $recordUid
+	 *
+	 * @throws tx_mvc_exception_notImplemented
+	 * @throws tx_mvc_exception_notSupported
+	 *
+	 * @access protected
+	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function getFceTranslationModus($recordTableName, $recordUid) {
+		throw tx_mvc_exception_notImplemented('This ' . __METHOD__ . ' is currently not implemented');
+
+		require_once t3lib_extMgm::extPath('templavoila') . 'class.tx_templavoila_api.php';
+		$recordArray = t3lib_BEfunc::getRecord($recordTableName, $recordUid);
+
+		if ( is_array($recordArray) ) {
+			$datastrucure = tx_templavoila_api::ds_getExpandedDataStructure ($recordTableName, $recordArray);
+		}
+	}
+
+	/**
 	 * Build a fresh identity_key wich can be used
 	 * to create a new record with the TCEmain commands.
 	 *
@@ -124,6 +147,9 @@ class tx_l10nmgr_service_detectRecord {
 	}
 
 	/**
+	 * Retrieve the requested record as array,
+	 * if the record is not available then an exception will thrown.
+	 *
 	 * @param string $tableName The table where the record could select from
 	 * @param integer $recordUid The UID of desired record
 	 *
