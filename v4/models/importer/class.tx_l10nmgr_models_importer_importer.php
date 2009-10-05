@@ -105,6 +105,7 @@ class tx_l10nmgr_models_importer_importer {
 			//!TODO  maybe importData
 		if (! $this->importData->getImportIsCompletelyProcessed() ) {
 
+//!FIXME The "getNextFilenames" return also folders, this isn't the expected result.
 				// determine the next file to import
 			$currentFile = $this->importData->getNextFilename();
 

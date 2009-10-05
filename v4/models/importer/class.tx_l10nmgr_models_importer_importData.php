@@ -353,6 +353,7 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @return string $fileName
 	 */
 	public function getNextFilename() {
+//!FIXME The "getNextFilenames" return also folders, this isn't the expected result.
 		$remainingFilenames = $this->getImportRemainingFilenames();
 		$it = $remainingFilenames->getIterator();
 		$filename =  $it->current();
