@@ -182,7 +182,7 @@ class tx_l10nmgr_models_importer_importer {
 		$targetLanguageFromExport = $exportData->getTranslationLanguageObject()->getUid();
 		$targetLanguageFromImport =	$TranslationData->getSysLanguageUid();
 
-		if($targetLanguageFromExport != $targetLanguageFromImport){
+		if($targetLanguageFromExport != $targetLanguageFromImport && $this->importData->getForceTargetLanguageUid() == 0){
 			throw new tx_mvc_exception_invalidArgument('The import ('.$targetLanguageFromImport.') has a different target language as the export ('.$targetLanguageFromExport.') it results from');
 		}
 
