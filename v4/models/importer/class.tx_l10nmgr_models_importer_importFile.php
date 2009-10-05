@@ -108,7 +108,6 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 		return substr(strtolower($filename),strrpos($filename,'.') + 1);
 	}
 
-
 	/**
 	 * Returns the configured path for importFiles.
 	 *
@@ -119,7 +118,6 @@ class tx_l10nmgr_models_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	public function getImportFilePath(){
 		return $this->importFilePath;
 	}
-
 
 	/**
 	 * This method is used to overwrite the importPath
