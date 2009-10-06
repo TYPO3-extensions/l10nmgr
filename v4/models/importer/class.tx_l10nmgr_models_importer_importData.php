@@ -157,7 +157,7 @@ class tx_l10nmgr_models_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 * been processed.
 	 *
 	 * @param void
-	 * @return array
+	 * @return ArrayObject
 	 */
 	public function getImportRemainingFilenames(){
 		if (!($this->getProgress('import_remaining_filenames') instanceof ArrayObject)) {
