@@ -166,6 +166,7 @@ class tx_l10nmgr_service_importTranslation {
 	protected function blackBoxDoNotModifyIt() {
 		$TCEmain = t3lib_div::makeInstance('t3lib_TCEmain'); /* @var $TCEmain t3lib_TCEmain */
 		$TCEmain->stripslashes_values = false;
+		$errorMessages = '';
 
 		if (count($this->TCEmain_cmd))	{
 			$TCEmain->start(array(), $this->TCEmain_cmd);
@@ -194,14 +195,17 @@ class tx_l10nmgr_service_importTranslation {
 						$this->TCEmain_data[$tableName][t3lib_BEfunc::wsMapId($tableName, $TCEmain->copyMappingArray_merged[$tableName][$cmdl18nParentRecordUid])] = $fields;
 					} else {
 
-							//!FIXME change error handling
-						print "HERE NOT LOCALIZED!!!";
-						debug('Record "'.$tableName.':'.$cmdl18nParentRecordUid.'" was NOT localized as it should have been!');
+							//!FIXME add logging to the error handling
+						$errorMessages .= "\n" . 'Record "'.$tableName.':'.$cmdl18nParentRecordUid.'" was NOT localized as it should have been!';
 					}
 
 					tx_mvc_common_debug::debug($this->TCEmain_data, '$this->TCEmain_data', self::SHOW_DEBUG_INFORMATION);
 					unset($this->TCEmain_data[$tableName][$cmdProcessString]);
 				}
+			}
+
+			if (count($errorMessages)) {
+				throw new Exception('HERE NOT LOCALIZED!!!' . "\n\n" . $errorMessages);
 			}
 		}
 	}
@@ -224,7 +228,9 @@ class tx_l10nmgr_service_importTranslation {
 		$TCEmain->process_datamap();
 
 			//!TODO add the errorLog to the import record for better handling
-		tx_mvc_common_debug::debug($TCEmain->errorLog, 'TCEmain update errors:', (bool)count($TCEmain->errorLog));
+		if ((bool)count($TCEmain->errorLog)) {
+			throw new Exception('TCEmain update errors:' . "\n\n" . implode("\n", $TCEmain->errorLog));
+		}
 	}
 
 	/**
