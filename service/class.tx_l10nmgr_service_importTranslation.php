@@ -204,8 +204,8 @@ class tx_l10nmgr_service_importTranslation {
 				}
 			}
 
-			if (count($errorMessages)) {
-				throw new Exception('HERE NOT LOCALIZED!!!' . "\n\n" . $errorMessages);
+			if (count($errorMessages) > 1) {
+				throw new Exception('HERE NOT LOCALIZED!!!' . "\n" . $errorMessages);
 			}
 		}
 	}

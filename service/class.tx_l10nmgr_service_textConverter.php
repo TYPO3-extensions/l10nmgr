@@ -132,15 +132,15 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		if ($removeBrockenUTF8Charakter === true) {
 			$content = tx_l10nmgr_utf8tools::utf8_bad_strip($content);
 		}
-		
+
 		if($convertEntities) {
 			$content = htmlspecialchars($content);
 		}
-		
+
 		if ($validateToXML === true) {
 			try {
 				$this->isValidXML($content);
-			} catch (tx_mvc_exception_invalidContent $e) {				
+			} catch (tx_mvc_exception_invalidContent $e) {
 				throw new tx_mvc_exception_converter($e->getMessage());
 			}
 		}
@@ -160,12 +160,13 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 * @param string $content XML string to convert
 	 * @param boolean $importFlexFieldValue OPTIONAL if an value for flexforms should be imported use this option to escape the htmlspecialchars
 	 *                                       This option is current not in use - while the TCEmain convert the htmlspecialchars self way.
+	 * @param boolean $forceCleaningForRTE DEFAULT true If set to true the HTML-tags will be removed before the content is stored into the database.
 	 * @access public
 	 * @throws tx_mvc_exception_converter
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string
 	 */
-	public function toText($content, $importFlexFieldValue = false) {
+	public function toText($content, $importFlexFieldValue = false, $forceCleaningForRTE = true) {
 		//!TODO switch to use the RTE configuration from pageTSconfig
 		//$this->HTMLparser->RTE_transform();
 
@@ -184,16 +185,20 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 
 		$this->HTMLparser->procOptions['HTMLparser_db.']['xhtml_cleaning'] = true;
 
+		if ($forceCleaningForRTE === true) {
+			$content = $this->HTMLparser->TS_transform_db($content, 0);  // removes links from content if not called first!
+		}
+
 		$content = $this->HTMLparser->TS_links_db (
 			$this->HTMLparser->TS_images_db (
-				$this->HTMLparser->TS_transform_db($content, 0) // removes links from content if not called first!
+				$content
 			)
 		);
 
 			// this is needed because the "t3lib_parseHTML_proc" dosn't recognise <br/> whitin <li> tags
 		$content = str_replace (
-			'<br/>',
-			'<br />',
+			array('<br/>', '<br>'),
+			array('<br />', '<br />'),
 			$content
 		);
 
@@ -312,8 +317,8 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 
 		return implode('',$parts);
 	}
-	
-	
+
+
 	/**
 	 * Get the contents of a SimpleXMLElement as string (XML)
 	 *
@@ -323,7 +328,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	public function getXMLContent( SimpleXMLElement $field ) {
 		if(count($field->children())>0) {
 			$fieldXML = str_replace("<?xml version=\"1.0\"?>\n",'',$field->asXML());
-			
+
 			if(preg_match('/^<!DOCTYPE/',$fieldXML)) {
 				$fieldXML = substr($fieldXML,strpos($fieldXML,"]>")+3);
 			}

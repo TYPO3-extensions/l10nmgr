@@ -15,6 +15,6 @@
 	</head>
 	<pageGrp id="33155">
 		<data table="pages" elementUid="33155" key="pages_language_overlay:NEW/2/33155:title">headertest translated</data>
-		<data table="tt_content" elementUid="619945" key="tt_content:NEW/2/619945:header"><![CDATA[<p>This is a dirty header element &amp; uses an <br> ampersand translated </p>]]></data>
+		<data table="tt_content" elementUid="619945" key="tt_content:NEW/2/619945:header"><![CDATA[This is a dirty header element &amp; uses an <br> ampersand translated ]]></data>
 	</pageGrp>
 </TYPO3L10N>

@@ -113,7 +113,7 @@ class tx_l10nmgr_domain_translationFactory {
 							$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field,true)));
 						break;
 					default:
-							$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field)));
+							$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field), false, false));
 				}
 
 				$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);
