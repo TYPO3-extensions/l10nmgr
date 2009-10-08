@@ -79,6 +79,7 @@ class tx_l10nmgr_models_importer_importer {
   	 * Initializes the internalExportdata property from the translationData
   	 *
   	 * @param tx_l10nmgr_domain_translation_data $Translationdata
+  	 * @throws tx_mvc_exception_invalidContent
   	 * @return tx_l10nmgr_models_exporter_exportData $exportData
 	 */
 	protected function getExportDataFromTranslationData(tx_l10nmgr_domain_translation_data $Translationdata){
@@ -87,6 +88,10 @@ class tx_l10nmgr_models_importer_importer {
 
 		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
 		$exportData		      = $exportDataRepository->findById($exportDataUid);
+
+		if (! $exportData instanceOf tx_l10nmgr_models_exporter_exportData ) {
+			throw new tx_mvc_exception_invalidContent('The export data record ("t3_exportDataId") can not found!');
+		}
 
 		return $exportData;
 	}
