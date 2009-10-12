@@ -149,7 +149,7 @@ class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_phpunit
 		$forceTargetLanguageUid = 2;
 		$expectedSysLanguageUid = $forceTargetLanguageUid;
 
-		$TranslationData = $this->TranslationFactory->create (
+		$TranslationData = $this->TranslationFactory->createFromXMLFile (
 			t3lib_extMgm::extPath('l10nmgr').'tests/workflow/import/keepNewline/fixtures/default/fixture-import.xml',
 			$forceTargetLanguageUid
 		);
@@ -175,8 +175,6 @@ class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_phpunit
 		);
 
 		$fixtureRecord = t3lib_BEfunc::getRecord('tt_content', 839);
-//		var_dump($fixtureRecord['bodytext']);
-//		var_dump($translationRecordArray[0]['bodytext']);
 		$this->assertEquals(
 			$fixtureRecord['bodytext'],
 			$translationRecordArray[0]['bodytext'],
