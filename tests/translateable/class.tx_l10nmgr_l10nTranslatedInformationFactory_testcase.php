@@ -22,11 +22,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	public function setUp() {
 		global $BE_USER;
 		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+
 		$this->createDatabase ();
 		$db = $this->useTestDatabase ();
 		$this->importStdDB();
-		
+
 		$this->importExtensions ( array ('cms', 'l10nmgr', 'static_info_tables', 'templavoila' ) );
 	}
 
@@ -309,7 +309,7 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetDiffToDefaultFromDatabaseTranslatedFCE.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );		
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
@@ -349,31 +349,33 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	 * is possible that a field in pages is not contained in the overlay table
 	 * these fields should not be contained in an export. This testcase should ensure that these fields
 	 * will not be exported.
-	 * 
+	 *
 	 * @test
 	 */
 	public function canDetectAndSkipFieldsWhichAreNotInThePageOverlayFields(){
+		$this->importExtensions ( array ('tx_aoewebex_tableextensions' ) );
+
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canDetectAndSkipFieldsWhichAreNotInThePageOverlayFields.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );		
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );	
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
-		$exportData = $exportDataRepository->findById(9999);		
-		
+		$exportData = $exportDataRepository->findById(9999);
+
 		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
 		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
 		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
 
 		$pageGroups 				= $translateableInformations->getPageGroups ();
-		
+
 		$translateableElements 		= $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
 		$contentElement				= $translateableElements->offsetGet(0);
 		$this->assertEquals(1,$contentElement->getTranslateableFields()->count());
 	}
-	
-	
+
+
 	/**
 	 * This method is used to load a FixtureL10NConfig
 	 *
