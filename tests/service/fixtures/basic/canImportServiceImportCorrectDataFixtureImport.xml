@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp " "> ]>
+<TYPO3L10N>
+	<head>
+		<t3_l10ncfg>383</t3_l10ncfg>
+		<t3_sysLang>1</t3_sysLang>
+		<t3_sourceLang></t3_sourceLang>
+		<t3_targetLang>_3</t3_targetLang>
+		<t3_baseURL>http://example.com/</t3_baseURL>
+		<t3_workspaceId>0</t3_workspaceId>
+		<t3_count>7</t3_count>
+		<t3_wordCount>23</t3_wordCount>
+		<t3_exportDataId>251</t3_exportDataId>
+		<t3_internal>
+			</t3_internal>
+		<t3_formatVersion>1.1</t3_formatVersion>
+	</head>
+	<pageGrp id="33153">
+		<data table="pages" elementUid="33153" key="pages_language_overlay:NEW/1/33153:title"><![CDATA[importer testcase - Translated]]></data>
+		<data table="tt_content" elementUid="619943" key="tt_content:NEW/1/619943:header"><![CDATA[Importer tt content Header - Translated]]></data>
+		<data table="tt_content" elementUid="619943" key="tt_content:NEW/1/619943:bodytext" transformations="1"><p>Importer tt_content <STRONG>bodytext</STRONG> - Translated</p></data>
+	</pageGrp>
+	<pageGrp id="33154">
+		<data table="pages" elementUid="33154" key="pages_language_overlay:NEW/1/33154:title"><![CDATA[importer testcase subpage - Translated]]></data>
+		<data table="tt_content" elementUid="619944" key="tt_content:NEW/1/619944:header"><![CDATA[Teaserbox Testcase Headertext - Translated]]></data>
+		<data table="tt_content" elementUid="619944" key="tt_content:NEW/1/619944:tx_templavoila_flex:data/sDEF/lDEF/field_content/vDEF" transformations="1"><p>Teaserbox Testcase Bodytext - Translated</p></data>
+		<data table="tt_content" elementUid="619944" key="tt_content:NEW/1/619944:tx_templavoila_flex:data/sDEF/lDEF/field_author/vDEF"><![CDATA[Teaserbox Author - Translated]]></data>
+	</pageGrp>
+</TYPO3L10N>

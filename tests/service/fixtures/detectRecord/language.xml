@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testcase>
+    <sys_language>
+        <uid>1</uid>
+        <pid>0</pid>
+        <tstamp>1223076084</tstamp>
+        <hidden>0</hidden>
+        <title>First Brazil (Português)</title>
+        <flag>br.gif</flag>
+        <static_lang_isocode>189</static_lang_isocode>
+	    <tx_languagevisibility_fallbackorder></tx_languagevisibility_fallbackorder>
+        <tx_languagevisibility_defaultvisibility>t</tx_languagevisibility_defaultvisibility>
+        <tx_languagevisibility_defaultvisibilityel>t</tx_languagevisibility_defaultvisibilityel>
+        <tx_languagevisibility_defaultvisibilityttnewsel>t</tx_languagevisibility_defaultvisibilityttnewsel>
+        <tx_languagevisibility_fallbackorderel></tx_languagevisibility_fallbackorderel>
+        <tx_languagevisibility_fallbackorderttnewsel></tx_languagevisibility_fallbackorderttnewsel>
+        <tx_languagevisibility_complexfallbacksetting>0</tx_languagevisibility_complexfallbacksetting>        
+    </sys_language>
+    <sys_language>
+        <uid>2</uid>
+        <pid>0</pid>
+        <tstamp>1223076084</tstamp>
+        <hidden>0</hidden>
+        <title>Brazil (Português)</title>
+        <flag>br.gif</flag>
+        <static_lang_isocode>189</static_lang_isocode>
+	    <tx_languagevisibility_fallbackorder></tx_languagevisibility_fallbackorder>
+        <tx_languagevisibility_defaultvisibility>t</tx_languagevisibility_defaultvisibility>
+        <tx_languagevisibility_defaultvisibilityel>t</tx_languagevisibility_defaultvisibilityel>
+        <tx_languagevisibility_defaultvisibilityttnewsel>t</tx_languagevisibility_defaultvisibilityttnewsel>
+        <tx_languagevisibility_fallbackorderel></tx_languagevisibility_fallbackorderel>
+        <tx_languagevisibility_fallbackorderttnewsel></tx_languagevisibility_fallbackorderttnewsel>
+        <tx_languagevisibility_complexfallbacksetting>0</tx_languagevisibility_complexfallbacksetting>        
+    </sys_language>
+    <sys_language>
+        <uid>3</uid>
+        <pid>0</pid>
+        <tstamp>1223076084</tstamp>
+        <hidden>0</hidden>
+        <title>Third Brazil (Português)</title>
+        <flag>br.gif</flag>
+        <static_lang_isocode>189</static_lang_isocode>
+	    <tx_languagevisibility_fallbackorder></tx_languagevisibility_fallbackorder>
+        <tx_languagevisibility_defaultvisibility>t</tx_languagevisibility_defaultvisibility>
+        <tx_languagevisibility_defaultvisibilityel>t</tx_languagevisibility_defaultvisibilityel>
+        <tx_languagevisibility_defaultvisibilityttnewsel>t</tx_languagevisibility_defaultvisibilityttnewsel>
+        <tx_languagevisibility_fallbackorderel></tx_languagevisibility_fallbackorderel>
+        <tx_languagevisibility_fallbackorderttnewsel></tx_languagevisibility_fallbackorderttnewsel>
+        <tx_languagevisibility_complexfallbacksetting>0</tx_languagevisibility_complexfallbacksetting>        
+    </sys_language>
+    <static_languages>
+        <uid>189</uid>
+        <pid>0</pid>
+        <lg_iso_2>PT</lg_iso_2>
+        <lg_name_en>Brazilian Portuguese</lg_name_en>
+        <lg_typo3>br</lg_typo3>
+        <lg_country_iso_2>BR</lg_country_iso_2>
+        <lg_collate_locale>pt_BR</lg_collate_locale>
+        <lg_name_local>Português</lg_name_local>
+        <lg_sacred>0</lg_sacred>
+        <lg_constructed>0</lg_constructed>
+    </static_languages>
+    <static_countries>
+        <uid>29</uid>
+        <pid>0</pid>
+        <cn_iso_2>BR</cn_iso_2>
+        <cn_iso_3>BRA</cn_iso_3>
+        <cn_iso_nr>76</cn_iso_nr>
+        <cn_parent_tr_iso_nr>5</cn_parent_tr_iso_nr>
+        <cn_official_name_local>República Federativa do Brasil</cn_official_name_local>
+        <cn_official_name_en>Federative Republic of Brazil</cn_official_name_en>
+        <cn_capital>Brasilia</cn_capital>
+        <cn_tldomain>br</cn_tldomain>
+        <cn_currency_iso_3>BRL</cn_currency_iso_3>
+        <cn_currency_iso_nr>986</cn_currency_iso_nr>
+        <cn_phone>55</cn_phone>
+        <cn_eu_member>0</cn_eu_member>
+        <cn_address_format>9</cn_address_format>
+        <cn_zone_flag>0</cn_zone_flag>
+        <cn_short_local>Brasil</cn_short_local>
+        <cn_short_en>Brazil</cn_short_en>
+        <cn_uno_member>1</cn_uno_member>
+    </static_countries>    
+</testcase>

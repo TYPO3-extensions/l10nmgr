@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp " "> ]>
+<TYPO3L10N>
+	<head>
+		<t3_l10ncfg>384</t3_l10ncfg>
+		<t3_sysLang>2</t3_sysLang>
+		<t3_sourceLang></t3_sourceLang>
+		<t3_targetLang>PT</t3_targetLang>
+		<t3_baseURL>http://example.com/</t3_baseURL>
+		<t3_workspaceId>0</t3_workspaceId>
+		<t3_count>2</t3_count>
+		<t3_wordCount>11</t3_wordCount>
+		<t3_internal>
+			</t3_internal>
+		<t3_formatVersion>1.1</t3_formatVersion>
+	</head>
+	<pageGrp id="33155">
+		<data table="pages" elementUid="33155" key="pages_language_overlay:NEW/2/33155:title">headertest translated</data>
+		<data table="tt_content" elementUid="619945" key="tt_content:NEW/2/619945:header"><![CDATA[This is a dirty header element &amp; uses an <br> ampersand translated ]]></data>
+		<data table="tt_content" elementUid="619945" key="tt_content:NEW/2/619945:bodytext" transformations="1"><p>Show <br></br>prospects what you</p><ul><li><br /></li></ul><p>have to offer in a live WebEx session. Keep them engaged with real-time web presentations. Better than a phone call. Faster and more cost effective than traveling to each prospect. Sell smarter, not harder to reach your goals.</p><ul style="margin-left: 40px;"><li>Make lively, engaging sales presentations over the web.</li><li>Demonstrate your application live for your  pass control,  so they can try it. </li><li>Review and finalize contracts together.</li><li>Bring key stakeholders and decision makers into the meeting from wherever they are.</li><li>Bring subject matter expert into any call to resolve issues instantly.</li><li>Conduct regular sales team meetings between geographically <br/><br/>scattered staff <br/>members.<br /><br />  </li></ul></data>
+	</pageGrp>
+</TYPO3L10N>

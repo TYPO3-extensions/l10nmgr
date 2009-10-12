@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<t3_webex_sandbox>
+  <!-- Tabelle tx_templavoila_datastructure -->
+    <tx_templavoila_datastructure>
+        <uid>26</uid>
+        <pid>2</pid>
+        <t3ver_oid>0</t3ver_oid>
+        <t3ver_id>0</t3ver_id>
+        <t3ver_wsid>0</t3ver_wsid>
+        <t3ver_label></t3ver_label>
+        <t3ver_state>0</t3ver_state>
+        <t3ver_stage>0</t3ver_stage>
+        <t3ver_count>0</t3ver_count>
+        <t3ver_tstamp>0</t3ver_tstamp>
+        <t3_origuid>8</t3_origuid>
+        <tstamp>1205768399</tstamp>
+        <crdate>1190801368</crdate>
+        <cruser_id>7</cruser_id>
+        <deleted>0</deleted>
+        <sorting>27136</sorting>
+        <title>Teaserbox (small) [WE]</title>
+        <dataprot>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;T3DataStructure&gt;
+	&lt;meta type=&quot;array&quot;&gt;
+		&lt;langDisable&gt;1&lt;/langDisable&gt;
+		&lt;langDatabaseOverlay&gt;1&lt;/langDatabaseOverlay&gt;
+	&lt;/meta&gt;
+	&lt;ROOT type=&quot;array&quot;&gt;
+		&lt;tx_templavoila type=&quot;array&quot;&gt;
+			&lt;title&gt;ROOT&lt;/title&gt;
+			&lt;description&gt;Select the HTML element on the page which you want to be the overall container element for the template.&lt;/description&gt;
+		&lt;/tx_templavoila&gt;
+		&lt;type&gt;array&lt;/type&gt;
+		&lt;el type=&quot;array&quot;&gt;
+			&lt;field_content type=&quot;array&quot;&gt;
+				&lt;tx_templavoila type=&quot;array&quot;&gt;
+					&lt;title&gt;Content&lt;/title&gt;
+					&lt;sample_data type=&quot;array&quot;&gt;
+						&lt;numIndex index=&quot;0&quot;&gt;&lt;/numIndex&gt;
+					&lt;/sample_data&gt;
+					&lt;eType&gt;rte&lt;/eType&gt;
+					&lt;proc type=&quot;array&quot;&gt;
+						&lt;HSC type=&quot;integer&quot;&gt;0&lt;/HSC&gt;
+					&lt;/proc&gt;
+					&lt;TypoScript&gt;&lt;![CDATA[
+	10 = TEXT
+	10.current = 1
+	10.parseFunc = &lt; lib.parseFunc_RTE
+							]]&gt;&lt;/TypoScript&gt;
+				&lt;/tx_templavoila&gt;
+				&lt;TCEforms type=&quot;array&quot;&gt;
+					&lt;config type=&quot;array&quot;&gt;
+						&lt;type&gt;text&lt;/type&gt;
+						&lt;cols&gt;48&lt;/cols&gt;
+						&lt;rows&gt;5&lt;/rows&gt;
+						&lt;softref&gt;typolink_tag,images,email[subst],url&lt;/softref&gt;
+					&lt;/config&gt;
+					&lt;defaultExtras&gt;richtext:rte_transform[flag=rte_enabled|mode=ts_css]&lt;/defaultExtras&gt;
+					&lt;label&gt;Content&lt;/label&gt;
+				&lt;/TCEforms&gt;
+			&lt;/field_content&gt;		
+			&lt;field_author type=&quot;array&quot;&gt;
+				&lt;tx_templavoila type=&quot;array&quot;&gt;
+					&lt;title&gt;Author&lt;/title&gt;
+					&lt;sample_data type=&quot;array&quot;&gt;
+						&lt;numIndex index=&quot;0&quot;&gt;&lt;/numIndex&gt;
+					&lt;/sample_data&gt;
+					&lt;eType&gt;input&lt;/eType&gt;
+					&lt;TypoScript&gt;&lt;![CDATA[
+	10 = TEXT
+	10.current=1
+	10.required=1
+	10.wrap=&lt;p class=&quot;fce_author&quot;&gt;|&lt;/p&gt;
+			]]&gt;&lt;/TypoScript&gt;
+					&lt;proc type=&quot;array&quot;&gt;
+						&lt;HSC type=&quot;integer&quot;&gt;0&lt;/HSC&gt;
+					&lt;/proc&gt;
+				&lt;/tx_templavoila&gt;
+				&lt;TCEforms type=&quot;array&quot;&gt;
+					&lt;config type=&quot;array&quot;&gt;
+						&lt;type&gt;input&lt;/type&gt;
+						&lt;size&gt;48&lt;/size&gt;
+						&lt;eval&gt;trim&lt;/eval&gt;
+					&lt;/config&gt;
+					&lt;label&gt;Author&lt;/label&gt;
+				&lt;/TCEforms&gt;
+			&lt;/field_author&gt;			
+			&lt;field_date type=&quot;array&quot;&gt;
+				&lt;tx_templavoila type=&quot;array&quot;&gt;
+					&lt;title&gt;Date&lt;/title&gt;
+					&lt;sample_data type=&quot;array&quot;&gt;
+						&lt;numIndex index=&quot;0&quot;&gt;&lt;/numIndex&gt;
+					&lt;/sample_data&gt;
+					&lt;eType&gt;input&lt;/eType&gt;
+					&lt;TypoScript&gt;&lt;![CDATA[
+	10 = TEXT
+	10.current=1
+	10.required=1
+	10.wrap=&lt;p class=&quot;fce_date&quot;&gt;&lt;strong&gt;|&lt;/strong&gt;&lt;/p&gt;
+			]]&gt;&lt;/TypoScript&gt;
+					&lt;proc type=&quot;array&quot;&gt;
+						&lt;HSC type=&quot;integer&quot;&gt;0&lt;/HSC&gt;
+					&lt;/proc&gt;
+				&lt;/tx_templavoila&gt;
+				&lt;TCEforms type=&quot;array&quot;&gt;
+					&lt;config type=&quot;array&quot;&gt;
+						&lt;type&gt;input&lt;/type&gt;
+						&lt;size&gt;48&lt;/size&gt;
+						&lt;eval&gt;trim&lt;/eval&gt;
+					&lt;/config&gt;
+					&lt;label&gt;Date&lt;/label&gt;
+				&lt;/TCEforms&gt;
+			&lt;/field_date&gt;
+			&lt;field_links type=&quot;array&quot;&gt;
+				&lt;type&gt;array&lt;/type&gt;
+				&lt;section&gt;1&lt;/section&gt;
+				&lt;tx_templavoila type=&quot;array&quot;&gt;
+					&lt;title&gt;Links&lt;/title&gt;
+					&lt;eType&gt;input&lt;/eType&gt;
+				&lt;/tx_templavoila&gt;
+				&lt;el type=&quot;array&quot;&gt;
+					&lt;field_link type=&quot;array&quot;&gt;
+						&lt;type&gt;array&lt;/type&gt;
+						&lt;tx_templavoila type=&quot;array&quot;&gt;
+							&lt;title&gt;Link Item&lt;/title&gt;
+							&lt;eType&gt;input&lt;/eType&gt;
+						&lt;/tx_templavoila&gt;
+						&lt;el type=&quot;array&quot;&gt;
+							&lt;field_link_text type=&quot;array&quot;&gt;
+								&lt;tx_templavoila type=&quot;array&quot;&gt;
+									&lt;title&gt;Text&lt;/title&gt;
+									&lt;sample_data type=&quot;array&quot;&gt;
+										&lt;numIndex index=&quot;0&quot;&gt;&lt;/numIndex&gt;
+									&lt;/sample_data&gt;
+									&lt;eType&gt;input&lt;/eType&gt;
+									&lt;TypoScript&gt;
+	10 = TEXT
+	10.current=1
+	10.typolink.parameter.field=field_link_target
+							&lt;/TypoScript&gt;
+									&lt;proc type=&quot;array&quot;&gt;
+										&lt;HSC type=&quot;integer&quot;&gt;0&lt;/HSC&gt;
+									&lt;/proc&gt;
+								&lt;/tx_templavoila&gt;
+								&lt;TCEforms type=&quot;array&quot;&gt;
+									&lt;config type=&quot;array&quot;&gt;
+										&lt;type&gt;input&lt;/type&gt;
+										&lt;size&gt;48&lt;/size&gt;
+										&lt;eval&gt;trim&lt;/eval&gt;
+									&lt;/config&gt;
+									&lt;label&gt;Text&lt;/label&gt;
+								&lt;/TCEforms&gt;
+							&lt;/field_link_text&gt;
+							&lt;field_link_target type=&quot;array&quot;&gt;
+								&lt;type&gt;no_map&lt;/type&gt;
+								&lt;tx_templavoila type=&quot;array&quot;&gt;
+									&lt;title&gt;Link&lt;/title&gt;
+									&lt;sample_data type=&quot;array&quot;&gt;
+										&lt;numIndex index=&quot;0&quot;&gt;&lt;/numIndex&gt;
+									&lt;/sample_data&gt;
+									&lt;eType&gt;link&lt;/eType&gt;
+									&lt;TypoScript&gt;
+	10 = TEXT
+	10.typolink.parameter.current = 1
+							&lt;/TypoScript&gt;
+								&lt;/tx_templavoila&gt;
+								&lt;TCEforms type=&quot;array&quot;&gt;
+									&lt;config type=&quot;array&quot;&gt;
+										&lt;type&gt;input&lt;/type&gt;
+										&lt;size&gt;15&lt;/size&gt;
+										&lt;max&gt;256&lt;/max&gt;
+										&lt;checkbox&gt;&lt;/checkbox&gt;
+										&lt;eval&gt;trim&lt;/eval&gt;
+										&lt;wizards type=&quot;array&quot;&gt;
+											&lt;_PADDING type=&quot;integer&quot;&gt;2&lt;/_PADDING&gt;
+											&lt;link type=&quot;array&quot;&gt;
+												&lt;type&gt;popup&lt;/type&gt;
+												&lt;title&gt;Link&lt;/title&gt;
+												&lt;icon&gt;link_popup.gif&lt;/icon&gt;
+												&lt;script&gt;browse_links.php?mode=wizard&lt;/script&gt;
+												&lt;JSopenParams&gt;height=300,width=500,status=0,menubar=0,scrollbars=1&lt;/JSopenParams&gt;
+											&lt;/link&gt;
+										&lt;/wizards&gt;
+									&lt;/config&gt;
+									&lt;label&gt;Link&lt;/label&gt;
+								&lt;/TCEforms&gt;
+							&lt;/field_link_target&gt;
+						&lt;/el&gt;
+					&lt;/field_link&gt;
+				&lt;/el&gt;
+			&lt;/field_links&gt;
+			&lt;field_background type=&quot;array&quot;&gt;
+				&lt;type&gt;attr&lt;/type&gt;
+				&lt;tx_templavoila type=&quot;array&quot;&gt;
+					&lt;title&gt;Background Image&lt;/title&gt;
+					&lt;sample_data type=&quot;array&quot;&gt;
+						&lt;numIndex index=&quot;0&quot;&gt;&lt;/numIndex&gt;
+					&lt;/sample_data&gt;
+					&lt;eType&gt;image&lt;/eType&gt;
+					&lt;TypoScript&gt;&lt;![CDATA[
+	10 = IMG_RESOURCE
+	10.stdWrap.wrap=background: url(|) no-repeat
+	10.stdWrap.required=1	
+	10.file.import = uploads/tx_templavoila/
+	10.file.import.current = 1
+	10.file.import.listNum = 0
+							]]&gt;&lt;/TypoScript&gt;
+				&lt;/tx_templavoila&gt;
+				&lt;TCEforms type=&quot;array&quot;&gt;
+					&lt;config type=&quot;array&quot;&gt;
+						&lt;type&gt;group&lt;/type&gt;
+						&lt;internal_type&gt;file&lt;/internal_type&gt;
+						&lt;allowed&gt;gif,png,jpg,jpeg&lt;/allowed&gt;
+						&lt;max_size&gt;1000&lt;/max_size&gt;
+						&lt;uploadfolder&gt;uploads/tx_templavoila&lt;/uploadfolder&gt;
+						&lt;show_thumbs&gt;1&lt;/show_thumbs&gt;
+						&lt;size&gt;1&lt;/size&gt;
+						&lt;maxitems&gt;1&lt;/maxitems&gt;
+						&lt;minitems&gt;0&lt;/minitems&gt;
+					&lt;/config&gt;
+					&lt;label&gt;Background Image&lt;/label&gt;
+				&lt;/TCEforms&gt;
+			&lt;/field_background&gt;
+			&lt;!--
+			&lt;field_background_position type=&quot;array&quot;&gt;
+				&lt;type&gt;no_map&lt;/type&gt;
+				&lt;tx_templavoila type=&quot;array&quot;&gt;
+					&lt;title&gt;Background Position&lt;/title&gt;
+					&lt;sample_data type=&quot;array&quot;&gt;
+						&lt;numIndex index=&quot;0&quot;&gt;&lt;/numIndex&gt;
+					&lt;/sample_data&gt;
+					&lt;eType&gt;select&lt;/eType&gt;
+				&lt;/tx_templavoila&gt;
+				&lt;TCEforms type=&quot;array&quot;&gt;
+					&lt;config type=&quot;array&quot;&gt;
+						&lt;type&gt;select&lt;/type&gt;
+						&lt;items type=&quot;array&quot;&gt;
+							&lt;numIndex index=&quot;0&quot; type=&quot;array&quot;&gt;
+								&lt;numIndex index=&quot;0&quot;&gt;&lt;/numIndex&gt;
+								&lt;numIndex index=&quot;1&quot;&gt;&lt;/numIndex&gt;
+							&lt;/numIndex&gt;
+							&lt;numIndex index=&quot;1&quot; type=&quot;array&quot;&gt;
+								&lt;numIndex index=&quot;0&quot;&gt;top&lt;/numIndex&gt;
+								&lt;numIndex index=&quot;1&quot;&gt;top&lt;/numIndex&gt;
+							&lt;/numIndex&gt;
+							&lt;numIndex index=&quot;2&quot; type=&quot;array&quot;&gt;
+								&lt;numIndex index=&quot;0&quot;&gt;buttom&lt;/numIndex&gt;
+								&lt;numIndex index=&quot;1&quot;&gt;buttom&lt;/numIndex&gt;
+							&lt;/numIndex&gt;
+						&lt;/items&gt;
+						&lt;default&gt;0&lt;/default&gt;
+					&lt;/config&gt;
+					&lt;label&gt;Background Position&lt;/label&gt;
+				&lt;/TCEforms&gt;
+			&lt;/field_background_position&gt;
+			--&gt;
+		&lt;/el&gt;
+	&lt;/ROOT&gt;
+&lt;/T3DataStructure&gt;</dataprot>
+        <scope>2</scope>
+        <previewicon></previewicon>
+    </tx_templavoila_datastructure>
+</t3_webex_sandbox>

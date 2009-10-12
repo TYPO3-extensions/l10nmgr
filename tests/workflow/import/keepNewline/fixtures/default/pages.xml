@@ -1,0 +1,34 @@
+<testcase>
+    <pages>
+        <uid>150</uid>
+        <pid>148</pid>
+        <tstamp>1232534830</tstamp>
+        <deleted>0</deleted>
+        <crdate>1232534705</crdate>
+        <cruser_id>20</cruser_id>
+        <title>Asia</title>
+        <doktype>1</doktype>
+        <hidden>0</hidden>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <tx_templavoila_ds></tx_templavoila_ds>
+        <tx_templavoila_to>0</tx_templavoila_to>
+        <tx_templavoila_next_ds></tx_templavoila_next_ds>
+        <tx_templavoila_next_to>0</tx_templavoila_next_to>
+        <tx_templavoila_flex>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;T3FlexForms&gt;
+    &lt;data&gt;
+        &lt;sheet index=&quot;sDEF&quot;&gt;
+            &lt;language index=&quot;lDEF&quot;&gt;
+                &lt;field index=&quot;field_main_content&quot;&gt;
+                    &lt;value index=&quot;vDEF&quot;&gt;735&lt;/value&gt;
+                &lt;/field&gt;
+            &lt;/language&gt;
+        &lt;/sheet&gt;
+    &lt;/data&gt;
+&lt;/T3FlexForms&gt;</tx_templavoila_flex>
+        <tx_languagevisibility_visibility></tx_languagevisibility_visibility>
+        <tx_languagevisibility_inheritanceflag_original>0</tx_languagevisibility_inheritanceflag_original>
+        <tx_languagevisibility_inheritanceflag_overlayed>0</tx_languagevisibility_inheritanceflag_overlayed>
+    </pages>
+</testcase>
