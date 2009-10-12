@@ -58,7 +58,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	function setUp() {
 		global $BE_USER;
 		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+
 			// unset the indexed_search hooks
 		if (t3lib_extMgm::isLoaded('indexed_search')) {
 			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
@@ -78,7 +78,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 			array ('cms','l10nmgr','static_info_tables','templavoila', 'realurl', 'aoe_realurlpath','cc_devlog')
 		);
 
-		t3lib_div::loadTCA('tx_l10nmgr_importfiles');		
+		t3lib_div::loadTCA('tx_l10nmgr_importfiles');
 	}
 
 	/**
@@ -105,7 +105,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	public function importerDoesNotCreateEmptyRowAfterHeadingInCATXML(){
 		$this->helper_importerDoesNotCreatesEmptyRowAfterHeading('xml');
 	}
-	
+
 	/**
 	 * This testcase should check that the importer creates no empty line (<p>&nbsp;</p> after importing
 	 * an element with a heading (<h2>) in the bodytext from a excel import file.
@@ -115,12 +115,12 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	public function importerDoesNotCreateEmptyRowAfterHeadingInExcel(){
 		$this->helper_importerDoesNotCreatesEmptyRowAfterHeading('xls');
 	}
-	
-	
+
+
 	/**
 	 * This helper method will be triggered from the testcase methods to ensure that the
 	 * importer does not create empty rows after heading.
-	 * 
+	 *
 	 * @param string format
 	 */
 	protected function helper_importerDoesNotCreatesEmptyRowAfterHeading($format){
@@ -185,34 +185,35 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	/**
 	 * This method is a wrapper for the complete workflow test. It
 	 * starts the complete workflow test for the xml format.
-	 * 
+	 *
 	 * @test
 	 * @return void
 	 */
 	public function completeLocalisationWorkflowCATXML(){
 		$this->helper_testCompleteLocalisationWorkflow('xml');
 	}
-	
+
 	/**
 	 * This is a wrapper for the complete workflow test, to
 	 * start it for the excel format.
-	 * 
+	 *
 	 * @test
 	 * @return void
 	 */
 	public function completeLocalisationWorkflowExcel(){
 		$this->helper_testCompleteLocalisationWorkflow('xls');
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @test
 	 * @return void
 	 */
 	public function completeLocalisationWorkflowCATXMLWithImportIntoWorkspace(){
-		$this->helper_testCompleteLocalisationWorkflow('xml',142);	
+		$this->helper_testCompleteLocalisationWorkflow('xml',142);
+		$this->markTestIncomplete('Test must be implement.');
 	}
-	
+
 	/**
 	* The base for this testcase is the following structure:
  	*
@@ -232,7 +233,6 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	* @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	* @param void
 	* @return void
-	*
 	*/
 	protected function helper_testCompleteLocalisationWorkflow($format,$workspaceContext = null){
 		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/import';
@@ -287,7 +287,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$this->assertEquals(2,$runcountExport,'Unexpected number of exportRuns');
 
 		$this->replaceContentInExportFiles($exportData, $fileExportPath, $fileImportPath);
-		
+
 		//if we have a workspace context configured, we switch to the workspace to import
 		//the data into the workspace
 		//$currentWorkspace = $BE_USER->user['workspace_id'];
@@ -312,9 +312,9 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		//get overlay for 619634
 		$row 			= t3lib_beFunc::getRecord('tt_content',619634);
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1,$workspaceContext);
-		
 
-		
+
+
 		//header
 		$this->assertEquals($contentOverlay['header'],'@translated Content element with typolink translated@','No correct translation for header found');
 
@@ -322,14 +322,14 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$expectedBodytextResult = "@translated This is a test! translated@&nbsp;\n\na b c&nbsp;\n</data>\n!\"§$%&/()=?*+#'-_.:,;\n<link 24421>Typolink</link>\n";
 
 		$this->assertEquals($contentOverlay['bodytext'],$expectedBodytextResult,'In expected result after import');
-		
+
 		//restore the original workspace context
 		//$GLOBALS['BE_USER']->user['workspace_id'] = $currentWorkspace;
 		//$GLOBALS['BE_USER']->workspace = $currentWorkspace;
 	}
 
-	
-	
+
+
 	/**
 	* The base for this testcase is the following structure:
  	*
@@ -506,7 +506,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$importData->setExportdata_id($exportData->getUid());
 		$importData->setConfiguration_id(0);
 		$importData->setImport_type($format);
-		
+
 		$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
 		$importDataRepository->add($importData);
 
