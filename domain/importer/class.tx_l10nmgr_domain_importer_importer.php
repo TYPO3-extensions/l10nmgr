@@ -82,7 +82,7 @@ class tx_l10nmgr_domain_importer_importer {
 		$exportData		      = $exportDataRepository->findById($exportDataUid);
 
 		if (! $exportData instanceOf tx_l10nmgr_domain_exporter_exportData ) {
-			throw new tx_mvc_exception_invalidContent('The export data record ("t3_exportDataId") can not found!');
+			throw new tx_l10nmgr_domain_importer_exception_invalidData('The export data record "' . $exportDataUid . '" ("t3_exportDataId") can not found!');
 		}
 
 		return $exportData;
@@ -115,29 +115,33 @@ class tx_l10nmgr_domain_importer_importer {
 
 			}
 
-			$exportData 		= $this->getExportDataFromTranslationData($TranslationData);
+			try {
+				$exportData 		= $this->getExportDataFromTranslationData($TranslationData);
 
-				// check pre requirements
-			$this->checkImportConditions($this->importData, $exportData,$TranslationData);
+					// check pre requirements
+				$this->checkImportConditions($this->importData, $exportData,$TranslationData);
 
-			if ( $this->importData->getImportIsCompletelyUnprocessed() ) {
-				/**
-				 * @internal  workflowStates depend on the exportData object therefore we have to use it to mark the import as started
-				 */
-				$exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTING);
+				if ( $this->importData->getImportIsCompletelyUnprocessed() ) {
+					/**
+					 * @internal  workflowStates depend on the exportData object therefore we have to use it to mark the import as started
+					 */
+					$exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTING);
+				}
+
+					// get collection of pageIds to create a translateableInformation for the relevantPages from the imported file
+				$ImportPageIdCollection	= $TranslationData->getPageIdCollection();
+
+					// create a dataProvider based on the exportData and the relevantPageIds of the importFile
+				$factory                 = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
+				$TranlateableInformation = $factory->createFromExportDataAndPageIdCollection($exportData,$ImportPageIdCollection,$TranslationData->getWorkspaceId());
+
+					// Save the translation into the database
+				$TranslationService = new tx_l10nmgr_service_importTranslation();
+				$TranslationService->save($TranlateableInformation, $TranslationData);
+
+			} catch (tx_l10nmgr_exception_applicationError $e) {
+				trigger_error($e->getMessage() . ' That occurs on the file: "' . $currentFile . '"', E_USER_WARNING);
 			}
-
-				// get collection of pageIds to create a translateableInformation for the relevantPages from the imported file
-			$ImportPageIdCollection	= $TranslationData->getPageIdCollection();
-
-
-				// create a dataProvider based on the exportData and the relevantPageIds of the importFile
-			$factory                 = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
-			$TranlateableInformation = $factory->createFromExportDataAndPageIdCollection($exportData,$ImportPageIdCollection,$TranslationData->getWorkspaceId());
-
-				// Save the translation into the database
-			$TranslationService = new tx_l10nmgr_service_importTranslation();
-			$TranslationService->save($TranlateableInformation, $TranslationData);
 
 			if ( $this->importData->countRemainingImportFilenames() <= 0 ) {
 				$this->importData->setImportIsCompletelyProcessed(true);
