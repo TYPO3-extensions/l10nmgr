@@ -33,13 +33,18 @@
  * @author Michael Klapper <michael.klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.tx_l10nmgr_models_translateable_translateableField.php $
+ * @version $Id: class.tx_l10nmgr_domain_translateable_translateableField.php $
  * @date 16.09.2009 - 10:10:00
  * @package TYPO3
  * @subpackage tx_l10nmgr
  * @access public
  */
 class tx_l10nmgr_service_detectRecord {
+	
+	/**
+	 * @var int
+	 */
+	protected $workspaceId = 0;
 
 	/**
 	 * @static
@@ -47,6 +52,20 @@ class tx_l10nmgr_service_detectRecord {
 	 */
 	static protected $cachedParentRecordArray = array();
 
+	/**
+	 * @param $workspaceId the $workspaceId to set
+	 */
+	public function setWorkspaceId($workspaceId) {
+		$this->workspaceId = $workspaceId;
+	}
+
+	/**
+	 * @return the $workspaceId
+	 */
+	public function getWorkspaceId() {
+		return $this->workspaceId;
+	}	
+	
 	/**
 	 * Generate a new identity_key based on the $forcedTargetLanguageUid.
 	 *
@@ -71,6 +90,7 @@ class tx_l10nmgr_service_detectRecord {
 		$currentIdentityKey       = (string)$currentIdentityKey;
 		$identityKey              = '';
 
+
 		if ($forceLanguageUid == 0) {
 			throw new tx_mvc_exception_skipped('FORCE TARGET LANGUAGE: Process skipped - No valid "forceLanguageUid" given!');
 		}
@@ -83,7 +103,9 @@ class tx_l10nmgr_service_detectRecord {
 			throw new tx_mvc_exception_skipped('FORCE TARGET LANGUAGE: Process skipped - The cmdProcessingString can not handled correct. The requested identity_key: "' . var_export($currentIdentityKey, true) . '"');
 		}
 
-		return $this->buildIdentityKey($cmdTableName, $cmdFieldName, $cmdFieldFlexformPath, $forceLanguageUid, $localisationParentRecord);;
+		$key = $this->buildIdentityKey($cmdTableName, $cmdFieldName, $cmdFieldFlexformPath, $forceLanguageUid, $localisationParentRecord);
+
+		return $key;
 	}
 
 	/**
@@ -108,7 +130,7 @@ class tx_l10nmgr_service_detectRecord {
 			$datastrucure = tx_templavoila_api::ds_getExpandedDataStructure ($recordTableName, $recordArray);
 		}
 	}
-
+	
 	/**
 	 * Build a fresh identity_key wich can be used
 	 * to create a new record with the TCEmain commands.
@@ -132,6 +154,7 @@ class tx_l10nmgr_service_detectRecord {
 	 */
 	protected function buildIdentityKey($cmdTableName, $cmdFieldName, $cmdFieldFlexformPath, $forceLanguageUid, $localisationParentRecordUid) {
 		$translationTableName = tx_mvc_common_typo3::getTranslationTableName($cmdTableName);
+
 		$parentRecordArray    = $this->getParentRecord($translationTableName, $localisationParentRecordUid);
 		$cmdProcessingString  = $this->getProcessingString($translationTableName, $parentRecordArray['uid'], $parentRecordArray['pid'], $forceLanguageUid);
 
@@ -169,6 +192,7 @@ class tx_l10nmgr_service_detectRecord {
 		}
 
 		$parentRecord = self::$cachedParentRecordArray[$index];
+
 		if (! is_array($parentRecord) || count($parentRecord) <= 1) {
 			throw new tx_mvc_exception_skipped('FORCE TARGET LANGUAGE: Process skipped - The parent record (formally known as "l18n_parent") are not available."');
 		}
@@ -230,6 +254,11 @@ class tx_l10nmgr_service_detectRecord {
 		$translationRecordArray = $this->getRecordTranslation($translationTableName, $parentRecordUid, $parentRecordPid, $forceLanguageUid);
 		$cmdProcessingString    = '';
 
+		
+		if($this->getWorkspaceId() > 0){
+			$translationRecordArray = t3lib_BEfunc::getWorkspaceVersionOfRecord($this->getWorkspaceId(), $translationTableName, $translationRecordArray['uid']);
+		}
+		
 		if (! is_array($translationRecordArray) || count($translationRecordArray) == 0) {
 			$cmdProcessingString = 'NEW/' . $forceLanguageUid . '/' . $parentRecordUid;
 		} else {

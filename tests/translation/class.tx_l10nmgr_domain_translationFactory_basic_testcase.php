@@ -26,8 +26,6 @@
 t3lib_extMgm::isLoaded('mvc', true);
 tx_mvc_common_classloader::loadAll();
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/class.tx_l10nmgr_domain_translationFactory.php';
-
 /**
  * bla
  *
@@ -50,7 +48,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/class.tx_l10nmgr_domain_
 class tx_l10nmgr_domain_translationFactory_basic_testcase extends tx_phpunit_testcase {
 
 	/**
-	 * @var tx_l10nmgr_models_translation_factory
+	 * @var tx_l10nmgr_domain_translation_factory
 	 */
 	private $TranslationFactory = null;
 
@@ -96,7 +94,7 @@ class tx_l10nmgr_domain_translationFactory_basic_testcase extends tx_phpunit_tes
 	 */
 	public function test_factoryReturnsRightInstanceOfTranslationData() {
 		$fileName = t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/fixtures/files/validContent/catxml_export__to_en_GB_210409-175557.xml';
-		$this->assertTrue(($this->TranslationFactory->create($fileName) instanceof tx_l10nmgr_domain_translation_data), 'Object of wrong class - expected instanceof "tx_l10nmgr_models_translation_data" ');
+		$this->assertTrue(($this->TranslationFactory->createFromXMLFile($fileName) instanceof tx_l10nmgr_domain_translation_data), 'Object of wrong class - expected instanceof "tx_l10nmgr_domain_translation_data" ');
 	}
 
 	/**
@@ -129,7 +127,7 @@ class tx_l10nmgr_domain_translationFactory_basic_testcase extends tx_phpunit_tes
 	 * @return void
 	 */
 	public function test_throwInvalidContentExceptionOnEmptyFile($fullQualifiedFileName) {
-		$this->TranslationFactory->create($fullQualifiedFileName);
+		$this->TranslationFactory->createFromXMLFile($fullQualifiedFileName);
 	}
 
 	/**
@@ -167,7 +165,7 @@ class tx_l10nmgr_domain_translationFactory_basic_testcase extends tx_phpunit_tes
 	 * @return void
 	 */
 	public function test_throwFileNotFoundExceptionOnWrongFilePath($fullQualifiedFileName) {
-		$this->TranslationFactory->create($fullQualifiedFileName);
+		$this->TranslationFactory->createFromXMLFile($fullQualifiedFileName);
 	}
 }
 

@@ -22,8 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importer.php');
-
 /**
  * This testcase is used to test a complete localisation workflow
  * with the l10nmgr.
@@ -58,7 +56,9 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	 *
 	 */
 	function setUp() {
-
+		global $BE_USER;
+		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
+		
 			// unset the indexed_search hooks
 		if (t3lib_extMgm::isLoaded('indexed_search')) {
 			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
@@ -78,14 +78,15 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 			array ('cms','l10nmgr','static_info_tables','templavoila', 'realurl', 'aoe_realurlpath','cc_devlog')
 		);
 
-		t3lib_div::loadTCA('tx_l10nmgr_importfiles');
+		t3lib_div::loadTCA('tx_l10nmgr_importfiles');		
 	}
 
 	/**
 	 * Resets the test enviroment after the test.
 	 */
 	function tearDown() {
-
+		$this->cleanDatabase();
+   		$this->dropDatabase();
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 
    			// restore the indexed_search hooks
@@ -95,15 +96,34 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		}
 	}
 
-
-
 	/**
 	 * This testcase should check that the importer creates no empty line (<p>&nbsp;</p> after importing
-	 * an element with a heading (<h2>) in the bodytext.
+	 * an element with a heading (<h2>) in the bodytext from a catxml import file.
 	 *
 	 * @test
 	 */
-	public function importerDoesNotCreatesEmptyRowAfterHeading(){
+	public function importerDoesNotCreateEmptyRowAfterHeadingInCATXML(){
+		$this->helper_importerDoesNotCreatesEmptyRowAfterHeading('xml');
+	}
+	
+	/**
+	 * This testcase should check that the importer creates no empty line (<p>&nbsp;</p> after importing
+	 * an element with a heading (<h2>) in the bodytext from a excel import file.
+	 *
+	 * @test
+	 */
+	public function importerDoesNotCreateEmptyRowAfterHeadingInExcel(){
+		$this->helper_importerDoesNotCreatesEmptyRowAfterHeading('xls');
+	}
+	
+	
+	/**
+	 * This helper method will be triggered from the testcase methods to ensure that the
+	 * importer does not create empty rows after heading.
+	 * 
+	 * @param string format
+	 */
+	protected function helper_importerDoesNotCreatesEmptyRowAfterHeading($format){
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/pages.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/ttcontent.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/exportdata.xml');
@@ -112,10 +132,11 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/import';
 
-		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository 	= new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData 			= $exportDataRepository->findById(67);
+		$exportData->setExport_type($format);
 
-		$exporter 				= new tx_l10nmgr_models_exporter_exporter($exportData,1,$exportData->getInitializedExportView());
+		$exporter 				= new tx_l10nmgr_domain_exporter_exporter($exportData,1,$exportData->getInitializedExportView());
 		$exporter->run();
 
 		$exportedResult 		= $exporter->getResultForChunk();
@@ -130,25 +151,24 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		mkdir($fileImportPath,0777);
 
 		$exportedResult = str_replace('anywhere','anywhere translated@', $exportedResult);
-
 		file_put_contents($tempfile,$exportedResult);
 
 		###
 		# RUN IMPORT
 		###
-		$importData	= new tx_l10nmgr_models_importer_importData();
+		$importData	= new tx_l10nmgr_domain_importer_importData();
 		$importData->setConfiguration_id(384);
 		$importData->setExportdata_id(67);
-		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
+		$importData->setImport_type($format);
+		$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
 		$importDataRepository->add($importData);
-
-		$importFile = new tx_l10nmgr_models_importer_importFile();
+		$importFile = new tx_l10nmgr_domain_importer_importFile();
 		$importFile->setFilename('temp.xml');
 		$importFile->setImportdata_id($importData->getUid());
-		$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
+		$importFileRepository = new tx_l10nmgr_domain_importer_importFileRepository();
 		$importFileRepository->add($importFile);
 
-		$importer 	= new tx_l10nmgr_models_importer_importer($importData);
+		$importer 	= new tx_l10nmgr_domain_importer_importer($importData);
 		$res 		= $importer->run();
 		$this->assertTrue($res, 'Import seems to work incorrect ');
 
@@ -160,11 +180,39 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 							'<link http://www.webex.com/go/webex_ft>Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
 
 		$this->assertEquals($contentOverlay['bodytext'],$expectedResult,'unexpected import result');
-
-
 	}
 
-
+	/**
+	 * This method is a wrapper for the complete workflow test. It
+	 * starts the complete workflow test for the xml format.
+	 * 
+	 * @test
+	 * @return void
+	 */
+	public function completeLocalisationWorkflowCATXML(){
+		$this->helper_testCompleteLocalisationWorkflow('xml');
+	}
+	
+	/**
+	 * This is a wrapper for the complete workflow test, to
+	 * start it for the excel format.
+	 * 
+	 * @test
+	 * @return void
+	 */
+	public function completeLocalisationWorkflowExcel(){
+		$this->helper_testCompleteLocalisationWorkflow('xls');
+	}
+	
+	/**
+	 * 
+	 * @test
+	 * @return void
+	 */
+	public function completeLocalisationWorkflowCATXMLWithImportIntoWorkspace(){
+		$this->helper_testCompleteLocalisationWorkflow('xml',142);	
+	}
+	
 	/**
 	* The base for this testcase is the following structure:
  	*
@@ -181,13 +229,12 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
  	*  <li>page 2 (Subpage of page 1 -> Testpage l10nmgr 33154):</li>
 	* </ul>
 	*
-	* @test
 	* @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	* @param void
 	* @return void
 	*
 	*/
-	public function completeLocalisationWorkflow(){
+	protected function helper_testCompleteLocalisationWorkflow($format,$workspaceContext = null){
 		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/import';
 		$GLOBALS['TCA']['tx_l10nmgr_exportfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export';
 		$GLOBALS['TCA']['tx_l10nmgr_exportdata']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export/zip';
@@ -200,11 +247,11 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/templavoila_data_structures.xml');
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/templavoila_template_objects.xml');
 		//retrieve fixture exportData
-		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository 	= new tx_l10nmgr_domain_exporter_exportDataRepository();
 
-		/** @var tx_l10nmgr_models_exporter_exportData */
+		/** @var tx_l10nmgr_domain_exporter_exportData */
 		$exportData				= $exportDataRepository->findById(97);
-
+		$exportData->setExport_type($format);
 
 		//create export folders
 		$fileExportPath = 	t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export';
@@ -231,7 +278,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		$runcountExport = 1;
 		//invoke export service to performExport
-		while(!tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,1,$zipExportPath,$fileExportPath)){
+		while(!tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData,1,$zipExportPath,$fileExportPath)){
 			//exporting
 			$runcountExport++;
 		}
@@ -240,17 +287,22 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$this->assertEquals(2,$runcountExport,'Unexpected number of exportRuns');
 
 		$this->replaceContentInExportFiles($exportData, $fileExportPath, $fileImportPath);
+		
+		//if we have a workspace context configured, we switch to the workspace to import
+		//the data into the workspace
+		//$currentWorkspace = $BE_USER->user['workspace_id'];
+		//$GLOBALS['BE_USER']->workspace = $workspaceContext;
+		//$GLOBALS['BE_USER']->user['workspace_id'] = $workspaceContext;
 
 		$importData = $this->createFixtureImportDataWithImportFiles($exportData, $fileImportPath);
+		$importData->setImport_type($format);
 
 		$runcountImport = 1;
-		while(!tx_l10nmgr_models_importer_importer::performImportRun($importData)){
+		while(!tx_l10nmgr_domain_importer_importer::performImportRun($importData)){
 			$runcountImport++;
 		}
 
-
 		$this->assertEquals($runcountExport, $runcountImport,'The import should have the same runcount as the export');
-
 
 		//now check that there are overlays for the exported records with the correct translation settings
 
@@ -259,9 +311,10 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		//get overlay for 619634
 		$row 			= t3lib_beFunc::getRecord('tt_content',619634);
+		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1,$workspaceContext);
+		
 
-		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1);
-
+		
 		//header
 		$this->assertEquals($contentOverlay['header'],'@translated Content element with typolink translated@','No correct translation for header found');
 
@@ -269,8 +322,14 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$expectedBodytextResult = "@translated This is a test! translated@&nbsp;\n\na b c&nbsp;\n</data>\n!\"§$%&/()=?*+#'-_.:,;\n<link 24421>Typolink</link>\n";
 
 		$this->assertEquals($contentOverlay['bodytext'],$expectedBodytextResult,'In expected result after import');
+		
+		//restore the original workspace context
+		//$GLOBALS['BE_USER']->user['workspace_id'] = $currentWorkspace;
+		//$GLOBALS['BE_USER']->workspace = $currentWorkspace;
 	}
 
+	
+	
 	/**
 	* The base for this testcase is the following structure:
  	*
@@ -307,9 +366,9 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 //		$this->importDataSet($basePath.'templavoila_data_structures.xml');
 //		$this->importDataSet($basePath.'templavoila_template_objects.xml');
 		//retrieve fixture exportData
-		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository 	= new tx_l10nmgr_domain_exporter_exportDataRepository();
 
-		/** @var tx_l10nmgr_models_exporter_exportData */
+		/** @var tx_l10nmgr_domain_exporter_exportData */
 		$exportData				= $exportDataRepository->findById(97);
 
 
@@ -338,7 +397,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 
 		$runcountExport = 1;
 		//invoke export service to performExport
-		while(!tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,1,$zipExportPath,$fileExportPath)){
+		while(!tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData,1,$zipExportPath,$fileExportPath)){
 			//exporting
 			$runcountExport++;
 		}
@@ -351,7 +410,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$importData = $this->createFixtureImportDataWithImportFile($exportData);
 
 		$runcountImport = 1;
-		while(!tx_l10nmgr_models_importer_importer::performImportRun($importData)){
+		while(!tx_l10nmgr_domain_importer_importer::performImportRun($importData)){
 			$runcountImport++;
 		}
 
@@ -397,7 +456,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	/**
 	 * This helpermethod is used to replace
 	 *
-	 * @param tx_l10nmgr_models_exporter_exportData $exportData
+	 * @param tx_l10nmgr_domain_exporter_exportData $exportData
 	 * @param string fileExportPath
 	 * @param string fileImportPath
 	 */
@@ -434,31 +493,33 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	 * This private method is used to create an importData and Importfile records for the imported
 	 * files.
 	 *
-	 * @param tx_l10nmgr_models_exporter_exportData
-	 * @return tx_l10nmgr_models_importer_importData
+	 * @param tx_l10nmgr_domain_exporter_exportData
+	 * @return tx_l10nmgr_domain_importer_importData
 	 */
-	protected function createFixtureImportDataWithImportFiles($exportData){
+	protected function createFixtureImportDataWithImportFiles($exportData,$format='xml'){
 		$exportFiles 	= $exportData->getExportFiles();
 		$exportFile1 = $exportFiles->offsetGet(0)->getFilename();
 		$exportFile2 = $exportFiles->offsetGet(1)->getFilename();
 
 
-		$importData = new tx_l10nmgr_models_importer_importData();
+		$importData = new tx_l10nmgr_domain_importer_importData();
 		$importData->setExportdata_id($exportData->getUid());
 		$importData->setConfiguration_id(0);
-		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
+		$importData->setImport_type($format);
+		
+		$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
 		$importDataRepository->add($importData);
 
-		$importFile1 = new tx_l10nmgr_models_importer_importFile();
+		$importFile1 = new tx_l10nmgr_domain_importer_importFile();
 		$importFile1->setFilename($exportFile1);
 		$importFile1->setImportdata_id($importData->getUid());
 
-		$importFile2 = new tx_l10nmgr_models_importer_importFile();
+		$importFile2 = new tx_l10nmgr_domain_importer_importFile();
 		$importFile2->setFilename($exportFile2);
 		$importFile2->setImportdata_id($importData->getUid());
 
 
-		$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
+		$importFileRepository = new tx_l10nmgr_domain_importer_importFileRepository();
 		$importFileRepository->add($importFile1);
 		$importFileRepository->add($importFile2);
 
@@ -468,7 +529,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	/**
 	 * This helpermethod is used to replace
 	 *
-	 * @param tx_l10nmgr_models_exporter_exportData $exportData
+	 * @param tx_l10nmgr_domain_exporter_exportData $exportData
 	 * @param string fileExportPath
 	 * @param string fileImportPath
 	 */
@@ -497,22 +558,23 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	 * This private method is used to create an importData and Importfile records for the imported
 	 * files.
 	 *
-	 * @param tx_l10nmgr_models_exporter_exportData
-	 * @return tx_l10nmgr_models_importer_importData
+	 * @param tx_l10nmgr_domain_exporter_exportData
+	 * @return tx_l10nmgr_domain_importer_importData
 	 */
-	protected function createFixtureImportDataWithImportFile($exportData){
+	protected function createFixtureImportDataWithImportFile($exportData,$format = 'xml'){
 		$exportFiles = $exportData->getExportFiles();
-		$importData = new tx_l10nmgr_models_importer_importData();
+		$importData = new tx_l10nmgr_domain_importer_importData();
 		$importData->setExportdata_id($exportData->getUid());
 		$importData->setConfiguration_id(0);
-		$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
+		$importData->setImport_type($format);
+		$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
 		$importDataRepository->add($importData);
 
-		$importFile1 = new tx_l10nmgr_models_importer_importFile();
+		$importFile1 = new tx_l10nmgr_domain_importer_importFile();
 		$importFile1->setFilename($exportFiles->offsetGet(0)->getFilename());
 		$importFile1->setImportdata_id($importData->getUid());
 
-		$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
+		$importFileRepository = new tx_l10nmgr_domain_importer_importFileRepository();
 		$importFileRepository->add($importFile1);
 
 		return $importData;

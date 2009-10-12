@@ -22,7 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'models/tools/class.tx_l10nmgr_utf8tools.php';
 require_once PATH_t3lib . 'class.t3lib_cs.php';
 
 /**
@@ -130,24 +129,57 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		);
 
 		if ($removeBrockenUTF8Charakter === true) {
-			$content = tx_l10nmgr_utf8tools::utf8_bad_strip($content);
+			$content = self::utf8_bad_strip($content);
 		}
-
+		
 		if($convertEntities) {
 			$content = htmlspecialchars($content);
 		}
-
+		
 		if ($validateToXML === true) {
 			try {
 				$this->isValidXML($content);
-			} catch (tx_mvc_exception_invalidContent $e) {
+			} catch (tx_mvc_exception_invalidContent $e) {				
 				throw new tx_mvc_exception_converter($e->getMessage());
 			}
 		}
 
 		return $content;
 	}
-
+	
+	/**
+	* Strips out any bad bytes from a UTF-8 string and returns the rest
+	* PCRE Pattern to locate bad bytes in a UTF-8 string
+	* Comes from W3 FAQ: Multilingual Forms
+	* Note: modified to include full ASCII range including control chars
+	* @see http://www.w3.org/International/questions/qa-forms-utf-8
+	* @param string
+	* @return string
+	* @package utf8
+	* @subpackage bad
+	*/
+	protected static function utf8_bad_strip($str) {
+	    $UTF8_BAD =
+	    '([\x00-\x7F]'.                          # ASCII (including control chars)
+	    '|[\xC2-\xDF][\x80-\xBF]'.               # non-overlong 2-byte
+	    '|\xE0[\xA0-\xBF][\x80-\xBF]'.           # excluding overlongs
+	    '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}'.    # straight 3-byte
+	    '|\xED[\x80-\x9F][\x80-\xBF]'.           # excluding surrogates
+	    '|\xF0[\x90-\xBF][\x80-\xBF]{2}'.        # planes 1-3
+	    '|[\xF1-\xF3][\x80-\xBF]{3}'.            # planes 4-15
+	    '|\xF4[\x80-\x8F][\x80-\xBF]{2}'.        # plane 16
+	    '|(.{1}))';                              # invalid byte
+	    ob_start();
+	    while (preg_match('/'.$UTF8_BAD.'/S', $str, $matches)) {
+	        if ( !isset($matches[2])) {
+	            echo $matches[0];
+	        }
+	        $str = substr($str,strlen($matches[0]));
+	    }
+	    $result = ob_get_contents();
+	    ob_end_clean();
+	    return $result;
+	}
 	/**
 	 * This method is used to convert thext form an import XML file into a valid database shema.
 	 *
@@ -167,7 +199,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 * @return string
 	 */
 	public function toText($content, $importFlexFieldValue = false, $forceCleaningForRTE = true) {
-		//!TODO switch to use the RTE configuration from pageTSconfig
+			//!TODO switch to use the RTE configuration from pageTSconfig
 		//$this->HTMLparser->RTE_transform();
 
 		$this->HTMLparser->procOptions['typolist']              = false;
@@ -317,8 +349,8 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 
 		return implode('',$parts);
 	}
-
-
+	
+	
 	/**
 	 * Get the contents of a SimpleXMLElement as string (XML)
 	 *
@@ -328,7 +360,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	public function getXMLContent( SimpleXMLElement $field ) {
 		if(count($field->children())>0) {
 			$fieldXML = str_replace("<?xml version=\"1.0\"?>\n",'',$field->asXML());
-
+			
 			if(preg_match('/^<!DOCTYPE/',$fieldXML)) {
 				$fieldXML = substr($fieldXML,strpos($fieldXML,"]>")+3);
 			}

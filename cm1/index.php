@@ -70,34 +70,34 @@ if (t3lib_extMgm::isLoaded('mvc')) {
 
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_l10ncfgDetailView.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_l10nHTMLListView.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'views/excelXML/class.tx_l10nmgr_excelXMLView.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'views/CATXML/class.tx_l10nmgr_CATXMLView.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractExportView.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_view_export_exporttypes_l10nHTMLList.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/excelXML/class.tx_l10nmgr_view_export_exporttypes_excelXML.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/CATXML/class.tx_l10nmgr_view_export_exporttypes_CATXML.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_view_export_abstractExportView.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/configuration/class.tx_l10nmgr_domain_configuration_configuration.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/configuration/class.tx_l10nmgr_domain_configuration_configurationRepository.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nBaseService.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translationData.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_translationDataFactory.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_l10nBaseService.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_CATXMLImportManager.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/class.tx_l10nmgr_mkPreviewLinkService.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/class.tx_l10nmgr_l10nBaseService.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/class.tx_l10nmgr_translationData.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/class.tx_l10nmgr_translationDataFactory.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/class.tx_l10nmgr_l10nBaseService.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/class.tx_l10nmgr_CATXMLImportManager.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/class.tx_l10nmgr_mkPreviewLinkService.php');
 
 require_once(PATH_t3lib.'class.t3lib_parsehtml_proc.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/language/class.tx_l10nmgr_domain_language_language.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/language/class.tx_l10nmgr_domain_language_languageRepository.php');
 
 require_once(t3lib_extMgm::extPath('l10nmgr').'interface/interface.tx_l10nmgr_interface_wordsCountable.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableElement.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/translateable/class.tx_l10nmgr_domain_translateable_pageGroup.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/translateable/class.tx_l10nmgr_domain_translateable_translateableElement.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/translateable/class.tx_l10nmgr_domain_translateable_translateableField.php');
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/translateable/class.tx_l10nmgr_domain_translateable_translateableInformation.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/translateable/class.tx_l10nmgr_domain_translateable_translateableInformationFactory.php');
 
 
 /**
@@ -183,9 +183,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 			// Find l10n configuration record:
 
-		$l10nmgrCfgRepository = t3lib_div::makeInstance( 'tx_l10nmgr_models_configuration_configurationRepository' );
+		$l10nmgrCfgRepository = t3lib_div::makeInstance( 'tx_l10nmgr_domain_configuration_configurationRepository' );
 		$l10ncfgObj = $l10nmgrCfgRepository->findById($this->id);
-		if ($l10ncfgObj instanceof tx_l10nmgr_models_configuration_configuration) {
+		if ($l10ncfgObj instanceof tx_l10nmgr_domain_configuration_configuration) {
 
 				// Setting page id
 			$this->id = $l10ncfgObj->getData('pid');
@@ -290,7 +290,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		switch ($this->MOD_SETTINGS["action"]) {
 			//Please use translate module from now on!
 			/* case 'inlineEdit': case 'link':
-				$htmlListViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10nHTMLListView');
+				$htmlListViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_view_export_exporttypes_l10nHTMLList');
 				$htmlListView=new $htmlListViewClassName($l10ncfgObj,$this->sysLanguage);
 				$subheader=$LANG->getLL('inlineEdit');
 

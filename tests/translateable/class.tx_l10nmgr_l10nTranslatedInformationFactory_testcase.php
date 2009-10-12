@@ -7,32 +7,12 @@ if (t3lib_extMgm::isLoaded ( 'mvc' )) {
 	exit ( 'Framework "mvc" not loaded!' );
 }
 
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php');
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php');
-
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/language/class.tx_l10nmgr_models_language_language.php');
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/language/class.tx_l10nmgr_models_language_languageRepository.php');
-
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'interface/interface.tx_l10nmgr_interface_wordsCountable.php');
-
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_pageGroup.php');
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableElement.php');
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableField.php');
-
-
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider.php');
-
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
-require_once (t3lib_extMgm::extPath ( 'l10nmgr' ) . 'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
-
 /**
  * This class is used to test the functionallity of the l10nAccumulatedInformationsFactory class.
  *
  * @author Timo Schmidt
  * @see tx_l10nmgr:l10nAccumulatedInformationFactory
- *
  */
-
 class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_database_testcase {
 
 	/**
@@ -40,6 +20,9 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	 *
 	 */
 	public function setUp() {
+		global $BE_USER;
+		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
+		
 		$this->createDatabase ();
 		$db = $this->useTestDatabase ();
 		$this->importStdDB();
@@ -110,12 +93,12 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$fixtureLimitToPageIds = $this->getFixtureLimitToPageids ();
 
 		$ids = array ();
-		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
+		$factory = new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData, $fixtureLimitToPageIds );
+		$typo3DataProvider			=  new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData, $fixtureLimitToPageIds );
 		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
 
 		$pageGroups = $translateableInformations->getPageGroups ();
@@ -136,12 +119,12 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 		$fixtureLimitToPageIds = $this->getFixtureLimitToPageids ();
 
-		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			=  new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData, $fixtureLimitToPageIds);
+		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			=  new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData, $fixtureLimitToPageIds);
 		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
 
 		$pageGroups = $translateableInformations->getPageGroups ();
@@ -162,11 +145,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
-			$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+			$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 			$exportData = $exportDataRepository->findById(9999);
 
-			$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-			$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
+			$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
+			$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
 			$translateableInformations 	= $factory->createFromDataProvider( $typo3DataProvider );
 
 			$pageGroups = $translateableInformations->getPageGroups ();
@@ -194,11 +177,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
+		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
 		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
 
 
@@ -235,13 +218,13 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
 		//diff must be something like l18n
-		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+		$factory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
+		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
 		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
 
 		/**
@@ -257,11 +240,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(9999)));
+		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(9999)));
 		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
 		/**
 		 * The TranslateableInformation has 2 translateableElements:
@@ -298,13 +281,13 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
-		$factory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+		$factory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
+		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
 		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
 
 
@@ -326,14 +309,14 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetDiffToDefaultFromDatabaseTranslatedFCE.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );		
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_models_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
+		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
 		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
 
 		$pageGroups = $translateableInformations->getPageGroups ();
@@ -361,14 +344,43 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	}
 
 
+	/**
+	 * Translations of pages are stored in pages_language_overlay. It
+	 * is possible that a field in pages is not contained in the overlay table
+	 * these fields should not be contained in an export. This testcase should ensure that these fields
+	 * will not be exported.
+	 * 
+	 * @test
+	 */
+	public function canDetectAndSkipFieldsWhichAreNotInThePageOverlayFields(){
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canDetectAndSkipFieldsWhichAreNotInThePageOverlayFields.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );		
+		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );	
 
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
+		$exportData = $exportDataRepository->findById(9999);		
+		
+		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
+		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
+		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
+
+		$pageGroups 				= $translateableInformations->getPageGroups ();
+		
+		$translateableElements 		= $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
+		$contentElement				= $translateableElements->offsetGet(0);
+		$this->assertEquals(1,$contentElement->getTranslateableFields()->count());
+	}
+	
+	
 	/**
 	 * This method is used to load a FixtureL10NConfig
 	 *
-	 * @return tx_l10nmgr_models_configuration_configuration
+	 * @return tx_l10nmgr_domain_configuration_configuration
 	 */
 	protected function getFixtureL10NConfig() {
-		$fixtureConfigRepository = new tx_l10nmgr_models_configuration_configurationRepository ( );
+		$fixtureConfigRepository = new tx_l10nmgr_domain_configuration_configurationRepository ( );
 		$fixtureConfig = $fixtureConfigRepository->findById ( 4711 );
 
 		return $fixtureConfig;
@@ -380,7 +392,7 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	 * @return tx_l10nmgr_l10nLanguage
 	 */
 	protected function getFixtureTargetLanguage() {
-		$fixtureLanguageRepository = new tx_l10nmgr_models_language_languageRepository ( );
+		$fixtureLanguageRepository = new tx_l10nmgr_domain_language_languageRepository ( );
 		$fixtureLanguage = $fixtureLanguageRepository->findById ( 999 );
 
 		return $fixtureLanguage;
@@ -392,7 +404,7 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	 * @return tx_l10nmgr_l10nLanguage
 	 */
 	protected function getFixturePreviewLanguage() {
-		$fixtureLanguageRepository = new tx_l10nmgr_models_language_languageRepository ( );
+		$fixtureLanguageRepository = new tx_l10nmgr_domain_language_languageRepository ( );
 		$fixtureLanguage = $fixtureLanguageRepository->findById ( 998 );
 
 		return $fixtureLanguage;

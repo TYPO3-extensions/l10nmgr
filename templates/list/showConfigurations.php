@@ -62,10 +62,11 @@
 						<!-- Import XML -->
 						<?php
 							$editOnClickParams  = '&edit[tx_l10nmgr_importdata][' . $configuration->getPid() . ']=new';
-							$editOnClickParams .= '&columnsOnly=configuration_id,force_target_lang,importfiles';
+							$editOnClickParams .= '&columnsOnly=configuration_id,force_target_lang,importfiles,import_type';
 							$editOnClickParams .= '&returnEditConf=1';
 							$editOnClickParams .= '&noView=1';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();
+							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][import_type]=xml';
 							$editOnClickParams .= '&overrideVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();
 							$redirectUrl = $extPath . 'import/index.php?tx_l10nmgrexport[action]=generateImport';
 						?>
@@ -90,12 +91,22 @@
 						</a>
 
 						<!-- Import XLS -->
-						<a title="Import XLS" href="<?php echo $extPath . 'import/index.php?l10nmgr[configurationId]=' . $configuration->getUid() . '&l10nmgr[selectedExportFormat]=xls';?>">
+						<?php
+							$editOnClickParams  = '&edit[tx_l10nmgr_importdata][' . $configuration->getPid() . ']=new';
+							$editOnClickParams .= '&columnsOnly=configuration_id,force_target_lang,importfiles,import_type';
+							$editOnClickParams .= '&returnEditConf=1';
+							$editOnClickParams .= '&noView=1';
+							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();
+							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][import_type]=xls';
+							$editOnClickParams .= '&overrideVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();
+							$redirectUrl = $extPath . 'import/index.php?tx_l10nmgrexport[action]=generateImport';
+						?>
+						<a title="Import XLS" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $GLOBALS['BACK_PATH'], $redirectUrl)) ?>">
 							<img src="<?php echo $extPath;?>gfx/xls_import.png" alt="Import XLS" />
-						</a> |
+						</a>  |
 
 						<!-- Translate online -->
-						<a title="Translate online" href="<?php echo $extPath . 'translate/index.php?l10nmgr[configurationId]=' . $configuration->getUid() . '&l10nmgr[selectedExportFormat]=inlineEdit';?>">
+						<a title="Translate online" href="<?php echo $extPath . 'translate/index.php?tx_l10nmgrtranslate[configurationId]=' . $configuration->getUid() . '&tx_l10nmgrtranslate[selectedExportFormat]=inlineEdit';?>">
 							<img src="<?php echo $extPath;?>gfx/pencil_go.png" alt="Translate online" />
 						</a>
 					</td>

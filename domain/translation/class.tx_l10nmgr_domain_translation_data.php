@@ -23,7 +23,6 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('l10nmgr') . 'interface/interface.tx_l10nmgr_interface_stateImportable.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_pageCollection.php';
 
 /**
  * Translation data object which holds the metadata of an XML file
@@ -379,6 +378,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @return void
 	 */
 	public function setL10ncfgUid($l10ncfgUid) {
+
 		$this->l10ncfgUid = $l10ncfgUid;
 	}
 

@@ -52,7 +52,7 @@ require ($BACK_PATH.'init.php');
 require ($BACK_PATH.'template.php');
 $LANG->includeLLFile('EXT:l10nmgr/cm3/locallang.xml');
 require_once (PATH_t3lib.'class.t3lib_scbase.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_tools.php');
+require_once(t3lib_extMgm::extPath('l10nmgr').'domain/tools/class.tx_l10nmgr_tools.php');
 
 
 /**

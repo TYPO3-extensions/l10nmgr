@@ -23,8 +23,8 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/mixed/class.tx_l10nmgr_mixed_completeWorkflow_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/class.tx_l10nmgr_models_importer_importData_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/class.tx_l10nmgr_models_importer_importFile_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/class.tx_l10nmgr_domain_importer_importData_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/class.tx_l10nmgr_domain_importer_importFile_testcase.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/service/class.tx_l10nmgr_service_importTranslation_basic_testcase.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/service/class.tx_l10nmgr_service_importTranslation_headertest_testcase.php';
 
@@ -59,8 +59,8 @@ class tx_l10nmgr_complexWorkflow_testsuite extends tx_phpunit_testsuite {
 
 		$this->setName('Complex Workflow package');
 		$this->addTestSuite('tx_l10nmgr_mixed_completeWorkflow_testcase');
-		$this->addTestSuite('tx_l10nmgr_models_importer_importData_testcase');
-		$this->addTestSuite('tx_l10nmgr_models_importer_importFile_testcase');
+		$this->addTestSuite('tx_l10nmgr_domain_importer_importData_testcase');
+		$this->addTestSuite('tx_l10nmgr_domain_importer_importFile_testcase');
 		$this->addTestSuite('tx_l10nmgr_service_importTranslation_basic_testcase');
 		$this->addTestSuite('tx_l10nmgr_service_importTranslation_headertest_testcase');
 /*		
@@ -71,15 +71,15 @@ class tx_l10nmgr_complexWorkflow_testsuite extends tx_phpunit_testsuite {
 ./
 ./
 ./translateable/class.tx_l10nmgr_l10nTranslatedInformationFactory_testcase.php
-./translateable/class.tx_l10nmgr_models_translateable_translateableField_testcase.php
+./translateable/class.tx_l10nmgr_domain_translateable_translateableField_testcase.php
 ./
-./configuration/class.tx_l10nmgr_models_configuration_Configuration_testcase.php
+./configuration/class.tx_l10nmgr_domain_configuration_Configuration_testcase.php
 ./converter/tx_xmltools_testcase.php
-./exporter/class.tx_l10nmgr_models_exporter_exporter_testcase.php
-./exporter/class.tx_l10nmgr_models_exporter_exporter_basic_testcase.php
-./exporter/class.tx_l10nmgr_models_exporter_exporter_ownpagetype_testcase.php
-./exporter/class.tx_l10nmgr_models_exporter_exportDataRepository_testcase.php
-./exporter/class.tx_l10nmgr_models_exporter_exporter_complex_testcase.php
+./exporter/class.tx_l10nmgr_domain_exporter_exporter_testcase.php
+./exporter/class.tx_l10nmgr_domain_exporter_exporter_basic_testcase.php
+./exporter/class.tx_l10nmgr_domain_exporter_exporter_ownpagetype_testcase.php
+./exporter/class.tx_l10nmgr_domain_exporter_exportDataRepository_testcase.php
+./exporter/class.tx_l10nmgr_domain_exporter_exporter_complex_testcase.php
 
 */		
 		

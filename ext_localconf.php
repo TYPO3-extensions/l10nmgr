@@ -1,4 +1,13 @@
 <?php
+
+require_once t3lib_extMgm::extPath('l10nmgr').'service/class.tx_l10nmgr_service_autoload.php';
+
+// Registering autoloaders
+
+if (spl_autoload_register(array('tx_l10nmgr_service_autoload', 'autoLoad')) == false) {
+	throw new Exception('Registering autoloader for l10nmgr failed.');
+}
+
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 t3lib_extMgm::addUserTSConfig('
 	options.saveDocNew.tx_l10nmgr_cfg=1
@@ -20,11 +29,12 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['recStatInfoHooks']['tx_l10n
 
 // define some classes
 
-// This class is used as a exportStateRepository withing the exportData class. The class has to be an instance (or inheriting) from tx_l10nmgr_models_exporter_workflowStateRepository
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['classes']['exportData_workflowStateRepository'] = 'EXT:l10nmgr/models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php:tx_l10nmgr_models_exporter_workflowStateRepository';
+// This class is used as a exportStateRepository withing the exportData class. The class has to be an instance (or inheriting) from tx_l10nmgr_domain_exporter_workflowStateRepository
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['classes']['exportData_workflowStateRepository'] = 'EXT:l10nmgr/domain/exporter/class.tx_l10nmgr_domain_exporter_workflowStateRepository.php:tx_l10nmgr_domain_exporter_workflowStateRepository';
 
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'][] = 'EXT:l10nmgr/models/hooks/class.tx_l10nmgr_models_hooks_emailNotifier.php:tx_l10nmgr_models_hooks_emailNotifier->notify';
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'][] = 'EXT:l10nmgr/models/hooks/class.tx_l10nmgr_models_hooks_ftpUploader.php:tx_l10nmgr_models_hooks_ftpUploader->upload';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'][] = 'EXT:l10nmgr/domain/hooks/class.tx_l10nmgr_domain_hooks_emailNotifier.php:tx_l10nmgr_domain_hooks_emailNotifier->notify';
+
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'][] = 'EXT:l10nmgr/domain/hooks/class.tx_l10nmgr_domain_hooks_ftpUploader.php:tx_l10nmgr_domain_hooks_ftpUploader->upload';
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['phpunit']['importExtensions_additionalDatabaseFiles'][] = 'EXT:l10nmgr/ext_tables.sql';
 

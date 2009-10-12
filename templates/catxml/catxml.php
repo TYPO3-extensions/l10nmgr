@@ -5,7 +5,7 @@
 		<?php $staticSourceLanguage = $this->l10ncfgObj->getStaticSourceLanguage(); ?>
 		<t3_l10ncfg><?= $this->l10ncfgObj->getData('uid'); ?></t3_l10ncfg>
 		<t3_sysLang><?= $this->getTranslateableInformation()->getTargetLanguage()->getUid(); ?></t3_sysLang>
-		<t3_sourceLang><?php if($staticSourceLanguage instanceof tx_l10nmgr_models_language_staticLanguage ){?><?= $staticSourceLanguage->getLg_iso_2(); ?><?php } ?></t3_sourceLang>
+		<t3_sourceLang><?php if($staticSourceLanguage instanceof tx_l10nmgr_domain_language_staticLanguage ){?><?= $staticSourceLanguage->getLg_iso_2(); ?><?php } ?></t3_sourceLang>
 		<t3_targetLang><?= $this->getTranslateableInformation()->getTargetLanguage()->getStaticLanguage()->getLg_iso_2(); ?></t3_targetLang>
 		<t3_baseURL><?= $this->getTranslateableInformation()->getSiteUrl(); ?></t3_baseURL>
 		<t3_workspaceId><?= $this->getTranslateableInformation()->getWorkspaceId(); ?></t3_workspaceId>

@@ -151,6 +151,7 @@ CREATE TABLE tx_l10nmgr_importdata (
 	t3ver_count int(11) DEFAULT '0' NOT NULL,
 	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,	
 	t3_origuid int(11) DEFAULT '0' NOT NULL,
+	import_type tinytext NOT NULL,	
 	
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	progress blob NOT NULL,

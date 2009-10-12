@@ -26,17 +26,6 @@
 t3lib_extMgm::isLoaded('mvc', true);
 tx_mvc_common_classloader::loadAll();
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'controller/class.tx_l10nmgr_controller_abstractProgressable.php');
-
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFile.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importer.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importData.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importDataRepository.php');
-
-require_once(t3lib_extMgm::extPath('l10nmgr').'view/import/class.tx_l10nmgr_view_importer_detail.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'view/class.tx_l10nmgr_view_showProgress.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_div.php');
-
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progress.php');
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progressAjax.php');
 
@@ -108,8 +97,8 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 
 		if(tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['importDataId'])){
 
-			$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
-			$importData = $importDataRepository->findById($this->arguments['importDataId']); /* @var $importData tx_l10nmgr_models_importer_importData */
+			$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
+			$importData = $importDataRepository->findById($this->arguments['importDataId']); /* @var $importData tx_l10nmgr_domain_importer_importData */
 
 			/* Ensure, that all files are unzipped */
 			$importData->extractAllZipContent();
@@ -143,24 +132,24 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	/**
 	 * This method is used to dummytranslate a file after import.
 	 *
-	 * @param tx_l10nmgr_models_importer_importData importData object which provides the files that should be translated.
+	 * @param tx_l10nmgr_domain_importer_importData importData object which provides the files that should be translated.
 	 * @return void
 	 */
-	protected function dummyTranslateImportData(tx_l10nmgr_models_importer_importData $importData){
-		$fileExportPath = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_exporter_exportFile::getTableName(), 'filename'));
+	protected function dummyTranslateImportData(tx_l10nmgr_domain_importer_importData $importData){
+		$fileExportPath = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_domain_exporter_exportFile::getTableName(), 'filename'));
 
 		$importFiles = $importData->getImportFiles();
-		foreach($importFiles as $importFile){ /* @var $importFile tx_l10nmgr_models_importer_importFile */
+		foreach($importFiles as $importFile){ /* @var $importFile tx_l10nmgr_domain_importer_importFile */
 			$sourceFilename 	= $importFile->getFilename();
 
 			if(strpos($sourceFilename,'dummytranslated_') === false){
 				$targetFilename		= 'dummytranslated_'.$importFile->getFilename();
 				$path 				= $importFile->getImportFilePath();
 
-				tx_l10nmgr_div::translate($path.'/'.$sourceFilename,$path.'/'.$targetFilename);
+				tx_l10nmgr_domain_tools_div::translate($path.'/'.$sourceFilename,$path.'/'.$targetFilename);
 				$importFile->setFilename($targetFilename);
 
-				$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
+				$importFileRepository = new tx_l10nmgr_domain_importer_importFileRepository();
 				$importFileRepository->save($importFile);
 			}
 		}
@@ -175,7 +164,7 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
  	 * @return tx_mvc_view_widget_phpTemplateListView
 	 */
 	protected function getProgressableSubjectView(){
-		$view = new tx_l10nmgr_view_importer_detail();
+		$view = new tx_l10nmgr_view_import_detail();
 		$this->initializeView($view);
 		$view->setImportData($this->getProgressableSubject());
 
@@ -191,7 +180,7 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	protected function getProgressableSubject(){
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['importDataId'],true);
 
-		$importDataRepository 	= new tx_l10nmgr_models_importer_importDataRepository();
+		$importDataRepository 	= new tx_l10nmgr_domain_importer_importDataRepository();
 		$importData 			= $importDataRepository->findById($this->arguments['importDataId']);
 
 		return $importData;
@@ -204,9 +193,9 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	 */
 	protected function performProgressableRun($importData){
 		if($this->configuration->get('enable_workspaceCheck') == 1){
-			tx_l10nmgr_models_importer_importer::enableWorkspaceCheck();
+			tx_l10nmgr_domain_importer_importer::enableWorkspaceCheck();
 		}
-		return tx_l10nmgr_models_importer_importer::performImportRun($importData);
+		return tx_l10nmgr_domain_importer_importer::performImportRun($importData);
 
 	}
 }

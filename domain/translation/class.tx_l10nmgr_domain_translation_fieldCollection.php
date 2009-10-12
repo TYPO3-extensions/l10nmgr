@@ -23,7 +23,6 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('l10nmgr') . 'interface/interface.tx_l10nmgr_interface_stateImportable.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_field.php';
 
 /**
  * Collection of fields to translate

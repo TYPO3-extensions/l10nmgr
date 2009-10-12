@@ -22,8 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_textConverter.php';
-
 /**
  * Testcase for text convert from database text to XML text.
  *
@@ -57,6 +55,9 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_phpunit_testcas
 	 * @return void
 	 */
 	public function setUp() {
+		global $BE_USER;
+		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
+		
 		$this->TextConverter = new tx_l10nmgr_service_textConverter();
 	}
 

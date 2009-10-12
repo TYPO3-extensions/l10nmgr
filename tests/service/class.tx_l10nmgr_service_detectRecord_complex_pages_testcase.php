@@ -22,8 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_detectRecord.php';
-
 /**
  *
  * {@inheritdoc}
@@ -57,6 +55,9 @@ class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_phpunit_
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function setUp() {
+//		global $BE_USER;
+//		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
+		
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 

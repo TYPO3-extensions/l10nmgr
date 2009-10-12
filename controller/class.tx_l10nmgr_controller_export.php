@@ -24,37 +24,9 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'controller/class.tx_l10nmgr_controller_abstractProgressable.php');
-
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_language.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/language/class.tx_l10nmgr_models_language_languageRepository.php');
-
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportData.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportDataRepository.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFile.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exportFileRepository.php');
-
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_exporter.php');
-require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowState.php';
-
-require_once t3lib_extMgm::extPath('l10nmgr').'models/exporter/class.tx_l10nmgr_models_exporter_workflowStateRepository.php';
-
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformation.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/translateable/class.tx_l10nmgr_models_translateable_translateableInformationFactory.php');
-
-require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_showExportList.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view_export_showExportDetail.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'view/class.tx_l10nmgr_view_showProgress.php');
-
-
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progress.php');
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_progressAjax.php');
 
-###
-# OLD VIEWS
-###
-require_once(t3lib_extMgm::extPath('l10nmgr').'views/CATXML/class.tx_l10nmgr_CATXMLView.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'views/excelXML/class.tx_l10nmgr_excelXMLView.php');
 	// autoload the mvc
 if (t3lib_extMgm::isLoaded('mvc')) {
 	tx_mvc_common_classloader::loadAll();
@@ -135,7 +107,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 			$this->arguments['exportDataId'] = intval( $exportDataId );
 			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'], true);
 
-			$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+			$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 			$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
 
 			$exportData->setTitle(sprintf('%s [%s->%s] (site:%s)', $exportData->getTitle(), $exportData->getSourceIsoCode(), $exportData->getTranslationIsoCode(), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']));
@@ -193,7 +165,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	public function showExportDetailAction() {
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'], true);
 
-		$exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository	= new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData 			= $exportDataRepository->findById($this->arguments['exportDataId']);
 
 		$this->view->setExportData($exportData);
@@ -216,12 +188,12 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	public function showNotReimportedExportsAction() {
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'], true);
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById($this->arguments['exportDataId']);
 
-		$exportDataRepository	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository	= new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$notReimportedExports 	= $exportDataRepository->findAllWithoutStateInHistoryByAssigendConfigurationAndTargetLanguage(
-			tx_l10nmgr_models_exporter_workflowState::WORKFLOWSTATE_IMPORTED,
+			tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTED,
 			$exportData->getL10ncfg_id(), // configuration id
 			$exportData->getTranslation_lang() // target language id
 		);
@@ -255,12 +227,12 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * This method returns the progressableSubject. In case of the import
 	 * controller this is an exportData object.
 	 *
-	 * @return tx_l10nmgr_models_exporter_exportData
+	 * @return tx_l10nmgr_domain_exporter_exportData
 	 */
 	protected function getProgressableSubject() {
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'],true);
 
-		$exportDataRepository 	= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository 	= new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData 			= $exportDataRepository->findById($this->arguments['exportDataId']);
 
 		return $exportData;
@@ -274,7 +246,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @see ajaxPerformRunAction
 	 */
 	protected function performProgressableRun($exportData) {
-		$res = tx_l10nmgr_models_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk'));
+		$res = tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk'));
 		
 		return $res;
 	}

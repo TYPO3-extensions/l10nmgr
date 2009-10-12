@@ -26,10 +26,6 @@
 t3lib_extMgm::isLoaded('mvc', true);
 tx_mvc_common_classloader::loadAll();
 
-
-require_once(t3lib_extMgm::extPath('l10nmgr').'view/list/class.tx_l10nmgr_view_list_showConfigurations.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configuration.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/configuration/class.tx_l10nmgr_models_configuration_configurationRepository.php');
 require_once(t3lib_extMgm::extPath('mvc').'mvc/view/widget/class.tx_mvc_view_widget_pagination.php');
 
 class tx_l10nmgr_controller_list extends tx_mvc_controller_action {
@@ -67,7 +63,7 @@ class tx_l10nmgr_controller_list extends tx_mvc_controller_action {
 
 		$this->checkflexFormXMLincludeDiffBaseSetting();
 
-		$configurationsRepository 	= new tx_l10nmgr_models_configuration_configurationRepository();
+		$configurationsRepository 	= new tx_l10nmgr_domain_configuration_configurationRepository();
 		$paginationSubView 			= new tx_mvc_view_widget_pagination();
 
 		$this->initializeView($paginationSubView);
@@ -79,7 +75,7 @@ class tx_l10nmgr_controller_list extends tx_mvc_controller_action {
 
 		$this->view->pagination = $paginationSubView;
 
-		$configurationsRepository = new tx_l10nmgr_models_configuration_configurationRepository();
+		$configurationsRepository = new tx_l10nmgr_domain_configuration_configurationRepository();
 		$this->view->configurations = $configurationsRepository->findAll(true, 'crdate DESC', false, 30, $this->arguments['offset']);
 		$this->view->addBackendStylesHeaderData();
 	}

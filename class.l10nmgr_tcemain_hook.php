@@ -47,7 +47,7 @@
 
 
 	// Include API
-require_once (t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_tools.php');
+require_once (t3lib_extMgm::extPath('l10nmgr').'domain/tools/class.tx_l10nmgr_tools.php');
 
 
 /**

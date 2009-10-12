@@ -22,12 +22,12 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_elementCollection.php';
+require_once t3lib_extMgm::extPath('l10nmgr').'interface/interface.tx_l10nmgr_interface_stateImportable.php';
 
 /**
- * Business object of an page which contains tx_l10nmgr_models_tranlation_elementCollection
+ * Business object of an page which contains tx_l10nmgr_domain_tranlation_elementCollection
  *
- * class.tx_l10nmgr_models_tranlation_page.php
+ * class.tx_l10nmgr_domain_tranlation_page.php
  *
  * @author Michael Klapper <klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
@@ -58,7 +58,7 @@ class tx_l10nmgr_domain_translation_page implements tx_l10nmgr_interface_stateIm
 	/**
 	 * Holds all related items of the current page
 	 *
-	 * @var tx_l10nmgr_models_tranlation_elementCollection
+	 * @var tx_l10nmgr_domain_tranlation_elementCollection
 	 */
 	protected $ElementCollection = null;
 
@@ -93,7 +93,7 @@ class tx_l10nmgr_domain_translation_page implements tx_l10nmgr_interface_stateIm
 	/**
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @return tx_l10nmgr_models_tranlation_elementCollection
+	 * @return tx_l10nmgr_domain_tranlation_elementCollection
 	 */
 	public function getElementCollection() {
 		return $this->ElementCollection;

@@ -62,7 +62,7 @@ class tx_l10nmgr_view_export_showExportProgress extends tx_mvc_view_backendModul
 	/**
 	 * This method is used to set an exportData object which represents the current export.
 	 *
-	 * @param tx_l10nmgr_models_export_exportData
+	 * @param tx_l10nmgr_domain_export_exportData
 	 */
 	public function setExportData($exportData) {
 		$this->exportData = $exportData;
@@ -71,7 +71,7 @@ class tx_l10nmgr_view_export_showExportProgress extends tx_mvc_view_backendModul
 	/**
 	 * Returns the current exportData object to display it in the view
 	 *
-	 * @return tx_l10nmgr_models_export_exportDtaa
+	 * @return tx_l10nmgr_domain_export_exportDtaa
 	 */
 	protected function getExportData() {
 		return $this->exportData;

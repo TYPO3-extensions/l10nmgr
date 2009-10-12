@@ -36,6 +36,18 @@ plugin.tx_l10nmgr_controller_export.configuration {
 	loadJQuery = 1
 }
 
+plugin.tx_l10nmgr_controller_translate.configuration {
+	viewHelper.disable {
+		linkCreator = 0
+		label = 0
+		fieldRenderer = 1
+		tcaFieldRenderer = 1
+		formElementRenderer = 0
+	}
+	pagesPerChunk = 1
+	loadJQuery = 1
+}
+
 plugin.tx_l10nmgr_controller_import.configuration {
 	viewHelper.disable {
 		linkCreator = 0

@@ -25,11 +25,7 @@
  ***************************************************************/
 
 require_once(t3lib_extMgm::extPath('mvc').'mvc/controller/class.tx_mvc_controller_cli.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importData.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importDataRepository.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importFile.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importFileRepository.php');
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/importer/class.tx_l10nmgr_models_importer_importer.php');
+
 
 /**
  * Import controller for cli
@@ -115,18 +111,18 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 
 		} else {
 
-			$destinationFolder = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_models_importer_importFile::getTableName(), 'filename'));
+			$destinationFolder = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_domain_importer_importFile::getTableName(), 'filename'));
 
 			foreach ($this->arguments['--file'] as $file) {
 
 				tx_mvc_validator_factory::getFileValidator()->isValid($file, true);
 
 				// create importData record
-				$importData = new tx_l10nmgr_models_importer_importData();
+				$importData = new tx_l10nmgr_domain_importer_importData();
 				$importData['exportdata_id'] = 0; // will be updated later
 				$importData['configuration_id'] = 0; // will be updated later
 
-				$importDataRepository = new tx_l10nmgr_models_importer_importDataRepository();
+				$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
 				$importDataRepository->add($importData);
 
 				$pathInfo = pathinfo($file);
@@ -143,11 +139,11 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 
 				t3lib_div::fixPermissions($destinationFile);
 
-				$importFile = new tx_l10nmgr_models_importer_importFile();
+				$importFile = new tx_l10nmgr_domain_importer_importFile();
 				$importFile['importdata_id'] = $importData->getUid();
 				$importFile['filename'] = $destinationFileName;
 
-				$importFileRepository = new tx_l10nmgr_models_importer_importFileRepository();
+				$importFileRepository = new tx_l10nmgr_domain_importer_importFileRepository();
 				$importFileRepository->add($importFile);
 
 				$this->cli_echo('Extracting zip content...');
@@ -156,7 +152,7 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 
 				do {
 					$this->cli_echo(sprintf('%s%% finished'."\n", round($importData->getProgressPercentage())));
-				} while (!tx_l10nmgr_models_importer_importer::performImportRun($importData));
+				} while (!tx_l10nmgr_domain_importer_importer::performImportRun($importData));
 				$this->cli_echo(sprintf('%s%% finished'."\n", round($importData->getProgressPercentage())));
 			}
 

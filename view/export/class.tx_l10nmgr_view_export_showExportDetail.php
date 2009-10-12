@@ -55,7 +55,7 @@ class tx_l10nmgr_view_export_showExportDetail extends tx_mvc_view_backendModule 
 	/**
 	 * Holds the exportData record where the details should be displayed from
 	 *
-	 * @var tx_l10nmgr_models_exporter_exportData
+	 * @var tx_l10nmgr_domain_exporter_exportData
 	 */
 	protected $exportData;
 
@@ -84,7 +84,7 @@ class tx_l10nmgr_view_export_showExportDetail extends tx_mvc_view_backendModule 
 	 * Method to set the exportData record that should be used to display informations about.
 	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
-	 * @param tx_l10nmgr_models_exporter_exportData exportData
+	 * @param tx_l10nmgr_domain_exporter_exportData exportData
 	 */
 	public function setExportData($exportData){
 		$this->exportData = $exportData;
@@ -94,7 +94,7 @@ class tx_l10nmgr_view_export_showExportDetail extends tx_mvc_view_backendModule 
 	 * Retrieves the configured exportData
 	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
-	 * @return tx_l10nmgr_models_exporter_exportData
+	 * @return tx_l10nmgr_domain_exporter_exportData
 	 */
 	protected function getExportData(){
 		return $this->exportData;

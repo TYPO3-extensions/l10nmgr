@@ -148,40 +148,51 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	 */
 	public function ajaxPerformRunAction() {
 		$progressView = new tx_mvc_view_widget_progressAjax();
-		
+		$this->initializeView($progressView);
+					
 		try {
 			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['warningCount'],true);	
 			$subject = $this->getProgressableSubject();
 
-			set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);
-			$completed = $this->performProgressableRun($subject);
+			/**
+			 * To handle errors during the import process we setup an error handing for user warnings.
+			 * In addition any output will cause a user warning, to get any warning output into the 
+			 * progress bar.
+			 * 
+			 * To trigger own errors use trigger_error('your message',E_USER_WARNING)
+			 */
+			set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);			
+				ob_start();
+					$completed = $this->performProgressableRun($subject);
+					$output = ob_get_contents();
+				ob_end_clean();
+			
+				if(!empty($output)){ trigger_error('Output during process: '.$output,E_USER_WARNING);}
 			restore_error_handler();
-
-			$this->initializeView($progressView);
+			
 			$percent = $subject->getProgressPercentage();
 			$progressView->setProgress($percent);
-
+			
 			if(is_array(self::$warningMessages)) {
 				$warningMessage = implode('<br/><br/>',self::$warningMessages);
 				$progressView->setWarningMessage($warningMessage);		
 				$this->arguments['warningCount']++;
 			}
-
+			
 			if ($completed) {
 				$progressView->setProgressLabel('Completed');
 				$progressView->setCompleted(true);
-				
 				if($this->arguments['warningCount'] > 0){
 					$progressView->setCompleteMessage('Task has been finished with '.$this->arguments['warningCount'].' warnings. Click "Ok" to be redirected to the overview.');
 				}
 			} else {
 				$progressView->setProgressLabel($subject->getProgressOutput());
 			}
-		}  catch(Exception $e) {
-			tx_mvc_common_debug::logException($e);
 			
+		}catch(Exception $e) {
+			tx_mvc_common_debug::logException($e);
 			$progressView->setAborted(true);
-			$progressView->setAbortMessage($e->getMessage());
+			$progressView->setAbortMessage($e->getMessage().' '.$e->getFile().' '.$e->getLine().' '.$e->getTraceAsString());
 		}
 		
 		//update the progress url, maybe the number of warnings has changed

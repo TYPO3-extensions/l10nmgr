@@ -26,9 +26,6 @@
 t3lib_extMgm::isLoaded('mvc', true);
 tx_mvc_common_classloader::loadAll();
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/class.tx_l10nmgr_domain_translationFactory.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_importTranslation.php';
-
 /**
  *
  * {@inheritdoc}
@@ -64,7 +61,7 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 	private $TranslationFactory = null;
 
 	/**
-	 * @var tx_l10nmgr_models_translateable_translateableInformationFactory
+	 * @var tx_l10nmgr_domain_translateable_translateableInformationFactory
 	 */
 	private $TranslatableFactory = null;
 
@@ -81,7 +78,9 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 	 * @return void
 	 */
 	public function setUp() {
-
+		global $BE_USER;
+		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
+		
 			// unset the indexed_search hooks
 		if (t3lib_extMgm::isLoaded('indexed_search')) {
 			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
@@ -101,7 +100,7 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 		);
 
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
-		$this->TranslatableFactory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+		$this->TranslatableFactory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
 		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();
 	}
 
@@ -172,14 +171,15 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 
 		$import = dirname(__FILE__) . '/fixtures/basic/canImportServiceImportCorrectDataFixtureImport.xml';
 
-		$TranslationData = $this->TranslationFactory->create($import);
+		$TranslationData = $this->TranslationFactory->createFromXMLFile($import);
 
-		$ExportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$ExportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$ExportData           = $ExportDataRepository->findById($TranslationData->getExportDataRecordUid());
 
-		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($ExportData, $TranslationData->getPageIdCollection());
+		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($ExportData, $TranslationData->getPageIdCollection());
 		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
 
+		
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 
 		/**
@@ -235,12 +235,12 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 		$this->importDataSet('/fixtures/headertest/exportdata.xml');
 		$this->importDataSet('/fixtures/headertest/language.xml');
 
-		$TranslationData = $this->TranslationFactory->create($import); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
+		$TranslationData = $this->TranslationFactory->createFromXMLFile($import); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
 
-		$exportDataRepository 			= new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository 			= new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData 					= $exportDataRepository->findById(67);
 
-		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
+		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
 		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);

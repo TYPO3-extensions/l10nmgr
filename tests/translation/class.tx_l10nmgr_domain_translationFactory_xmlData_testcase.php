@@ -26,8 +26,6 @@
 t3lib_extMgm::isLoaded('mvc', true);
 tx_mvc_common_classloader::loadAll();
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/class.tx_l10nmgr_domain_translationFactory.php';
-
 /**
  * Verify that the TranslationFactory parse the XML
  * file correct and build the translationData collection as expected.
@@ -51,12 +49,12 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/class.tx_l10nmgr_domain_
 class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_testcase {
 
 	/**
-	 * @var tx_l10nmgr_models_translation_factory
+	 * @var tx_l10nmgr_domain_translation_factory
 	 */
 	private $TranslationFactory = null;
 
 	/**
-	 * @var tx_l10nmgr_models_translation_data
+	 * @var tx_l10nmgr_domain_translation_data
 	 */
 	private $TranslationData = null;
 
@@ -71,7 +69,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	public function setUp() {
 		$fileName                 = t3lib_extMgm::extPath('l10nmgr') . 'tests/translation/fixtures/files/validContent/catxml_export__to_en_GB_210409-175557.xml';
 		$this->TranslationFactory = new tx_l10nmgr_domain_translationFactory();
-		$this->TranslationData    = $this->TranslationFactory->create($fileName);
+		$this->TranslationData    = $this->TranslationFactory->createFromXMLFile($fileName);
 	}
 
 	/**
@@ -101,7 +99,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 	public function test_translationDataContainsRightAmountOfPages() {
 		$importFile = dirname(__FILE__) . '/fixtures/files/validContent/canImportServiceImportCorrectDataFixtureImport.xml';
 
-		$TranslationData = $this->TranslationFactory->create($importFile); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
+		$TranslationData = $this->TranslationFactory->createFromXMLFile($importFile); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
 
 		$this->assertEquals (
 			2,
@@ -380,7 +378,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 		$importFile = dirname(__FILE__) . '/fixtures/files/validContent/canImportServiceImportCorrectDataFixtureImport.xml';
 		$forcedTargetLanguageUid = 2;
 
-		$TranslationData = $this->TranslationFactory->create($importFile, $forcedTargetLanguageUid); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
+		$TranslationData = $this->TranslationFactory->createFromXMLFile($importFile, $forcedTargetLanguageUid); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
 
 		$this->assertEquals (
 			$forcedTargetLanguageUid,
@@ -409,7 +407,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 		$forcedTargetLanguageUid  = 2;
 		$fixtureTargetLanguageUid = 1;
 
-		$TranslationData = $this->TranslationFactory->create($importFile); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
+		$TranslationData = $this->TranslationFactory->createFromXMLFile($importFile); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
 
 		$this->assertEquals (
 			$fixtureTargetLanguageUid,
@@ -417,7 +415,7 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_phpunit_t
 			'The TranslationData must be contain the right target language uid "' . $fixtureTargetLanguageUid . '".'
 		);
 
-		$TranslationData = $this->TranslationFactory->create($importFile, $forcedTargetLanguageUid); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
+		$TranslationData = $this->TranslationFactory->createFromXMLFile($importFile, $forcedTargetLanguageUid); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
 
 		$this->assertEquals (
 			$forcedTargetLanguageUid,

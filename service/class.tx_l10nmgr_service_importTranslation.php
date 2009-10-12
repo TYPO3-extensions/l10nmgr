@@ -88,11 +88,12 @@ class tx_l10nmgr_service_importTranslation {
 		$this->flexToolObj = t3lib_div::makeInstance('t3lib_flexformtools');
 	}
 
+
 	/**
 	 * Save the incoming translationData object into the database
 	 * if the available translatableObject are match the configuration.
 	 *
-	 * @param tx_l10nmgr_models_translateable_translateableInformation $TranslatableInformation
+	 * @param tx_l10nmgr_domain_translateable_translateableInformation $TranslatableInformation
 	 * @param tx_l10nmgr_domain_translation_data $TranslationData
 	 *
 	 * @access public
@@ -100,8 +101,7 @@ class tx_l10nmgr_service_importTranslation {
 	 *
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
-	public function save(tx_l10nmgr_models_translateable_translateableInformation $TranslatableInformation, tx_l10nmgr_domain_translation_data $TranslationData) {
-
+	public function save(tx_l10nmgr_domain_translateable_translateableInformation $TranslatableInformation, tx_l10nmgr_domain_translation_data $TranslationData) {
 		$TranslatablePageGroupCollection = $TranslatableInformation->getPageGroups();
 
 		foreach ( $TranslatablePageGroupCollection as $Page) {
@@ -110,8 +110,9 @@ class tx_l10nmgr_service_importTranslation {
 			foreach ($TranslatableElementsCollection as $Element) {
 				$TranslatableFieldsCollection = $Element->getTranslateableFields();
 				$DetectRecordService          = t3lib_div::makeInstance('tx_l10nmgr_service_detectRecord'); /* @var $DetectRecordService tx_l10nmgr_service_detectRecord */
-
-				foreach ($TranslatableFieldsCollection as $Field) { /* @var $Field tx_l10nmgr_models_translateable_translateableField */
+				$DetectRecordService->setWorkspaceId($TranslatableInformation->getWorkspaceId());
+				
+				foreach ($TranslatableFieldsCollection as $Field) { /* @var $Field tx_l10nmgr_domain_translateable_translateableField */
 					try {
 						$TranslationField = $TranslationData->findByTableUidAndKey($Page->getUid(), $Element->getTableName(), $Element->getUid(), $Field->getIdentityKey());
 
@@ -120,36 +121,49 @@ class tx_l10nmgr_service_importTranslation {
 								$DetectRecordService->verifyIdentityKey (
 									$Field->getIdentityKey(),
 									$TranslationData->getSysLanguageUid(),
-									$Element->getUid()
+									$Element->getUid(),
+									$TranslationData->getWorkspaceId()
 								)
 							);
 						} catch (tx_mvc_exception_skipped $e) {
 							tx_mvc_common_debug::logException($e);
 							$TranslationField->markSkipped($e->getMessage());
 						}
-
+						
+						
 						$this->buildDataCommandArray($Element, $Field, $TranslationField);
-					} catch (tx_mvc_exception_argumentOutOfRange $e ) {
+					}catch (tx_mvc_exception_argumentOutOfRange $e ) {
 
 						//!TODO add proper error handling and make them visible during the user interface -
 						// furthermore it would be greate to save the events to the importData record inforation for later statistical usage.
 						// this will only then happend if an "$Field->getIdentityKey()" value are not availible into the "$TranslationData" collection.
-						tx_mvc_common_debug::logException($e);
+						$this->handleException($e);
 					} catch (tx_mvc_exception_skipped $e) {
-						tx_mvc_common_debug::logException($e);
+						$this->handleException($e);
 					} catch (tx_mvc_exception $e) {
-						tx_mvc_common_debug::logException($e);
+						$this->handleException($e);
 					}
 				}
 			}
 		}
-
+		
 		$this->blackBoxDoNotModifyIt();
 		$this->processDataMapCommands();
 
 		if ( $TranslationData->isImported()) {
 			$TranslationData->writeProcessingLog();
-		}
+		}	
+	}
+	
+	/**
+	 * This method is used to handle exceptions during the import process.
+	 * Currently it triggers a warning and loggs the exception.
+	 * 
+	 * @param $e
+	 */
+	protected function handleException($e){
+		trigger_error($e->getMessage(),E_USER_WARNING);
+		tx_mvc_common_debug::logException($e);
 	}
 
 	/**
@@ -167,7 +181,7 @@ class tx_l10nmgr_service_importTranslation {
 		$TCEmain = t3lib_div::makeInstance('t3lib_TCEmain'); /* @var $TCEmain t3lib_TCEmain */
 		$TCEmain->stripslashes_values = false;
 		$errorMessages = '';
-
+		
 		if (count($this->TCEmain_cmd))	{
 			$TCEmain->start(array(), $this->TCEmain_cmd);
 			$TCEmain->process_cmdmap();
@@ -196,20 +210,20 @@ class tx_l10nmgr_service_importTranslation {
 					} else {
 
 							//!FIXME add logging to the error handling
-						$errorMessages .= "\n" . 'Record "'.$tableName.':'.$cmdl18nParentRecordUid.'" was NOT localized as it should have been!';
+						$errorMessages .= "\n" . 'Record "'.$tableName.':'.$cmdl18nParentRecordUid.'" was NOT localized as it should have been!';	
 					}
 
 					tx_mvc_common_debug::debug($this->TCEmain_data, '$this->TCEmain_data', self::SHOW_DEBUG_INFORMATION);
 					unset($this->TCEmain_data[$tableName][$cmdProcessString]);
 				}
 			}
-
+			
 			if (count($errorMessages) > 1) {
-				throw new Exception('HERE NOT LOCALIZED!!!' . "\n" . $errorMessages);
-			}
+				trigger_error('HERE NOT LOCALIZED!!!' . "\n" . $errorMessages,E_USER_WARNING);
+			}		
 		}
 	}
-
+	
 	/**
 	 * Process the datamap command array to aply
 	 * the new translation to the database.
@@ -229,22 +243,21 @@ class tx_l10nmgr_service_importTranslation {
 
 			//!TODO add the errorLog to the import record for better handling
 		if ((bool)count($TCEmain->errorLog)) {
-			throw new Exception('TCEmain update errors:' . "\n\n" . implode("\n", $TCEmain->errorLog));
-		}
+			trigger_error('TCEmain update errors:' . "\n\n" . implode("\n", $TCEmain->errorLog),E_USER_WARNING);
+		}	
 	}
 
 	/**
 	 * Build the TCE_main command array to process the final translation import later
 	 *
-	 * @param tx_l10nmgr_models_translateable_translateableElement $Element
-	 * @param tx_l10nmgr_models_translateable_translateableField $Field
+	 * @param tx_l10nmgr_domain_translateable_translateableElement $Element
+	 * @param tx_l10nmgr_domain_translateable_translateableField $Field
 	 * @param tx_l10nmgr_domain_translation_field $TranslationField
 	 *
 	 * @access protected
 	 * @return void
 	 */
 	protected function buildDataCommandArray($Element, $Field, $TranslationField) {
-
 		if (
 				! self::FORCE_CREATE_TRANSLATION
 			&&

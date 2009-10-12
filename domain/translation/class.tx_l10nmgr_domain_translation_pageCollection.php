@@ -23,12 +23,11 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('l10nmgr') . 'interface/interface.tx_l10nmgr_interface_stateImportable.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_page.php';
 
 /**
  * Collection of tx_l10nmgr_domain_translation_page objects
  *
- * class.tx_l10nmgr_models_tranlsation_pageCollection.php
+ * class.tx_l10nmgr_domain_tranlsation_pageCollection.php
  *
  * @author Michael Klapper <klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>

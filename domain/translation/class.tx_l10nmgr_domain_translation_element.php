@@ -22,8 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10nmgr_domain_translation_fieldCollection.php';
-
 /**
  * Representation of an single field of an record
  *
@@ -39,6 +37,7 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'domain/translation/class.tx_l10
  * @subpackage tx_l10nmgr
  * @access public
  */
+
 class tx_l10nmgr_domain_translation_element implements tx_l10nmgr_interface_stateImportable {
 
 	/**

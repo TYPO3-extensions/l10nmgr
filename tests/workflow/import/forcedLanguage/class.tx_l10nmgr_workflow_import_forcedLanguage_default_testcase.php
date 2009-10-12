@@ -22,8 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_service_detectRecord.php';
-
 /**
  *
  * {@inheritdoc}
@@ -58,7 +56,7 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_phpu
 	protected $TranslationFactory  = null;
 
 	/**
-	 * @var tx_l10nmgr_models_translateable_translateableInformationFactory
+	 * @var tx_l10nmgr_domain_translateable_translateableInformationFactory
 	 */
 	protected $TranslatableFactory = null;
 
@@ -76,7 +74,6 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_phpu
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function setUp() {
-
 			// unset the indexed_search hooks
 		if (t3lib_extMgm::isLoaded('indexed_search')) {
 			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
@@ -94,11 +91,28 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_phpu
 		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog'));
 
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
-		$this->TranslatableFactory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+		$this->TranslatableFactory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
 		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();
 
+		set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);		
 	}
 
+	/**
+	 * This errorHandler is used to throw an own exception to test if errors can be detected correctly.
+	 * 
+	 * @param $errno
+	 * @param $errstr
+	 * @param $file
+	 * @param $line
+	 * @throws tx_l10nmgr_exception_applicationError
+	 * @return void
+	 */
+	public function warningHandler($errno,$errstr,$file,$line) {
+		$message = 'Warning: '.$errstr.'/ '.$errno. ' in '.$file.' on line '.$line;
+		throw new tx_l10nmgr_exception_applicationError($message);
+	}
+	
+	
 	/**
 	 * Resets the test enviroment after the test.
 	 *
@@ -108,6 +122,8 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_phpu
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function tearDown() {
+		restore_error_handler();
+				
 		$this->cleanDatabase();
    		$this->dropDatabase();
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
@@ -137,6 +153,7 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_phpu
 	 * @test
 	 *
 	 * @access public
+	 * @expectedException tx_l10nmgr_exception_applicationError
 	 * @return void
 	 *
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
@@ -150,17 +167,16 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_phpu
 		$forceTargetLanguageUid = 0;
 		$expectedSysLanguageUid = 1;
 
-		$TranslationData = $this->TranslationFactory->create (
+		$TranslationData = $this->TranslationFactory->createFromXMLFile (
 			t3lib_extMgm::extPath('l10nmgr').'tests/workflow/import/forcedLanguage/fixtures/default/fixture-import.xml',
 			$forceTargetLanguageUid
 		);
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData           = $exportDataRepository->findById(67);
 
-		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
+		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
 		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
-
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 
 		$translationRecordArray = t3lib_BEfunc::getRecord('tt_content', 540863);
@@ -178,12 +194,13 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_phpu
 			'Check the pages_language_overlay record!'
 		);
 	}
-
+	
 	/**
 	 * @test
 	 *
 	 * @access public
 	 * @return void
+	 * @expectedException tx_l10nmgr_exception_applicationError
 	 *
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
@@ -196,15 +213,15 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_phpu
 		$forceTargetLanguageUid = 2;
 		$expectedSysLanguageUid = $forceTargetLanguageUid;
 
-		$TranslationData = $this->TranslationFactory->create (
+		$TranslationData = $this->TranslationFactory->createFromXMLFile (
 			t3lib_extMgm::extPath('l10nmgr').'tests/workflow/import/forcedLanguage/fixtures/default/fixture-import.xml',
 			$forceTargetLanguageUid
 		);
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData           = $exportDataRepository->findById(67);
 
-		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
+		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
 		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
@@ -242,15 +259,15 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_phpu
 		$forceTargetLanguageUid = 0;
 		$expectedSysLanguageUid = 1;
 
-		$TranslationData = $this->TranslationFactory->create (
+		$TranslationData = $this->TranslationFactory->createFromXMLFile (
 			t3lib_extMgm::extPath('l10nmgr').'tests/workflow/import/forcedLanguage/fixtures/default/fixture-import-2.xml',
 			$forceTargetLanguageUid
 		);
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData           = $exportDataRepository->findById(67);
 
-		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
+		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
 		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
@@ -293,15 +310,15 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_phpu
 		$forceTargetLanguageUid = 2;
 		$expectedSysLanguageUid = $forceTargetLanguageUid;
 
-		$TranslationData = $this->TranslationFactory->create (
+		$TranslationData = $this->TranslationFactory->createFromXMLFile (
 			t3lib_extMgm::extPath('l10nmgr').'tests/workflow/import/forcedLanguage/fixtures/default/fixture-import-2.xml',
 			$forceTargetLanguageUid
 		);
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData           = $exportDataRepository->findById(67);
 
-		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
+		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
 		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);

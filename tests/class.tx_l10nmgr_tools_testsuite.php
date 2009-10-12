@@ -23,8 +23,7 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/tools/class.tx_l10nmgr_div_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/configuration/class.tx_l10nmgr_models_configuration_Configuration_testcase.php';
-require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/converter/tx_xmltools_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/configuration/class.tx_l10nmgr_domain_configuration_Configuration_testcase.php';
 
 /**
  * Static test suite for the translation package
@@ -57,8 +56,7 @@ class tx_l10nmgr_tools_testsuite extends tx_phpunit_testsuite {
 
 		$this->setName('Tools package');
 		$this->addTestSuite('tx_l10nmgr_div_testcase');
-		$this->addTestSuite('tx_l10nmgr_models_configuration_Configuration_testcase');
-		$this->addTestSuite('tx_xmltools_testcase');
+		$this->addTestSuite('tx_l10nmgr_domain_configuration_Configuration_testcase');
 	}
 
 	/**
