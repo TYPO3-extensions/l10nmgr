@@ -58,7 +58,7 @@ class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_phpunit
 	protected $TranslationFactory  = null;
 
 	/**
-	 * @var tx_l10nmgr_models_translateable_translateableInformationFactory
+	 * @var tx_l10nmgr_domain_translateable_translateableInformationFactory
 	 */
 	protected $TranslatableFactory = null;
 
@@ -94,7 +94,7 @@ class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_phpunit
 		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog'));
 
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
-		$this->TranslatableFactory = new tx_l10nmgr_models_translateable_translateableInformationFactory();
+		$this->TranslatableFactory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
 		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();
 	}
 
@@ -154,10 +154,10 @@ class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_phpunit
 			$forceTargetLanguageUid
 		);
 
-		$exportDataRepository = new tx_l10nmgr_models_exporter_exportDataRepository();
+		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData           = $exportDataRepository->findById(67);
 
-		$translateableFactoryDataProvider = new tx_l10nmgr_models_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
+		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
 		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
