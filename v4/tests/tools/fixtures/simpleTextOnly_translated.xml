@@ -1,23 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp " "> ]>
-<TYPO3L10N>
-	<head>
-		<t3_l10ncfg>71</t3_l10ncfg>
-		<t3_sysLang>1</t3_sysLang>
-		<t3_sourceLang></t3_sourceLang>
-		<t3_targetLang>_3</t3_targetLang>
-		<t3_baseURL>http://example.com/</t3_baseURL>
-		<t3_workspaceId>0</t3_workspaceId>
-		<t3_count>867</t3_count>
-		<t3_wordCount>29109</t3_wordCount>
-		<t3_internal>			</t3_internal>
-		<t3_formatVersion>1.1</t3_formatVersion>
-	</head>
-	<pageGrp id="1111">
-		<data table="pages" elementUid="1111" key="pages_language_overlay:NEW/1/1111:title">TextA 金</data>
-	</pageGrp>	<pageGrp id="178">
-		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:title">TextB 金</data>
-		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:subtitle">TextC 金</data>
-		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:subtitle"><p>TextC</p><p>金</p></data>
-		<data table="pages" elementUid="178" key="pages_language_overlay:NEW/1/178:subtitle"><![CDATA[TextD 金]]></data>
-	</pageGrp></TYPO3L10N>
