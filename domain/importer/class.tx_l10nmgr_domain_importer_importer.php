@@ -81,6 +81,10 @@ class tx_l10nmgr_domain_importer_importer {
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData		      = $exportDataRepository->findById($exportDataUid);
 
+		if (! $exportData instanceOf tx_l10nmgr_domain_exporter_exportData ) {
+			throw new tx_mvc_exception_invalidContent('The export data record ("t3_exportDataId") can not found!');
+		}
+
 		return $exportData;
 	}
 
@@ -103,12 +107,12 @@ class tx_l10nmgr_domain_importer_importer {
 			$currentFile = $this->importData->getNextFilename();
 
 			$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
-			
+
 			if($this->importData->getImport_type() == 'xml'){
 				$TranslationData    = $TranslationFactory->createFromXMLFile($currentFile, $this->importData->getForceTargetLanguageUid());
 			}elseif($this->importData->getImport_type() == 'xls'){
 				$TranslationData    = $TranslationFactory->createFromExcelFile($currentFile,$this->importData->getForceTargetLanguageUid());
-	
+
 			}
 
 			$exportData 		= $this->getExportDataFromTranslationData($TranslationData);
@@ -126,7 +130,7 @@ class tx_l10nmgr_domain_importer_importer {
 				// get collection of pageIds to create a translateableInformation for the relevantPages from the imported file
 			$ImportPageIdCollection	= $TranslationData->getPageIdCollection();
 
-			
+
 				// create a dataProvider based on the exportData and the relevantPageIds of the importFile
 			$factory                 = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
 			$TranlateableInformation = $factory->createFromExportDataAndPageIdCollection($exportData,$ImportPageIdCollection,$TranslationData->getWorkspaceId());
