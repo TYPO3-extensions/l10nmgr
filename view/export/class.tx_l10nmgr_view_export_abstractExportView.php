@@ -154,9 +154,9 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 	/**
 	 * Method to set the Translateable Information
 	 *
-	 * @param tx_l10nmgr_domain_configuration_translateableInformation $translateableInformation
+	 * @param tx_l10nmgr_domain_translateable_translateableInformation $translateableInformation
 	 */
-	public function setTranslateableInformation(tx_l10nmgr_domain_configuration_translateableInformation $translateableInformation){
+	public function setTranslateableInformation(tx_l10nmgr_domain_translateable_translateableInformation $translateableInformation){
 		$this->translateableInformation = $translateableInformation;
 	}
 
