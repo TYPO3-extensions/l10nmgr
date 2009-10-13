@@ -59,7 +59,7 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 	 * @var tx_l10nmgr_service_textConverter
 	 */
 	protected $xmlTool;
-	
+
 	/**
 	 * @var boolean
 	 */
@@ -69,7 +69,7 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 	 * @var boolean
 	 */
 	protected $useUTF8Mode;
-	
+
 	/**
 	 * @return boolean
 	 */
@@ -96,8 +96,8 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 	 */
 	public function setUseUTF8Mode($useUTF8Mode) {
 		$this->useUTF8Mode = $useUTF8Mode;
-	}	
-	
+	}
+
 	/**
 	 * This method is used to get the content of the rendered pagegroups to display it in the exportView.
 	 * The implementation of the renderPageGroups method sould write the result using setRenderedPageGroups
@@ -156,7 +156,7 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 	 *
 	 * @param tx_l10nmgr_domain_configuration_translateableInformation $translateableInformation
 	 */
-	public function setTranslateableInformation($translateableInformation){
+	public function setTranslateableInformation(tx_l10nmgr_domain_configuration_translateableInformation $translateableInformation){
 		$this->translateableInformation = $translateableInformation;
 	}
 
@@ -269,7 +269,7 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
 		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
 	}
-	
+
 
 	/**
 	 * Searches the internal XML Tool Singleton
@@ -305,10 +305,10 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 				$result = $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, true, false);
 			}
 		} catch (tx_mvc_exception_converter $e) {
-			
+
 			try {
 				$result = $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, true, true);
-				
+
 			} catch(tx_mvc_exception_converter $e) {
 				if ($skipXMLCheck) {
 					$result = '<![CDATA[' . $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, false) . ']]>';
@@ -319,7 +319,7 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 		}
 
 		return $result;
-	}	
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_view_export_abstractExportView.php'])	{
