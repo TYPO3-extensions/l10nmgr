@@ -117,7 +117,9 @@ class tx_l10nmgr_service_detectRecord_workspace_ttcontent_testcase extends tx_ph
 		$newIdentityKey = $this->DetectRecordService->verifyIdentityKey($currentIdentityKey, $forceTargetLanguageUid, $localisationParentRecord);
 		
 		//the identityKey should not be changed
-		$this->assertEquals($newIdentityKey,$currentIdentityKey);
+		$this->assertEquals(	$newIdentityKey,
+								$currentIdentityKey,
+								'Could not verify identityKey of workspace content element.'	);
 	}
 	
 	/**
@@ -146,7 +148,9 @@ class tx_l10nmgr_service_detectRecord_workspace_ttcontent_testcase extends tx_ph
 		$newIdentityKey = $this->DetectRecordService->verifyIdentityKey($currentIdentityKey, $forceTargetLanguageUid, $localisationParentRecord);
 		
 		//the identityKey should not be changed
-		$this->assertEquals($newIdentityKey,$expectedIdentityKey);
+		$this->assertEquals(	$newIdentityKey,
+								$expectedIdentityKey,
+								'Could not retrieve live identity key from workspace record'	);
 	}
 	
 	/**
@@ -182,7 +186,9 @@ class tx_l10nmgr_service_detectRecord_workspace_ttcontent_testcase extends tx_ph
 		$newIdentityKey = $this->DetectRecordService->verifyIdentityKey($currentIdentityKey, $forceTargetLanguageUid, $localisationParentRecord);
 		
 		//the identityKey should not be changed
-		$this->assertEquals($newIdentityKey,$currentIdentityKey);		
+		$this->assertEquals(	$newIdentityKey,
+								$currentIdentityKey,
+								'Determined wrong identityKey in workspace context' );		
 		
 		$GLOBALS['BE_USER']->user['workspace_id'] 	= $oldWorkspaceId;
 		$GLOBALS['BE_USER']->workspace				= $oldWorkspace;
@@ -213,7 +219,9 @@ class tx_l10nmgr_service_detectRecord_workspace_ttcontent_testcase extends tx_ph
 		$newIdentityKey = $this->DetectRecordService->verifyIdentityKey($currentIdentityKey, $forceTargetLanguageUid, $localisationParentRecord);
 		
 		//the identityKey should not be changed
-		$this->assertEquals($newIdentityKey,$currentIdentityKey);	
+		$this->assertEquals(	$newIdentityKey,
+								$currentIdentityKey,
+								'Determined wrong identityKey with workspace set to zero'	);	
 	}
 	
 	/**
@@ -242,7 +250,9 @@ class tx_l10nmgr_service_detectRecord_workspace_ttcontent_testcase extends tx_ph
 		$this->DetectRecordService->setWorkspaceId(131);
 		$newIdentityKey = $this->DetectRecordService->verifyIdentityKey($currentIdentityKey, $forceTargetLanguageUid, $localisationParentRecord);
 
-		$this->assertEquals($newIdentityKey,$workspaceIdentityKey,'Record detection service does not determine workspace identity key');
+		$this->assertEquals(	$newIdentityKey,
+								$workspaceIdentityKey,
+								'Record detection service does not determine workspace identity key'	);
 	}
 }
 ?>
