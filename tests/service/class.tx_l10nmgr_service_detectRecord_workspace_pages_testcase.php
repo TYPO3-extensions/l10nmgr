@@ -31,7 +31,7 @@
  * @author Timo Schmidt <timo.schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.tx_l10nmgr_service_detectRecord_workspace_ttcontent_testcase.php $
+ * @version $Id: class.tx_l10nmgr_service_detectRecord_workspace_pages_testcase.php $
  * @date 29.09.2009 11:30:21
  * @see tx_phpunit_database_testcase
  * @category testcase

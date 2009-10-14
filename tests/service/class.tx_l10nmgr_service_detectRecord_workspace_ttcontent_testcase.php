@@ -26,7 +26,7 @@
  *
  * {@inheritdoc}
  *
- * class.tx_l10nmgr_service_detectRecord_complex_pages_testcase.php
+ * class.tx_l10nmgr_service_detectRecord_workspace_ttcontent_testcase.php
  *
  * @author Timo Schmidt <timo.schmidt@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
