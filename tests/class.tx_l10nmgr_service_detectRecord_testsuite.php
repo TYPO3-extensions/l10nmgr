@@ -27,6 +27,8 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/service/class.tx_l10nmgr_
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/service/class.tx_l10nmgr_service_detectRecord_complex_ttcontent_testcase.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/service/class.tx_l10nmgr_service_detectRecord_complex_ttcontent_fce_disabledLang_testcase.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/service/class.tx_l10nmgr_service_detectRecord_complex_pages_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/service/class.tx_l10nmgr_service_detectRecord_workspace_pages_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/service/class.tx_l10nmgr_service_detectRecord_workspace_ttcontent_testcase.php';
 
 /**
  *
@@ -62,6 +64,9 @@ class tx_l10nmgr_service_detectRecord_testsuite extends tx_phpunit_testsuite {
 		$this->addTestSuite('tx_l10nmgr_service_detectRecord_complex_pages_testcase');
 		$this->addTestSuite('tx_l10nmgr_service_detectRecord_complex_ttcontent_testcase');
 		$this->addTestSuite('tx_l10nmgr_service_detectRecord_complex_ttcontent_fce_disabledLang_testcase');
+		$this->addTestSuite('tx_l10nmgr_service_detectRecord_workspace_pages_testcase');
+		$this->addTestSuite('tx_l10nmgr_service_detectRecord_workspace_ttcontent_testcase');
+		
 	}
 
 	/**

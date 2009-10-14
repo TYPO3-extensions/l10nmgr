@@ -222,7 +222,7 @@ class tx_l10nmgr_service_detectRecord {
 	 */
 	protected function buildIdentityKeyOrig($cmdTableName, $cmdProcessingString, $cmdFieldName, $cmdFieldFlexformPath) {
 
-		$identityKey  = $cmdTableName;
+		$identityKey  =    $cmdTableName;
 		$identityKey .= ':' . $cmdProcessingString;
 		$identityKey .= ':' . $cmdFieldName;
 		$identityKey .= ( (count($cmdFieldFlexformPath) > 0)
@@ -233,6 +233,8 @@ class tx_l10nmgr_service_detectRecord {
 		return $identityKey;
 	}
 
+
+	
 	/**
 	 * Build up the cmdProcessingString.
 	 *
@@ -253,12 +255,11 @@ class tx_l10nmgr_service_detectRecord {
 	protected function getProcessingString($translationTableName, $parentRecordUid, $parentRecordPid, $forceLanguageUid) {
 		$translationRecordArray = $this->getRecordTranslation($translationTableName, $parentRecordUid, $parentRecordPid, $forceLanguageUid);
 		$cmdProcessingString    = '';
-
 		
 		if($this->getWorkspaceId() > 0){
-			$translationRecordArray = t3lib_BEfunc::getWorkspaceVersionOfRecord($this->getWorkspaceId(), $translationTableName, $translationRecordArray['uid']);
+			$translationRecordArray = t3lib_BEfunc::getWorkspaceVersionOfRecord($this->getWorkspaceId(), tx_mvc_common_typo3::getTranslationTargetTable($translationTableName), $translationRecordArray['uid']);
 		}
-		
+				
 		if (! is_array($translationRecordArray) || count($translationRecordArray) == 0) {
 			$cmdProcessingString = 'NEW/' . $forceLanguageUid . '/' . $parentRecordUid;
 		} else {
