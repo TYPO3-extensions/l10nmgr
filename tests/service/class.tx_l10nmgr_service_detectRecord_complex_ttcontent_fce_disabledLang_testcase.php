@@ -110,8 +110,8 @@ class tx_l10nmgr_service_detectRecord_complex_ttcontent_fce_disabledLang_testcas
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function verifyIdentityKeyThrowsExceptionOnParentRecordNotFound() {
-		$this->importDataSet('/fixtures/detectRecord/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/language.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 111111111111;
 		$forceTargetLanguageUid   = 2;
@@ -129,9 +129,9 @@ class tx_l10nmgr_service_detectRecord_complex_ttcontent_fce_disabledLang_testcas
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function keepIdentityKeyForContentWithNoForcedLanguageUidOnNewElement() {
-		$this->importDataSet('/fixtures/detectRecord/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/language.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 619945;
 		$forceTargetLanguageUid   = 2;
@@ -155,9 +155,9 @@ class tx_l10nmgr_service_detectRecord_complex_ttcontent_fce_disabledLang_testcas
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function keepIdentityKeyForContentWithNoForcedLanguageUidOnExistingElement() {
-		$this->importDataSet('/fixtures/detectRecord/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/language.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 619945;
 		$forceTargetLanguageUid   = 3;
@@ -181,9 +181,9 @@ class tx_l10nmgr_service_detectRecord_complex_ttcontent_fce_disabledLang_testcas
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function buildNewIdentityKeyForContentWithForcedLanguageUidOnNewElement() {
-		$this->importDataSet('/fixtures/detectRecord/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/language.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 619945;
 		$forceTargetLanguageUid   = 1;
@@ -207,9 +207,9 @@ class tx_l10nmgr_service_detectRecord_complex_ttcontent_fce_disabledLang_testcas
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function buildNewIdentityKeyForContentWithNoForcedLanguageUidOnNotExistingElement() {
-		$this->importDataSet('/fixtures/detectRecord/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/language.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 619945;
 		$forceTargetLanguageUid   = 2;
@@ -233,9 +233,9 @@ class tx_l10nmgr_service_detectRecord_complex_ttcontent_fce_disabledLang_testcas
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function buildNewIdentityKeyForContentWithForcedLanguageUidOnNotExistingElement() {
-		$this->importDataSet('/fixtures/detectRecord/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/language.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 619945;
 		$forceTargetLanguageUid   = 1;
@@ -259,9 +259,9 @@ class tx_l10nmgr_service_detectRecord_complex_ttcontent_fce_disabledLang_testcas
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function buildNewIdentityKeyForContentWithNoForcedLanguageUidOnExistingElementWithTheNewIndicator() {
-		$this->importDataSet('/fixtures/detectRecord/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/language.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 619945;
 		$forceTargetLanguageUid   = 3;
@@ -285,9 +285,9 @@ class tx_l10nmgr_service_detectRecord_complex_ttcontent_fce_disabledLang_testcas
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function buildNewIdentityKeyForContentWithForcedLanguageUidOnNotExistingElementWithTheNewIndicator() {
-		$this->importDataSet('/fixtures/detectRecord/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/language.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 619945;
 		$forceTargetLanguageUid   = 4;

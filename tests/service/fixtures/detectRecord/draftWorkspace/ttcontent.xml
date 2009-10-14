@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testcase>
+    <tt_content>
+        <uid>619945</uid>
+        <pid>33155</pid>
+        <t3ver_oid>0</t3ver_oid>
+        <t3ver_id>0</t3ver_id>
+        <t3ver_wsid>0</t3ver_wsid>
+        <t3ver_label></t3ver_label>
+        <t3ver_state>0</t3ver_state>
+        <t3ver_stage>0</t3ver_stage>
+        <t3ver_count>0</t3ver_count>
+        <t3ver_tstamp>0</t3ver_tstamp>
+        <t3_origuid>0</t3_origuid>
+        <tstamp>1241086529</tstamp>
+        <hidden>0</hidden>
+        <CType>header</CType>
+        <header>This is a &lt;br&gt; dirty header element &amp; uses an ampersand</header>
+        <bodytext></bodytext>
+        <deleted>0</deleted>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <sys_language_uid>0</sys_language_uid>
+        <l18n_parent>0</l18n_parent>
+        <l18n_diffsource>a:20:{s:5:&quot;CType&quot;;N;s:6:&quot;colPos&quot;;N;s:11:&quot;spaceBefore&quot;;N;s:10:&quot;spaceAfter&quot;;N;s:13:&quot;section_frame&quot;;N;s:12:&quot;sectionIndex&quot;;N;s:6:&quot;hidden&quot;;N;s:6:&quot;header&quot;;N;s:15:&quot;header_position&quot;;N;s:13:&quot;header_layout&quot;;N;s:11:&quot;header_link&quot;;N;s:4:&quot;date&quot;;N;s:9:&quot;subheader&quot;;N;s:6:&quot;layout&quot;;N;s:9:&quot;linkToTop&quot;;N;s:9:&quot;starttime&quot;;N;s:7:&quot;endtime&quot;;N;s:32:&quot;tx_languagevisibility_visibility&quot;;N;s:16:&quot;sys_language_uid&quot;;N;s:8:&quot;fe_group&quot;;N;}</l18n_diffsource>
+        <crdate>1241083571</crdate>
+        <cruser_id>831</cruser_id>
+    </tt_content>
+    <tt_content>
+        <uid>619941</uid>
+        <pid>33155</pid>
+        <t3ver_oid>0</t3ver_oid>
+        <t3ver_id>0</t3ver_id>
+        <t3ver_wsid>0</t3ver_wsid>
+        <t3ver_label></t3ver_label>
+        <t3ver_state>0</t3ver_state>
+        <t3ver_stage>0</t3ver_stage>
+        <t3ver_count>0</t3ver_count>
+        <t3ver_tstamp>0</t3ver_tstamp>
+        <t3_origuid>0</t3_origuid>
+        <tstamp>1241086529</tstamp>
+        <hidden>0</hidden>
+        <CType>header</CType>
+        <header>This is a &lt;br&gt; dirty header element &amp; uses an ampersand</header>
+        <bodytext></bodytext>
+        <deleted>0</deleted>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <titleText></titleText>
+        <sys_language_uid>3</sys_language_uid>
+        <l18n_parent>619945</l18n_parent>
+        <l18n_diffsource>a:20:{s:5:&quot;CType&quot;;N;s:6:&quot;colPos&quot;;N;s:11:&quot;spaceBefore&quot;;N;s:10:&quot;spaceAfter&quot;;N;s:13:&quot;section_frame&quot;;N;s:12:&quot;sectionIndex&quot;;N;s:6:&quot;hidden&quot;;N;s:6:&quot;header&quot;;N;s:15:&quot;header_position&quot;;N;s:13:&quot;header_layout&quot;;N;s:11:&quot;header_link&quot;;N;s:4:&quot;date&quot;;N;s:9:&quot;subheader&quot;;N;s:6:&quot;layout&quot;;N;s:9:&quot;linkToTop&quot;;N;s:9:&quot;starttime&quot;;N;s:7:&quot;endtime&quot;;N;s:32:&quot;tx_languagevisibility_visibility&quot;;N;s:16:&quot;sys_language_uid&quot;;N;s:8:&quot;fe_group&quot;;N;}</l18n_diffsource>
+        <crdate>1241083571</crdate>
+        <cruser_id>831</cruser_id>
+    </tt_content>
+    
+    <tt_content>
+        <uid>619942</uid>
+        <pid>-1</pid>
+        <t3ver_oid>619941</t3ver_oid>
+        <t3ver_id>0</t3ver_id>
+        <t3ver_wsid>131</t3ver_wsid>
+        <t3ver_label></t3ver_label>
+        <t3ver_state>0</t3ver_state>
+        <t3ver_stage>0</t3ver_stage>
+        <t3ver_count>0</t3ver_count>
+        <t3ver_tstamp>0</t3ver_tstamp>
+        <t3_origuid>619941</t3_origuid>
+        <tstamp>1241086529</tstamp>
+        <hidden>0</hidden>
+        <CType>header</CType>
+        <header>This is a &lt;br&gt; dirty header element &amp; uses an ampersand</header>
+        <bodytext></bodytext>
+        <deleted>0</deleted>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <titleText></titleText>
+        <sys_language_uid>3</sys_language_uid>
+        <l18n_parent>619945</l18n_parent>
+        <l18n_diffsource>a:20:{s:5:&quot;CType&quot;;N;s:6:&quot;colPos&quot;;N;s:11:&quot;spaceBefore&quot;;N;s:10:&quot;spaceAfter&quot;;N;s:13:&quot;section_frame&quot;;N;s:12:&quot;sectionIndex&quot;;N;s:6:&quot;hidden&quot;;N;s:6:&quot;header&quot;;N;s:15:&quot;header_position&quot;;N;s:13:&quot;header_layout&quot;;N;s:11:&quot;header_link&quot;;N;s:4:&quot;date&quot;;N;s:9:&quot;subheader&quot;;N;s:6:&quot;layout&quot;;N;s:9:&quot;linkToTop&quot;;N;s:9:&quot;starttime&quot;;N;s:7:&quot;endtime&quot;;N;s:32:&quot;tx_languagevisibility_visibility&quot;;N;s:16:&quot;sys_language_uid&quot;;N;s:8:&quot;fe_group&quot;;N;}</l18n_diffsource>
+        <crdate>1241083571</crdate>
+        <cruser_id>831</cruser_id>
+    </tt_content>
+</testcase>
