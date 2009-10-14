@@ -149,5 +149,32 @@ class tx_l10nmgr_service_detectRecord_workspace_pages_testcase extends tx_phpuni
 		$this->assertEquals($newIdentityKey,$expectedWsIdentityKey,'Record detection service does not determine workspace identity key');			
 	}
 	
+	/**
+	 * @test
+	 * 
+	 * This method is used to check that a identityKey of a pages_language_overlay record
+	 * will be verified an returned.
+	 * 
+	 * @access public
+	 * @return void
+	 * 
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 */
+	public function verifyOverlayIdentityStringWillBeVerified(){
+		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/pages.xml');
+		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/ttcontent.xml');
+		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/language.xml');		
+
+		$workspaceWsIdentityKey = 'pages_language_overlay:486:title';
+		$expectedWsIdentityKey	= 'pages_language_overlay:486:title';
+
+		$localisationParentRecord 	= 33155;
+		$forceTargetLanguageUid  	= 1;	
+
+		$this->DetectRecordService->setWorkspaceId(131);
+		$newIdentityKey = $this->DetectRecordService->verifyIdentityKey($workspaceWsIdentityKey, $forceTargetLanguageUid, $localisationParentRecord);
+
+		$this->assertEquals($newIdentityKey,$expectedWsIdentityKey,'Record detection service does not determine workspace identity key');			
+	}
 }
 ?>
