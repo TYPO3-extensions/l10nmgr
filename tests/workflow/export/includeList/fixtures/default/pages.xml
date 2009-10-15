@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+- SELECT pages.uid,pages.pid,pages.deleted,pages.hidden,pages.title
+- FROM `pages`
+- JOIN tt_content ON tt_content.pid = pages.uid
+- WHERE tt_content.uid
+- IN ( 405, 475, 362, 425, 444, 360, 424, 442, 348, 423, 430, 133, 221, 434, 489, 565, 1016, 352, 387 )
+- GROUP BY pages.uid
+- LIMIT 0 , 30
+-->
+<testcase>
+    <pages>
+        <uid>64</uid>
+        <pid>104</pid>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <title>Nested tabs</title>
+    </pages>
+    <pages>
+        <uid>106</uid>
+        <pid>104</pid>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <title>Player, Double Gray Box</title>
+    </pages>
+    <pages>
+        <uid>129</uid>
+        <pid>25</pid>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <title>Network</title>
+    </pages>
+    <pages>
+        <uid>135</uid>
+        <pid>133</pid>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <title>Exhibitions</title>
+    </pages>
+    <pages>
+        <uid>136</uid>
+        <pid>133</pid>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <title>TV Ads</title>
+    </pages>
+    <pages>
+        <uid>140</uid>
+        <pid>16</pid>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <title>Motorsports</title>
+    </pages>
+</testcase>

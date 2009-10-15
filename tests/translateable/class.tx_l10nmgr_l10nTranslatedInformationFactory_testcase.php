@@ -17,7 +17,6 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
-	 *
 	 */
 	public function setUp() {
 		global $BE_USER;
@@ -39,15 +38,12 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	 *
 	 * @param void
 	 * @return void
-	 *
 	 */
 	public function test_canLoadFixtureL10NConfig() {
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-
 		$fixtureConfig = $this->getFixtureL10NConfig ();
 
 		$this->assertEquals ( $fixtureConfig->getUid (), 4711, 'Fixture l10nConfig can not be loaded' );
-
 	}
 
 	/**
@@ -67,7 +63,6 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	 *
 	 * @param void
 	 * @return void
-	 *
 	 */
 	public function test_canLoadFixturePreviewLanguage() {
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
@@ -93,13 +88,14 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$fixtureLimitToPageIds = $this->getFixtureLimitToPageids ();
 
 		$ids = array ();
-		$factory = new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
+		$factory = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
 
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$typo3DataProvider			=  new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData, $fixtureLimitToPageIds );
-		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
+		$typo3DataProvider =  new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$typo3DataProvider->addPageIdCollectionToRelevantPageIds($fixtureLimitToPageIds);
+		$translateableInformations = $factory->_call('createFromDataProvider', $typo3DataProvider);
 
 		$pageGroups = $translateableInformations->getPageGroups ();
 
@@ -119,26 +115,30 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
-		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
-		$exportData = $exportDataRepository->findById(9999);
+		$exportDataRepository  = new tx_l10nmgr_domain_exporter_exportDataRepository();
+		$exportData            = $exportDataRepository->findById(9999);
 		$fixtureLimitToPageIds = $this->getFixtureLimitToPageids ();
 
-		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			=  new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData, $fixtureLimitToPageIds);
-		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
+		$factory           = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
+		$typo3DataProvider =  new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$typo3DataProvider->addPageIdCollectionToRelevantPageIds($fixtureLimitToPageIds);
+
+		$translateableInformations = $factory->_call('createFromDataProvider', $typo3DataProvider);
 
 		$pageGroups = $translateableInformations->getPageGroups ();
-		$firstField = $pageGroups->offsetGet ( 0 )->getTranslateableElements ()->offsetGet ( 0 )->getTranslateableFields ()->offsetGet ( 0 );
+
+		$firstField = $pageGroups->offsetGet ( 4711 )->getTranslateableElements ()->offsetGet ( 0 )->getTranslateableFields ()->offsetGet ( 0 );
 
 		$this->assertEquals ( $firstField->getIdentityKey (), 'pages_language_overlay:NEW/999/4711:title' );
 		$this->assertEquals ( 1, $firstField->countWords () );
 
-		$wordCountOfFirstContentElement = $pageGroups->offsetGet ( 0 )->getTranslateableElements ()->offsetGet ( 1 )->countWords ();
+		$wordCountOfFirstContentElement = $pageGroups->offsetGet ( 4711 )->getTranslateableElements ()->offsetGet ( 1 )->countWords ();
 		$this->assertEquals ( $wordCountOfFirstContentElement, 7, 'Determined wrong word count' );
 	}
 
 	public function test_canGetContentElementFromPageAndReturnCorrectDiffToDefaut() {
-		try{
+
+		try {
 			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetContentElementFromPageAndReturnCorrectDiffToDefaut.xml' );
 			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
 			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
@@ -148,25 +148,25 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 			$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 			$exportData = $exportDataRepository->findById(9999);
 
-			$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
-			$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
-			$translateableInformations 	= $factory->createFromDataProvider( $typo3DataProvider );
+			$factory           = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
+			$typo3DataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+			$typo3DataProvider->addPageIdCollectionToRelevantPageIds(new ArrayObject(array(4711)));
+			$translateableInformations = $factory->_call('createFromDataProvider', $typo3DataProvider);
 
-			$pageGroups = $translateableInformations->getPageGroups ();
-			$allElements = $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
+			$pageGroups  = $translateableInformations->getPageGroups ();
+			$allElements = $pageGroups->offsetGet ( 4711 )->getTranslateableElements ();
 
 			//get second element (first is the page itself).
 			$ttContentElement = $allElements->offsetGet ( 1 );
 
-			$this->assertEquals(1,$ttContentElement->getTranslateableFields()->count(),'Unexpected number of translateableFields');
+			$this->assertEquals(1, $ttContentElement->getTranslateableFields()->count(), 'Unexpected number of translateableFields');
 
 			$headerField = $ttContentElement->getTranslateableFields()->offsetGet(0);
 
-			$this->assertEquals('l18n',$headerField->getDiffDefaultValue(),'Incorrect diffDefaultValue');
-		}catch(Exception $e){
+			$this->assertEquals('l18n', $headerField->getDiffDefaultValue(), 'Incorrect diffDefaultValue');
 
+		} catch (Exception $e) {
 			 $e->getTrace();
-
 		}
 	}
 
@@ -180,16 +180,16 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
-		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
-
+		$factory           = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
+		$typo3DataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$typo3DataProvider->addPageIdCollectionToRelevantPageIds(new ArrayObject(array(4711)));
+		$translateableInformations = $factory->_call('createFromDataProvider', $typo3DataProvider);
 
 		$pageGroups = $translateableInformations->getPageGroups ();
 
-		$allElements = $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
+		$allElements = $pageGroups->offsetGet ( 4711 )->getTranslateableElements ();
 
-		//get second element (first is the page itself).
+		// get second element (first is the page itself).
 		$ttContentElement = $allElements->offsetGet ( 1 );
 
 		/**
@@ -199,10 +199,9 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->assertEquals(3,$ttContentElement->getTranslateableFields()->count(),'Unexpected number of translateableFields');
 		$translateableFields = $ttContentElement->getTranslateableFields();
 
-		$headerField 		=	$translateableFields->offsetGet(0);
-		$headerLinkField 	=	$translateableFields->offsetGet(1);
-		$bodytextField 		=	$translateableFields->offsetGet(2);
-
+		$headerField     = $translateableFields->offsetGet(0);
+		$headerLinkField = $translateableFields->offsetGet(1);
+		$bodytextField   = $translateableFields->offsetGet(2);
 
 		$this->assertTrue($headerField->isChanged(),'The header should appear as changed and therefore it needs to be translated again.');
 		$this->assertFalse($headerLinkField->isChanged(),'The header link should not be changed therefore no new translatio is needed.');
@@ -217,15 +216,16 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
-		//diff must be something like l18n
+		// diff must be something like l18n
 		$factory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
 
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
-		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
+		$factory = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
+		$typo3DataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$typo3DataProvider->addPageIdCollectionToRelevantPageIds(new ArrayObject(array(99999)));
+		$translateableInformations = $factory->_call('createFromDataProvider', $typo3DataProvider);
 
 		/**
 		 * @todo: there is a bug in TYPO3. There is no correct l18n_diffsource for a new pages_language_overlay.
@@ -243,9 +243,12 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(9999)));
-		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
+		$factory           = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE); /* @var $factory tx_l10nmgr_domain_translateable_translateableInformationFactory */
+		$typo3DataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$typo3DataProvider->addPageIdCollectionToRelevantPageIds(new ArrayObject(array(9999)));
+
+		$translateableInformations = $factory->_call('createFromDataProvider', $typo3DataProvider);
+
 		/**
 		 * The TranslateableInformation has 2 translateableElements:
 		 *
@@ -257,21 +260,19 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		 */
 		$pageGroups = $translateableInformations->getPageGroups ();
 
-		$translateableElements 	= $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
-		$fceElement				= $translateableElements->offsetGet(1);
+		$translateableElements 	= $pageGroups->offsetGet ( 9999 )->getTranslateableElements ();
+		$fceElement = $translateableElements->offsetGet(1);
 
-		$headerField			= $fceElement->getTranslateableFields()->offsetGet(0);
+		$headerField = $fceElement->getTranslateableFields()->offsetGet(0);
 
 		$this->assertEquals("Header",$headerField->getDiffDefaultValue());
 		$this->assertEquals("Header Translated",$headerField->getTranslationValue());
 		$this->assertEquals("Header Changed",$headerField->getDefaultValue());
 
-
-		$contentField			= $fceElement->getTranslateableFields()->offsetGet(1);
+		$contentField = $fceElement->getTranslateableFields()->offsetGet(1);
 		$this->assertEquals("Content", $contentField->getDiffDefaultValue());
 		$this->assertEquals("Content Translated",$contentField->getTranslationValue());
 		$this->assertEquals("Content Changed",$contentField->getDefaultValue());
-
 	}
 
 	public function test_canGetDiffToDefaultFromLanguageSeparateFCE(){
@@ -281,15 +282,13 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
 		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
 
-		$factory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
-
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
-		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
-
+		$factory           = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
+		$typo3DataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$typo3DataProvider->addPageIdCollectionToRelevantPageIds(new ArrayObject(array(99999)));
+		$translateableInformations = $factory->_call('createFromDataProvider', $typo3DataProvider);
 
 		/**
 		 * The FCE on the page is configured with langChildren = 0 AND langDisable = 0. This means, that there
@@ -297,10 +296,9 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		 * translateable Information should only contain a page and a contentelement. The contentelement should
 		 * not have any translateable field.
 		 */
-
-		$pageGroups 			= $translateableInformations->getPageGroups ();
-		$translateableElements 	= $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
-		$ttContentElement 		= $translateableElements ->offsetGet ( 1 );
+		$pageGroups            = $translateableInformations->getPageGroups ();
+		$translateableElements = $pageGroups->offsetGet ( 99999 )->getTranslateableElements ();
+		$ttContentElement      = $translateableElements ->offsetGet ( 1 );
 
 		$this->assertEquals($ttContentElement->getTranslateableFields()->count(), 0,'Unexpected number of translateable fields');
 	}
@@ -315,18 +313,19 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(99999)));
-		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
+		$factory           = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
+		$typo3DataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$typo3DataProvider->addPageIdCollectionToRelevantPageIds(new ArrayObject(array(99999)));
+		$translateableInformations = $factory->_call('createFromDataProvider', $typo3DataProvider);
 
 		$pageGroups = $translateableInformations->getPageGroups ();
 
-		$translateableElements 		= $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
-		$contentElement				= $translateableElements->offsetGet(1);
+		$translateableElements = $pageGroups->offsetGet ( 99999 )->getTranslateableElements ();
+		$contentElement        = $translateableElements->offsetGet(1);
 
-		$ContentElementHeaderField	= $contentElement->getTranslateableFields()->offsetGet(0);
-		$FCEHeaderField				= $contentElement->getTranslateableFields()->offsetGet(1);
-		$FCEContentField			= $contentElement->getTranslateableFields()->offsetGet(2);
+		$ContentElementHeaderField = $contentElement->getTranslateableFields()->offsetGet(0);
+		$FCEHeaderField            = $contentElement->getTranslateableFields()->offsetGet(1);
+		$FCEContentField           = $contentElement->getTranslateableFields()->offsetGet(2);
 
 		$this->assertEquals('Original', $ContentElementHeaderField->getDefaultValue());
 		$this->assertEquals('Original', $ContentElementHeaderField->getTranslationValue());
@@ -364,15 +363,17 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
 
-		$factory 					= new tx_l10nmgr_domain_translateable_translateableInformationFactory ( );
-		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,  new ArrayObject(array(4711)));
-		$translateableInformations 	= $factory->createFromDataProvider ( $typo3DataProvider );
+		$factory           = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
+		$typo3DataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$typo3DataProvider->addPageIdCollectionToRelevantPageIds(new ArrayObject(array(4711)));
 
-		$pageGroups 				= $translateableInformations->getPageGroups ();
+		$translateableInformations = $factory->_call('createFromDataProvider', $typo3DataProvider);
 
-		$translateableElements 		= $pageGroups->offsetGet ( 0 )->getTranslateableElements ();
-		$contentElement				= $translateableElements->offsetGet(0);
-		$this->assertEquals(1,$contentElement->getTranslateableFields()->count());
+		$pageGroups            = $translateableInformations->getPageGroups ();
+
+		$translateableElements = $pageGroups->offsetGet ( 4711 )->getTranslateableElements ();
+		$contentElement        = $translateableElements->offsetGet(0);
+		$this->assertEquals(1, $contentElement->getTranslateableFields()->count());
 	}
 
 
@@ -424,9 +425,6 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 		$limitPageIdCollection->append ( 4712 );
 
 		return $limitPageIdCollection;
-
 	}
-
 }
-
 ?>

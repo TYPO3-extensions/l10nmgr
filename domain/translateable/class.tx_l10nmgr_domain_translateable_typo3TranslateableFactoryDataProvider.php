@@ -50,12 +50,38 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 	protected $t8Tools;
 
 	/**
+	 * @var array
+	 */
+	protected $recordsToProcess = array();
+
+	/**
+	 * @var boolean
+	 */
+	protected $isFromIncludeList = false;
+
+	/**
+	 * Add single records to the export queue.
+	 *
+	 * @param string $tableName
+	 * @param integer $recordUid
+	 *
+	 * @access public
+	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function appendRecordsToProcess($pageId, $tableName, $recordUid) {
+		$this->isFromIncludeList = true;
+		$this->addPageIdCollectionToRelevantPageIds(new ArrayObject(array($pageId)));
+		$this->recordsToProcess[$tableName][$pageId][]['uid'] = $recordUid;
+	}
+
+	/**
 	 * Constructor
 	 *
 	 * @param tx_l10nmgr_domain_exporter_exportData exportData object
-	 * @param ArrayObject pageIdCollection
 	 */
-	public function __construct(tx_l10nmgr_domain_exporter_exportData $exportData, ArrayObject $pageIdCollection ){
+	public function __construct(tx_l10nmgr_domain_exporter_exportData $exportData){
 
 		$this->exportData	= $exportData;
 		$l10ncfg 			= $exportData->getL10nConfigurationObject();
@@ -75,12 +101,7 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 		$this->tca_tables		= $this->getTCATablenames();
 		$this->relevantTables	= array_intersect($this->tca_tables,$l10ncfg->getTableArray());
 		$this->excludeArray		= $l10ncfg->getExcludeArray();
-
-//		$pageIdCollection		= $this->addPagesFromIncludeListToPageIdCollection($pageIdCollection);
-
-		$this->addPageIdCollectionToRelevantPageIds($pageIdCollection);
 	}
-
 
 	/**
 	 * @return boolean
@@ -192,11 +213,17 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 	 *  @param int $pageid
 	 *  @return array
 	 */
-	public function getRelevantElementIdsByTablenameAndPageId($tablename,$pageid){
-		$records = $this->t8Tools->getRecordsToTranslateFromTable($tablename, $pageid);
+	public function getRelevantElementIdsByTablenameAndPageId($tableName,$pageId){
+
+		if ($this->isFromIncludeList === false) {
+			$recordsToProcess = $this->t8Tools->getRecordsToTranslateFromTable($tableName, $pageId);
+		} else {
+			$recordsToProcess = $this->recordsToProcess[$tableName][$pageId];
+		}
+
 		$uids = array();
-		if (is_array($records)) {
-			foreach($records as $record){
+		if (is_array($recordsToProcess)) {
+			foreach($recordsToProcess as $record){
 				$uids[] = $record['uid'];
 			}
 		}
@@ -213,7 +240,7 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 	 *  @param int uid of the element
 	 */
 	public function getTranslationDetailsByTablenameAndElementId($tablename,$elementid) {
-		if(!self::isInIncludeOrExcludeArray($this->excludeArray,$tablename,$elementid)) {
+		if(!self::isArrayValueSet($this->excludeArray,$tablename,$elementid)) {
 			// this is need because 'pages' and other tables need to be handled diffrent
 			$tablerow = $tablename=='pages' ? t3lib_BEfunc::getRecord($tablename,$elementid) : $this->t8Tools->getSingleRecordToTranslate($tablename,$elementid);
 
@@ -230,23 +257,25 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
      *
      * @param ArrayObject
 	 */
-	protected function addPageIdCollectionToRelevantPageIds($pageIdCollection){
-		$this->collectionOfRelevantPageIds = new ArrayObject();
+	public function addPageIdCollectionToRelevantPageIds($pageIdCollection){
+
+		if (! $this->collectionOfRelevantPageIds instanceof ArrayObject) {
+			$this->collectionOfRelevantPageIds = new ArrayObject();
+		}
 
 		/**
-		* old check:
-		*
-		*if(!self::isInIncludeOrExcludeArray($excludeArray,'pages',$pageId)  && ($pageRow['l18n_cfg']&2)!=2 && !in_array($pageRow['doktype'], $this->disallowDoktypes)){
-		*
-		* $pageRow['l18n_cfg']&2)!=2 This check meens that the following options should not be checked in the backend:
-		* "Hide default translation of page" but it should be possible to translate pages where the default translation is hidden, therefore
-		* this check has been removed.
-		*/
-
+		 * old check:
+		 *
+		 * if(!self::isInIncludeOrExcludeArray($excludeArray,'pages',$pageId)  && ($pageRow['l18n_cfg']&2)!=2 && !in_array($pageRow['doktype'], $this->disallowDoktypes)){
+		 *
+		 * $pageRow['l18n_cfg']&2)!=2 This check meens that the following options should not be checked in the backend:
+		 * "Hide default translation of page" but it should be possible to translate pages where the default translation is hidden, therefore
+		 * this check has been removed.
+		 */
 		foreach($pageIdCollection as $pageId){
 			$pageRow = t3lib_BEfunc::getRecordWSOL('pages',$pageId);
-			if(!self::isInIncludeOrExcludeArray($this->excludeArray,'pages',$pageId)  && $this->hasAllowedDoctype($pageRow)){
-				$this->collectionOfRelevantPageIds->append($pageId);
+			if(!self::isArrayValueSet($this->excludeArray,'pages',$pageId)  && $this->hasAllowedDoctype($pageRow)){
+				$this->collectionOfRelevantPageIds->offsetSet($pageId, $pageId);
 			}
 		}
 	}
@@ -260,7 +289,6 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 	protected function hasAllowedDoctype($pageRow){
 		return !in_array($pageRow['doktype'], $this->disallowDoktypes);
 	}
-
 
 	/**
 	 * The factory uses internally the t8tools to collect informations about a translation.
@@ -291,7 +319,6 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 
 		return $t8Tools;
 	}
-
 
 	/**
 	 * Helpermethod to get the flexform diff
@@ -329,7 +356,7 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 	 * @param int $id
 	 * @return boolean
 	 */
-	private static function isInIncludeOrExcludeArray($array,$table,$id){
+	private static function isArrayValueSet($array,$table,$id){
 		return isset($array[$table.':'.$id]);
 	}
 }

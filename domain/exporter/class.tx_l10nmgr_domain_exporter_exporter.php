@@ -57,7 +57,6 @@ class tx_l10nmgr_domain_exporter_exporter {
 	 */
 	protected $isChunkProcessed = false;
 
-
 	/**
 	 * @var string
 	 */
@@ -81,52 +80,93 @@ class tx_l10nmgr_domain_exporter_exporter {
 	 * @param tx_l10nmgr_view_export_abstractExportView export view
 	 */
 	public function __construct(tx_l10nmgr_domain_exporter_exportData $exportData, $numberOfPagesPerChunk, tx_l10nmgr_view_export_abstractExportView $exportView) {
-		$this->exportData 				= $exportData;
-		$this->numberOfPagesPerChunk  	= $numberOfPagesPerChunk;
-		$this->exportView				= $exportView;
+		$this->exportData            = $exportData;
+		$this->numberOfPagesPerChunk = $numberOfPagesPerChunk;
+		$this->exportView            = $exportView;
 	}
 
 	/**
 	 * Run
 	 *
-	 * @param void
-	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @todo Refactoring is required!
+	 *
+	 * @access public
 	 * @return bool true if not completely processed
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function run() {
-		if ($this->exportData->getExportIsCompletelyProcessed()) {
+		$factory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
+		$this->wasRunning = true;
+
+		if ($this->exportData->countRemainingPages() <= 0) {
+
+			// last chunk
+			if (count($this->exportData->getL10nConfigurationObject()->getIncludeArray()) > 0 && !$this->exportData->getIncludeListProcessedState()) {
+
+				$l10ncfg = $this->exportData->getL10nConfigurationObject();
+				if ( $l10ncfg instanceOf tx_mvc_ddd_typo3_abstractTCAObject ) {
+					$includeArray = $l10ncfg->getIncludeArray();
+	//!FIXME verify the missing WS-ID this is probably needed if an export of an WS is processed
+					$tranlateableInformation = $factory->createFromIncludeList($this->exportData, $includeArray);
+
+					$this->processExport($tranlateableInformation);
+					$this->currentNumberOfFields = count($includeArray);
+					$this->exportData->setIncludeListProcessedState();
+					$this->exportData->setExportIsCompletelyProcessed(true);
+
+					return true;
+				}
+			}
+
+			$this->exportData->setExportIsCompletelyProcessed(true);
 			return false;
+
 		} else {
 
 			if ($this->exportData->getIsCompletelyUnprocessed()) {
 				$this->exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_EXPORTING);
 			}
 
-			$pagesForChunk 					= $this->getNextPagesChunk();
-			$factory 						= new tx_l10nmgr_domain_translateable_translateableInformationFactory();
-			$tranlateableInformation 		= $factory->createFromExportDataAndPageIdCollection($this->exportData,$pagesForChunk);
+			$pagesForChunk               = $this->getNextPagesChunk();
+//!FIXME verify the missing WS-ID this is probably needed if an export of an WS is processed
+			$tranlateableInformation 	 = $factory->createFromExportDataAndPageIdCollection($this->exportData,$pagesForChunk);
+			$this->currentNumberOfFields = $tranlateableInformation->countFields();
+			$this->processExport($tranlateableInformation, $pagesForChunk);
 
-			$this->currentNumberOfFields 	= $tranlateableInformation->countFields();
-
-			$this->exportView->setTranslateableInformation($tranlateableInformation);
-
-			$this->resultForChunk 		= $this->exportView->render();
-			$this->removeProcessedChunkPages($pagesForChunk);
-			$this->setIsChunkProcessed(true);
-
-			if ($this->exportData->countRemainingPages() <= 0) {
-				$this->exportData->setExportIsCompletelyProcessed(true);
-				$this->exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_EXPORTED);
-			}
-
-			$this->exportData->increaseNumberOfExportRuns();
-
-			$this->wasRunning = true;
+			$this->exportData->setExportIsCompletelyProcessed(false);
 			return true;
 		}
 	}
 
+	/**
+	 *
+	 * @param tx_l10nmgr_domain_translateable_translateableInformation $tranlateableInformation
+	 * @param ArrayObject $pagesForChunk DEFAULT is null
+	 *
+	 * @return void
+	 * @access public
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function processExport(tx_l10nmgr_domain_translateable_translateableInformation $tranlateableInformation, $pagesForChunk = null) {
 
+		$this->exportView->setTranslateableInformation($tranlateableInformation);
+
+		$this->resultForChunk 		= $this->exportView->render();
+		if ($pagesForChunk instanceOf ArrayObject) {
+			$this->removeProcessedChunkPages($pagesForChunk);
+		}
+
+		$this->setIsChunkProcessed(true);
+
+		if ($this->exportData->countRemainingPages() <= 0) {
+ 			$this->exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_EXPORTED);
+		}
+
+		$this->exportData->increaseNumberOfExportRuns();
+	}
 
 	/**
 	 * In each run the exporter processes one chunk. This method
@@ -149,7 +189,6 @@ class tx_l10nmgr_domain_exporter_exporter {
 		return $this->resultForChunk;
 	}
 
-
 	/**
 	 * Counts the items which haven been exported in the current chunk.
 	 *
@@ -157,11 +196,15 @@ class tx_l10nmgr_domain_exporter_exporter {
 	 * @return int
 	 */
 	protected function countItemsForChunk(){
+		$count = 0;
 		if(!$this->wasRunning){
 			throw new Exception('export has did not run export->run() has to be called first');
-		}else{
-			return $this->currentNumberOfFields;
 		}
+
+		if ($this->currentNumberOfFields > 0 ) {
+			$count = $this->currentNumberOfFields;
+		}
+		return $count;
 	}
 
 	/**
@@ -239,18 +282,19 @@ class tx_l10nmgr_domain_exporter_exporter {
 		$exporter 				= new tx_l10nmgr_domain_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
 
 		$prefix 				= $exportData->getL10nConfigurationObject()->getFilenameprefix();
-
 		$exporterWasRunning 	= $exporter->run();
 		$numberOfItemsInChunk	= $exporter->countItemsForChunk();
 		$exportFileRepository = new tx_l10nmgr_domain_exporter_exportFileRepository();
-		
+
 		if ($exporterWasRunning && $numberOfItemsInChunk > 0) {
-			//add the number of items in the current chunk to the whole number of items
+
+			// add the number of items in the current chunk to the whole number of items
 			$exportData->addNumberOfItems($numberOfItemsInChunk);
-			
-			//now we write the exporter result to a file
+
+			// now we write the exporter result to a file
 			$exportFile	= new tx_l10nmgr_domain_exporter_exportFile();
 			$exportFile->setFilename($exportView->getFilename($prefix,$exportData->getNumberOfExportRuns()));
+
 			$exportFile->setExportDataObject($exportData);
 			$exportFile->setContent($exporter->getResultForChunk());
 			$exportFile->setPid($exportData->getPid()); // store the export file record on the same page as the export data record (and its configuration record)
@@ -260,9 +304,11 @@ class tx_l10nmgr_domain_exporter_exporter {
 		}
 
 		if ($exportData->getExportIsCompletelyProcessed()) {
-			if($exportData->getNumberOfItems() > 0){
+
+			if( ($exportData->getNumberOfItems() > 0) || (count($exportData->getL10nConfigurationObject()->getIncludeArray()) > 0 )){
+
 				$exportData->createZip($exportView->getFilename($prefix) . '.zip');
-	
+
 				// postProcessingHook
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'])) {
 					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'] as $userFunc) {
@@ -277,7 +323,6 @@ class tx_l10nmgr_domain_exporter_exporter {
 
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportDataRepository->save($exportData);
-
 		return $exportData->getExportIsCompletelyProcessed();
 	}
 }

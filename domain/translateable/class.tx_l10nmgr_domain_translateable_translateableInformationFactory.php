@@ -46,10 +46,15 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 	 * @param tx_l10nmgr_domain_exporter_exportData $exportData
 	 * @param ArrayObject $pageIdCollection collection of page ids
 	 * @param integer $workspaceId DEFAULT is null
+	 *
+	 * @access public
 	 * @return tx_l10nmgr_domain_translateable_translateableInformation
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function createFromExportDataAndPageIdCollection(tx_l10nmgr_domain_exporter_exportData $exportData, ArrayObject $pageIdCollection, $workspaceId = NULL){
-		$typo3DataProvider			= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData, $pageIdCollection );
+		$typo3DataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$typo3DataProvider->addPageIdCollectionToRelevantPageIds($pageIdCollection);
 
 		if(!is_null($workspaceId)){
 			$typo3DataProvider->setWorkspaceId($workspaceId);
@@ -57,6 +62,59 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 		$tranlateableInformation 	= $this->createFromDataProvider($typo3DataProvider);
 
 		return $tranlateableInformation;
+	}
+
+	/**
+	 * The include list of the tx_l10nmgr_cfg database record.
+	 *
+	 * @param tx_l10nmgr_domain_exporter_exportData $exportData
+	 * @param array $includeArray Comma seperated list of tt_content:1,*
+	 * @param integer $workspaceId DEFAULT is null
+	 *
+	 * @access public
+	 * @return tx_l10nmgr_domain_translateable_translateableInformation
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function createFromIncludeList(tx_l10nmgr_domain_exporter_exportData $exportData, array $includeArray, $workspaceId = NULL){
+		$typo3DataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$count = 0;
+		foreach ($includeArray as $recordKey => $recordContent) {
+			$count++;
+			list($tableName, $recordUid) = explode(':', $recordKey);
+			$typo3DataProvider->appendRecordsToProcess($this->getPageId($tableName, $recordUid), $tableName, $recordUid);
+		}
+
+		if (!is_null($workspaceId)) {
+			$typo3DataProvider->setWorkspaceId($workspaceId);
+		}
+
+		$tranlateableInformation 	= $this->createFromDataProvider($typo3DataProvider);
+
+		return $tranlateableInformation;
+	}
+
+	/**
+	 * Return pid of the given record information.
+	 *
+	 * @param string $tableName
+	 * @param integer $recordUid
+	 *
+	 * @access public
+	 * @return integer
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function getPageId($tableName, $recordUid) {
+		$pid = 0;
+		//TODO check if WS-overlay is required
+		$recordArray = t3lib_BEfunc::getRecord($tableName, $recordUid);
+
+		if (is_array($recordArray)) {
+			$pid = $recordArray['pid'];
+		}
+
+		return $pid;
 	}
 
 	/**
@@ -72,11 +130,11 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 	 * @return tx_l10nmgr_domain_translateable_translateableInformation
 	 * @todo we need to handle the include index
 	 */
-	public function createFromDataProvider(tx_l10nmgr_interface_translateable_translateableFactoryDataProvider $dataProvider){
+	protected function createFromDataProvider(tx_l10nmgr_interface_translateable_translateableFactoryDataProvider $dataProvider){
 //!TODO change parameter $dataprovider handling...
-		$this->dataProvider			= $dataProvider;
+		$this->dataProvider	= $dataProvider;
 
-		$translateableInformation 	= new tx_l10nmgr_domain_translateable_translateableInformation();
+		$translateableInformation = new tx_l10nmgr_domain_translateable_translateableInformation();
 		$translateableInformation->setSourceLanguage($this->dataProvider->getSourceLanguage());
 		$translateableInformation->setTargetLanguage($this->dataProvider->getTargetLanguage());
 		$translateableInformation->setExportData($this->dataProvider->getExportData());
@@ -86,9 +144,9 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 		$pageIdCollection		= $this->dataProvider->getRelevantPageIds();
 		$tables_to_process		= $this->dataProvider->getRelevantTables();
 
-		//we only need to process tables which are in the TCA AND the configuration
+		// we only need to process tables which are in the TCA AND the configuration
 
-		//iterate pageId collection
+		// iterate pageId collection
 		foreach($pageIdCollection as $pageId){
 			$pageRow = t3lib_BEfunc::getRecordWSOL('pages',$pageId);
 
@@ -116,7 +174,6 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 						$pageGroup->addTranslateableElement($translateablePageElement);
 					}
 				}
-
 				$translateableInformation->addPageGroup($pageGroup);
 			}
 		}
@@ -152,7 +209,7 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 		$translationFields = $translationDetails['fields'];
 		if(is_array($translationFields)){
 			foreach($translationFields as $key => $translationField) {
-				
+
 				//@todo refactor determination of fieldName
 				list(,$uidString,$fieldName) = explode(':',$key);
 				list($uidValue) = explode('/',$uidString);
@@ -173,12 +230,12 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 
 				//if it is changed and we jus what changed elements OR if we don't care about that an element was changed
 				//@todo does this also work for the export at import time? in the old version new and changed elements where only excluded in the view
-				if(	( 	($translateableField->isChanged() && $this->dataProvider->getOnlyNewAndChanged()) 
-							|| 
-							!$this->dataProvider->getOnlyNewAndChanged()) 
-						&& 
-						$this->isTranslateableField($table,$translateableField) 
-					) {		
+				if(	( 	($translateableField->isChanged() && $this->dataProvider->getOnlyNewAndChanged())
+							||
+							!$this->dataProvider->getOnlyNewAndChanged())
+						&&
+						$this->isTranslateableField($table,$translateableField)
+					) {
 						$translateableElement->addTranslateableField($translateableField);
 				}
 			}
@@ -186,24 +243,24 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 
 		return $translateableElement;
 	}
-	
+
 	/**
 	 * This method is used to test if an field of a pages element is configured a pageOverlayField.
-	 * 
+	 *
 	 * @param $table
 	 * @param $translateableField
 	 * @return boolean
 	 */
 	protected function isTranslateableField($table,$translateableField){
-		if($table == 'pages'){
+		if ($table == 'pages') {
 			$overlayFieldArray = t3lib_div::trimExplode(",",$GLOBALS["TYPO3_CONF_VARS"]["FE"]["pageOverlayFields"]);
-			if(is_array($overlayFieldArray) && in_array($translateableField->getFieldName(),$overlayFieldArray)){
+			if (is_array($overlayFieldArray) && in_array($translateableField->getFieldName(),$overlayFieldArray)) {
 				return true;
-			}else{
+			} else {
 				//non existing overlay field
 				return false;
 			}
-		}else{
+		} else {
 			return true;
 		}
 	}

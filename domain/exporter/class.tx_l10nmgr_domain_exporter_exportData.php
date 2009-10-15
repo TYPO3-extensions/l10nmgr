@@ -279,6 +279,32 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
+	 * Method to indicate that the include list of the export has been processed.
+	 *
+	 * @param boolean $isProcessed DEFAULT is true
+	 *
+	 * @access public
+	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function setIncludeListProcessedState($isProcessed = true){
+		$this->setProgress('includeListProcessedState', $isProcessed);
+	}
+
+	/**
+	 * Returns the processing state of the include list of this export.
+	 *
+	 * @access public
+	 * @return boolean
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function getIncludeListProcessedState(){
+		return $this->getProgress('includeListProcessedState');
+	}
+
+	/**
 	 * Method to set the number of pages that are relevant for this export
 	 *
 	 * @param int $numberOfPages
@@ -651,13 +677,13 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 			default: {
 				throw new LogicException('ExportFormat is invalid (must be "xml" or "xls")!');
 			}
-
 		}
 
 		$viewClass->setForcedSourceLanguage($this->getSourceLanguageObject());
 		$viewClass->setL10NConfiguration($this->getL10nConfigurationObject());
 		$viewClass->setModeOnlyChanged($this->getOnlychangedcontent());
 		$viewClass->setModeNoHidden($this->getNohidden());
+		$viewClass->setTargetLanguageId($this->getTranslationLanguageObject()->getUid());
 
 		return $viewClass;
 	}
@@ -737,6 +763,5 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	public function getSourceIsoCode() {
 		return $this->getIsoCode($this->getSourceLanguageObject());
 	}
-
 }
 ?>

@@ -50,7 +50,6 @@ class tx_l10nmgr_domain_importer_importer {
 	 */
 	protected $exportData;
 
-
 	/**
 	 * @var boolean
 	 */
@@ -92,9 +91,11 @@ class tx_l10nmgr_domain_importer_importer {
 	 * This is the worker method of the importer, it uses the importData to get translationInform
 	 *
 	 * @access public
+	 *
+	 * @return boolean
+	 *
 	 * @author Timo Schmidt <schmidt@aoemedia.de>
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 * @return boolean
 	 */
 	public function run(){
 		$isRunning = false;
@@ -105,18 +106,16 @@ class tx_l10nmgr_domain_importer_importer {
 //!FIXME The "getNextFilenames" return also folders, this isn't the expected result.
 				// determine the next file to import
 			$currentFile = $this->importData->getNextFilename();
-
 			$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
 
-			if($this->importData->getImport_type() == 'xml'){
-				$TranslationData    = $TranslationFactory->createFromXMLFile($currentFile, $this->importData->getForceTargetLanguageUid());
-			}elseif($this->importData->getImport_type() == 'xls'){
-				$TranslationData    = $TranslationFactory->createFromExcelFile($currentFile,$this->importData->getForceTargetLanguageUid());
-
+			if ($this->importData->getImport_type() == 'xml') {
+				$TranslationData = $TranslationFactory->createFromXMLFile($currentFile, $this->importData->getForceTargetLanguageUid());
+			} elseif ($this->importData->getImport_type() == 'xls') {
+				$TranslationData = $TranslationFactory->createFromExcelFile($currentFile,$this->importData->getForceTargetLanguageUid());
 			}
 
 			try {
-				$exportData 		= $this->getExportDataFromTranslationData($TranslationData);
+				$exportData = $this->getExportDataFromTranslationData($TranslationData);
 
 					// check pre requirements
 				$this->checkImportConditions($this->importData, $exportData,$TranslationData);
@@ -166,7 +165,6 @@ class tx_l10nmgr_domain_importer_importer {
 		return self::$workspaceCheck;
 	}
 
-
 	/**
 	 * This method is used to configure the importer to disallow imports
 	 * into a target workspace which was not the source workspace.
@@ -196,8 +194,6 @@ class tx_l10nmgr_domain_importer_importer {
 			throw new tx_mvc_exception_invalidArgument('The import ('.$targetLanguageFromImport.') has a different target language as the export ('.$targetLanguageFromExport.') it results from');
 		}
 
-		###
-
 		$importWorkspaceId	 	= $TranslationData->getWorkspaceId();
 		$currentUserWorkspaceId	= $GLOBALS['BE_USER']->workspace;
 
@@ -205,50 +201,48 @@ class tx_l10nmgr_domain_importer_importer {
 			throw new tx_mvc_exception_invalidArgument('The workspace id in the import ('.$importWorkspaceId.') is another workspace id then the workspace id of the current user ('.$currentUserWorkspaceId.')');
 		}
 
-		###
 		$saveImportData = false;
 
 		$exportDataIdFromImportData = $importData->getExportdata_id();
 		$exportDataIdFromImportFile = $TranslationData->getExportDataRecordUid();
-		if($exportDataIdFromImportData == 0){
+		if ($exportDataIdFromImportData == 0) {
 			$importData->setExportdata_id($exportDataIdFromImportFile);
 			$saveImportData = true;
-		}else{
-			if($exportDataIdFromImportData != $exportDataIdFromImportFile){
+		} else {
+			if ($exportDataIdFromImportData != $exportDataIdFromImportFile) {
 				throw new tx_mvc_exception_invalidArgument('The exportdata_id of the importdata ('.$exportDataIdFromImportData.') was another then the exportData id of the import ('.$exportDataIdFromImportFile.')');
 			}
 		}
 
 		$configurationIdFromImportData = $importData->getConfiguration_id();
 		$configurationIdFromImportFile = $TranslationData->getL10ncfgUid();
-		if($configurationIdFromImportData == 0){
+		if ($configurationIdFromImportData == 0) {
 			$importData->setConfiguration_id($configurationIdFromImportFile);
 			$saveImportData = true;
-		}else{
-			if($configurationIdFromImportData != $configurationIdFromImportFile){
+		} else {
+			if ($configurationIdFromImportData != $configurationIdFromImportFile) {
 				throw new tx_mvc_exception_invalidArgument('The l10ncfg of the importdata ('.$configurationIdFromImportData.') was another then the l10ncfg id of the import ('.$configurationIdFromImportFile.')');
 			}
 		}
 
-		if($saveImportData){
+		if ($saveImportData) {
 			$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
 			$importDataRepository->save($importData);
 		}
-
 	}
-
-
 
 	/**
 	 * This static method is used to process one importChunk of an importData object.
 	 *
 	 * @param tx_l10nmgr_domain_importer_importData $importData
 	 */
-	public static function performImportRun($importData){
-		$importer 	= new tx_l10nmgr_domain_importer_importer($importData);
-		$res 		= $importer->run();
+	public static function performImportRun(tx_l10nmgr_domain_importer_importData $importData){
+		$importer = new tx_l10nmgr_domain_importer_importer($importData);
+		$res      = $importer->run();
 
-		if ($res) { $importData->increaseNumberOfImportRuns(); }
+		if ($res) {
+			$importData->increaseNumberOfImportRuns();
+		}
 
 		$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
 		$importDataRepository->save($importData);

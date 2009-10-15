@@ -80,7 +80,7 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 	public function setUp() {
 		global $BE_USER;
 		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+
 			// unset the indexed_search hooks
 		if (t3lib_extMgm::isLoaded('indexed_search')) {
 			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
@@ -100,7 +100,7 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 		);
 
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
-		$this->TranslatableFactory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
+		$this->TranslatableFactory = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
 		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();
 	}
 
@@ -176,10 +176,11 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 		$ExportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$ExportData           = $ExportDataRepository->findById($TranslationData->getExportDataRecordUid());
 
-		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($ExportData, $TranslationData->getPageIdCollection());
-		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
+		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($ExportData);
+		$translateableFactoryDataProvider->addPageIdCollectionToRelevantPageIds($TranslationData->getPageIdCollection());
+		$TranslatableInformation = $this->TranslatableFactory->_call('createFromDataProvider', $translateableFactoryDataProvider);
 
-		
+
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 
 		/**
@@ -240,8 +241,9 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 		$exportDataRepository 			= new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData 					= $exportDataRepository->findById(67);
 
-		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
-		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
+		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$translateableFactoryDataProvider->addPageIdCollectionToRelevantPageIds($TranslationData->getPageIdCollection());
+		$TranslatableInformation = $this->TranslatableFactory->_call('createFromDataProvider', $translateableFactoryDataProvider);
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 
@@ -275,7 +277,6 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 			'Check the pages_language_overlay record!'
 		);
 	}
-
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/tests/service/class.tx_l10nmgr_service_importTranslation_basic_testcase.php']) {

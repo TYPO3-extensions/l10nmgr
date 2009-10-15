@@ -56,7 +56,7 @@ class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_phpunit_data
 	public function setUp(){
 		global $BE_USER;
 		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 		$this->importStdDB();
@@ -102,9 +102,9 @@ class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_phpunit_data
 
 	/**
 	 * We only load the export configuration and exportdata, no content is in the database therefore the export should be empty.
-	 * 
+	 *
 	 * @expectedException tx_mvc_exception_skipped
-	 * @author Timo Schmidt 
+	 * @author Timo Schmidt
 	 * @test
 	 */
 	public function exporterThrowsExceptionOnEmptyExport(){
@@ -112,8 +112,9 @@ class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_phpunit_data
 		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportData.xml');
 
 		$exportData = $this->getFixtureExportData();
-		
-		 tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData,1);
+
+		 while (true)
+		 	tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData, 1);
 	}
 
 	/**

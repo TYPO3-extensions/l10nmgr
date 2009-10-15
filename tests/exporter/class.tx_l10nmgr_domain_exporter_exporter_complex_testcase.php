@@ -72,7 +72,7 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_phpunit_da
 	function setUp() {
 		global $BE_USER;
 		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+
 			// unset the indexed_search hooks
 		if (t3lib_extMgm::isLoaded('indexed_search')) {
 			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
@@ -91,13 +91,13 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_phpunit_da
 		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','aoe_realurlpath','cc_devlog'));
 
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
-		$this->TranslatableFactory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
-		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();
+		$this->TranslatableFactory = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
+ 	 	$this->TranslationService  = new tx_l10nmgr_service_importTranslation();
 	}
 
 	/**
-	* Resets the test enviroment after the test.
-	*/
+	 * Resets the test enviroment after the test.
+	 */
 	function tearDown() {
 		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 
@@ -200,8 +200,10 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_phpunit_da
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(67);
 
-		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,$TranslationData->getPageIdCollection());
-		$TranslatableInformation		  = $this->TranslatableFactory->createFromDataProvider($translateableFactoryDataProvider);
+		$translateableFactoryDataProvider = new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+		$translateableFactoryDataProvider->addPageIdCollectionToRelevantPageIds($TranslationData->getPageIdCollection());
+
+		$TranslatableInformation = $this->TranslatableFactory->_call('createFromDataProvider', $translateableFactoryDataProvider);
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 

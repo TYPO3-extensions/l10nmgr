@@ -23,13 +23,13 @@ class tx_l10nmgr_domain_configuration_configuration_testcase extends tx_phpunit_
 	public function setUp(){
 		global $BE_USER;
 		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 		$GLOBALS['TYPO3_DB']->debugOutput = TRUE;
-		
+
 		$this->importStdDB();
-		
+
 		$this->importExtensions(array('cms','l10nmgr','static_info_tables','templavoila'));
 	}
 
@@ -58,7 +58,6 @@ class tx_l10nmgr_domain_configuration_configuration_testcase extends tx_phpunit_
 
 		$this->assertTrue(in_array(4711,$pageCollection->getArrayCopy()),'page could not be found in page collection');
 		$this->assertFalse(in_array(4715,$pageCollection->getArrayCopy()),'page could not be found in page collection');
-		//var_dump($pageCollection);
 	}
 }
 ?>

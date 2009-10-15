@@ -69,27 +69,27 @@ class tx_l10nmgr_domain_translateable_translateableInformation {
 	 * @var string
 	 */
 	protected $siteUrl;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $workspaceId;
-	
+
 	/**
-	 * @var tx_l10nmgr_domain_export_exportData 
+	 * @var tx_l10nmgr_domain_export_exportData
 	 */
 	protected $exportData;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $countedFields;
-	
+
 	/**
 	 * @var int
 	 */
 	protected $countedWords;
-	
+
 	/**
 	 * @return ArrayObject
 	 */
@@ -102,21 +102,21 @@ class tx_l10nmgr_domain_translateable_translateableInformation {
 	public function getSourceLanguage() {
 		return $this->sourceLanguage;
 	}
-	
+
 	/**
 	 * @return tx_l10nmgr_domain_language_Language
 	 */
 	public function getTargetLanguage() {
 		return $this->targetLanguage;
 	}
-	
+
 	/**
 	 * @param tx_l10nmgr_domain_language_Language $sourceLanguage
 	 */
 	public function setSourceLanguage($sourceLanguage) {
 		$this->sourceLanguage = $sourceLanguage;
 	}
-	
+
 	/**
 	 * Returns the id of the configured source language
 	 *
@@ -129,11 +129,11 @@ class tx_l10nmgr_domain_translateable_translateableInformation {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * @param tx_l10nmgr_domain_language_Language $targetLanguage
 	 */
-	public function setTargetLanguage($targetLanguage) {
+	public function setTargetLanguage(tx_l10nmgr_domain_language_Language $targetLanguage) {
 		$this->targetLanguage = $targetLanguage;
 	}
 	/**
@@ -143,37 +143,37 @@ class tx_l10nmgr_domain_translateable_translateableInformation {
 	public function __construct(){
 		$this->pageGroups = new ArrayObject();
 	}
-	
+
 	/**
 	 * Method to add a pageGroup to the translateableInformation
-	 * 
+	 *
 	 * @param tx_l10nmgr_domain_translateable_PageGroup $pageGroup
 	 */
 	public function addPageGroup(tx_l10nmgr_domain_translateable_PageGroup $pageGroup){
-		$this->pageGroups->append($pageGroup);
+		$this->pageGroups->offsetSet($pageGroup->getUid(), $pageGroup);
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getSiteUrl() {
 		return $this->siteUrl;
 	}
-	
+
 	/**
 	 * @return int
 	 */
 	public function getWorkspaceId() {
 		return $this->workspaceId;
 	}
-	
+
 	/**
 	 * @param string $siteUrl
 	 */
 	public function setSiteUrl($siteUrl) {
 		$this->siteUrl = $siteUrl;
 	}
-	
+
 	/**
 	 * @param int $workspaceId
 	 */
@@ -181,25 +181,25 @@ class tx_l10nmgr_domain_translateable_translateableInformation {
 		$this->workspaceId = $workspaceId;
 	}
 
-	
+
 	/**
-	 * Counts all fields of all pagegroups 
+	 * Counts all fields of all pagegroups
 	 *
 	 * @return int
 	 */
 	public function countFields(){
 		if($this->countedFields == 0 && $this->pageGroups instanceof ArrayObject ){
 			foreach($this->pageGroups as $pageGroup){
-				$this->countedFields += $pageGroup->countFields();	
+				$this->countedFields += $pageGroup->countFields();
 			}
 		}
-		
+
 		return $this->countedFields;
 	}
-	
+
 	/**
 	 * Counts all words within the translateableInformation
-	 * 
+	 *
 	 * @return int
 	 */
 	public function countWords(){
@@ -208,22 +208,22 @@ class tx_l10nmgr_domain_translateable_translateableInformation {
 				$this->countedWords += $pageGroup->countWords();
 			}
 		}
-		
+
 		return $this->countedWords;
 	}
-	
+
 	/**
 	 * Method to get the exportData objects where this translateableInformation belongs to.
-	 * 
+	 *
 	 * @return tx_l10nmgr_domain_export_exportData
 	 */
 	public function getExportData() {
 		return $this->exportData;
 	}
-	
+
 	/**
 	 * Method to set the exportData where the translateableInformation has been created for.
-	 * 
+	 *
 	 * @param tx_l10nmgr_domain_export_exportData $exportData
 	 */
 	public function setExportData($exportData) {

@@ -184,11 +184,15 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 	 * @return int
 	 */
 	protected function getTargetLanguageId(){
-		if($this->getTranslateableInformation() instanceof tx_l10nmgr_domain_translateable_translateableInformation ){
-			return $this->translateableInformation->getTargetLanguage()->getUid();
-		}elseif(isset($this->sysLang)){
-			return $this->sysLang;
+		$targetLanguage = 0;
+
+		if ($this->getTranslateableInformation() instanceof tx_l10nmgr_domain_translateable_translateableInformation ) {
+			$targetLanguage = $this->translateableInformation->getTargetLanguage()->getUid();
+		} elseif (isset($this->sysLang)) {
+			$targetLanguage = $this->sysLang;
 		}
+
+		return $targetLanguage;
 	}
 
 	/**
@@ -243,7 +247,7 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 	public function getFilename($configurationPrefix='',$postfix = 0){
 
 		$exporttypePrefix = $this->getExporttypePrefix();
-		$targetLanguageId = $this->getTranslateableInformation()->getTargetLanguage()->getUid();
+		$targetLanguageId = $this->getTargetLanguageId();
 
 		if ($postfix != '') {
 			$filename = $exporttypePrefix. '_' . $targetLanguageId . '_' . date('dmy-Hi') . '_' . $postfix . '.xml';
