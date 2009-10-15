@@ -1,11 +1,9 @@
 <form action="<?php echo $this->linkCreator->getActionLink('','saveTranslation')->setScriptPath('index.php')->useOverruledParameters()->makeUrl(); ?>" method="post">
 <?php 
-	if ($this->l10ncfgObj->getData('displaymode')>0)	{
-		if ($this->l10ncfgObj->getData('displaymode')==2)	{ 
-			$analyseMode = False;
-		}
-	} else {
-		$analyseMode = True;
+	/* @var $this  tx_l10nmgr_view_export_exporttypes_l10nHTMLList */
+	$analyseMode = True;
+	if ($this->l10ncfgObj->getDisplaymode() == 2)	{ 
+		$analyseMode = False;
 	}
 				
 	$translateableInformation = $this->getTranslateableInformation();
@@ -20,7 +18,6 @@
 				<?php /* @var $translateableElement  tx_l10nmgr_domain_translateable_translateableElement  */ ?>
 				<?php $table 		= $translateableElement->getTableName(); ?>
 				<?php $elementUid 	= $translateableElement->getUid(); ?>
-
 				<?php $editLink 	= $this->getEditLink($translateableElement); ?>
 				<?php $flags 		= array();?>
 				<?php $flags 		= $this->getFlagsForElement($translateableElement); ?>

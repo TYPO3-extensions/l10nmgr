@@ -162,7 +162,7 @@ class tx_l10nmgr_service_importTranslation {
 	 * @param $e
 	 */
 	protected function handleException($e){
-		trigger_error($e->getMessage(),E_USER_WARNING);
+		@trigger_error($e->getMessage(),E_USER_WARNING);
 		tx_mvc_common_debug::logException($e);
 	}
 

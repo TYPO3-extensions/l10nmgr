@@ -70,6 +70,13 @@ class tx_l10nmgr_controller_translate extends tx_mvc_controller_action {
 	protected $keepArgumentKeys = array('configurationId','selectedTable','selectedUid','target_language','no_hidden','new_changed_only');	
 	
 	/**
+	 * These arguments will be stored in the session
+	 * 
+	 * @var array
+	 */
+	protected $sessionArgumentKeys = array('configurationId');
+	
+	/**
 	 * Called before processing - used to initialise the arguments
 	 * 
 	 * @access protected

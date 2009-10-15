@@ -188,7 +188,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		if ($l10ncfgObj instanceof tx_l10nmgr_domain_configuration_configuration) {
 
 				// Setting page id
-			$this->id = $l10ncfgObj->getData('pid');
+			$this->id = $l10ncfgObj->getPid();
 			$this->perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
 			$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
 			$access = is_array($this->pageinfo) ? 1 : 0;
@@ -205,8 +205,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 				$this->content.=$this->doc->divider(15);
 				$this->content.=$this->doc->section($LANG->getLL('general.export.choose.action.title'),
-						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[lang]",$this->sysLanguage,$this->MOD_MENU["lang"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
-						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).'<br />'
+						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getUid(),"SET[lang]",$this->sysLanguage,$this->MOD_MENU["lang"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
+						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getUid(),"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).'<br />'
 					);
 
 					// Render content:

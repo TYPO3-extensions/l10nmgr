@@ -22,8 +22,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
-
 /**
  * l10nConfiguration
  *  Capsulate a 10ncfg record.
@@ -37,7 +35,15 @@
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abstractTCAObject {
+	
+	/**
+	 * @var t3lib_pageTree
+	 */
 	protected $tree;
+	
+	/**
+	 * @var ArrayObject
+	 */
 	protected $exportPageIdCollection;
 
 	/**
@@ -56,17 +62,8 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	* @param string	$key		Key of the field. E.g. title,uid...
 	* @return string	Value of the field
 	**/
-	function getData($key) {
+	protected function getData($key) {
 		return $this->row[$key];
-	}
-
-	/**
-	* get uid field
-	*
-	* @return Int
-	**/
-	public function getId() {
-		return $this->getData('uid');
 	}
 
 	/**
@@ -161,7 +158,6 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 		return array_unique($pidList);
 	}	
 	
-	
 	/**
 	 * Each l10nconfig can define an includeList this method returns the includeList as array.
 	 *
@@ -178,7 +174,6 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	 * @return ArrayObject
 	 */
 	public function getExportPageIdCollection() {
-
 		$this->exportPageIdCollection = new ArrayObject();
 		$tree 			= $this->getExportTree();
 		$excludeArray	= $this->getExcludeArray();		
@@ -199,7 +194,7 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	 * a set of pages wich should be exported.
 	 *
 	 * @param void
-	 *
+	 * @return t3lib_pageTree
 	 */
 	protected function getExportTree(){
 		$this->buildExportTree();
@@ -211,7 +206,6 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	 *
 	 * @param void
 	 * @return void
-	 *
 	 */
 	protected function buildExportTree(){
 		if(!isset($this->tree)){
@@ -250,7 +244,6 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 		}
 	}
 
-
 	/**
 	 * Method to determine if all exports from the configuration are allready finished or not
 	 *
@@ -259,27 +252,6 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	public function hasIncompleteExports(){
 		//@todo determine all exports exports that are currently not finished
 		return false;
-
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function updateFlexFormDiff($sysLang,$flexFormDiffArray)	{
-
-			// Updating diff-data:
-			// First, unserialize/initialize:
-		$flexFormDiffForAllLanguages = unserialize($this->getData('flexformdiff'));
-		if (!is_array($flexFormDiffForAllLanguages))	{
-			$flexFormDiffForAllLanguages = array();
-		}
-
-			// Set the data (
-		$flexFormDiffForAllLanguages[$sysLang] = array_merge((array)$flexFormDiffForAllLanguages[$sysLang],$flexFormDiffArray);
-
-			// Serialize back and save it to record:
-		$this->row['flexformdiff'] = serialize($flexFormDiffForAllLanguages);
-		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg','uid='.intval($this->getData('uid')),array('flexformdiff' => $this->getData('flexformdiff')));
 	}
 
 	/**
@@ -305,6 +277,4 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/configuration/class.tx_l10nmgr_domain_configuration_configuration.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/configuration/class.tx_l10nmgr_domain_configuration_configuration.php']);
 }
-
-
 ?>

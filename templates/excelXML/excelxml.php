@@ -5,7 +5,7 @@
  xmlns:html="http://www.w3.org/TR/REC-html40"
  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
  <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
-  <Author>ConfigurationUid:<?= $this->l10ncfgObj->getData('uid'); ?>|ExportDataUid:<?= $this->getTranslateableInformation()->getExportData()->getUid(); ?>|TargetLanguageUid:<?= $this->getTranslateableInformation()->getTargetLanguage()->getUid(); ?>|FormatVersion:<? echo L10NMGR_FILEVERSION; ?></Author>
+  <Author>ConfigurationUid:<?= $this->l10ncfgObj->getUid(); ?>|ExportDataUid:<?= $this->getTranslateableInformation()->getExportData()->getUid(); ?>|TargetLanguageUid:<?= $this->getTranslateableInformation()->getTargetLanguage()->getUid(); ?>|FormatVersion:<? echo L10NMGR_FILEVERSION; ?></Author>
   <LastAuthor>Office 2004 Test Drive User</LastAuthor>
   <Created>2006-12-01T02:10:16Z</Created>
   <Version>11.512</Version>

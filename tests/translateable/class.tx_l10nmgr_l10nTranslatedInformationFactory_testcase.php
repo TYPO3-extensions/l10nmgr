@@ -46,7 +46,7 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 
 		$fixtureConfig = $this->getFixtureL10NConfig ();
 
-		$this->assertEquals ( $fixtureConfig->getId (), 4711, 'Fixture l10nConfig can not be loaded' );
+		$this->assertEquals ( $fixtureConfig->getUid (), 4711, 'Fixture l10nConfig can not be loaded' );
 
 	}
 
