@@ -33,28 +33,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_service_detectRecord_workspace_pages_testcase.php $
  * @date 29.09.2009 11:30:21
- * @see tx_phpunit_database_testcase
+ * @see tx_l10nmgr_tests_database_testcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_service_detectRecord_workspace_pages_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_service_detectRecord_workspace_pages_testcase extends tx_l10nmgr_tests_database_testcase {
 
-	/**
-	 * Import dataset into test database
-	 *
-	 * This will only work if the fixture locate at the same directory level as the testcase.
-	 *
-	 * @example $this->importDataSet('/fixtures/__FILENAME__.xml');
-	 * @param string $pathToFile The path beginning from the current location of the testcase
-	 * @access protected
-	 * @return void
-	 */
-	protected function importDataSet($pathToFile) {
-		parent::importDataSet(dirname ( __FILE__ ) . $pathToFile);
-	}
-		
 	/**
 	 * Creates the test environment.
 	 *
@@ -72,8 +58,8 @@ class tx_l10nmgr_service_detectRecord_workspace_pages_testcase extends tx_phpuni
 			// order of extension-loading is important !!!!
 		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog'));
 		$this->DetectRecordService = t3lib_div::makeInstance('tx_l10nmgr_service_detectRecord');
-	}	
-	
+	}
+
 	/**
 	 * Resets the test enviroment after the test.
 	 *
@@ -88,93 +74,93 @@ class tx_l10nmgr_service_detectRecord_workspace_pages_testcase extends tx_phpuni
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 
    		$this->DetectRecordService = null;
-	}	
-	
+	}
+
 	/**
-	 * @test 
-	 * 
+	 * @test
+	 *
 	 * This testcase is used to check that a pages key will be verified to a pages_languages_overlay
 	 * key with a workspace uid, when the record detection service will be initialized with a workspace id.
-	 * 
-	 * @access public 
+	 *
+	 * @access public
 	 * @return void
-	 * 
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
 	public function verifyPageKeyResultsInWorkspacePagesLanguageOverlayIdentityKey(){
 		$this->markTestSkipped('This testcase can be ignored since this can currently not happen in an export');
-		
-		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/language.xml');		
-		
+
+		$this->importDataSet('/service/fixtures/detectRecord/draftWorkspace/pages.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/draftWorkspace/ttcontent.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/draftWorkspace/language.xml');
+
 		$liveWsIdentityKey 		= 'pages:33155:title';
 		$expectedWsIdentityKey	= 'pages_language_overlay:486:title';
-		
+
 		$localisationParentRecord 	= 33155;
-		$forceTargetLanguageUid  	= 1;	
+		$forceTargetLanguageUid  	= 1;
 
 		$this->DetectRecordService->setWorkspaceId(131);
 		$newIdentityKey = $this->DetectRecordService->verifyIdentityKey($liveWsIdentityKey, $forceTargetLanguageUid, $localisationParentRecord);
 
-		$this->assertEquals($newIdentityKey,$expectedWsIdentityKey,'Record detection service does not determine workspace identity key');	
+		$this->assertEquals($newIdentityKey,$expectedWsIdentityKey,'Record detection service does not determine workspace identity key');
 	}
-	
+
 	/**
 	 * @test
-	 * 
-	 * When the detection service will be called with an overlay identity key and a workspace context and 
-	 * an workspace version for this overlay exists, the identity key should be corrected to 
+	 *
+	 * When the detection service will be called with an overlay identity key and a workspace context and
+	 * an workspace version for this overlay exists, the identity key should be corrected to
 	 * the identity key of the workspace version.
-	 * 
+	 *
 	 * @access public
 	 * @return void
-	 * 
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
-	public function verifyPageWithOverlayAndExistingWorkspaceVersionReturnsWorkspaceIdentityKey(){		
-		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/language.xml');		
-		
+	public function verifyPageWithOverlayAndExistingWorkspaceVersionReturnsWorkspaceIdentityKey(){
+		$this->importDataSet('/service/fixtures/detectRecord/draftWorkspace/pages.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/draftWorkspace/ttcontent.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/draftWorkspace/language.xml');
+
 		$liveWsIdentityKey 		= 'pages_language_overlay:485:title';
 		$expectedWsIdentityKey	= 'pages_language_overlay:486:title';
-		
+
 		$localisationParentRecord 	= 33155;
-		$forceTargetLanguageUid  	= 1;	
+		$forceTargetLanguageUid  	= 1;
 
 		$this->DetectRecordService->setWorkspaceId(131);
 		$newIdentityKey = $this->DetectRecordService->verifyIdentityKey($liveWsIdentityKey, $forceTargetLanguageUid, $localisationParentRecord);
 
-		$this->assertEquals($newIdentityKey,$expectedWsIdentityKey,'Record detection service does not determine workspace identity key');			
+		$this->assertEquals($newIdentityKey,$expectedWsIdentityKey,'Record detection service does not determine workspace identity key');
 	}
-	
+
 	/**
 	 * @test
-	 * 
+	 *
 	 * This method is used to check that a identityKey of a pages_language_overlay record
 	 * will be verified an returned.
-	 * 
+	 *
 	 * @access public
 	 * @return void
-	 * 
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
 	public function verifyOverlayIdentityStringWillBeVerified(){
-		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/draftWorkspace/language.xml');		
+		$this->importDataSet('/service/fixtures/detectRecord/draftWorkspace/pages.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/draftWorkspace/ttcontent.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/draftWorkspace/language.xml');
 
 		$workspaceWsIdentityKey = 'pages_language_overlay:486:title';
 		$expectedWsIdentityKey	= 'pages_language_overlay:486:title';
 
 		$localisationParentRecord 	= 33155;
-		$forceTargetLanguageUid  	= 1;	
+		$forceTargetLanguageUid  	= 1;
 
 		$this->DetectRecordService->setWorkspaceId(131);
 		$newIdentityKey = $this->DetectRecordService->verifyIdentityKey($workspaceWsIdentityKey, $forceTargetLanguageUid, $localisationParentRecord);
 
-		$this->assertEquals($newIdentityKey,$expectedWsIdentityKey,'Record detection service does not determine workspace identity key');			
+		$this->assertEquals($newIdentityKey,$expectedWsIdentityKey,'Record detection service does not determine workspace identity key');
 	}
 }
 ?>

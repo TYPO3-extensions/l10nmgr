@@ -47,7 +47,7 @@ if (t3lib_extMgm::isLoaded('mvc')) {
  * @subpackage	l10nmgr
  * @access public
  */
-class tx_l10nmgr_domain_exporter_exporter_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_domain_exporter_exporter_testcase extends tx_l10nmgr_tests_database_testcase {
 	/**
 	 * Changes current database to test database
 	 *
@@ -76,7 +76,7 @@ class tx_l10nmgr_domain_exporter_exporter_testcase extends tx_phpunit_database_t
 	public function setUp(){
 		global $BE_USER;
 		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 		$this->importStdDB();
@@ -90,9 +90,9 @@ class tx_l10nmgr_domain_exporter_exporter_testcase extends tx_phpunit_database_t
 	}
 
 	public function test_exporterTerminatesAfterExpectedNumberOfRuns(){
-			$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureExportConfiguration.xml');
-			$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureExportData.xml');
-			$this->importDataSet(dirname(__FILE__). '/fixtures/exporterTerminatesAfterExpectedNumberOfRuns.xml');
+			$this->importDataSet('/exporter/fixtures/canLoadFixtureExportConfiguration.xml');
+			$this->importDataSet('/exporter/fixtures/canLoadFixtureExportData.xml');
+			$this->importDataSet('/exporter/fixtures/exporterTerminatesAfterExpectedNumberOfRuns.xml');
 
 			$exportData = $this->getFixtureExportData();
 
@@ -118,8 +118,8 @@ class tx_l10nmgr_domain_exporter_exporter_testcase extends tx_phpunit_database_t
 	 *
 	 */
 	public function test_canGetFixtureExportData(){
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureExportConfiguration.xml');
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canLoadFixtureExportData.xml');
+		$this->importDataSet('/exporter/fixtures/canLoadFixtureExportConfiguration.xml');
+		$this->importDataSet('/exporter/fixtures/canLoadFixtureExportData.xml');
 
 		$exportData = $this->getFixtureExportData();
 

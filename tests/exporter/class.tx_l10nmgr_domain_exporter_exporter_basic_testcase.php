@@ -48,7 +48,7 @@ if (t3lib_extMgm::isLoaded('mvc')) {
  * @access public
  */
 
-class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_l10nmgr_tests_database_testcase {
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
 	 *
@@ -78,9 +78,9 @@ class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_phpunit_data
 	 * @author Timo Schmidt
 	 */
 	public function test_exporterTerminatesAfterExpectedNumberOfRuns(){
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportData.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/exporterTerminatesAfterExpectedNumberOfRuns.xml');
+		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
+		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportData.xml');
+		$this->importDataSet('/exporter/fixtures/basic/exporterTerminatesAfterExpectedNumberOfRuns.xml');
 
 		$exportData = $this->getFixtureExportData();
 
@@ -108,8 +108,8 @@ class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_phpunit_data
 	 * @test
 	 */
 	public function exporterThrowsExceptionOnEmptyExport(){
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportData.xml');
+		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
+		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportData.xml');
 
 		$exportData = $this->getFixtureExportData();
 
@@ -125,8 +125,8 @@ class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_phpunit_data
 	 * @author Timo Schmidt
 	 */
 	public function test_canGetFixtureExportData(){
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/basic/canLoadFixtureExportData.xml');
+		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
+		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportData.xml');
 
 		$exportData = $this->getFixtureExportData();
 

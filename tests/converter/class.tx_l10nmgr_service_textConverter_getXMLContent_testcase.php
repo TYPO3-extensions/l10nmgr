@@ -35,12 +35,12 @@
  * @version $Id$
  * @date $Date$
  * @since 07.05.2009 - 14:24:19
- * @see tx_phpunit_testcase
+ * @see tx_10nmgr_tests_base_testcase
  * @package TYPO3
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_service_textConverter_getXMLContent_testcase extends tx_phpunit_testcase {
+class tx_l10nmgr_service_textConverter_getXMLContent_testcase extends tx_10nmgr_tests_base_testcase {
 
 	/**
 	 * @var tx_l10nmgr_service_textConverter

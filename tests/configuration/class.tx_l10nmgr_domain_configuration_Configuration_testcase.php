@@ -14,7 +14,7 @@ if (t3lib_extMgm::isLoaded('mvc')) {
  * @see tx_l10nmgr:l10nAccumulatedInformationFactory
  */
 
-class tx_l10nmgr_domain_configuration_configuration_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_domain_configuration_configuration_testcase extends tx_l10nmgr_tests_database_testcase {
 
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
@@ -51,7 +51,7 @@ class tx_l10nmgr_domain_configuration_configuration_testcase extends tx_phpunit_
 	}
 
 	public function test_getPageIdsFromPageTree () {
-		$this->importDataSet(dirname(__FILE__). '/fixtures/canDeterminePageIdsFromPageTree.xml');
+		$this->importDataSet('/configuration//fixtures/canDeterminePageIdsFromPageTree.xml');
 
 		$fixtureConfig = $this->getFixtureL10NConfig();
 		$pageCollection = $fixtureConfig->getExportPageIdCollection();

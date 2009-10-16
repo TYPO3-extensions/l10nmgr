@@ -13,7 +13,7 @@ if (t3lib_extMgm::isLoaded ( 'mvc' )) {
  * @author Timo Schmidt
  * @see tx_l10nmgr:l10nAccumulatedInformationFactory
  */
-class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_l10nmgr_tests_database_testcase {
 
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
@@ -40,7 +40,7 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	 * @return void
 	 */
 	public function test_canLoadFixtureL10NConfig() {
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureL10NConfig.xml' );
 		$fixtureConfig = $this->getFixtureL10NConfig ();
 
 		$this->assertEquals ( $fixtureConfig->getUid (), 4711, 'Fixture l10nConfig can not be loaded' );
@@ -53,7 +53,7 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	 * @return void
 	 */
 	public function test_canLoadFixtureTargetLanguage() {
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureTargetLanguage.xml' );
 		$fixtureTargetLanguage = $this->getFixtureTargetLanguage ();
 		$this->assertEquals ( $fixtureTargetLanguage->getUid(), 999, 'Fixture Targetlanguage can not be loaded' );
 	}
@@ -65,7 +65,7 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	 * @return void
 	 */
 	public function test_canLoadFixturePreviewLanguage() {
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixturePreviewLanguage.xml' );
 		$fixturePreviewLanguage = $this->getFixturePreviewLanguage ();
 
 		$this->assertEquals ( $fixturePreviewLanguage->getUid(), 998, 'Fixture Previewlanguage can not be loaded' );
@@ -79,11 +79,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	 * @return void
 	 */
 	public function test_canCreateTranslateableInformationForPageId() {
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canCreateTranslateableInformationsForPageId.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+		$this->importDataSet('/translateable/fixtures/canCreateTranslateableInformationsForPageId.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureExportData.xml' );
 
 		$fixtureLimitToPageIds = $this->getFixtureLimitToPageids ();
 
@@ -109,11 +109,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	}
 
 	public function test_canDetermineTranslateableElementsForPageIds() {
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canDetermineTranslateableElementsForPageIds.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+		$this->importDataSet('/translateable/fixtures/canDetermineTranslateableElementsForPageIds.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureExportData.xml' );
 
 		$exportDataRepository  = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData            = $exportDataRepository->findById(9999);
@@ -139,11 +139,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	public function test_canGetContentElementFromPageAndReturnCorrectDiffToDefaut() {
 
 		try {
-			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetContentElementFromPageAndReturnCorrectDiffToDefaut.xml' );
-			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
-			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-			$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+			$this->importDataSet('/translateable/fixtures/canGetContentElementFromPageAndReturnCorrectDiffToDefaut.xml' );
+			$this->importDataSet('/translateable/fixtures/canLoadFixturePreviewLanguage.xml' );
+			$this->importDataSet('/translateable/fixtures/canLoadFixtureTargetLanguage.xml' );
+			$this->importDataSet('/translateable/fixtures/canLoadFixtureL10NConfig.xml' );
+			$this->importDataSet('/translateable/fixtures/canLoadFixtureExportData.xml' );
 
 			$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 			$exportData = $exportDataRepository->findById(9999);
@@ -171,11 +171,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	}
 
 	public function test_determineCorrectTranslateableFields() {
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/determineCorrectTranslateableFields.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+		$this->importDataSet('/translateable/fixtures/determineCorrectTranslateableFields.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureExportData.xml' );
 
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
@@ -210,11 +210,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 
 
 	public function test_canReturnCorrectDiffToDefaultForPage(){
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canReturnCorrectDiffToDefaultForPage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+		$this->importDataSet('/translateable/fixtures/canReturnCorrectDiffToDefaultForPage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureExportData.xml' );
 
 		// diff must be something like l18n
 		$factory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
@@ -234,11 +234,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	}
 
 	public function test_canGetDiffToDefaultFromLanguageInheritanceFCE(){
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetDiffToDefaultFromLanguageInheritanceFCE.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+		$this->importDataSet('/translateable/fixtures/canGetDiffToDefaultFromLanguageInheritanceFCE.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureExportData.xml' );
 
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
@@ -276,11 +276,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	}
 
 	public function test_canGetDiffToDefaultFromLanguageSeparateFCE(){
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetDiffToDefaultFromLanguageSeparateFCE.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+		$this->importDataSet('/translateable/fixtures/canGetDiffToDefaultFromLanguageSeparateFCE.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureExportData.xml' );
 
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
@@ -304,11 +304,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	}
 
 	public function test_canGetDiffToDefaultFromDatabaseTranslatedFCE(){
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canGetDiffToDefaultFromDatabaseTranslatedFCE.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+		$this->importDataSet('/translateable/fixtures/canGetDiffToDefaultFromDatabaseTranslatedFCE.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureExportData.xml' );
 
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);
@@ -354,11 +354,11 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_phpunit_da
 	public function canDetectAndSkipFieldsWhichAreNotInThePageOverlayFields(){
 		$this->importExtensions ( array ('tx_aoewebex_tableextensions' ) );
 
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canDetectAndSkipFieldsWhichAreNotInThePageOverlayFields.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixturePreviewLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureTargetLanguage.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureL10NConfig.xml' );
-		$this->importDataSet ( dirname ( __FILE__ ) . '/fixtures/canLoadFixtureExportData.xml' );
+		$this->importDataSet('/translateable/fixtures/canDetectAndSkipFieldsWhichAreNotInThePageOverlayFields.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixturePreviewLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureTargetLanguage.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureL10NConfig.xml' );
+		$this->importDataSet('/translateable/fixtures/canLoadFixtureExportData.xml' );
 
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(9999);

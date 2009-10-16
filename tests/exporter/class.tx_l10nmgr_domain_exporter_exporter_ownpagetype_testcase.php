@@ -34,14 +34,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_domain_exporter_exporter_ownpagetype_testcase.php $
  * @date 18.05.2009 13:37:19
- * @seetx_phpunit_database_testcase
+ * @seetx_l10nmgr_tests_database_testcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
 
-class tx_l10nmgr_domain_exporter_exporter_ownpagetype_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_domain_exporter_exporter_ownpagetype_testcase extends tx_l10nmgr_tests_database_testcase {
 	/**
 	* This method overwrites the method of the baseclass to ensure that no live database will be used.
 	*
@@ -67,11 +67,11 @@ class tx_l10nmgr_domain_exporter_exporter_ownpagetype_testcase extends tx_phpuni
 	function setUp() {
 		global $BE_USER;
 		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 		$this->importStdDB();
-		
+
 		// order of extension-loading is important !!!!
 		$this->importExtensions(array('cms','l10nmgr','static_info_tables','templavoila'));
 	}
@@ -94,9 +94,9 @@ class tx_l10nmgr_domain_exporter_exporter_ownpagetype_testcase extends tx_phpuni
 	* @test
 	*/
 	public function exportsPagesWithOwnPageType(){
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/ownpagetype/canLoadFixtureExportConfiguration.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/ownpagetype/canLoadFixtureExportData.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr'). 'tests/exporter/fixtures/ownpagetype/exporterTerminatesAfterExpectedNumberOfRuns.xml');
+		$this->importDataSet('/exporter/fixtures/ownpagetype/canLoadFixtureExportConfiguration.xml');
+		$this->importDataSet('/exporter/fixtures/ownpagetype/canLoadFixtureExportData.xml');
+		$this->importDataSet('/exporter/fixtures/ownpagetype/exporterTerminatesAfterExpectedNumberOfRuns.xml');
 
 		$exportData = $this->getFixtureExportData();
 

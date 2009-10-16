@@ -35,14 +35,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_service_importTranslation_headertest_testcase.php $
  * @date 30.04.2009 11:30:21
- * @seetx_phpunit_database_testcase
+ * @seetx_l10nmgr_tests_database_testcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
 
-class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_l10nmgr_tests_database_testcase {
 
 	/**
 	 * Temporary store for the indexed_search registered HOOKS.
@@ -124,11 +124,11 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 
 		$import = t3lib_extMgm::extPath('l10nmgr').'tests/service/fixtures/headertest/test__to_pt_BR_300409-113504_import.xml';
 
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/pages.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/ttcontent.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/l10nconfiguration.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/exportdata.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/language.xml');
+		$this->importDataSet('/service/fixtures/headertest/pages.xml');
+		$this->importDataSet('/service/fixtures/headertest/ttcontent.xml');
+		$this->importDataSet('/service/fixtures/headertest/l10nconfiguration.xml');
+		$this->importDataSet('/service/fixtures/headertest/exportdata.xml');
+		$this->importDataSet('/service/fixtures/headertest/language.xml');
 
 		$TranslationData = $this->TranslationFactory->createFromXMLFile($import); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
 
@@ -182,11 +182,11 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_phpuni
 
 		$import = t3lib_extMgm::extPath('l10nmgr').'tests/service/fixtures/headertest/test__to_pt_BR_300409-113504_import-2.xml';
 
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/pages.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/ttcontent-2.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/l10nconfiguration.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/exportdata.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/service/fixtures/headertest/language.xml');
+		$this->importDataSet('/service/fixtures/headertest/pages.xml');
+		$this->importDataSet('/service/fixtures/headertest/ttcontent-2.xml');
+		$this->importDataSet('/service/fixtures/headertest/l10nconfiguration.xml');
+		$this->importDataSet('/service/fixtures/headertest/exportdata.xml');
+		$this->importDataSet('/service/fixtures/headertest/language.xml');
 
 		$TranslationData = $this->TranslationFactory->createFromXMLFile($import); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
 

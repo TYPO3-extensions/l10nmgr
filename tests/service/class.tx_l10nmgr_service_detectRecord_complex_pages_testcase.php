@@ -33,13 +33,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_service_detectRecord_basic_testcase.php $
  * @date 29.09.2009 11:30:21
- * @seetx_phpunit_database_testcase
+ * @seetx_l10nmgr_tests_database_testcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_l10nmgr_tests_database_testcase {
 
 	/**
 	 * @var tx_l10nmgr_service_detectRecord
@@ -57,7 +57,7 @@ class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_phpunit_
 	public function setUp() {
 //		global $BE_USER;
 //		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 
@@ -86,20 +86,6 @@ class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_phpunit_
 	}
 
 	/**
-	 * Import dataset into test database
-	 *
-	 * This will only work if the fixture locate at the same directory level as the testcase.
-	 *
-	 * @example $this->importDataSet('/fixtures/__FILENAME__.xml');
-	 * @param string $pathToFile The path beginning from the current location of the testcase
-	 * @access protected
-	 * @return void
-	 */
-	protected function importDataSet($pathToFile) {
-		parent::importDataSet(dirname ( __FILE__ ) . $pathToFile);
-	}
-	
-	/**
 	 * @test
 	 * @expectedException tx_mvc_exception_skipped
 	 *
@@ -109,8 +95,8 @@ class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_phpunit_
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function verifyIdentityKeyThrowsExceptionOnParentRecordNotFound() {
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 111111111111;
 		$forceTargetLanguageUid   = 2;
@@ -128,9 +114,9 @@ class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_phpunit_
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function keepIdentityKeyForPagesWithNoForcedLanguageUidOnNewElement() {
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 33155;
 		$forceTargetLanguageUid   = 2;
@@ -154,9 +140,9 @@ class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_phpunit_
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function keepIdentityKeyForPagesWithNoForcedLanguageUidOnExistingElement() {
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 33155;
 		$forceTargetLanguageUid   = 1;
@@ -180,9 +166,9 @@ class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_phpunit_
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function buildNewIdentityKeyForPagesWithNoForcedLanguageUidOnNotExistingElement() {
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 33155;
 		$forceTargetLanguageUid   = 1;
@@ -206,9 +192,9 @@ class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_phpunit_
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function buildNewIdentityKeyForPagesWithForcedLanguageUidOnRemovedElement() {
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 33155;
 		$forceTargetLanguageUid   = 3;
@@ -232,9 +218,9 @@ class tx_l10nmgr_service_detectRecord_complex_pages_testcase extends tx_phpunit_
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function buildNewIdentityKeyForPagesWithForcedLanguageUidOnNotExistingElement() {
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/pages.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
-		$this->importDataSet('/fixtures/detectRecord/liveWorkspace/language.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/pages.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/ttcontent.xml');
+		$this->importDataSet('/service/fixtures/detectRecord/liveWorkspace/language.xml');
 
 		$localisationParentRecord = 33155;
 		$forceTargetLanguageUid   = 3;

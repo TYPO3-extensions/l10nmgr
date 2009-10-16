@@ -35,12 +35,12 @@
  * @version $Id$
  * @date $Date$
  * @since 04.05.2009 - 12:02:16
- * @see tx_phpunit_testcase
+ * @see tx_10nmgr_tests_base_testcase
  * @package TYPO3
  * @subpackage tx_l10nmgr
  * @access public
  */
-class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_phpunit_testcase {
+class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_10nmgr_tests_base_testcase {
 
 	const INDEX_FIRST  = 'tt_content:1:header';
 	const INDEX_SECOND = 'tt_content:1:subheader';

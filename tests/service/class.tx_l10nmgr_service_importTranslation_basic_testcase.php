@@ -38,13 +38,13 @@ tx_mvc_common_classloader::loadAll();
  * @version $Id$
  * @date $Date$
  * @since 28.04.2009 - 15:13:53
- * @see tx_phpunit_database_testcase
+ * @see tx_l10nmgr_tests_database_testcase
  * @category database testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_l10nmgr_tests_database_testcase {
 
 	/**
 	 * Temporary store for the indexed_search registered HOOKS.
@@ -123,18 +123,6 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 	}
 
 	/**
-	 * Import dataset into test database
-	 *
-	 * @example $this->importDataSet('/fixtures/__FILENAME__.xml');
-	 * @param string $pathToFile The path beginning from the current location of the testcase
-	 * @access protected
-	 * @return void
-	 */
-	protected function importDataSet($pathToFile) {
-		parent::importDataSet(dirname ( __FILE__ ) . $pathToFile);
-	}
-
-	/**
 	 * Verify the instanceof Repository is of type "tx_l10nmgr_service_importTranslation"
 	 *
 	 * @access public
@@ -163,11 +151,11 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 			"GLOBALS['TSFE'] is set but should not be set"
 		);
 		*/
-		$this->importDataSet('/fixtures/basic/canImportServiceImportCorrectData_pages.xml');
-		$this->importDataSet('/fixtures/basic/canImportServiceImportCorrectData_tt_content.xml');
-		$this->importDataSet('/fixtures/basic/canImportServiceImportCorrectData_language.xml');
-		$this->importDataSet('/fixtures/basic/templavoilaTemplateDatastructure.xml');
-		$this->importDataSet('/fixtures/basic/templavoilaTemplateObject.xml');
+		$this->importDataSet('/service/fixtures/basic/canImportServiceImportCorrectData_pages.xml');
+		$this->importDataSet('/service/fixtures/basic/canImportServiceImportCorrectData_tt_content.xml');
+		$this->importDataSet('/service/fixtures/basic/canImportServiceImportCorrectData_language.xml');
+		$this->importDataSet('/service/fixtures/basic/templavoilaTemplateDatastructure.xml');
+		$this->importDataSet('/service/fixtures/basic/templavoilaTemplateObject.xml');
 
 		$import = dirname(__FILE__) . '/fixtures/basic/canImportServiceImportCorrectDataFixtureImport.xml';
 
@@ -230,11 +218,11 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_phpunit_dat
 
 		$import = t3lib_extMgm::extPath('l10nmgr').'tests/service/fixtures/headertest/test__to_pt_BR_300409-113504_import.xml';
 
-		$this->importDataSet('/fixtures/headertest/pages.xml');
-		$this->importDataSet('/fixtures/headertest/ttcontent.xml');
-		$this->importDataSet('/fixtures/headertest/l10nconfiguration.xml');
-		$this->importDataSet('/fixtures/headertest/exportdata.xml');
-		$this->importDataSet('/fixtures/headertest/language.xml');
+		$this->importDataSet('/service/fixtures/headertest/pages.xml');
+		$this->importDataSet('/service/fixtures/headertest/ttcontent.xml');
+		$this->importDataSet('/service/fixtures/headertest/l10nconfiguration.xml');
+		$this->importDataSet('/service/fixtures/headertest/exportdata.xml');
+		$this->importDataSet('/service/fixtures/headertest/language.xml');
 
 		$TranslationData = $this->TranslationFactory->createFromXMLFile($import); /* @var $TranslationData tx_l10nmgr_domain_translation_data */
 

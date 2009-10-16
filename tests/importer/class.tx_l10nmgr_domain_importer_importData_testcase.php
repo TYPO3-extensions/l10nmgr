@@ -40,7 +40,7 @@
  * @access public
  */
 
-class tx_l10nmgr_domain_importer_importData_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_domain_importer_importData_testcase extends tx_l10nmgr_tests_database_testcase {
 
 
 	/**

@@ -34,13 +34,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_model_exporter_export_complex_testcase.php $
  * @date 30.04.2009 17:11:48
- * @seetx_phpunit_database_testcase
+ * @seetx_l10nmgr_tests_database_testcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_l10nmgr_tests_database_testcase {
 
 	/**
 	 * Temporary store for the indexed_search registered HOOKS.
@@ -109,20 +109,6 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_phpunit_da
 	}
 
 	/**
-	 * Import dataset into test database
-	 *
-	 * This will only work if the fixture locate at the same directory level as the testcase.
-	 *
-	 * @example $this->importDataSet('/fixtures/__FILENAME__.xml');
-	 * @param string $pathToFile The path beginning from the current location of the testcase
-	 * @access protected
-	 * @return void
-	 */
-	protected function importDataSet($pathToFile) {
-		parent::importDataSet(dirname ( __FILE__ ) . $pathToFile);
-	}
-
-	/**
 	* This testcase should ensure, that the exporter can create a simple export from
 	* a given database state.
 	*
@@ -137,11 +123,11 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_phpunit_da
 	public function canExporterCreateCorrectFileFromGivenStructure(){
 		//created without option "do not check xml"
 
-		$this->importDataset('/fixtures/complex/pages.xml');
-		$this->importDataset('/fixtures/complex/ttcontent.xml');
-		$this->importDataset('/fixtures/complex/language.xml');
-		$this->importDataset('/fixtures/complex/l10nconfiguration.xml');
-		$this->importDataset('/fixtures/complex/exportdata.xml');
+		$this->importDataset('/exporter/fixtures/complex/pages.xml');
+		$this->importDataset('/exporter/fixtures/complex/ttcontent.xml');
+		$this->importDataset('/exporter/fixtures/complex/language.xml');
+		$this->importDataset('/exporter/fixtures/complex/l10nconfiguration.xml');
+		$this->importDataset('/exporter/fixtures/complex/exportdata.xml');
 
 		$exportdataRepository 	= new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData				= $exportdataRepository->findById(67);
@@ -187,11 +173,11 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_phpunit_da
 	 * @author Timo Schmidt
 	 */
 	public function isExportEmptyAfterReimpoertingExportAndExportingOnlyNewAndChangedElements(){
-		$this->importDataset('/fixtures/complex/pages.xml');
-		$this->importDataset('/fixtures/complex/ttcontent.xml');
-		$this->importDataset('/fixtures/complex/language.xml');
-		$this->importDataset('/fixtures/complex/l10nconfiguration.xml');
-		$this->importDataset('/fixtures/complex/exportdata.xml');
+		$this->importDataset('/exporter/fixtures/complex/pages.xml');
+		$this->importDataset('/exporter/fixtures/complex/ttcontent.xml');
+		$this->importDataset('/exporter/fixtures/complex/language.xml');
+		$this->importDataset('/exporter/fixtures/complex/l10nconfiguration.xml');
+		$this->importDataset('/exporter/fixtures/complex/exportdata.xml');
 
 		$import = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/fixture-import.xml';
 

@@ -33,14 +33,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.classname.php $
  * @date 07.05.2009 15:44:40
- * @seetx_phpunit_database_testcase
+ * @seetx_l10nmgr_tests_database_testcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
 
-class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_database_testcase {
 
 	/**
 	 * Temporary store for the indexed_search registered HOOKS.
@@ -124,11 +124,11 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 	 * @param string format
 	 */
 	protected function helper_importerDoesNotCreatesEmptyRowAfterHeading($format){
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/pages.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/ttcontent.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/exportdata.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/language.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/l10nconfiguration.xml');
+		$this->importDataSet('/mixed/fixtures/emptyLineAfterHeading/pages.xml');
+		$this->importDataSet('/mixed/fixtures/emptyLineAfterHeading/ttcontent.xml');
+		$this->importDataSet('/mixed/fixtures/emptyLineAfterHeading/exportdata.xml');
+		$this->importDataSet('/mixed/fixtures/emptyLineAfterHeading/language.xml');
+		$this->importDataSet('/mixed/fixtures/emptyLineAfterHeading/l10nconfiguration.xml');
 
 		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/emptyLineAfterHeading/import';
 
@@ -239,13 +239,13 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$GLOBALS['TCA']['tx_l10nmgr_exportfiles']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export';
 		$GLOBALS['TCA']['tx_l10nmgr_exportdata']['columns']['filename']['config']['uploadfolder'] = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/export/zip';
 
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/pages.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/ttcontent.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/exportdata.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/l10nconfiguration.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/languages.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/templavoila_data_structures.xml');
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/templavoila_template_objects.xml');
+		$this->importDataSet('/mixed/fixtures/completeWorkflow/pages.xml');
+		$this->importDataSet('/mixed/fixtures/completeWorkflow/ttcontent.xml');
+		$this->importDataSet('/mixed/fixtures/completeWorkflow/exportdata.xml');
+		$this->importDataSet('/mixed/fixtures/completeWorkflow/l10nconfiguration.xml');
+		$this->importDataSet('/mixed/fixtures/completeWorkflow/languages.xml');
+		$this->importDataSet('/mixed/fixtures/completeWorkflow/templavoila_data_structures.xml');
+		$this->importDataSet('/mixed/fixtures/completeWorkflow/templavoila_template_objects.xml');
 		//retrieve fixture exportData
 		$exportDataRepository 	= new tx_l10nmgr_domain_exporter_exportDataRepository();
 
@@ -261,24 +261,23 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$fileImportPath = 	t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/import';
 		$zipImportPath	=	t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeWorkflow/import/zip';
 
-
 		//ensure that the directory do not exists
 		$this->removeDirectoryAndContent($zipExportPath);
 		$this->removeDirectoryAndContent($fileExportPath);
 		$this->removeDirectoryAndContent($zipImportPath);
 		$this->removeDirectoryAndContent($fileImportPath);
 
-		mkdir($fileExportPath,0777);
-		mkdir($zipExportPath,0777);
-		mkdir($fileImportPath,0777);
-		mkdir($zipImportPath,0777);
+		t3lib_div::mkdir($fileExportPath);
+		t3lib_div::mkdir($zipExportPath);
+		t3lib_div::mkdir($fileImportPath);
+		t3lib_div::mkdir($zipImportPath);
 
 		$this->assertFileExists($fileExportPath);
 		$this->assertFileExists($zipExportPath);
 
 		$runcountExport = 1;
 		//invoke export service to performExport
-		while(!tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData,1,$zipExportPath,$fileExportPath)){
+		while(!tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData,1)){
 			//exporting
 			$runcountExport++;
 		}
@@ -312,7 +311,6 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		//get overlay for 619634
 		$row 			= t3lib_beFunc::getRecord('tt_content',619634);
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1,$workspaceContext);
-
 
 
 		//header
@@ -358,13 +356,13 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_phpunit_database_tes
 		$GLOBALS['TCA']['tx_l10nmgr_exportfiles']['columns']['filename']['config']['uploadfolder'] = $basePath.'export';
 		$GLOBALS['TCA']['tx_l10nmgr_exportdata']['columns']['filename']['config']['uploadfolder'] = $basePath.'export/zip';
 
-		$this->importDataSet($basePath.'pages.xml');
-		$this->importDataSet($basePath.'ttcontent.xml');
-		$this->importDataSet($basePath.'exportdata.xml');
-		$this->importDataSet($basePath.'l10nconfiguration.xml');
-		$this->importDataSet($basePath.'languages.xml');
-//		$this->importDataSet($basePath.'templavoila_data_structures.xml');
-//		$this->importDataSet($basePath.'templavoila_template_objects.xml');
+		$this->importDataSet('/mixed/fixtures/completeLocalisationWorkflowWithInvalidXMLinExport/pages.xml');
+		$this->importDataSet('/mixed/fixtures/completeLocalisationWorkflowWithInvalidXMLinExport/ttcontent.xml');
+		$this->importDataSet('/mixed/fixtures/completeLocalisationWorkflowWithInvalidXMLinExport/exportdata.xml');
+		$this->importDataSet('/mixed/fixtures/completeLocalisationWorkflowWithInvalidXMLinExport/l10nconfiguration.xml');
+		$this->importDataSet('/mixed/fixtures/completeLocalisationWorkflowWithInvalidXMLinExport/languages.xml');
+//		$this->importDataSet('/mixed/fixtures/completeLocalisationWorkflowWithInvalidXMLinExport/templavoila_data_structures.xml');
+//		$this->importDataSet('/mixed/fixtures/completeLocalisationWorkflowWithInvalidXMLinExport/templavoila_template_objects.xml');
 		//retrieve fixture exportData
 		$exportDataRepository 	= new tx_l10nmgr_domain_exporter_exportDataRepository();
 

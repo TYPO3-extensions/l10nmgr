@@ -35,13 +35,13 @@ require_once t3lib_extMgm::extPath('l10nmgr') . 'service/class.tx_l10nmgr_servic
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_workflow_import_forcedLanguage_default_testcase.php $
  * @date 29.09.2009 11:30:21
- * @seetx_phpunit_database_testcase
+ * @seetx_l10nmgr_tests_database_testcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_phpunit_database_testcase {
+class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_l10nmgr_tests_database_testcase {
 
 	/**
 	 * Temporary store for the indexed_search registered HOOKS.
@@ -119,20 +119,6 @@ class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_phpunit
 	}
 
 	/**
-	 * Import dataset into test database
-	 *
-	 * This will only work if the fixture locate at the same directory level as the testcase.
-	 *
-	 * @example $this->importDataSet('/fixtures/__FILENAME__.xml');
-	 * @param string $pathToFile The path beginning from the current location of the testcase
-	 * @access protected
-	 * @return void
-	 */
-	protected function importDataSet($pathToFile) {
-		parent::importDataSet(dirname ( __FILE__ ) . $pathToFile);
-	}
-
-	/**
 	 * @test
 	 *
 	 * @access public
@@ -141,11 +127,11 @@ class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_phpunit
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function importTranslationWithForcedLanguageUidOnExistingElement() {
-		$this->importDataset('/fixtures/default/pages.xml');
-		$this->importDataset('/fixtures/default/ttcontent.xml');
-		$this->importDataset('/fixtures/default/language.xml');
-		$this->importDataset('/fixtures/default/l10nconfiguration.xml');
-		$this->importDataset('/fixtures/default/exportdata.xml');
+		$this->importDataset('/workflow/import/keepNewline/fixtures/default/pages.xml');
+		$this->importDataset('/workflow/import/keepNewline/fixtures/default/ttcontent.xml');
+		$this->importDataset('/workflow/import/keepNewline/fixtures/default/language.xml');
+		$this->importDataset('/workflow/import/keepNewline/fixtures/default/l10nconfiguration.xml');
+		$this->importDataset('/workflow/import/keepNewline/fixtures/default/exportdata.xml');
 		$forceTargetLanguageUid = 2;
 		$expectedSysLanguageUid = $forceTargetLanguageUid;
 
