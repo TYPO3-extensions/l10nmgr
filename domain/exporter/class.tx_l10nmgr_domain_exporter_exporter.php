@@ -151,7 +151,6 @@ class tx_l10nmgr_domain_exporter_exporter {
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	protected function processExport(tx_l10nmgr_domain_translateable_translateableInformation $tranlateableInformation, $pagesForChunk = null) {
-
 		$this->exportView->setTranslateableInformation($tranlateableInformation);
 
 		$this->resultForChunk 		= $this->exportView->render();
