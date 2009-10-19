@@ -70,7 +70,7 @@ class tx_l10nmgr_cm1 {
 		if (!$backRef->cmLevel)	{
 
 				// Returns directly, because the clicked item was not from the pages table
-			if ($table=="tx_l10nmgr_cfg" && t3lib_div::_GET('subname')!=='moreoptions_tx_l10nmgrXX_cm1')   {	
+			if ($table=="tx_l10nmgr_cfg" && t3lib_div::_GET('subname')!=='moreoptions_tx_l10nmgrXX_cm1') {
 
 					// Adds the regular item:
 				$LL = $this->includeLL();
@@ -123,7 +123,6 @@ class tx_l10nmgr_cm1 {
 
 			$menuItems=array_merge($menuItems,$localItems);
 		}
-
 
 		return $menuItems;
 	}
