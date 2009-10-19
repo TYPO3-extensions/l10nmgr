@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testcase>
+    <pages>
+        <uid>64</uid>
+        <pid>104</pid>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <title>Nested tabs</title>
+    </pages>
+</testcase>

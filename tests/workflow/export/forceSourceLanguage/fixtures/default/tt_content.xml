@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SELECT uid, pid, header, bodytext, deleted, hidden, sys_language_uid, l18n_parent, t3_origuid
+FROM tt_content
+WHERE pid =64
+AND hidden =0
+AND sys_language_uid in(0,2)
+AND deleted =0
+LIMIT 0 , 10
+-->
+<testcase>
+    <tt_content>
+        <uid>150</uid>
+        <pid>64</pid>
+        <header>US - Video</header>
+        <bodytext></bodytext>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <sys_language_uid>0</sys_language_uid>
+        <l18n_parent>0</l18n_parent>
+        <t3_origuid>0</t3_origuid>
+    </tt_content>
+    <tt_content>
+        <uid>152</uid>
+        <pid>64</pid>
+        <header>US - Performance</header>
+        <bodytext>&lt;p class=&quot;pinkheader&quot;&gt;Performance&lt;/p&gt;
+Posuere amet quis sit, pede orci pellentesque ipsum, leo ut phasellus turpis aliquam, id nibh consequat nisl ut.</bodytext>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <sys_language_uid>0</sys_language_uid>
+        <l18n_parent>0</l18n_parent>
+        <t3_origuid>0</t3_origuid>
+    </tt_content>
+    <tt_content>
+        <uid>153</uid>
+        <pid>64</pid>
+        <header>US - Safety</header>
+        <bodytext>&lt;p class=&quot;lightblueheader&quot;&gt;Safety&lt;/p&gt;
+Posuere amet quis sit, pede orci pellentesque ipsum, leo ut phasellus turpis aliquam, id nibh consequat nisl ut.</bodytext>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <sys_language_uid>0</sys_language_uid>
+        <l18n_parent>0</l18n_parent>
+        <t3_origuid>152</t3_origuid>
+    </tt_content>
+    <tt_content>
+        <uid>1014</uid>
+        <pid>64</pid>
+        <header>US - Some Text Elment (copy 2)</header>
+        <bodytext>US - TExt Text TExt</bodytext>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <sys_language_uid>0</sys_language_uid>
+        <l18n_parent>0</l18n_parent>
+        <t3_origuid>135</t3_origuid>
+    </tt_content>
+    <tt_content>
+        <uid>1017</uid>
+        <pid>64</pid>
+        <header>US - Some Text Elment  (copy 1)</header>
+        <bodytext>US - TExt Text TExt</bodytext>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <sys_language_uid>0</sys_language_uid>
+        <l18n_parent>0</l18n_parent>
+        <t3_origuid>137</t3_origuid>
+    </tt_content>
+    <tt_content>
+        <uid>12206</uid>
+        <pid>64</pid>
+        <header>DE - Einige Textelemente  (Exemplar 1)</header>
+        <bodytext>DE - TExt Text TExt</bodytext>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <sys_language_uid>2</sys_language_uid>
+        <l18n_parent>1017</l18n_parent>
+        <t3_origuid>1017</t3_origuid>
+    </tt_content>
+    <tt_content>
+        <uid>12207</uid>
+        <pid>64</pid>
+        <header>DE - Einige Textelemente (Exemplar 2)</header>
+        <bodytext>DE - TExt Text TExt</bodytext>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <sys_language_uid>2</sys_language_uid>
+        <l18n_parent>1014</l18n_parent>
+        <t3_origuid>1014</t3_origuid>
+    </tt_content>
+    <tt_content>
+        <uid>12209</uid>
+        <pid>64</pid>
+        <header>DE - Video</header>
+        <bodytext></bodytext>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <sys_language_uid>2</sys_language_uid>
+        <l18n_parent>150</l18n_parent>
+        <t3_origuid>150</t3_origuid>
+    </tt_content>
+    <tt_content>
+        <uid>12210</uid>
+        <pid>64</pid>
+        <header>DE - Sicherheit</header>
+        <bodytext>&lt;p class=&quot;lightblueheader&quot;&gt;Sicherheit&lt;/p&gt;
+Posuere amet quis sit, pede orci pellentesque ipsum, leo ut phasellus turpis aliquam, id nibh consequat nisl ut.</bodytext>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <sys_language_uid>2</sys_language_uid>
+        <l18n_parent>153</l18n_parent>
+        <t3_origuid>153</t3_origuid>
+    </tt_content>
+    <tt_content>
+        <uid>12211</uid>
+        <pid>64</pid>
+        <header>DE - Leistung</header>
+        <bodytext>&lt;p class=&quot;pinkheader&quot;&gt;Leistung&lt;/p&gt;
+Posuere amet quis sit, pede orci pellentesque ipsum, leo ut phasellus turpis aliquam, id nibh consequat nisl ut.</bodytext>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <sys_language_uid>2</sys_language_uid>
+        <l18n_parent>152</l18n_parent>
+        <t3_origuid>152</t3_origuid>
+    </tt_content>
+</testcase>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testcase>
+    <sys_language>
+        <uid>2</uid>
+        <pid>0</pid>
+        <tstamp>1254747450</tstamp>
+        <hidden>0</hidden>
+        <title>Deutsch</title>
+        <flag>de.gif</flag>
+        <static_lang_isocode>43</static_lang_isocode>
+        <tx_languagevisibility_fallbackorder></tx_languagevisibility_fallbackorder>
+        <tx_languagevisibility_fallbackorderel></tx_languagevisibility_fallbackorderel>
+        <tx_languagevisibility_fallbackorderttnewsel></tx_languagevisibility_fallbackorderttnewsel>
+        <tx_languagevisibility_complexfallbacksetting>0</tx_languagevisibility_complexfallbacksetting>
+        <tx_languagevisibility_defaultvisibility>t</tx_languagevisibility_defaultvisibility>
+        <tx_languagevisibility_defaultvisibilityel>t</tx_languagevisibility_defaultvisibilityel>
+        <tx_languagevisibility_defaultvisibilityttnewsel>t</tx_languagevisibility_defaultvisibilityttnewsel>
+    </sys_language>
+    <sys_language>
+        <uid>3</uid>
+        <pid>0</pid>
+        <tstamp>1254747694</tstamp>
+        <hidden>0</hidden>
+        <title>Nederlands</title>
+        <flag>nl.gif</flag>
+        <static_lang_isocode>29</static_lang_isocode>
+        <tx_languagevisibility_fallbackorder></tx_languagevisibility_fallbackorder>
+        <tx_languagevisibility_fallbackorderel></tx_languagevisibility_fallbackorderel>
+        <tx_languagevisibility_fallbackorderttnewsel></tx_languagevisibility_fallbackorderttnewsel>
+        <tx_languagevisibility_complexfallbacksetting>0</tx_languagevisibility_complexfallbacksetting>
+        <tx_languagevisibility_defaultvisibility>t</tx_languagevisibility_defaultvisibility>
+        <tx_languagevisibility_defaultvisibilityel>t</tx_languagevisibility_defaultvisibilityel>
+        <tx_languagevisibility_defaultvisibilityttnewsel>t</tx_languagevisibility_defaultvisibilityttnewsel>
+    </sys_language>
+</testcase>

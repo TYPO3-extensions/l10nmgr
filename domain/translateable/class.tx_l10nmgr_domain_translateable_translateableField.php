@@ -312,14 +312,14 @@ class tx_l10nmgr_domain_translateable_translateableField implements tx_l10nmgr_i
 	/**
 	 * Returns an array with all preview language
 	 * values.
-	 * 
+	 *
 	 * @param void
 	 * @return array
 	 */
 	public function getPreviewLanguageValues(){
-		return $this->previewLanguage_values;	
+		return $this->previewLanguage_values;
 	}
-	
+
 	/**
 	 * @param boolean $readOnly
 	 */
@@ -364,11 +364,11 @@ class tx_l10nmgr_domain_translateable_translateableField implements tx_l10nmgr_i
 	 *
 	 * @param tx_l10nmgr_domain_language_language $forcedSourceLanguageId
 	 */
-	public function getDataForTranslation($forcedSourceLanguage = 0){
+	public function getDataForTranslation($forcedSourceLanguage = null){
 		//dtermine ssourcefield depending in sourceLanguage
-		if($forcedSourceLanguage instanceof tx_l10nmgr_domain_language_language){
+		if ($forcedSourceLanguage instanceof tx_l10nmgr_domain_language_language) {
 			$dataForTranslation = $this->determinFieldContentByLanguageId($forcedSourceLanguage->getUid());
-		}else{
+		} else {
 			$dataForTranslation = $this->determinFieldContentByLanguageId(0);
 		}
 		return $dataForTranslation;
@@ -377,15 +377,14 @@ class tx_l10nmgr_domain_translateable_translateableField implements tx_l10nmgr_i
 	/**
 	 * delivers the data for the translation depending on the sourceLanguage
 	 *
-	 * @param tx_l10nmgr_domain_language_language $forcedSourceLanguage
+	 * @param integer $forcedSourceLanguage
 	 * @return string
 	 */
 	protected function determinFieldContentByLanguageId($forcedSourceLanguageId = 0){
-		if ($forcedSourceLanguage) {
-			$dataForTranslation =	$this->getPreviewLanguageValueByLanguageId($forcedSourceLanguageId);
-		}
-		else {
-			$dataForTranslation	=	$this->default_value;
+		if ($forcedSourceLanguageId > 0) {
+			$dataForTranslation = $this->getPreviewLanguageValueByLanguageId($forcedSourceLanguageId);
+		} else {
+			$dataForTranslation	= $this->default_value;
 		}
 
 		return $dataForTranslation;

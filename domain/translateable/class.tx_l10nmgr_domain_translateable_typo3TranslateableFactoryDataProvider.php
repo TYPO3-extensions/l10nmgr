@@ -243,7 +243,6 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 		if(!self::isArrayValueSet($this->excludeArray,$tablename,$elementid)) {
 			// this is need because 'pages' and other tables need to be handled diffrent
 			$tablerow = $tablename=='pages' ? t3lib_BEfunc::getRecord($tablename,$elementid) : $this->t8Tools->getSingleRecordToTranslate($tablename,$elementid);
-
 			t3lib_BEfunc::workspaceOL($tablename,$tablerow);
 			return $this->t8Tools->translationDetails($tablename,$tablerow,$this->getTargetLanguage()->getUid(),$this->flexFormDiff);
 		}
@@ -295,10 +294,10 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 	 * This method is used to get an configured intance of the tools object
 	 *
 	 * @param tx_l10nmgr_domain_configuration_configuration $l10ncfg
-	 * @param tx_l10nmgr_domain_language_Language $previewLanguage
+	 * @param tx_l10nmgr_domain_language_language $previewLanguage
 	 * @return tx_l10nmgr_tools
 	 */
-	protected function getInitializedt8Tools($l10ncfg,$sourceLanguage = NULL){
+	protected function getInitializedt8Tools($l10ncfg, tx_l10nmgr_domain_language_language $sourceLanguage = NULL){
 		// Init:
 		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
 		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
@@ -306,15 +305,11 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 			$t8Tools->includeFceWithDefaultLanguage=TRUE;
 		}
 
-		if($sourceLanguage instanceof tx_l10nmgr_domain_language_Language ){
-			$sourceLanguageIds = $sourceLanguage->getUid();
-		}
-
-		if(!$sourceLanguageIds){
-			$sourceLanguageIds = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
-		}
-		if($sourceLanguage){
-			$t8Tools->previewLanguages = array($sourceLanguageIds);
+		$sourceLanguageId = $sourceLanguage->getUid();
+		if($sourceLanguageId > 0 ){
+			$t8Tools->previewLanguages = array($sourceLanguageId);
+		} else {
+			$t8Tools->previewLanguages = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
 		}
 
 		return $t8Tools;
