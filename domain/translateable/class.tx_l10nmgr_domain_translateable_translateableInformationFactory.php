@@ -41,6 +41,11 @@
 class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 
 	/**
+	 * @var tx_l10nmgr_interface_translateable_translateableFactoryDataProvider
+	 */
+	protected $dataProvider = null;
+
+	/**
 	 * Builds an translateableInformation from a given exportData object and a collection of page ids which should be exported.
 	 *
 	 * @param tx_l10nmgr_domain_exporter_exportData $exportData
@@ -189,7 +194,7 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 	 * @param int uid
 	 * @return tx_l10nmgr_domain_translateable_translateableElement
 	 */
-	protected function getTranslateableElementFromDataProvider($table,$uid){
+	protected function getTranslateableElementFromDataProvider($table, $uid) {
 		$translationDetails = $this->dataProvider->getTranslationDetailsByTablenameAndElementId($table,$uid);
 
 		$translationInfo 	= $translationDetails['translationInfo'];
