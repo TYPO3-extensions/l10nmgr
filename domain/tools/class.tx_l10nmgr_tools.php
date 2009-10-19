@@ -166,13 +166,12 @@ class tx_l10nmgr_tools {
 				'*',
 				$table,
 				'pid='.intval($pageId).
-					' AND '.$TCA[$table]['ctrl']['languageField'].'<=0'.
+					' AND '.$TCA[$table]['ctrl']['languageField'] . '<=0' .
 					($GLOBALS['TCA'][$table]['ctrl']['versioningWS'] ? ' AND '.$table.'.t3ver_state<=0' : '').
 					$hiddenClause.
 					t3lib_BEfunc::deleteClause($table).
 					t3lib_BEfunc::versioningPlaceholderClause($table)
 			);
-
 
 			return $allRows;
 		}
@@ -218,20 +217,19 @@ class tx_l10nmgr_tools {
 		global $TCA;
 			// Store language:
 		$this->sysLang = $sysLang;
-
 			// Initialize:
 		$tInfo = $this->t8Tools->translationInfo($table,$row['uid'],$sysLang);
-
-		if ($table == 'tt_content') {
-			$tInfo['CType'] = $row['CType'];
-		} else {
-			$tInfo['CType'] = 'default';
-		}
 
 		$this->detailsOutput = array();
 		$this->flexFormDiff = $flexFormDiff;
 
-		if (is_array($tInfo))	{
+		if (is_array($tInfo)) {
+
+			if ($table == 'tt_content') {
+				$tInfo['CType'] = $row['CType'];
+			} else {
+				$tInfo['CType'] = 'default';
+			}
 				// Initialize some more:
 			$this->detailsOutput['translationInfo'] = $tInfo;
 			t3lib_div::loadTCA($table);
