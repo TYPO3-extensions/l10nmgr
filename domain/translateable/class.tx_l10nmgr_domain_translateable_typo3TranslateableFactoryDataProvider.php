@@ -83,12 +83,12 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 	 */
 	public function __construct(tx_l10nmgr_domain_exporter_exportData $exportData){
 
-		$this->exportData	= $exportData;
-		$l10ncfg 			= $exportData->getL10nConfigurationObject();
-		$targetLanguage		= $exportData->getTranslationLanguageObject();
-		$sourceLanguage		= $exportData->getSourceLanguageObject();
+		$this->exportData = $exportData;
+		$l10ncfg          = $exportData->getL10nConfigurationObject();
+		$targetLanguage   = $exportData->getTranslationLanguageObject();
+		$sourceLanguage   = $exportData->getSourceLanguageObject();
 
-		$this->disallowDoktypes = array('--div--','3','255');
+		$this->disallowDoktypes = array('--div--', '255');
 
 		$this->setWorkspaceId($GLOBALS['BE_USER']->workspace);
 		$this->setSiteUrl(t3lib_div::getIndpEnv("TYPO3_SITE_URL"));
@@ -301,15 +301,22 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 		// Init:
 		$t8Tools = t3lib_div::makeInstance('tx_l10nmgr_tools');
 		$t8Tools->verbose = FALSE;	// Otherwise it will show records which has fields but none editable.
+		$sourceLanguageId = 0;
+
 		if ($l10ncfg->getIncludeFCEWithDefaultLanguage()) {
 			$t8Tools->includeFceWithDefaultLanguage=TRUE;
 		}
 
-		$sourceLanguageId = $sourceLanguage->getUid();
+		if ( $sourceLanguage instanceOf tx_l10nmgr_domain_language_language) {
+			$sourceLanguageId = $sourceLanguage->getUid();
+		}
+
 		if($sourceLanguageId > 0 ){
 			$t8Tools->previewLanguages = array($sourceLanguageId);
-		} else {
-			$t8Tools->previewLanguages = current(t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
+		}
+
+		if ($GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages') != '') {
+			$t8Tools->previewLanguages = array_merge($t8Tools->previewLanguages, t3lib_div::intExplode(',',$GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
 		}
 
 		return $t8Tools;
