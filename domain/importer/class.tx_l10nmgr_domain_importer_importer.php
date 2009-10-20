@@ -142,12 +142,14 @@ class tx_l10nmgr_domain_importer_importer {
 				trigger_error($e->getMessage() . ' That occurs on the file: "' . $currentFile . '"', E_USER_WARNING);
 			}
 
+			$this->importData->removeProcessedFilename($currentFile);	
+				
 			if ( $this->importData->countRemainingImportFilenames() <= 0 ) {
 				$this->importData->setImportIsCompletelyProcessed(true);
-				$exportData->addWorkflowStat(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
+				
+				$exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
 			}
 
-			$this->importData->removeProcessedFilename($currentFile);
 			$isRunning = true;
 		}
 

@@ -135,7 +135,7 @@ class tx_l10nmgr_domain_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @param boolean
 	 * @return void
 	 */
-	protected function setImportIsCompletelyProcessed($boolean){
+	public function setImportIsCompletelyProcessed($boolean){
 		$this->setProgress('import_is_completely_processed',$boolean);
 	}
 

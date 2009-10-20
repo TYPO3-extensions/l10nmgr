@@ -22,6 +22,8 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once t3lib_extMgm::extPath('l10nmgr') . '/tests/class.tx_l10nmgr_tests_database_testcase.php';
+
 /**
  * This testcase is used to test a complete localisation workflow
  * with the l10nmgr.
@@ -210,8 +212,9 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 	 * @return void
 	 */
 	public function completeLocalisationWorkflowCATXMLWithImportIntoWorkspace(){
-		$this->markTestIncomplete('Test must be implement.');
+		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/workspace.xml');
 		$this->helper_testCompleteLocalisationWorkflow('xml',142);
+
 	}
 
 	/**
@@ -287,11 +290,17 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 
 		$this->replaceContentInExportFiles($exportData, $fileExportPath, $fileImportPath);
 
+		
+
 		//if we have a workspace context configured, we switch to the workspace to import
 		//the data into the workspace
-		//$currentWorkspace = $BE_USER->user['workspace_id'];
-		//$GLOBALS['BE_USER']->workspace = $workspaceContext;
-		//$GLOBALS['BE_USER']->user['workspace_id'] = $workspaceContext;
+		if(!is_null($workspaceContext )){
+			$currentWorkspace 	= $GLOBALS['BE_USER']->workspace;
+			$currentWorkspaceId = $BE_USER->user['workspace_id'];
+			
+			$GLOBALS['BE_USER']->workspace = $workspaceContext;
+			$GLOBALS['BE_USER']->user['workspace_id'] = $workspaceContext;
+		}
 
 		$importData = $this->createFixtureImportDataWithImportFiles($exportData, $fileImportPath);
 		$importData->setImport_type($format);
@@ -304,14 +313,12 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 		$this->assertEquals($runcountExport, ($runcountImport+1),'The import should have the same runcount as the export');
 
 		//now check that there are overlays for the exported records with the correct translation settings
-
 		$this->removeDirectoryAndContent($zipExportPath);
 		$this->removeDirectoryAndContent($fileExportPath);
 
 		//get overlay for 619634
 		$row 			= t3lib_beFunc::getRecord('tt_content',619634);
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($row, 'tt_content', 1,$workspaceContext);
-
 
 		//header
 		$this->assertEquals($contentOverlay['header'],'@translated Content element with typolink translated@','No correct translation for header found');
@@ -322,11 +329,11 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 		$this->assertEquals($contentOverlay['bodytext'],$expectedBodytextResult,'In expected result after import');
 
 		//restore the original workspace context
-		//$GLOBALS['BE_USER']->user['workspace_id'] = $currentWorkspace;
-		//$GLOBALS['BE_USER']->workspace = $currentWorkspace;
+		if(!is_null($workspaceContext)){			
+			$GLOBALS['BE_USER']->user['workspace_id'] = 0;
+			$GLOBALS['BE_USER']->workspace = 0;
+		}
 	}
-
-
 
 	/**
 	* The base for this testcase is the following structure:
@@ -351,6 +358,8 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 	*
 	*/
 	public function completeLocalisationWorkflowWithInvalidXMLinExport(){
+
+			
 		$basePath = t3lib_extMgm::extPath('l10nmgr').'tests/mixed/fixtures/completeLocalisationWorkflowWithInvalidXMLinExport/';
 		$GLOBALS['TCA']['tx_l10nmgr_importfiles']['columns']['filename']['config']['uploadfolder'] = $basePath.'import';
 		$GLOBALS['TCA']['tx_l10nmgr_exportfiles']['columns']['filename']['config']['uploadfolder'] = $basePath.'export';
