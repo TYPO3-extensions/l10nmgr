@@ -183,9 +183,10 @@ class tx_l10nmgr_domain_translationFactory {
 	}
 	
 	/**
+	 * This method is used to create a translationData from a form submit of the backend side by side translation.
 	 * 
 	 * @param $array
-	 * @return unknown_type
+	 * @return tx_l10nmgr_domain_translation_data
 	 */
 	public function createFromFormSubmit($pageid,$targetLanguageUid,$fields,tx_l10nmgr_domain_configuration_configuration $l10nConfiguration){
 		global $BE_USER;
@@ -230,8 +231,16 @@ class tx_l10nmgr_domain_translationFactory {
 		return $TranslationData;
 	}	
 	
-	###
-	
+
+	/** 
+	 * This method is used to create a TranslationData from an excel xml file
+	 * 
+	 * @param string filename to the excel xml file.
+	 * @param int forced target language uid.
+	 * 
+	 * @return tx_l10nmgr_domain_translation_data
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 */
 	public function createFromExcelFile($fullQualifiedFileName, $forceTargetLanguageUid = 0){
 		global $BE_USER;
 
@@ -325,10 +334,15 @@ class tx_l10nmgr_domain_translationFactory {
 		$this->TranslationData->setPageCollection($PageCollection);
 		$this->TranslationData->setFieldCount($fieldCount);
 		
-		
 		return $this->TranslationData;
 	}
 	
+	/**
+	 * This method is used to extract the meta data from an excel export file.
+	 * 
+	 * @param $metaDataNode string content of the metaData node
+	 * @return void
+	 */
 	protected function extractExcelMetaData($metaDataNode){
 		$noteArray = explode('|',$metaDataNode);
 		
