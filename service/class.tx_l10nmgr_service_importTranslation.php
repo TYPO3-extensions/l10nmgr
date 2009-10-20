@@ -132,7 +132,8 @@ class tx_l10nmgr_service_importTranslation {
 
 						$this->buildDataCommandArray($Element, $Field, $TranslationField);
 					}catch (tx_mvc_exception_argumentOutOfRange $e ) {
-						$this->handleException($e);
+						//!FIXME Check why the import runs a lot of times into this exception!
+						//$this->handleException($e);
 					} catch (tx_mvc_exception_skipped $e) {
 						$this->handleException($e);
 					} catch (tx_mvc_exception $e) {
