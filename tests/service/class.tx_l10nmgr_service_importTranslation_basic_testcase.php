@@ -38,13 +38,13 @@ tx_mvc_common_classloader::loadAll();
  * @version $Id$
  * @date $Date$
  * @since 28.04.2009 - 15:13:53
- * @see tx_l10nmgr_tests_database_testcase
+ * @see tx_l10nmgr_tests_databaseTestcase
  * @category database testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_l10nmgr_tests_database_testcase {
+class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
 	/**
 	 * Temporary store for the indexed_search registered HOOKS.

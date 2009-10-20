@@ -1,5 +1,5 @@
 <?php
-class tx_l10nmgr_domain_exporter_exportDataRepository_testcase extends tx_l10nmgr_tests_database_testcase {
+class tx_l10nmgr_domain_exporter_exportDataRepository_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase

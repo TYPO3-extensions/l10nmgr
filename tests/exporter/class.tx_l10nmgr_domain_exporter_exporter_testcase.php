@@ -47,7 +47,7 @@ if (t3lib_extMgm::isLoaded('mvc')) {
  * @subpackage	l10nmgr
  * @access public
  */
-class tx_l10nmgr_domain_exporter_exporter_testcase extends tx_l10nmgr_tests_database_testcase {
+class tx_l10nmgr_domain_exporter_exporter_testcase extends tx_l10nmgr_tests_databaseTestcase {
 	/**
 	 * Changes current database to test database
 	 *

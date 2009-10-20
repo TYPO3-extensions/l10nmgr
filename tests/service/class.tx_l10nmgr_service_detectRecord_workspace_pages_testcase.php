@@ -33,13 +33,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_service_detectRecord_workspace_pages_testcase.php $
  * @date 29.09.2009 11:30:21
- * @see tx_l10nmgr_tests_database_testcase
+ * @see tx_l10nmgr_tests_databaseTestcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_service_detectRecord_workspace_pages_testcase extends tx_l10nmgr_tests_database_testcase {
+class tx_l10nmgr_service_detectRecord_workspace_pages_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
 	/**
 	 * Creates the test environment.

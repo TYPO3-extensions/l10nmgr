@@ -35,14 +35,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_service_importTranslation_headertest_testcase.php $
  * @date 30.04.2009 11:30:21
- * @seetx_l10nmgr_tests_database_testcase
+ * @seetx_l10nmgr_tests_databaseTestcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
 
-class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_l10nmgr_tests_database_testcase {
+class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
 	/**
 	 * Temporary store for the indexed_search registered HOOKS.

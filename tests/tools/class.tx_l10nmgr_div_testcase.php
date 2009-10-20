@@ -1,7 +1,7 @@
 <?php
 
 
-class tx_l10nmgr_div_testcase extends tx_10nmgr_tests_base_testcase {
+class tx_l10nmgr_div_testcase extends tx_l10nmgr_tests_baseTestcase {
 
 	public function test_translate() {
 		$tempOutputFile = tempnam(sys_get_temp_dir(), get_class($this) . '_');

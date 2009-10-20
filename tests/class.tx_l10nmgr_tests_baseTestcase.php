@@ -25,89 +25,40 @@
 PHPUnit_Util_Filter::addFileToFilter(__FILE__, 'PHPUNIT');
 
 /**
- * This supports the l10nmgr database tests and provide some helper.
+ * This is the l10nmgr base test test case class
  *
  * {@inheritdoc}
  *
- * class.tx_l10nmgr_tests_database_testcase.php
+ * class.tx_l10nmgr_tests_baseTest.php
  *
  * @author Michael Klapper <klapper@aoemedia.de>
  * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
  * @version $Id$
  * @date $Date$
- * @since 15.10.2009 - 22:07:23
+ * @since 15.10.2009 - 21:51:25
  * @category tests
  * @package TYPO3
  * @subpackage tx_l10nmgr
  * @access public
  * @abstract
  */
-abstract class tx_l10nmgr_tests_database_testcase extends tx_phpunit_database_testcase {
+abstract class tx_l10nmgr_tests_baseTestcase extends tx_phpunit_testcase {
 
 	/**
-	 * Temporary store for the indexed_search registered HOOKS.
+	 * Constructs a test case with the given name.
 	 *
-	 * The hooks must be reset because they produce an side effect on the tests which is not desired.
+	 * @param  string $name
+	 * @param  array  $data
+	 * @param  string $dataName
 	 *
-	 * @var array
-	 */
-	private $indexedSearchHook = array();
-
-	/**
-	 * This method unregister the indexed_search hooks on TCEmain processCmdmapClass & processDatamapClass
-	 * This is in some database tests required because the indexed_search will increase the requirements on the database tables.
+	 * @access public
 	 *
-	 * @access protected
 	 * @return void
 	 *
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
-	protected function unregisterIndexedSearchHooks() {
-
-			// unset the indexed_search hooks
-		if (t3lib_extMgm::isLoaded('indexed_search')) {
-			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
-			$this->indexedSearchHook['processDatamapClass'] = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch'];
-			unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch']);
-			unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch']);
-		}
-	}
-
-	/**
-	 * Restore the indexed_search hooks.
-	 *
-	 * @access protected
-	 * @return void
-	 *
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 */
-	protected function restoreIndexedSearchHooks() {
-
-			// restore the indexed_search hooks
-		if (t3lib_extMgm::isLoaded('indexed_search')) {
-			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch']  = $this->indexedSearchHook['processCmdmapClass'];
-			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch'] = $this->indexedSearchHook['processDatamapClass'];
-		}
-	}
-
-	/**
-	 * Import dataset into test database
-	 *
-	 * This will only work if the fixture locate at the same directory level as the testcase.
-	 *
-	 * @example $this->importDataSet('/fixtures/__FILENAME__.xml');
-	 *
-	 * @param string $pathToFile The path beginning from the current location of the testcase
-	 *
-	 * @uses tx_phpunit_database_testcase::importDataSet
-	 *
-	 * @access protected
-	 * @return void
-	 *
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 */
-	protected function importDataSet($pathToFile) {
-		parent::importDataSet(dirname ( __FILE__ ) . $pathToFile);
+	public function __construct($name = NULL, array $data = array(), $dataName = '') {
+		parent::__construct($name, $data, $dataName);
 	}
 
 	/**

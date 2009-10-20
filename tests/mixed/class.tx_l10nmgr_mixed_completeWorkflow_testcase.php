@@ -35,14 +35,14 @@ require_once t3lib_extMgm::extPath('l10nmgr') . '/tests/class.tx_l10nmgr_tests_d
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.classname.php $
  * @date 07.05.2009 15:44:40
- * @seetx_l10nmgr_tests_database_testcase
+ * @seetx_l10nmgr_tests_databaseTestcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
 
-class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_database_testcase {
+class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
 	/**
 	 * Temporary store for the indexed_search registered HOOKS.

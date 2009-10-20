@@ -33,14 +33,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_service_detectRecord_basic_testcase.php $
  * @date 29.09.2009 11:30:21
- * @see tx_10nmgr_tests_base_testcase
+ * @see tx_l10nmgr_tests_baseTestcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
 
-class tx_l10nmgr_service_detectRecord_basic_testcase extends tx_10nmgr_tests_base_testcase {
+class tx_l10nmgr_service_detectRecord_basic_testcase extends tx_l10nmgr_tests_baseTestcase {
 
 	/**
 	 * @var tx_l10nmgr_service_detectRecord

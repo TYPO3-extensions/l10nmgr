@@ -33,13 +33,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_workflow_import_forcedLanguage_default_testcase.php $
  * @date 11.10.2009 11:30:21
- * @seetx_l10nmgr_tests_database_testcase
+ * @seetx_l10nmgr_tests_databaseTestcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_workflow_export_forceSourceLanguage_default_testcase extends tx_l10nmgr_tests_database_testcase {
+class tx_l10nmgr_workflow_export_forceSourceLanguage_default_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
 	/**
 	 * Temporary store for the indexed_search registered HOOKS.

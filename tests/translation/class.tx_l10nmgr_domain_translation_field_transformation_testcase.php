@@ -38,13 +38,13 @@ tx_mvc_common_classloader::loadAll();
  * @version $Id$
  * @date $Date$
  * @since 24.04.2009 - 14:57:30
- * @see tx_10nmgr_tests_base_testcase
+ * @see tx_l10nmgr_tests_baseTestcase
  * @category database testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
-class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_l10nmgr_tests_database_testcase {
+class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
 	/**
 	 * @var tx_l10nmgr_domain_translation_field

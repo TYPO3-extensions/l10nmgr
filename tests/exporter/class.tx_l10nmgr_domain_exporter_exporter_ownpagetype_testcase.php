@@ -34,14 +34,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Id: class.tx_l10nmgr_domain_exporter_exporter_ownpagetype_testcase.php $
  * @date 18.05.2009 13:37:19
- * @seetx_l10nmgr_tests_database_testcase
+ * @seetx_l10nmgr_tests_databaseTestcase
  * @category testcase
  * @package TYPO3
  * @subpackage l10nmgr
  * @access public
  */
 
-class tx_l10nmgr_domain_exporter_exporter_ownpagetype_testcase extends tx_l10nmgr_tests_database_testcase {
+class tx_l10nmgr_domain_exporter_exporter_ownpagetype_testcase extends tx_l10nmgr_tests_databaseTestcase {
 	/**
 	* This method overwrites the method of the baseclass to ensure that no live database will be used.
 	*
