@@ -110,6 +110,7 @@ class tx_l10nmgr_service_importTranslation {
 			foreach ($TranslatableElementsCollection as $Element) {
 				$TranslatableFieldsCollection = $Element->getTranslateableFields();
 				$DetectRecordService          = t3lib_div::makeInstance('tx_l10nmgr_service_detectRecord'); /* @var $DetectRecordService tx_l10nmgr_service_detectRecord */
+				$DetectRecordService->flushRecordCache();
 				$DetectRecordService->setWorkspaceId($TranslatableInformation->getWorkspaceId());
 
 				foreach ($TranslatableFieldsCollection as $Field) { /* @var $Field tx_l10nmgr_domain_translateable_translateableField */

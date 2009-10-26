@@ -40,7 +40,7 @@
  * @access public
  */
 class tx_l10nmgr_service_detectRecord {
-	
+
 	/**
 	 * @var int
 	 */
@@ -51,6 +51,18 @@ class tx_l10nmgr_service_detectRecord {
 	 * @var array
 	 */
 	static protected $cachedParentRecordArray = array();
+
+	/**
+	 * Reset the record cache.
+	 *
+	 * @access public
+	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	public function flushRecordCache() {
+		self::$cachedParentRecordArray = array();
+	}
 
 	/**
 	 * @param $workspaceId the $workspaceId to set
@@ -64,8 +76,8 @@ class tx_l10nmgr_service_detectRecord {
 	 */
 	public function getWorkspaceId() {
 		return $this->workspaceId;
-	}	
-	
+	}
+
 	/**
 	 * Generate a new identity_key based on the $forcedTargetLanguageUid.
 	 *
@@ -130,7 +142,7 @@ class tx_l10nmgr_service_detectRecord {
 			$datastrucure = tx_templavoila_api::ds_getExpandedDataStructure ($recordTableName, $recordArray);
 		}
 	}
-	
+
 	/**
 	 * Build a fresh identity_key wich can be used
 	 * to create a new record with the TCEmain commands.
@@ -234,7 +246,7 @@ class tx_l10nmgr_service_detectRecord {
 	}
 
 
-	
+
 	/**
 	 * Build up the cmdProcessingString.
 	 *
@@ -255,11 +267,11 @@ class tx_l10nmgr_service_detectRecord {
 	protected function getProcessingString($translationTableName, $parentRecordUid, $parentRecordPid, $forceLanguageUid) {
 		$translationRecordArray = $this->getRecordTranslation($translationTableName, $parentRecordUid, $parentRecordPid, $forceLanguageUid);
 		$cmdProcessingString    = '';
-		
+
 		if($this->getWorkspaceId() > 0){
 			$translationRecordArray = t3lib_BEfunc::getWorkspaceVersionOfRecord($this->getWorkspaceId(), tx_mvc_common_typo3::getTranslationTargetTable($translationTableName), $translationRecordArray['uid']);
 		}
-				
+
 		if (! is_array($translationRecordArray) || count($translationRecordArray) == 0) {
 			$cmdProcessingString = 'NEW/' . $forceLanguageUid . '/' . $parentRecordUid;
 		} else {
