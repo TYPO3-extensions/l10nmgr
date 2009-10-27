@@ -108,6 +108,7 @@ class tx_l10nmgr_service_importTranslation {
 			$TranslatableElementsCollection = $Page->getTranslateableElements();
 
 			foreach ($TranslatableElementsCollection as $Element) {
+
 				$TranslatableFieldsCollection = $Element->getTranslateableFields();
 				$DetectRecordService          = t3lib_div::makeInstance('tx_l10nmgr_service_detectRecord'); /* @var $DetectRecordService tx_l10nmgr_service_detectRecord */
 				$DetectRecordService->flushRecordCache();
@@ -115,6 +116,7 @@ class tx_l10nmgr_service_importTranslation {
 
 				foreach ($TranslatableFieldsCollection as $Field) { /* @var $Field tx_l10nmgr_domain_translateable_translateableField */
 					try {
+
 						$TranslationField = $TranslationData->findByTableUidAndKey($Page->getUid(), $Element->getTableName(), $Element->getUid(), $Field->getIdentityKey());
 
 						try {
@@ -133,8 +135,7 @@ class tx_l10nmgr_service_importTranslation {
 
 						$this->buildDataCommandArray($Element, $Field, $TranslationField);
 					}catch (tx_mvc_exception_argumentOutOfRange $e ) {
-						//!FIXME Check why the import runs a lot of times into this exception!
-						//$this->handleException($e);
+						tx_mvc_common_debug::debug($e->getMessage(), 'Exception out of range - Thrown because a element from the database is not in the import avaliable.', self::SHOW_DEBUG_INFORMATION);
 					} catch (tx_mvc_exception_skipped $e) {
 						$this->handleException($e);
 					} catch (tx_mvc_exception $e) {
