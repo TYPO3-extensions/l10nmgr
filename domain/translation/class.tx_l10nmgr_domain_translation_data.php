@@ -219,7 +219,12 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @return tx_l10nmgr_domain_translation_fieldCollection
 	 */
 	public function findByTableUidAndKey($pageUid, $tableName, $elementUid, $uniqueKey) {
-		return $this->getPageCollection()->offsetGet($pageUid)->getElementCollection()->offsetGet($tableName . ':' . $elementUid)->getFieldCollection()->offsetGet($uniqueKey);
+		return $this->getPageCollection()
+			->offsetGet($pageUid)
+			->getElementCollection()
+			->offsetGet($tableName . ':' . $elementUid)
+			->getFieldCollection()
+			->offsetGet($uniqueKey);
 	}
 
 	/**
