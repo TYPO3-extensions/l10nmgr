@@ -13,7 +13,7 @@
  *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
- *
+ *^
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -21,9 +21,31 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'] = array();
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_l10nmgr'] = 'EXT:l10nmgr/class.l10nmgr_tcemain_hook.php:&tx_l10nmgr_tcemain_hook';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['recStatInfoHooks']['tx_l10nmgr'] = 'EXT:l10nmgr/class.l10nmgr_tcemain_hook.php:&tx_l10nmgr_tcemain_hook->stat';
 
 PHPUnit_Util_Filter::addFileToFilter(__FILE__, 'PHPUNIT');
+PHPUnit_Util_Filter::addDirectoryToFilter (
+	PATH_site, '.php'
+);
+PHPUnit_Util_Filter::addDirectoryToFilter (
+	PATH_site . TYPO3_mainDir, '.php'
+);
+PHPUnit_Util_Filter::addDirectoryToFilter (
+	PATH_t3lib, '.php'
+);
+PHPUnit_Util_Filter::removeDirectoryFromFilter(
+	t3lib_extMgm::extPath('l10nmgr'), '.php'
+);
+PHPUnit_Util_Filter::addDirectoryToFilter(
+	t3lib_extMgm::extPath('l10nmgr') . 'templates', '.php'
+);
+PHPUnit_Util_Filter::addDirectoryToFilter(
+	t3lib_extMgm::extPath('l10nmgr') . 'interface', '.php'
+);
 
+PHPUnit_Util_Filter::addFileToFilter(t3lib_extMgm::extPath('l10nmgr') . 'class.l10nmgr_tcemain_hook.php');
 /**
  * This is the l10nmgr base test test case class
  *
