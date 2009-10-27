@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testdata>
+    <sys_workspace>
+        <uid>142</uid>
+        <pid>0</pid>
+        <tstamp>1209668582</tstamp>
+        <deleted>1</deleted>
+        <title></title>
+        <description></description>
+        <adminusers>1</adminusers>
+        <members></members>
+        <reviewers></reviewers>
+        <db_mountpoints>24</db_mountpoints>
+        <file_mountpoints>5</file_mountpoints>
+        <publish_time>0</publish_time>
+        <unpublish_time>0</unpublish_time>
+        <freeze>0</freeze>
+        <live_edit>0</live_edit>
+        <review_stage_edit>0</review_stage_edit>
+        <vtypes>0</vtypes>
+        <disable_autocreate>0</disable_autocreate>
+        <swap_modes>0</swap_modes>
+        <publish_access>0</publish_access>
+        <stagechg_notification>1</stagechg_notification>
+    </sys_workspace>
+</testdata>
