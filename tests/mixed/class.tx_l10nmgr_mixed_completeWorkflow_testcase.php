@@ -210,7 +210,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 	 * @return void
 	 */
 	public function completeLocalisationWorkflowCATXMLWithImportIntoWorkspace(){
-		$this->importDataSet(t3lib_extMgm::extPath('l10nmgr').'/tests/mixed/fixtures/completeWorkflow/workspace.xml');
+		$this->importDataSet('/mixed/fixtures/completeWorkflow/workspace.xml');
 		$this->helper_testCompleteLocalisationWorkflow('xml',142);
 
 	}
