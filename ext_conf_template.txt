@@ -50,4 +50,7 @@ ftp_server_username =
 # cat=basic/ftp/40; type=string; label=FTP server password: The FTP server's password.
 ftp_server_password =
 
-
+# Debugging
+#
+# cat=basic/debugging/10; type=boolean[0]; label=Show debugging information during export
+show_debugging_information = 0

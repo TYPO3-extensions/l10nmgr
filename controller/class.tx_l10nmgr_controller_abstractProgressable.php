@@ -70,7 +70,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 
 	/**
 	 * Holds the received warning messages during the import.
-	 * 
+	 *
 	 * @var array
 	 */
 	public static $warningMessages;
@@ -85,7 +85,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		}
 		parent::initializeArguments();
 	}
-	
+
 	/**
 	 * Show progress action
 	 *
@@ -137,8 +137,8 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	 */
 	protected function getRedirectUrlOnAbort() {
 		return '../mod1/index.php';
-	}	
-	
+	}
+
 	/**
 	 * Perform run action (via AJAX call)
 	 *
@@ -149,36 +149,36 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	public function ajaxPerformRunAction() {
 		$progressView = new tx_mvc_view_widget_progressAjax();
 		$this->initializeView($progressView);
-					
+
 		try {
-			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['warningCount'],true);	
+			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['warningCount'],true);
 			$subject = $this->getProgressableSubject();
 
 			/**
 			 * To handle errors during the import process we setup an error handing for user warnings.
-			 * In addition any output will cause a user warning, to get any warning output into the 
+			 * In addition any output will cause a user warning, to get any warning output into the
 			 * progress bar.
-			 * 
+			 *
 			 * To trigger own errors use trigger_error('your message',E_USER_WARNING)
 			 */
-			set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);			
+			set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);
 				ob_start();
 					$completed = $this->performProgressableRun($subject);
 					$output = ob_get_contents();
 				ob_end_clean();
-			
+
 				if(!empty($output)){ trigger_error('Output during process: '.$output,E_USER_WARNING);}
 			restore_error_handler();
-			
+
 			$percent = $subject->getProgressPercentage();
 			$progressView->setProgress($percent);
-			
+
 			if(is_array(self::$warningMessages)) {
 				$warningMessage = implode('<br/><br/>',self::$warningMessages);
-				$progressView->setWarningMessage($warningMessage);		
+				$progressView->setWarningMessage($warningMessage);
 				$this->arguments['warningCount']++;
 			}
-			
+
 			if ($completed) {
 				$progressView->setProgressLabel('Completed');
 				$progressView->setCompleted(true);
@@ -188,13 +188,21 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 			} else {
 				$progressView->setProgressLabel($subject->getProgressOutput());
 			}
-			
+
 		}catch(Exception $e) {
 			tx_mvc_common_debug::logException($e);
 			$progressView->setAborted(true);
-			$progressView->setAbortMessage($e->getMessage().' '.$e->getFile().' '.$e->getLine().' '.$e->getTraceAsString());
+
+			$message = $e->getMessage()."\n\n";
+			if($this->configuration->get('show_debugging_information') == 1){
+				$message .= 'File: '.$e->getFile()."\n\n".
+							'Line: '.$e->getLine()."\n\n".
+							'Trace: '.$e->getTraceAsString();
+			}
+
+			$progressView->setAbortMessage($message);
 		}
-		
+
 		//update the progress url, maybe the number of warnings has changed
 		$progressView->setProgressUrl($this->getViewHelper('tx_mvc_viewHelper_linkCreator')->getAjaxActionLink('ajaxPerformRun')->useOverruledParameters()->makeUrl());
 
@@ -213,7 +221,14 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	* @param int line of code
 	*/
 	public function warningHandler($errno,$errstr,$file,$line) {
-		$message = 'Warning: '.$errstr.'/ '.$errno. ' in '.$file.' on line '.$line;
+		$message = 'Warning: '.$errstr."\n\n";
+
+		if($this->configuration->get('show_debugging_information') == 1){
+			$message .= 'Error: '.$errno."\n\n".
+						'File: '.$file."\n\n".
+						'Line: '.$line."\n\n".
+						'Debug Backtrace: '.var_export(debug_backtrace(),true);
+		}
 		self::$warningMessages[] = $message;
 	}
 }

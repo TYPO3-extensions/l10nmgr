@@ -130,6 +130,7 @@ class tx_l10nmgr_domain_importer_importer {
 					// get collection of pageIds to create a translateableInformation for the relevantPages from the imported file
 				$ImportPageIdCollection	= $TranslationData->getPageIdCollection();
 
+
 					// create a dataProvider based on the exportData and the relevantPageIds of the importFile
 				$factory                 = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
 				$TranlateableInformation = $factory->createFromExportDataAndPageIdCollection($exportData,$ImportPageIdCollection,$TranslationData->getWorkspaceId());
@@ -142,11 +143,11 @@ class tx_l10nmgr_domain_importer_importer {
 				trigger_error($e->getMessage() . ' That occurs on the file: "' . $currentFile . '"', E_USER_WARNING);
 			}
 
-			$this->importData->removeProcessedFilename($currentFile);	
-				
+			$this->importData->removeProcessedFilename($currentFile);
+
 			if ( $this->importData->countRemainingImportFilenames() <= 0 ) {
 				$this->importData->setImportIsCompletelyProcessed(true);
-				
+
 				$exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
 			}
 
