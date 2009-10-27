@@ -93,25 +93,7 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
 		$this->TranslatableFactory = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
 		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();
-
-		set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);
 	}
-
-	/**
-	 * This errorHandler is used to throw an own exception to test if errors can be detected correctly.
-	 *
-	 * @param $errno
-	 * @param $errstr
-	 * @param $file
-	 * @param $line
-	 * @throws tx_l10nmgr_exception_applicationError
-	 * @return void
-	 */
-	public function warningHandler($errno,$errstr,$file,$line) {
-		$message = 'Warning: '.$errstr.'/ '.$errno. ' in '.$file.' on line '.$line;
-		throw new tx_l10nmgr_exception_applicationError($message);
-	}
-
 
 	/**
 	 * Resets the test enviroment after the test.
@@ -139,7 +121,6 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 	 * @test
 	 *
 	 * @access public
-	 * @expectedException tx_l10nmgr_exception_applicationError
 	 * @return void
 	 *
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
@@ -158,6 +139,11 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 			$forceTargetLanguageUid
 		);
 
+		$translationRecordArray = t3lib_BEfunc::getRecord('tt_content', 540807);
+		$this->assertTrue (
+			is_null($translationRecordArray)
+		);
+
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData           = $exportDataRepository->findById(67);
 
@@ -166,8 +152,7 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 
 		$TranslatableInformation = $this->TranslatableFactory->_call('createFromDataProvider', $translateableFactoryDataProvider);
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
-
-		$translationRecordArray = t3lib_BEfunc::getRecord('tt_content', 540863);
+		$translationRecordArray = t3lib_BEfunc::getRecord('tt_content', 540807);
 		$this->assertEquals (
 			$expectedSysLanguageUid,
 			$translationRecordArray['sys_language_uid'],
@@ -188,7 +173,6 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 	 *
 	 * @access public
 	 * @return void
-	 * @expectedException tx_l10nmgr_exception_applicationError
 	 *
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
@@ -216,7 +200,7 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 
-		$translationRecordArray = t3lib_BEfunc::getRecord('tt_content', 540863);
+		$translationRecordArray = t3lib_BEfunc::getRecord('tt_content', 540807);
 		$this->assertEquals (
 			$expectedSysLanguageUid,
 			$translationRecordArray['sys_language_uid'],
