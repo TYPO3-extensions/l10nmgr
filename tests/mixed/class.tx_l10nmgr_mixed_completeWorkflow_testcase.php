@@ -59,13 +59,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 		global $BE_USER;
 		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
 
-			// unset the indexed_search hooks
-		if (t3lib_extMgm::isLoaded('indexed_search')) {
-			$this->indexedSearchHook['processCmdmapClass']  = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch'];
-			$this->indexedSearchHook['processDatamapClass'] = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch'];
-			unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch']);
-			unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch']);
-		}
+		$this->unregisterIndexedSearchHooks();
 
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
@@ -89,11 +83,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
    		$this->dropDatabase();
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 
-   			// restore the indexed_search hooks
-		if (t3lib_extMgm::isLoaded('indexed_search')) {
-			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['tx_indexedsearch']  = $this->indexedSearchHook['processCmdmapClass'];
-			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_indexedsearch'] = $this->indexedSearchHook['processDatamapClass'];
-		}
+   		$this->restoreIndexedSearchHooks();
 	}
 
 	/**
@@ -210,6 +200,8 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 	 * @return void
 	 */
 	public function completeLocalisationWorkflowCATXMLWithImportIntoWorkspace(){
+		$this->markTestIncomplete('This test is under construction.');
+
 		$this->importDataSet('/mixed/fixtures/completeWorkflow/workspace.xml');
 		$this->helper_testCompleteLocalisationWorkflow('xml',142);
 
