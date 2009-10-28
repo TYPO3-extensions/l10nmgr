@@ -55,9 +55,7 @@ class tx_l10nmgr_service_textConverter_getXMLContent_testcase extends tx_l10nmgr
 	 * @return void
 	 */
 	public function setUp() {
-		global $BE_USER;
-		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+		$this->skipInWrongWorkspaceContext();
 		$this->TextConverter = new tx_l10nmgr_service_textConverter();
 	}
 
@@ -76,14 +74,14 @@ class tx_l10nmgr_service_textConverter_getXMLContent_testcase extends tx_l10nmgr
 	 * test if simple content is extracted properly from XML
 	 * whitespaces should be kept too
 	 *
-	 */	
+	 */
 	public function test_getXMLContentWorkForSimpleContent() {
 		$output ='the content ';
 		$input = '<data>'.$output.'</data>';
 
 		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
 	}
-	
+
 	/**
 	 * test if nested content (which could be produced by the RTE)
 	 * is properly retrieved
@@ -95,7 +93,7 @@ class tx_l10nmgr_service_textConverter_getXMLContent_testcase extends tx_l10nmgr
 
 		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
 	}
-	
+
 	/**
 	 * Check if nested content is kept and if newlines are kept as supposed
 	 *
@@ -115,10 +113,10 @@ class tx_l10nmgr_service_textConverter_getXMLContent_testcase extends tx_l10nmgr
 	public function test_getXMLContentWorkForEntityContent() {
 		$input = "<data>blub&lt;huhu&gt;bla&lt;/huhu&gt;blub</data>";
 		$output ="blub<huhu>bla</huhu>blub";
-		
+
 		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
 	}
-	
+
 	/**
 	 * Check wether the process kepts UTF8 chars as expected
 	 *
@@ -126,10 +124,10 @@ class tx_l10nmgr_service_textConverter_getXMLContent_testcase extends tx_l10nmgr
 	public function test_getXMLContentWorkForRandomUnicodeContent() {
 		$input = "<data>€ ".chr(0xe2).chr(0x80).chr(0x94)."</data>";
 		$output ="€ ".chr(0xe2).chr(0x80).chr(0x94);
-		
+
 		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
 	}
-	
+
 	/**
 	 * Check if wether CDATA tags are processed in the right way
 	 *
@@ -137,12 +135,12 @@ class tx_l10nmgr_service_textConverter_getXMLContent_testcase extends tx_l10nmgr
 	public function test_getXMLContentWorkForCDATAContent() {
 		$input = "<data><![CDATA[ &lt;br /&gt;new line ]]></data>";
 		$output =" &lt;br /&gt;new line ";
-		
+
 		$realoutp=$this->TextConverter->getXMLContent(new SimpleXMLElement($input));
 		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
 	}
 
-	
+
 	/**
 	 * Check if wether CDATA tags are processed in the right way
 	 * and make sure that the cooperation with toText works as supposed
@@ -151,12 +149,12 @@ class tx_l10nmgr_service_textConverter_getXMLContent_testcase extends tx_l10nmgr
 	public function test_getXMLContentWorkForCDATAContentWithinRoundtrip() {
 		$input = "<data><![CDATA[ &lt;br /&gt;new line ]]></data>";
 		$output =" <br />new line ";
-		
+
 		$realoutp=$this->TextConverter->toText($this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
 		$this->assertEquals($output,$realoutp);
 	}
-	
-	
+
+
 	/**
 	 * Check if wether CDATA tags are processed in the right way and that UTF8 characters also keep their identity
 	 *
@@ -164,7 +162,7 @@ class tx_l10nmgr_service_textConverter_getXMLContent_testcase extends tx_l10nmgr
 	public function test_getXMLContentWorkForRandomCDATAContent() {
 		$input = "<data><![CDATA[ € ".chr(0xe2).chr(0x80).chr(0x94)."]]></data>";
 		$output =" € ".chr(0xe2).chr(0x80).chr(0x94);
-		
+
 		$realoutp=$this->TextConverter->getXMLContent(new SimpleXMLElement($input));
 		$this->assertEquals($output,$this->TextConverter->getXMLContent(new SimpleXMLElement($input)));
 	}
