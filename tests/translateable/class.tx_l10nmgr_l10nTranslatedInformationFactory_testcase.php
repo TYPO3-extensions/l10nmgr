@@ -19,9 +19,7 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_l10nmgr_te
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
 	 */
 	public function setUp() {
-		global $BE_USER;
-		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-
+		$this->skipInWrongWorkspaceContext();
 		$this->createDatabase ();
 		$db = $this->useTestDatabase ();
 		$this->importStdDB();

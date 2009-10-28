@@ -1,4 +1,4 @@
-<?php 
+<?php
 /***************************************************************
  *  Copyright notice
  *
@@ -39,22 +39,21 @@
  * @package TYPO3
  * @subpackage extensionkey
  * @access public
- */ 
+ */
 
 class tx_l10nmgr_domain_importer_importFile_testcase extends tx_l10nmgr_tests_databaseTestcase {
-		
+
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
 	 *
 	 */
 	public function setUp(){
-		global $BE_USER;
-		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+		$this->skipInWrongWorkspaceContext();
+
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 		$this->importStdDB();
-		
+
 		$this->importExtensions(array('l10nmgr'));
 	}
 
@@ -65,30 +64,30 @@ class tx_l10nmgr_domain_importer_importFile_testcase extends tx_l10nmgr_tests_da
 
 	/**
 	 * This testcase is used to ensure that an exportFile which contains a zip can be unzipped.
-	 * 
+	 *
 	 */
 	public function test_canExtractZip() {
 
 		$row['uid'] = 4711;
 		$row['importdata_id'] = 1212;
 		$row['filename'] = 'test.zip';
-			
+
 		$importFile = new tx_l10nmgr_domain_importer_importFile($row);
 
 		$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
-		
-		$this->assertTrue($importFile->isZip(),'Testfile should be an zip file!');		
-		
+
+		$this->assertTrue($importFile->isZip(),'Testfile should be an zip file!');
+
 		$importFile->extractZIPAndCreateImportFileForEach();
 
 		$fileHasBeenWritten = tx_mvc_validator_factory::getFileValidator()->isValid(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
-		
+
 		$this->assertTrue($fileHasBeenWritten);
-		
+
 		unlink(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
-		
+
 		$fileHasBeeRemoved = !tx_mvc_validator_factory::getFileValidator()->isValid(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
-		 
+
 		$this->assertTrue($fileHasBeeRemoved);
 	}
 }

@@ -50,6 +50,8 @@ class tx_l10nmgr_service_detectRecord_workspace_pages_testcase extends tx_l10nmg
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function setUp() {
+		$this->skipInWrongWorkspaceContext();
+
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 

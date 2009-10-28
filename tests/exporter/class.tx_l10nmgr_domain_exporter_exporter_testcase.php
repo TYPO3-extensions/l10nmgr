@@ -74,9 +74,7 @@ class tx_l10nmgr_domain_exporter_exporter_testcase extends tx_l10nmgr_tests_data
 	 *
 	 */
 	public function setUp(){
-		global $BE_USER;
-		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-
+		$this->skipInWrongWorkspaceContext();
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 		$this->importStdDB();

@@ -52,6 +52,8 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_l10
 	protected $Field = null;
 
 	public function setUp() {
+		$this->skipInWrongWorkspaceContext();
+
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
 

@@ -15,13 +15,12 @@ class tx_l10nmgr_domain_translateable_translateableField_testcase extends tx_l10
 	 *
 	 */
 	public function setUp() {
-		global $BE_USER;
-		$this->assertEquals($BE_USER->user['workspace_id'],0,'Run this test only in the live workspace' );
-		
+		$this->skipInWrongWorkspaceContext();
+
 		$this->createDatabase ();
 		$db = $this->useTestDatabase ();
 		$this->importStdDB();
-		
+
 		$this->importExtensions ( array ('cms', 'l10nmgr', 'static_info_tables', 'templavoila' ) );
 	}
 
@@ -37,14 +36,14 @@ class tx_l10nmgr_domain_translateable_translateableField_testcase extends tx_l10
 	public function canDetectTransformationTypePlain() {
 
 		$tF = new tx_l10nmgr_domain_translateable_translateableField();
-		
+
 		$this->assertEquals('plain', $tF->getTransformationType());
 	}
 
 	/**
 	 * assuming that the field is configured to require RTE transformations
 	 * the required output is "text"
-	 * 
+	 *
 	 * the information is taken from t8tools
 	 *
 	 * @test
@@ -59,7 +58,7 @@ class tx_l10nmgr_domain_translateable_translateableField_testcase extends tx_l10
 	/**
 	 * assuming that the field is configured to contain plain HTML
 	 * we suggest that "html" is returned
-	 * 
+	 *
 	 * the information is taken from t8tools
 	 *
 	 * @test
@@ -73,7 +72,7 @@ class tx_l10nmgr_domain_translateable_translateableField_testcase extends tx_l10
 	/**
 	 * in case of wrong configuration we assume that the RTE-setting
 	 * is "stronger"
-	 * 
+	 *
 	 * the information is taken from t8tools
 	 *
 	 * @test
@@ -84,7 +83,7 @@ class tx_l10nmgr_domain_translateable_translateableField_testcase extends tx_l10
 		$tF->setIsRTE(true);
 		$tF->setIsHTML(true);
 		$this->assertEquals('text', $tF->getTransformationType());
-			
+
 	}
 }
 
