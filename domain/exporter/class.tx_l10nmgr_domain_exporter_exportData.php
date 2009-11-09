@@ -61,14 +61,22 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 */
 	protected $relativeFilePath;
 
-
 	/**
 	 * @var string
 	 */
 	protected $relativeZipPath;
 
 	/**
+	 * The diffrent exportFormats are realized with diffrent views which
+	 * will be rendered at exportTime. This variable holds the exportView which
+	 * is responsible to render the exportFile for a given format.
+	 *
+	 * @var tx_l10nmgr_view_export_abstractExportView
+	 */
+	protected $initializedView;
 
+	/**
+	 *
 	 */
 	public function __construct($row = array()){
 		parent::__construct($row);
@@ -80,7 +88,23 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
+	 * Unset referenced objects and data.
 	 *
+	 */
+	public function __destruct(){
+		parent::__destruct();
+		unset($this->initializedView);
+		unset($this->relativeZipPath);
+		unset($this->relativeFilePath);
+		unset($this->absoluteFilePath);
+		unset($this->absoluteZipPath);
+		unset($this->row);
+	}
+
+	/**
+	 * Method to set the relative filePath for this export.
+	 *
+	 * @param string
 	 */
 	protected function setRelativeFilePath($path){
 		$this->relativeFilePath = $path;
@@ -88,7 +112,8 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
-	 * Returns the relative file path
+	 * Returns the relative file path.
+	 *
 	 * @return string
 	 */
 	public function getRelativeFilePath(){
@@ -96,6 +121,8 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
+	 * Method to set the relative filepath for the zipfile of an export.
+	 *
 	 * @param string
 	 */
 	protected function setRelativeZipPath($path){
@@ -104,6 +131,8 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
+	 * Returns the relative file path of the zip file.
+	 *
 	 * @return string
 	 */
 	public function getRelativeZipPath(){
@@ -111,6 +140,7 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
+	 * Method to set the absoulte filename.
 	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @param string
@@ -120,6 +150,8 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
+	 * Returns the configured absolute file name.
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return string
 	 */
@@ -128,6 +160,8 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
+	 * Method to set an absolute path to the folder where the zip file should
+	 * be stored.
 	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @param string path to exported zip files
@@ -137,6 +171,8 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	}
 
 	/**
+	 * Returns the absoulte path to the zip file of the export.
+	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return string returns the configured absolute path to the zip file
 	 */
@@ -243,6 +279,14 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 		return new ArrayObject($this->getProgress('export_remaining_pages'));
 	}
 
+	/**
+	 * This method is used to attach a warning message to the export progress.
+	 *
+	 * @param string $warningMessage
+	 */
+	public function addWarningMessage($warningMessage){
+		$this->row['warning_messages'] = $this->row['warning_messages'] . 'Warning in File '.$this->getCurrentFilename().': \n '.(string) $warningMessage;
+	}
 
 	/**
 	 * Returns the procress of this export
@@ -439,7 +483,6 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 		return $currentState;
 	}
 
-
 	/**
 	 * Creates a workflowstate for this exportData object
 	 *
@@ -457,7 +500,6 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 		$workflowRepository = new tx_l10nmgr_domain_exporter_workflowStateRepository();
 		$workflowRepository->add($workflowState);
 	}
-
 
 	/**
 	 * Increases the number of exportruns for this exportData object.
@@ -488,7 +530,6 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	protected function setNumberOfExportRuns($value){
 		$this->setProgress('export_number_of_runs',$value);
 	}
-
 
 	/**
 	 * Adds a number of processed items to the export data
@@ -582,15 +623,14 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 		$this->row['source_lang'] = $id;
 	}
 
-
 	/**
 	 * Create one zip files including all export files
 	 *
 	 * @param string filename
 	 * @return bool true if the zip was created successfully
 	 */
-	public function createZip($fileName) {
-
+	public function createZip() {
+		$fileName = $this->getZipFilename();
 		if (class_exists('ZipArchive')) {
 			$absoluteExportZipPath 	= $this->getAbsoluteZipPath();
 			$absoluteExportFilePath	= $this->getAbsoluteFilePath();
@@ -663,29 +703,55 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @return tx_l10nmgr_view_export_abstractExportView
 	 */
 	public function getInitializedExportView() {
-		switch ($this->getExport_type()) {
-			case 'xml' : {
-				$viewClass = new tx_l10nmgr_view_export_exporttypes_CATXML();
-				$viewClass->setSkipXMLCheck($this->getNoxmlcheck());
-				$viewClass->setUseUTF8Mode($this->getCheckutf8());
-			} break;
 
-			case 'xls' : {
-				$viewClass = new tx_l10nmgr_view_export_exporttypes_excelXML();
-			} break;
+		if(!$this->initializedView instanceof tx_l10nmgr_view_export_abstractExportView){
+			switch ($this->getExport_type()) {
+				case 'xml' : {
+					$viewClass = new tx_l10nmgr_view_export_exporttypes_CATXML();
+					$viewClass->setSkipXMLCheck($this->getNoxmlcheck());
+					$viewClass->setUseUTF8Mode($this->getCheckutf8());
+				} break;
 
-			default: {
-				throw new LogicException('ExportFormat is invalid (must be "xml" or "xls")!');
+				case 'xls' : {
+					$viewClass = new tx_l10nmgr_view_export_exporttypes_excelXML();
+				} break;
+
+				default: {
+					throw new LogicException('ExportFormat is invalid (must be "xml" or "xls")!');
+				}
 			}
+
+			$viewClass->setForcedSourceLanguage($this->getSourceLanguageObject());
+			$viewClass->setL10NConfiguration($this->getL10nConfigurationObject());
+			$viewClass->setModeOnlyChanged($this->getOnlychangedcontent());
+			$viewClass->setModeNoHidden($this->getNohidden());
+			$viewClass->setTargetLanguageId($this->getTranslationLanguageObject()->getUid());
+			$this->initializedView = $viewClass;
 		}
 
-		$viewClass->setForcedSourceLanguage($this->getSourceLanguageObject());
-		$viewClass->setL10NConfiguration($this->getL10nConfigurationObject());
-		$viewClass->setModeOnlyChanged($this->getOnlychangedcontent());
-		$viewClass->setModeNoHidden($this->getNohidden());
-		$viewClass->setTargetLanguageId($this->getTranslationLanguageObject()->getUid());
+		return $this->initializedView;
+	}
 
-		return $viewClass;
+	/**
+	 * Method to determine the filename for the currenly exported file.
+	 *
+	 * @param void
+	 * @return string filename
+	 */
+	public function getCurrentFilename(){
+		$prefix = $this->getL10nConfigurationObject()->getFilenameprefix();
+		return $this->getInitializedExportView()->getFilename($prefix,$this->getNumberOfExportRuns());
+	}
+
+	/**
+	 * Generates the name of the zipfile for this export process.
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return string
+	 */
+	protected function getZipFilename(){
+		$prefix = $this->getL10nConfigurationObject()->getFilenameprefix();
+		return $this->getInitializedExportView()->getFilename($prefix) . '.zip';
 	}
 
 	/**
@@ -697,7 +763,7 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	protected function getLanguageLabel(tx_l10nmgr_domain_language_language $lang=NULL) {
 		if (is_null($lang)) {
 			// default language
-			$tsConf = t3lib_BEfunc::getModTSconfig($exportData->getPid(), 'mod.SHARED.');
+			$tsConf = t3lib_BEfunc::getModTSconfig($this->getPid(), 'mod.SHARED.');
 			$languageLabel = $tsConf['properties']['defaultLanguageLabel'];
 
 			// TODO: extension manager configuration if empty

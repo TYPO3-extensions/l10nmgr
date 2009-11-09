@@ -145,6 +145,17 @@ class tx_l10nmgr_domain_translateable_translateableInformation {
 	}
 
 	/**
+	 * Destructor of the object. Unset referenced objects.
+	 * @return void
+	 */
+	public function __destruct(){
+		unset($this->pageGroups);
+		unset($this->targetLanguage);
+		unset($this->sourceLanguage);
+		unset($this->exportData);
+	}
+
+	/**
 	 * Method to add a pageGroup to the translateableInformation
 	 *
 	 * @param tx_l10nmgr_domain_translateable_PageGroup $pageGroup

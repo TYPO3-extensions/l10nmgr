@@ -31,10 +31,24 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 	 */
 	protected $sourceLanguage;
 
+	/**
+	 * Holds the targetlanguage.
+	 *
+	 * @var tx_l10nmgr_domain_language
+	 */
 	protected $targetLanguage;
 
+	/**
+	 *
+	 * @var array
+	 */
 	protected $relevantTables;
 
+	/**
+	 * Collection of relevant pageIds
+	 *
+	 * @var ArrayObject
+	 */
 	protected $collectionOfRelevantPageIds;
 
 	/**
@@ -101,6 +115,13 @@ class tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider impl
 		$this->tca_tables		= $this->getTCATablenames();
 		$this->relevantTables	= array_intersect($this->tca_tables,$l10ncfg->getTableArray());
 		$this->excludeArray		= $l10ncfg->getExcludeArray();
+	}
+
+	public function __destruct(){
+		unset($this->exportData);
+		unset($this->sourceLanguage);
+		unset($this->targetLanguage);
+		unset($this->t8Tools);
 	}
 
 	/**

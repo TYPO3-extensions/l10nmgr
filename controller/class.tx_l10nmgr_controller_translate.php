@@ -67,18 +67,18 @@ class tx_l10nmgr_controller_translate extends tx_mvc_controller_action {
 	 *
 	 * @var array
 	 */
-	protected $keepArgumentKeys = array('configurationId','selectedTable','selectedUid','target_language','no_hidden','new_changed_only');	
-	
+	protected $keepArgumentKeys = array('configurationId','selectedTable','selectedUid','target_language','no_hidden','new_changed_only');
+
 	/**
 	 * These arguments will be stored in the session
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $sessionArgumentKeys = array('configurationId');
-	
+
 	/**
 	 * Called before processing - used to initialise the arguments
-	 * 
+	 *
 	 * @access protected
 	 * @return void
 	 */
@@ -90,16 +90,16 @@ class tx_l10nmgr_controller_translate extends tx_mvc_controller_action {
 	 * @access public
 	 * @return string HTML formated output
 	 */
-	public function inlineTranslateAction() {		
+	public function inlineTranslateAction() {
 		$this->view = new tx_l10nmgr_view_translate_borderPanel();
 		$this->initializeView($this->view);
 
 		$this->view->addView($this->getControlPanelView(),tx_mvc_view_widget_panelBorder::POSITION_NORTH);
 		$this->view->addView($this->getInlineTranlationView(),tx_mvc_view_widget_panelBorder::POSITION_CENTER);
-		
+
 		return $this->view->render();
 	}
-	
+
 	/**
 	 * Returns the controll panel view.
 	 *
@@ -108,81 +108,83 @@ class tx_l10nmgr_controller_translate extends tx_mvc_controller_action {
 	protected function getControlPanelView(){
 		$languageRepository = new tx_l10nmgr_domain_language_languageRepository();
 		$allLanguages		= $languageRepository->findAll();
-		$l10ncfgObj = $this->getL10NConfigurationFromArguments();		
-		
+		$l10ncfgObj = $this->getL10NConfigurationFromArguments();
+
 		$default			= $languageRepository->findById(0);
 		$allLanguages->append($default);
-		
+
 		$view = new tx_l10nmgr_view_translate_controlPanel();
 		$this->initializeView($view);
-		
+
 		if($this->arguments['no_hidden'] == 1){ $view->setNoHidden(true); }
-		if($this->arguments['new_changed_only']){ $view->setNewChangedOnly(true);	}		
-		
+		if($this->arguments['new_changed_only']){ $view->setNewChangedOnly(true);	}
+
 		$view->setAvailableLanguages($allLanguages);
 		$view->setSelectedLanguage($this->getTargetLanguageFromArguments());
 		$view->setL10NConfiguration($l10ncfgObj);
-		
+
 		return $view;
 	}
-	
+
 	/**
-	 * Returns an initialized view for inline translations. 
+	 * Returns an initialized view for inline translations.
 	 *
 	 * @return tx_l10nmgr_view_export_exporttypes_l10nHTMLList
 	 */
 	protected function getInlineTranlationView(){
-		$l10ncfgObj 	= $this->getL10NConfigurationFromArguments();	
+		$l10ncfgObj 	= $this->getL10NConfigurationFromArguments();
 		$targetLanguage = $this->getTargetLanguageFromArguments();
-		
+
 		$view 			= new tx_l10nmgr_view_export_exporttypes_l10nHTMLList();
 		$view->setL10NConfiguration($l10ncfgObj);
 		$this->initializeView($view);
-		
-		if($this->arguments['target_language'] != 0){	
+
+		if($this->arguments['target_language'] != 0){
 
 			$exportData	= $this->getBackendExportData();
-			$translateableFactoryDataProvider 	= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData,$l10ncfgObj->getExportPageIdCollection());
+			$translateableFactoryDataProvider 	= new tx_l10nmgr_domain_translateable_typo3TranslateableFactoryDataProvider($exportData);
+			$translateableFactoryDataProvider->addPageIdCollectionToRelevantPageIds($l10ncfgObj->getExportPageIdCollection());
 			$translateableFactoryDataProvider->setTargetLanguage($targetLanguage);
 			$translateableInformationFactory 	= new tx_l10nmgr_domain_translateable_translateableInformationFactory();
 			$translateableInformation			= $translateableInformationFactory->createFromDataProvider($translateableFactoryDataProvider);
-	
+
+
 			if($this->arguments['no_hidden'] == 1){
 				$view->setModeNoHidden(true);
 			}
-			
+
 			if($this->arguments['new_changed_only']){
 				$view->setModeOnlyChanged(true);
 			}
-			
+
 			$view->setModeWithInlineEdit();
 			$view->setModeShowEditLinks();
-			
+
 			if($this->arguments['selectedTable'] != '' && $this->arguments['selectedUid'] != ''){
 				$view->setSelectedItem($this->arguments['selectedTable'],$this->arguments['selectedUid']);
 			}
-		
+
 			$view->setTranslateableInformation($translateableInformation);
-			$view->setTargetLanguageId($targetLanguage->getUid());	
+			$view->setTargetLanguageId($targetLanguage->getUid());
 		}
-		
+
 		$view->addBackendStylesHeaderData();
-		
+
 		return $view;
 	}
-		
+
 	/**
 	 * This method is used to save the translation to the database.
-	 * 
+	 *
 	 * @param void
 	 */
 	protected function saveTranslationAction(){
-		$l10ncfgObj 		= $this->getL10NConfigurationFromArguments();	
+		$l10ncfgObj 		= $this->getL10NConfigurationFromArguments();
 		$exportData			= $this->getBackendExportData();
-		
+
 		$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
 		$TranslationData    = $TranslationFactory->createFromFormSubmit($this->arguments['pageid'],$this->getTargetLanguageFromArguments()->getUid(),$this->arguments['translation'],$l10ncfgObj);
-		
+
 		// get collection of pageIds to create a translateableInformation for the relevantPages from the imported file
 		$ImportPageIdCollection	= $TranslationData->getPageIdCollection();
 
@@ -192,39 +194,39 @@ class tx_l10nmgr_controller_translate extends tx_mvc_controller_action {
 
 		// Save the translation into the database
 		$TranslationService = new tx_l10nmgr_service_importTranslation();
-		$TranslationService->save($TranlateableInformation, $TranslationData);	
-		
-		$this->routeToAction('inlineTranslateAction');	
+		$TranslationService->save($TranlateableInformation, $TranslationData);
+
+		$this->routeToAction('inlineTranslateAction');
 	}
-	
+
 	protected function getBackendExportData(){
-		$l10ncfgObj 	= $this->getL10NConfigurationFromArguments();	
+		$l10ncfgObj 	= $this->getL10NConfigurationFromArguments();
 		$targetLanguage = $this->getTargetLanguageFromArguments();
-		
+
 		$exportData = new tx_l10nmgr_domain_exporter_exportData();
 		$exportData->setOnlychangedcontent(false);
 		$exportData->setL10NConfiguration($l10ncfgObj);
-		$exportData->setTranslationLanguageObject($targetLanguage);	
-		
-		
+		$exportData->setTranslationLanguageObject($targetLanguage);
+
+
 		return $exportData;
 	}
-	
+
 	/**
 	 * Creates an initialized target language object from the controller arguments.
-	 * 
+	 *
 	 * @param void
 	 * @return tx_l10nmgr_domain_language_language
 	 */
 	protected function getTargetLanguageFromArguments(){
 		$languageRepository = new tx_l10nmgr_domain_language_languageRepository();
 		$targetLanguage = $languageRepository->findById($this->arguments['target_language']);
-		
+
 		return $targetLanguage;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param void
 	 * @return tx_l10nmgr_domain_configuration_configuration;
 	 */
@@ -232,8 +234,8 @@ class tx_l10nmgr_controller_translate extends tx_mvc_controller_action {
 		$cfgId = $this->arguments['configurationId'];
 		$l10nmgrCfgRepository 	= new tx_l10nmgr_domain_configuration_configurationRepository();
 		/* @var $l10ncfgObj tx_l10nmgr_domain_configuration_configuration */
-		$l10ncfgObj = $l10nmgrCfgRepository->findById($cfgId);	
-		
+		$l10ncfgObj = $l10nmgrCfgRepository->findById($cfgId);
+
 		return $l10ncfgObj;
 	}
 }

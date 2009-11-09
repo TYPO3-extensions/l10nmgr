@@ -49,6 +49,7 @@
 							$editOnClickParams  = '&edit[tx_l10nmgr_exportdata][' . $configuration->getPid() . ']=new';
 							$editOnClickParams .= '&returnEditConf=1';
 							$editOnClickParams .= '&noView=1';
+						//	$editOnClickParams .= '&columnsOnly=l10n_cfgid,title,translation_lang,source_lang,checkforexistingexports,onlychangedcontent,nohidden,noxmlcheck,checkutf8';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configuration->getUid();
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][export_type]=xml';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][title]='.$configuration->getTitle();

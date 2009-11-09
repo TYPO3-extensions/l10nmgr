@@ -39,7 +39,7 @@
  * @see tx_mvc_view_widget_phpTemplateListView
  * @category database
  * @package TYPO3
- * @subpackage extensionkey
+ * @subpackage l10nmgr
  * @access public
  */
 abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_controller_action {
@@ -57,6 +57,12 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	 * @var string initial progress label
 	 */
 	protected $initalProgressLabel = 'Initializing...';
+
+	/**
+	 *
+	 * @var boolean
+	 */
+	protected static $showDebuggingInfo;
 
 	/**
 	 * Sets the initial progress label
@@ -82,6 +88,12 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	protected function initializeArguments(){
 		if(!isset($this->arguments['warningCount'] )){
 			$this->arguments['warningCount'] = 0;
+		}
+
+		//we need to set this here because we can not read the information
+		//in the warning handler
+		if($this->configuration->get('show_debugging_information') == 1){
+			self::$showDebuggingInfo = true;
 		}
 		parent::initializeArguments();
 	}
@@ -120,6 +132,24 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	abstract protected function getProgressableSubjectView();
 
 	/**
+	 * Returns the progressable subject.
+	 *
+	 * @param void
+	 * @return tx_l10nmgr_interface_progressable
+	 *
+	 */
+	abstract protected function getProgressableSubject();
+
+	/**
+	 * The implementation of this method is responsible to
+	 * save the subject for the next run.
+	 *
+	 * @param tx_l10nmgr_interface_progressable
+	 * @return void
+	 */
+	abstract protected function saveProgressableSubject(tx_l10nmgr_interface_progressable $subject);
+
+	/**
 	 * This method is used to return the redirect url on completion of the export process.
 	 * overwrite it to change it in a sub-controller.
 	 *
@@ -131,12 +161,40 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	}
 
 	/**
-
+	 *
 	 * @author Timo Schmidt <schmidt@aoemedia.de>
  	 * @return string
 	 */
 	protected function getRedirectUrlOnAbort() {
 		return '../mod1/index.php';
+	}
+
+	/**
+	 * This method is used to call the performProgressableRun method. Usually this
+	 * method is overwritten by the import or export controller.
+	 *
+	 * @author Timo Schmidt
+	 * @param tx_l10nmgr_interface_progressable
+	 * @return boolean
+	 */
+	private function performProgressableRunOnSubject($subject){
+		/**
+		 * To handle errors during the import process we setup an error handing for user warnings.
+		 * In addition any output will cause a user warning, to get any warning output into the
+		 * progress bar.
+		 *
+		 * To trigger own errors use trigger_error('your message',E_USER_WARNING)
+		 */
+		set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);
+			ob_start();
+				$completed = $this->performProgressableRun($subject);
+				$output = ob_get_contents();
+			ob_end_clean();
+
+			if(!empty($output)){ trigger_error('Output during process: '.$output,E_USER_WARNING);}
+		restore_error_handler();
+
+		return $completed;
 	}
 
 	/**
@@ -153,31 +211,21 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		try {
 			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['warningCount'],true);
 			$subject = $this->getProgressableSubject();
-
-			/**
-			 * To handle errors during the import process we setup an error handing for user warnings.
-			 * In addition any output will cause a user warning, to get any warning output into the
-			 * progress bar.
-			 *
-			 * To trigger own errors use trigger_error('your message',E_USER_WARNING)
-			 */
-			set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);
-				ob_start();
-					$completed = $this->performProgressableRun($subject);
-					$output = ob_get_contents();
-				ob_end_clean();
-
-				if(!empty($output)){ trigger_error('Output during process: '.$output,E_USER_WARNING);}
-			restore_error_handler();
+			$completed = $this->performProgressableRunOnSubject($subject);
 
 			$percent = $subject->getProgressPercentage();
 			$progressView->setProgress($percent);
 
 			if(is_array(self::$warningMessages)) {
 				$warningMessage = implode('<br/><br/>',self::$warningMessages);
+
 				$progressView->setWarningMessage($warningMessage);
+				$subject->addWarningMessage($warningMessage);
+
 				$this->arguments['warningCount']++;
 			}
+
+			$this->saveProgressableSubject($subject);
 
 			if ($completed) {
 				$progressView->setProgressLabel('Completed');
@@ -223,7 +271,7 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	public function warningHandler($errno,$errstr,$file,$line) {
 		$message = 'Warning: '.$errstr."\n\n";
 
-		if($this->configuration->get('show_debugging_information') == 1){
+		if(self::$showDebuggingInfo == 1){
 			$message .= 'Error: '.$errno."\n\n".
 						'File: '.$file."\n\n".
 						'Line: '.$line."\n\n".

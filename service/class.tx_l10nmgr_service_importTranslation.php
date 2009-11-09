@@ -88,7 +88,6 @@ class tx_l10nmgr_service_importTranslation {
 		$this->flexToolObj = t3lib_div::makeInstance('t3lib_flexformtools');
 	}
 
-
 	/**
 	 * Save the incoming translationData object into the database
 	 * if the available translatableObject are match the configuration.
@@ -116,7 +115,6 @@ class tx_l10nmgr_service_importTranslation {
 
 				foreach ($TranslatableFieldsCollection as $Field) { /* @var $Field tx_l10nmgr_domain_translateable_translateableField */
 					try {
-
 						$TranslationField = $TranslationData->findByTableUidAndKey($Page->getUid(), $Element->getTableName(), $Element->getUid(), $Field->getIdentityKey());
 
 						try {

@@ -44,7 +44,6 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'interface/interface.tx_l10nmgr_in
  */
 class tx_l10nmgr_domain_translateable_translateableElement  implements tx_l10nmgr_interface_wordsCountable {
 
-
 	/**
 	 * Holds the translateableFields of the translateableElement
 	 * @var ArrayObject
@@ -66,18 +65,10 @@ class tx_l10nmgr_domain_translateable_translateableElement  implements tx_l10nmg
 	 */
 	protected $table;
 
-
 	/**
 	 * @var ArrayObject
 	 */
 	protected $logs;
-
-	/**
-	 * @var int
-	 * @deprecated
-	 * @todo Should be removed after relevance check
-	 */
-	protected $sys_language_uid;
 
 	/**
 	 * @var string
@@ -124,6 +115,16 @@ class tx_l10nmgr_domain_translateable_translateableElement  implements tx_l10nmg
 	 */
 	public function __construct(){
 		$this->translateableFields = new ArrayObject();
+	}
+
+	/**
+	 * Unset referenced objects in destructor.
+	 *
+	 * @see __construct
+	 * @return void
+	 */
+	public function __destruct(){
+		unset($this->translateableFields);
 	}
 
 	/**
@@ -194,19 +195,6 @@ class tx_l10nmgr_domain_translateable_translateableElement  implements tx_l10nmg
 	}
 
 	/**
-	 * Method to configure a language uid.
-	 *
-	 * @param int $id
-	 *
-	 * @deprecated
-	 * @todo Should be removed after relevance check
-	 */
-	public function setSysLanguageUid($id){
-		$this->sys_language_uid = $id;
-	}
-
-
-	/**
 	 * @param string $translation_table
 	 */
 	public function setTranslationTable($translation_table) {
@@ -226,10 +214,11 @@ class tx_l10nmgr_domain_translateable_translateableElement  implements tx_l10nmg
 	public function setTranslations($translations) {
 		$this->translations = $translations;
 	}
-	
+
 	/**
-	 * 
-	 * @param $languageUid
+	 * Returns the uid of a translated element.
+	 *
+	 * @param int $languageUid
 	 * @return int uid of an existing translation records
 	 */
 	public function getTranslationUid($languageUid){

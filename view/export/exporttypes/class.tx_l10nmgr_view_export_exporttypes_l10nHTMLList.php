@@ -33,13 +33,14 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  * @author	Daniel Pötzinger <development@aoemedia.de>
+ * @author	Timo Schmidt <timo.schmidt@aoemedia.de>
  *
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_view_export_exporttypes_l10nHTMLList extends tx_l10nmgr_view_export_abstractExportView {
 
-	
+
 	/**
 	 * The default template of the view
 	 * @var sting
@@ -53,7 +54,7 @@ class tx_l10nmgr_view_export_exporttypes_l10nHTMLList extends tx_l10nmgr_view_ex
 
 	//internal flags:
 	protected $modeWithInlineEdit=FALSE;
-	
+
 	protected $modeShowEditLinks=FALSE;
 
 	public function __construct() {
@@ -69,31 +70,31 @@ class tx_l10nmgr_view_export_exporttypes_l10nHTMLList extends tx_l10nmgr_view_ex
 	protected function getExporttypePrefix(){
 		return 'html';
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public function setModeWithInlineEdit() {
 		$this->modeWithInlineEdit=TRUE;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 **/
 	public function setModeShowEditLinks() {
 		$this->modeShowEditLinks=TRUE;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 *
 	 */
 	public function setSelectedItem($table,$uid){
 		$this->selectedItem = $table.':'.$uid;
 	}
-	
+
 	/**
-	 * Method to determine if an item is selected or not. 
+	 * Method to determine if an item is selected or not.
 	 *
 	 * @param string tablename
 	 * @param int record uid
@@ -101,32 +102,32 @@ class tx_l10nmgr_view_export_exporttypes_l10nHTMLList extends tx_l10nmgr_view_ex
 	public function isSelectedItem($table,$uid){
 		return ($this->selectedItem == $table.':'.$uid);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected function getEditLink($translateableElement){
 		$table 		= $translateableElement->getTableName();
 		$elementUid = $translateableElement->getUid();
-						
+
 		if ($this->modeShowEditLinks && $translateableElement->getTranslateableFields()->count() > 0)	{
 			$uidString = $translateableElement->getTranslateableFields()->offsetGet(0)->getUidValue();
-			
+
 			if (substr($uidString,0,3)!=='NEW')	{
 				$translationUid = $translateableElement->getTranslationUid($this->getTargetLanguageId());
 				$editLink = ' - <a href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::editOnClick('&edit['.$table.']['.$translationUid.']=edit',$this->doc->backPath)).'"><em>['.$this->labels->get('render_overview.clickedit.message').']</em></a>';
 			} else {
 				$editLink = ' - <a href="'.htmlspecialchars($this->doc->issueCommand('&cmd['.$table.']['.$elementUid.'][localize]='.$this->getTargetLanguageId())).'"><em>['.$this->labels->get('render_overview.clicklocalize.message').']</em></a>';
-			}	
+			}
 		}else{
 			$editLink = '';
 		}
-		
+
 		return $editLink;
 	}
-	
+
 	/**
-	 * Determines an returns a diff string for a translateable field. 
+	 * Determines an returns a diff string for a translateable field.
 	 *
 	 */
 	protected function getDiffString($translateableField){
@@ -138,19 +139,19 @@ class tx_l10nmgr_view_export_exporttypes_l10nHTMLList extends tx_l10nmgr_view_ex
 			$diff = $this->labels->get('render_overview.nochange.message');
 		} else {
 			$diff = $this->diffCMP($translateableField->getDiffDefaultValue(),$translateableField->getDefaultValue());
-		}		
-		
+		}
+
 		return $diff;
 	}
-	
+
 	/**
-	 * This method is used to determine the flags of new unknown and elements without changes. 
+	 * This method is used to determine the flags of new unknown and elements without changes.
 	 *
 	 *
 	 */
 	protected function getFlagsForElement($translateableElement){
 		$flags = array();
-		
+
 		foreach($translateableElement->getTranslateableFields() as $translateableField){
 			if ($translateableField->getUidValue()==='NEW')	{
 				$flags['new']++;
@@ -160,19 +161,19 @@ class tx_l10nmgr_view_export_exporttypes_l10nHTMLList extends tx_l10nmgr_view_ex
 				$flags['noChange']++;
 			} else {
 				$flags['update']++;
-			}	
+			}
 		}
-		
+
 		return $flags;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * (non-PHPdoc)
 	 * @see view/export/tx_l10nmgr_view_export_abstractExportView#renderPageGroups()
 	 */
 	protected function renderPageGroups(){}
-	
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_view_export_exporttypes_l10nHTMLList.php'])	{

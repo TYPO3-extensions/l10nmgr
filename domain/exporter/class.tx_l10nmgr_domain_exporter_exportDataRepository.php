@@ -63,8 +63,9 @@ class tx_l10nmgr_domain_exporter_exportDataRepository extends tx_mvc_ddd_typo3_a
 		if ($this->getDatabase()->debug_check_recordset($res) !== true) {
 			throw new Exception('Error while querying database!');
 		}
-		$row 		= $this->getDatabase ()->sql_fetch_assoc($res);
 
+		$row 		= $this->getDatabase ()->sql_fetch_assoc($res);
+		$this->getDatabase ()->sql_free_result($res);
 		return intval($row['anz']);
 	}
 

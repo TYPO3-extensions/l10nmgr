@@ -153,7 +153,6 @@ class tx_l10nmgr_domain_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 	public function extractZIPAndCreateImportFileForEach(){
 
 		if (class_exists('ZipArchive')) {
-
 			$absoluteImportFile 	= $this->getAbsoluteFilename();
 
 			if(tx_mvc_validator_factory::getFileValidator()->isValid($absoluteImportFile)){
@@ -168,7 +167,11 @@ class tx_l10nmgr_domain_importer_importFile extends tx_mvc_ddd_typo3_abstractTCA
 						//create a new importFile for each xml file in the zip
 						for($i = 0; $i < $zipper->numFiles; $i++){
 							$filename = $zipper->getNameIndex($i);
-							$this->createImportFileFromArchiveContent($filename);
+
+							//if we have a real file and no directory add it to the import files
+							if(is_file($this->getImportFilePath()."/".$filename)){
+								$this->createImportFileFromArchiveContent($filename);
+							}
 						}
 
 						//remove the zip itsself

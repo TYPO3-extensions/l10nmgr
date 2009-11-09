@@ -154,6 +154,7 @@ class tx_l10nmgr_domain_exporter_exportFile extends tx_mvc_ddd_typo3_abstractTCA
 
 		$path =  $this->getAbsoluteFilePath(). '/' . $this->row['filename'];
 		t3lib_div::writeFile($path, $this->row['content']);
+		unset($this->row['content']);
 	}
 
 }

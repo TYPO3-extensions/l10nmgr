@@ -67,6 +67,10 @@ class tx_l10nmgr_domain_importer_importer {
 		$this->importData = $importData;
 	}
 
+	public function __destruct(){
+		unset($this->importData);
+	}
+
 	/**
   	 * Initializes the internalExportdata property from the translationData
   	 *
@@ -83,6 +87,7 @@ class tx_l10nmgr_domain_importer_importer {
 		if (! $exportData instanceOf tx_l10nmgr_domain_exporter_exportData ) {
 			throw new tx_l10nmgr_domain_importer_exception_invalidData('The export data record "' . $exportDataUid . '" ("t3_exportDataId") can not found!');
 		}
+		unset($exportDataRepository);
 
 		return $exportData;
 	}
@@ -100,10 +105,8 @@ class tx_l10nmgr_domain_importer_importer {
 	public function run(){
 		$isRunning = false;
 
-			//!TODO  maybe importData
 		if (! $this->importData->getImportIsCompletelyProcessed() ) {
 
-//!FIXME The "getNextFilenames" return also folders, this isn't the expected result.
 				// determine the next file to import
 			$currentFile = $this->importData->getNextFilename();
 			$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
@@ -138,6 +141,7 @@ class tx_l10nmgr_domain_importer_importer {
 					// Save the translation into the database
 				$TranslationService = new tx_l10nmgr_service_importTranslation();
 				$TranslationService->save($TranlateableInformation, $TranslationData);
+				unset($TranslationService);
 
 			} catch (tx_l10nmgr_exception_applicationError $e) {
 				trigger_error($e->getMessage() . ' That occurs on the file: "' . $currentFile . '"', E_USER_WARNING);
@@ -247,9 +251,7 @@ class tx_l10nmgr_domain_importer_importer {
 			$importData->increaseNumberOfImportRuns();
 		}
 
-		$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
-		$importDataRepository->save($importData);
-
+		unset($importer);
 		return $importData->getImportIsCompletelyProcessed();
 	}
 }

@@ -47,6 +47,7 @@ class tx_l10nmgr_domain_importer_importDataRepository extends tx_mvc_ddd_typo3_a
 	 * @var string The name of the objectclass for that this repository s responsible
 	 */
 	protected $objectClassName = 'tx_l10nmgr_domain_importer_importData';
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/importer/class.tx_l10nmgr_domain_importer_importDataRepository.php']) {

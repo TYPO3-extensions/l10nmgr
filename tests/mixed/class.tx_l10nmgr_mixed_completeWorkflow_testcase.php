@@ -73,6 +73,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 		$this->cleanDatabase();
    		$this->dropDatabase();
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
+		sleep(2);
 
    		$this->restoreIndexedSearchHooks();
 	}
@@ -133,7 +134,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 
 		$exportedResult = str_replace('anywhere','anywhere translated@', $exportedResult);
 		file_put_contents($tempfile,$exportedResult);
-
+		unset($exportedResult);
 		###
 		# RUN IMPORT
 		###
@@ -161,6 +162,12 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 							'<link http://www.webex.com/go/webex_ft>Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
 
 		$this->assertEquals($contentOverlay['bodytext'],$expectedResult,'unexpected import result');
+
+		unset($contentOverlay);
+		unset($importData);
+		unset($importFileRepository);
+		unset($importDataRepository);
+		unset($row);
 	}
 
 	/**

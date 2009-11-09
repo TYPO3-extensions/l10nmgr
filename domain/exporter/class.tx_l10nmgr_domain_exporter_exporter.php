@@ -85,6 +85,12 @@ class tx_l10nmgr_domain_exporter_exporter {
 		$this->exportView            = $exportView;
 	}
 
+	public function __destruct(){
+		unset($this->resultForChunk);
+		unset($this->exportData);
+		unset($this->exportView);
+	}
+
 	/**
 	 * Run
 	 *
@@ -247,7 +253,6 @@ class tx_l10nmgr_domain_exporter_exporter {
 				$allPagesIterator->next();
 			}
 		}
-
 		return $chunk;
 	}
 
@@ -280,19 +285,17 @@ class tx_l10nmgr_domain_exporter_exporter {
 		$exportView				= $exportData->getInitializedExportView();
 		$exporter 				= new tx_l10nmgr_domain_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
 
-		$prefix 				= $exportData->getL10nConfigurationObject()->getFilenameprefix();
 		$exporterWasRunning 	= $exporter->run();
 		$numberOfItemsInChunk	= $exporter->countItemsForChunk();
 		$exportFileRepository = new tx_l10nmgr_domain_exporter_exportFileRepository();
 
 		if ($exporterWasRunning && $numberOfItemsInChunk > 0) {
-
 			// add the number of items in the current chunk to the whole number of items
 			$exportData->addNumberOfItems($numberOfItemsInChunk);
 
 			// now we write the exporter result to a file
 			$exportFile	= new tx_l10nmgr_domain_exporter_exportFile();
-			$exportFile->setFilename($exportView->getFilename($prefix,$exportData->getNumberOfExportRuns()));
+			$exportFile->setFilename($exportData->getCurrentFilename());
 
 			$exportFile->setExportDataObject($exportData);
 			$exportFile->setContent($exporter->getResultForChunk());
@@ -303,11 +306,8 @@ class tx_l10nmgr_domain_exporter_exporter {
 		}
 
 		if ($exportData->getExportIsCompletelyProcessed()) {
-
 			if( ($exportData->getNumberOfItems() > 0) || (count($exportData->getL10nConfigurationObject()->getIncludeArray()) > 0 )){
-
-				$exportData->createZip($exportView->getFilename($prefix) . '.zip');
-
+				$exportData->createZip();
 				// postProcessingHook
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'])) {
 					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportPostProcessing'] as $userFunc) {
@@ -320,8 +320,6 @@ class tx_l10nmgr_domain_exporter_exporter {
 			}
 		}
 
-		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
-		$exportDataRepository->save($exportData);
 		return $exportData->getExportIsCompletelyProcessed();
 	}
 }

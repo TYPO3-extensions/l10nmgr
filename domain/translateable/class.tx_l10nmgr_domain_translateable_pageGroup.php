@@ -90,10 +90,9 @@ class tx_l10nmgr_domain_translateable_pageGroup implements tx_l10nmgr_interface_
 		$this->page_row = $row;
 	}
 
-
 	/**
 	 * Returns the uid of the page, which the pageGroup is based on.
-	 * 
+	 *
 	 * @return int
 	 */
 	public function getUid(){
@@ -108,7 +107,6 @@ class tx_l10nmgr_domain_translateable_pageGroup implements tx_l10nmgr_interface_
 	public function getPageTitle(){
 		return $this->page_row['title'];
 	}
-
 
 	/**
 	 * Method to add a translateableElement to the PageGroup.

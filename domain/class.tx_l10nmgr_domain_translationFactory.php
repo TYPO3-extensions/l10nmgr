@@ -71,10 +71,10 @@ class tx_l10nmgr_domain_translationFactory {
 
 		$this->extractXMLMetaData($TranslationXML->head);
 		$this->extractXMLTranslation($TranslationXML->pageGrp);
-
+		unset($TranslationXML);
 		return $this->TranslationData;
 	}
-	
+
 	/**
 	 * Extract the page data from the XML import file into the tx_l10nmgr_domain_translation_pageCollection object
 	 *
@@ -181,10 +181,10 @@ class tx_l10nmgr_domain_translationFactory {
 			}
 		}
 	}
-	
+
 	/**
 	 * This method is used to create a translationData from a form submit of the backend side by side translation.
-	 * 
+	 *
 	 * @param $array
 	 * @return tx_l10nmgr_domain_translation_data
 	 */
@@ -195,49 +195,51 @@ class tx_l10nmgr_domain_translationFactory {
 		$TranslationData->setL10ncfgUid((int)$l10nConfiguration->getUid());
 		$TranslationData->setWorkspaceId($BE_USER->user['workspace_id']);
 		$TranslationData->setTargetSysLanguageUid((int)$targetLanguageUid);
-		
+
 		$PageCollection = new tx_l10nmgr_domain_translation_pageCollection();
-		
+
 		$Page = new tx_l10nmgr_domain_translation_page();
 		$Page->setUid($pageid);
-					
+
 		$TextConverter = new tx_l10nmgr_service_textConverter(); /* @var $test tx_l10nmgr_xmltools */
 		$ElementCollection = new tx_l10nmgr_domain_translation_elementCollection();
-		
+
 		$fieldCount = 0;
-		
-		foreach($fields as $table => $data){
-			foreach($data as $uid => $fields){				
-				foreach($fields as $identityKey => $translationValue){
-					$fieldCount++;
-					
-					$Field = new tx_l10nmgr_domain_translation_field();
-					$Field->setFieldPath($identityKey);
-					$Field->setContent($TextConverter->toText($translationValue));
-					
-					$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);
-					$Element->getFieldCollection()->offsetSet($identityKey, $Field);			
+
+		if(is_array($fields)){
+			foreach($fields as $table => $data){
+				foreach($data as $uid => $fields){
+					foreach($fields as $identityKey => $translationValue){
+						$fieldCount++;
+
+						$Field = new tx_l10nmgr_domain_translation_field();
+						$Field->setFieldPath($identityKey);
+						$Field->setContent($TextConverter->toText($translationValue));
+
+						$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);
+						$Element->getFieldCollection()->offsetSet($identityKey, $Field);
+					}
 				}
 			}
 		}
-		
+
 		$Page->setElementCollection($ElementCollection);
 		$PageCollection->offsetSet($pageid, $Page);
-		
+
 		$TranslationData->setFieldCount($fieldCount);
 		$TranslationData->setPageCollection($PageCollection);
 		$TranslationData->setForceTargetLanguageUid((int)$targetLanguageUid);
-		
-		return $TranslationData;
-	}	
-	
 
-	/** 
+		return $TranslationData;
+	}
+
+
+	/**
 	 * This method is used to create a TranslationData from an excel xml file
-	 * 
+	 *
 	 * @param string filename to the excel xml file.
 	 * @param int forced target language uid.
-	 * 
+	 *
 	 * @return tx_l10nmgr_domain_translation_data
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
@@ -246,23 +248,23 @@ class tx_l10nmgr_domain_translationFactory {
 
 		if (! tx_mvc_validator_factory::getFileValidator()->isValid($fullQualifiedFileName)) {
 			throw new tx_mvc_exception_fileNotFound('The given filename: "' . var_export($fullQualifiedFileName, true) . '" not found!');
-		}		
-		
+		}
+
 		// Parse XML in a rude fashion:
 		// Check if &nbsp; has to be substituted -> DOCTYPE -> entity?
 		$fileContent = file_get_contents($fullQualifiedFileName);
 		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML!
-		
+
 		if (!is_array($xmlNodes)) {
 			throw new tx_mvc_exception_invalidArgument('The given filename: "' . var_export($fullQualifiedFileName, true) . '" is no valid XML!');
-		}	
-				
+		}
+
 		$this->TranslationData = new tx_l10nmgr_domain_translation_data();
 		$this->TranslationData->setForceTargetLanguageUid($forceTargetLanguageUid);
 
-		$TextConverter = new tx_l10nmgr_service_textConverter(); /* @var $test tx_l10nmgr_xmltools */	
+		$TextConverter = new tx_l10nmgr_service_textConverter(); /* @var $test tx_l10nmgr_xmltools */
 		$PageCollection = new tx_l10nmgr_domain_translation_pageCollection();
-		
+
 		$metaDataNode = $xmlNodes['Workbook'][0]['ch']['DocumentProperties'][0]['ch']['Author'][0]['values'][0];
 		$this->extractExcelMetaData($metaDataNode);
 
@@ -274,39 +276,39 @@ class tx_l10nmgr_domain_translationFactory {
 			$worksheetIdentifier = 'ss:Worksheet';
 		}
 
-		$fieldCount = 0;				
-				
+		$fieldCount = 0;
+
 			// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
 		if (is_array($xmlNodes['Workbook'][0]['ch'][$worksheetIdentifier][0]['ch']['Table'][0]['ch']['Row']))	{
 			foreach($xmlNodes['Workbook'][0]['ch'][$worksheetIdentifier][0]['ch']['Table'][0]['ch']['Row'] as $row)	{
-								
+
 				if($row['ch']['Cell'][0]['attrs']['ss:Index'] == '2'){
 					$pageRow = $row['ch']['Cell'][0]['ch']['Data'][0]['values'][0];
 					$open	 = strpos($pageRow,'[Uid:');
 					$close	 = strpos($pageRow,']');
 					$length	 = $close - $open;
-	
+
 					if($open > 0 && $close > 0){
 						$pageId  = (int)substr($pageRow,$open+5,$length);
-						
-						if($pageId > 0){				
+
+						if($pageId > 0){
 							$ElementCollection = new tx_l10nmgr_domain_translation_elementCollection();
-										
+
 							$Page = new tx_l10nmgr_domain_translation_page();
 							$Page->setElementCollection($ElementCollection);
-						
+
 							$Page->setUid($pageId);
 							$PageCollection->offsetSet($pageId, $Page);
-						}	
+						}
 					}
 				}elseif(!isset($row['ch']['Cell'][0]['attrs']['ss:Index']))	{
 					list($table, $uid, $identityKey) = explode('][',substr(trim($row['ch']['Cell'][0]['ch']['Data'][0]['values'][0]),12,-1));
 
 					$translationValue = $row['ch']['Cell'][3]['ch']['Data'][0]['values'][0];
-														
+
 					$Field = new tx_l10nmgr_domain_translation_field();
 					$Field->setFieldPath($identityKey);
-					
+
 					switch($Field->getTransformationType($uid,true)) {
 						case 'html':
 								$Field->setContent($translationValue);
@@ -318,14 +320,14 @@ class tx_l10nmgr_domain_translationFactory {
 						default:
 								$Field->setContent($TextConverter->toText($translationValue));
 					}
-					
+
 					if($ElementCollection instanceof tx_l10nmgr_domain_translation_elementCollection){
 						$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);
 					}else{
 						throw new tx_mvc_exception_invalidArgument('Invalid excel file structure. No page definition before content rows.');
 					}
-					
-					$Element->getFieldCollection()->offsetSet($identityKey, $Field);	
+
+					$Element->getFieldCollection()->offsetSet($identityKey, $Field);
 					$fieldCount++;
 				}
 			}
@@ -333,36 +335,36 @@ class tx_l10nmgr_domain_translationFactory {
 
 		$this->TranslationData->setPageCollection($PageCollection);
 		$this->TranslationData->setFieldCount($fieldCount);
-		
+
 		return $this->TranslationData;
 	}
-	
+
 	/**
 	 * This method is used to extract the meta data from an excel export file.
-	 * 
+	 *
 	 * @param $metaDataNode string content of the metaData node
 	 * @return void
 	 */
 	protected function extractExcelMetaData($metaDataNode){
 		$noteArray = explode('|',$metaDataNode);
-		
+
 		if(is_array($noteArray)){
 			$notes = array();
 			foreach($noteArray as $note){
-	
+
 				$keyValue = explode(':',$note);
 
 				if(is_array($keyValue)){
 					$notes[$keyValue[0]] = $keyValue[1];
 				}
 			}
-			
-			$this->TranslationData->setWorkspaceId($BE_USER->user['workspace_id']);			
+
+			$this->TranslationData->setWorkspaceId($BE_USER->user['workspace_id']);
 			$this->TranslationData->setExportDataRecordUid((int)$notes['ExportDataUid']);
 			$this->TranslationData->setTargetSysLanguageUid((int)$notes['TargetLanguageUid']);
 			$this->TranslationData->setFormatVersion($notes['FormatVersion']);
 			$this->TranslationData->setL10ncfgUid((int)$notes['ConfigurationUid']);
-		}		
+		}
 	}
 }
 

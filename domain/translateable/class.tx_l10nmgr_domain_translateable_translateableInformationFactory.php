@@ -46,6 +46,15 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 	protected $dataProvider = null;
 
 	/**
+	 *
+	 * @return void
+	 */
+	public function __destruct(){
+		unset($this->dataProvider);
+	}
+
+
+	/**
 	 * Builds an translateableInformation from a given exportData object and a collection of page ids which should be exported.
 	 *
 	 * @param tx_l10nmgr_domain_exporter_exportData $exportData
@@ -135,7 +144,7 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 	 * @return tx_l10nmgr_domain_translateable_translateableInformation
 	 * @todo we need to handle the include index
 	 */
-	protected function createFromDataProvider(tx_l10nmgr_interface_translateable_translateableFactoryDataProvider $dataProvider){
+	public function createFromDataProvider(tx_l10nmgr_interface_translateable_translateableFactoryDataProvider $dataProvider){
 //!TODO change parameter $dataprovider handling...
 		$this->dataProvider	= $dataProvider;
 
@@ -152,34 +161,37 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 		// we only need to process tables which are in the TCA AND the configuration
 
 		// iterate pageId collection
-		foreach($pageIdCollection as $pageId){
-			$pageRow = t3lib_BEfunc::getRecordWSOL('pages',$pageId);
+		if($pageIdCollection instanceof ArrayObject && $pageIdCollection->count() > 0){
+			foreach($pageIdCollection as $pageId){
+				$pageRow = t3lib_BEfunc::getRecordWSOL('pages',$pageId);
 
-			if(is_array($pageRow)){
-				//create pageGroup and add metadata
-				$pageGroup 	= new tx_l10nmgr_domain_translateable_pageGroup();
-				$pageGroup->setPageRow($pageRow);
+				if(is_array($pageRow)){
+					//create pageGroup and add metadata
+					$pageGroup 	= new tx_l10nmgr_domain_translateable_pageGroup();
+					$pageGroup->setPageRow($pageRow);
 
-				// traverse tca tables:
-				foreach($tables_to_process as $table)	{
-					//the table pages its self is not needed because the informations of the page
-					//are attached to the page group object
-					if($table !== 'pages' ){
-						//get all Records on the page
+					// traverse tca tables:
+					foreach($tables_to_process as $table)	{
+						//the table pages its self is not needed because the informations of the page
+						//are attached to the page group object
+						if($table !== 'pages' ){
+							//get all Records on the page
 
-						$uidCollection	= $this->dataProvider->getRelevantElementIdsByTablenameAndPageId($table,$pageId);
-						if(is_array($uidCollection)){
-							foreach($uidCollection as $uid){
-								$translateableElement 	= $this->getTranslateableElementFromDataProvider($table,$uid);
-								$pageGroup->addTranslateableElement($translateableElement);
+							$uidCollection	= $this->dataProvider->getRelevantElementIdsByTablenameAndPageId($table,$pageId);
+
+							if(is_array($uidCollection)){
+								foreach($uidCollection as $uid){
+									$translateableElement 	= $this->getTranslateableElementFromDataProvider($table,$uid);
+									$pageGroup->addTranslateableElement($translateableElement);
+								}
 							}
+						}else{
+							$translateablePageElement 	= $this->getTranslateableElementFromDataProvider($table,$pageId);
+							$pageGroup->addTranslateableElement($translateablePageElement);
 						}
-					}else{
-						$translateablePageElement 	= $this->getTranslateableElementFromDataProvider($table,$pageId);
-						$pageGroup->addTranslateableElement($translateablePageElement);
 					}
+					$translateableInformation->addPageGroup($pageGroup);
 				}
-				$translateableInformation->addPageGroup($pageGroup);
 			}
 		}
 
@@ -206,7 +218,6 @@ class tx_l10nmgr_domain_translateable_translateableInformationFactory {
 
 		$translateableElement->setUid($translationInfo['uid']);
 		$translateableElement->setCType($translationInfo['CType']);
-		$translateableElement->setSysLanguageUid($translationInfo['sys_language_uid']);
 		$translateableElement->setTranslationTable($translationInfo['translation_table']);
 		$translateableElement->setTranslations($translationInfo['translations']);
 		$translateableElement->setExcessiveTranslations($translationInfo['excessive_translations']);

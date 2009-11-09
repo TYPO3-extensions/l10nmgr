@@ -28,6 +28,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view
  * excelXML: Renders the excel XML
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author	Timo Schmidt <timo.schmidt@aoemedia.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
@@ -124,7 +125,7 @@ class tx_l10nmgr_view_export_exporttypes_excelXML extends tx_l10nmgr_view_export
 						$noChangeFlag			= $translateableField->isChanged();
 						$message				= $translateableField->getMessage();
 						$data					= $this->getTransformedTranslationDataFromTranslateableField($this->getSkipXMLCheck(), $this->getUseUTF8Mode(),$translateableField,$this->forcedSourceLanguage);
-						
+
 						$diff 					= $this->generateDiff($uidValue,$defaultValue,$diffDefaultValue,$noChangeFlag,$message);
 
 						$content .= '

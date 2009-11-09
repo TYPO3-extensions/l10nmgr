@@ -1,6 +1,8 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
+
+
 $TCA["tx_l10nmgr_cfg"] = Array (
 	"ctrl" => $TCA["tx_l10nmgr_cfg"]["ctrl"],
 	"interface" => Array (
@@ -309,11 +311,20 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 			'config' => Array (
 				'type' => 'check',
 			)
+		),
+		'warning_messages' => Array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.warning_messages',
+			'config' => Array (
+				'type' => 'none',
+				'rows' => 30,
+				'cols' => 50,
+			)
 		)
 	),
 	"types" => Array (
-		"xml" => Array("showitem" => "l10ncfg_id, title, export_type;;1, --palette--;Languages;3, --palette--;Export Options;2"),
-		"xls" => Array("showitem" => "l10ncfg_id, title, export_type, --palette--;Languages;3, --palette--;Export Options;2")
+		"xml" => Array("showitem" => "l10ncfg_id, title, export_type;;1, --palette--;Languages;3, --palette--;Export Options;2,--div--;LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.additional_information, warning_messages"),
+		"xls" => Array("showitem" => "l10ncfg_id, title, export_type;;1, --palette--;Languages;3, --palette--;Export Options;2,--div--;LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.additional_information, warning_messages")
 	),
 	"palettes" => Array (
 		"1" => Array(
@@ -330,6 +341,8 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		)
 	)
 );
+
+$TCA["tx_l10nmgr_exportdata"]["ctrl"]['dividers2tabs']= true;
 
 $TCA['tx_l10nmgr_exportfiles'] = Array (
 	'ctrl' => $TCA['tx_l10nmgr_exportfiles']['ctrl'],
@@ -428,7 +441,7 @@ $TCA["tx_l10nmgr_importdata"] = Array (
                 "minitems" => 0,
                 "maxitems" => 1,
             )
-		),		
+		),
 		"force_target_lang" => Array (
 			"exclude" => 1,
 			"displayCond" => 'HIDE_FOR_NON_ADMINS',
@@ -455,11 +468,19 @@ $TCA["tx_l10nmgr_importdata"] = Array (
 				'minitems' => 0,
 				'maxitems' => 100,
 			)
+		),
+		'warning_messages' => Array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_importdata.warning_messages',
+			'config' => Array (
+				'type' => 'none',
+				'rows' => 20,
+			)
 		)
 	),
 
 	"types" => Array (
-		"0" => Array("showitem" => "configuration_id, exportdata_id, import_type;;1 --palette--;;1,  importfiles")
+		"0" => Array("showitem" => "configuration_id, exportdata_id, warning_messages, import_type;;1 --palette--;;1,  importfiles")
 	),
 	"palettes" => Array (
 		"1" => Array(

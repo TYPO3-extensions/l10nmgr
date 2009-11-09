@@ -112,6 +112,7 @@ class tx_l10nmgr_tcemain_hook {
 				$t8Tools->updateIndexTableFromDetailsArray($t8Tools->indexDetailsRecord($table,$liveRecord['uid']));
 			}
 		}
+		//unset ($pObj);
 	}
 
 	/**

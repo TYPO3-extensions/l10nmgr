@@ -33,6 +33,7 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'view/export/class.tx_l10nmgr_view
  * @author	Daniel Zielinski <d.zielinski@L10Ntech.de>
  * @author	Fabian Seltmann <fs@marketing-factory.de>
  * @author	Andreas Otto <andreas.otto@dkd.de>
+ * @author	Timo Schmidt <timo.schmidt@aoemedia.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
@@ -113,10 +114,10 @@ class tx_l10nmgr_view_export_exporttypes_CATXML extends tx_l10nmgr_view_export_a
 							$key 		= $translateableField->getIdentityKey();
 							$data		= $this->getTransformedTranslationDataFromTranslateableField($this->getSkipXMLCheck(), $this->getUseUTF8Mode(),$translateableField,$this->forcedSourceLanguage);
 							$needsTrafo = $translateableField->needsTransformation();
-							
+
 								//TODO switch to new format
 								// changed in version 1.2 of the XML format
-								//$transformationAttribute = $needsTrafo ? ' transformations="1"' : ''; 
+								//$transformationAttribute = $needsTrafo ? ' transformations="1"' : '';
 							$transformationType = $translateableField->getTransformationType();
 							$dataTag 	= "\t\t".sprintf('<data table="%s" elementUid="%d" cType="%s" fieldType="%s" transformationType="%s" key="%s">%s</data> ',$table,$uid,$cType,$fieldType,$transformationType,$key,$data)."\n";
 							$xml .= $dataTag;

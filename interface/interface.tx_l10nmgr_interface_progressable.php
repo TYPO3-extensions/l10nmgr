@@ -14,5 +14,12 @@ interface tx_l10nmgr_interface_progressable{
 	 *  @return string
 	 */
 	public function getProgressOutput();
+
+	/**
+	 * Should be implemented to log warning message during the progress
+	 *
+	 * @param string
+	 */
+	public function addWarningMessage($warningMessage);
 }
 ?>

@@ -75,7 +75,24 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 		'createdRecord' => 'returnEditConf',
 	);
 
-	
+	/**
+	 * Contructor, creates an instance of the importdataRepository.
+	 *
+	 * @return void
+	 */
+	public function __construct(){
+		$this->importdataRepository 	= new tx_l10nmgr_domain_importer_importDataRepository();
+		parent::__construct();
+	}
+
+	/**
+	 *
+	 *
+	 **/
+	public function __destruct(){
+		unset($this->importdataRepository);
+	}
+
 	/**
 	 * These arguments should be kept since they are needed in the ajax polling action
 	 *
@@ -182,10 +199,17 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	protected function getProgressableSubject(){
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['importDataId'],true);
 
-		$importDataRepository 	= new tx_l10nmgr_domain_importer_importDataRepository();
-		$importData 			= $importDataRepository->findById($this->arguments['importDataId']);
+		$importData	=  $this->importdataRepository->findById($this->arguments['importDataId']);
 
 		return $importData;
+	}
+
+	/**
+	 * This method is used to store the progressable subject
+	 *
+	 */
+	protected function saveProgressableSubject(tx_l10nmgr_interface_progressable $subject){
+		 $this->importdataRepository->save($subject);
 	}
 
 	/**

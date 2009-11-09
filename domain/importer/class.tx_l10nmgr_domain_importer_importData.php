@@ -55,7 +55,7 @@ class tx_l10nmgr_domain_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 * the table name of current object
 	 *
 	 * @access     public
-	 * @return     string                                  HTML formated output
+	 * @return     string
 	 */
 	public static function getTableName() {
 		return 'tx_l10nmgr_importdata';
@@ -299,7 +299,6 @@ class tx_l10nmgr_domain_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 		unset($this->row['importfilecollection_object']);
 	}
 
-
 	/**
 	 * Returns the progress of the processed importData as pecentage value
 	 *
@@ -349,8 +348,6 @@ class tx_l10nmgr_domain_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @return string $fileName
 	 */
 	public function getNextFilename() {
-		//!FIXME The "getNextFilenames" return also folders, this isn't the expected result.
-		
 		$remainingFilenames = $this->getImportRemainingFilenames();
 		$it = $remainingFilenames->getIterator();
 		$filename =  $it->current();
@@ -358,6 +355,20 @@ class tx_l10nmgr_domain_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 		$this->setCurrentFilename($filename);
 
 		return $filename;
+	}
+
+	/**
+	 * This method is used to attach a warning message to the export progress.
+	 *
+	 * @param string $warningMessage
+	 */
+	public function addWarningMessage($warningMessage){
+		$this->row['warning_messages'] .= 	'Warning in File '.$this->getCurrentFilename().': '.
+											"\n\n".
+											(string) $warningMessage.
+											"\n".
+											"--------------------------------------------------".
+											"\n";
 	}
 
 	/**

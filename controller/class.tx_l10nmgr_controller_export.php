@@ -63,11 +63,17 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 */
 	protected $argumentsNamespace = 'tx_l10nmgrexport';
 
+
+	/**
+	 * @var tx_l10nmgr_domain_exporter_exportDataRepository
+	 */
+	protected $exportdataRepository;
+
 	/**
 	 * These arguments should be kept by the controller because
 	 * they are needed in the polling ajax request.
 	 *
-	 * @var unknown_type
+	 * @var array
 	 */
 	protected $keepArgumentKeys = array('noHidden','noXMLCheck','checkUTF8','selectedExportFormat','exportDataId','warningCount');
 
@@ -79,15 +85,28 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	);
 
 	/**
+	 *
+	 * @return void
+	 */
+	public function __construct(){
+		$this->exportdataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
+		parent::__construct();
+	}
+
+	public function __destruct(){
+		unset($this->exportdataRepository);
+	}
+
+	/**
 	 * Abort action: redirects to the list controller
 	 *
 	 * @param void
 	 * @return void (never returns)
 	 */
 	public function abortAction() {
-        // redirect to list controller by sending a "Location" header
-        header('Location: '.t3lib_div::locationHeaderUrl('../mod1/index.php'));
-        exit();
+		// redirect to list controller by sending a "Location" header
+		header('Location: '.t3lib_div::locationHeaderUrl('../mod1/index.php'));
+		exit();
 	}
 
 	/**
@@ -152,9 +171,9 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
 	protected function getRedirectUrlOnAbort(){
-		return '../mod1/index.php';		
+		return '../mod1/index.php';
 	}
-	
+
 	/**
 	 * This method is used to show a list of files for a generated export.
 	 *
@@ -231,11 +250,17 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 */
 	protected function getProgressableSubject() {
 		tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['exportDataId'],true);
-
-		$exportDataRepository 	= new tx_l10nmgr_domain_exporter_exportDataRepository();
-		$exportData 			= $exportDataRepository->findById($this->arguments['exportDataId']);
+		$exportData 			= $this->exportdataRepository->findById($this->arguments['exportDataId']);
 
 		return $exportData;
+	}
+
+	/**
+	 * This method is used to store the progressable subject
+	 *
+	 */
+	protected function saveProgressableSubject(tx_l10nmgr_interface_progressable $subject){
+		 $this->exportdataRepository->save($subject);
 	}
 
 	/**
@@ -247,7 +272,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 */
 	protected function performProgressableRun($exportData) {
 		$res = tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk'));
-		
+
 		return $res;
 	}
 

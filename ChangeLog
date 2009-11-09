@@ -1,3 +1,12 @@
+2009-11--09 Timo Schmidt <timo.schmidt@aoemedia.de>
+	* implemented logging during import and export
+	* removed dispensable whitespaces
+	* check during zipfile extraction if the item is really a file and not a directory
+	* raised version to 4.5
+	* added unset() in destructor for referenced objects in a few objects
+	* removed deperecated method setSysLanguageUid in translateable/class.tx_l10nmgr_domain_translateable_translateableElement.php
+	* added documentation to some methods
+
 2009-09-12 Timo Schmidt <timo.schmidt@aoemedia.de>
 	* moved all model classes to the domain folder.
 	* added autoloader for classes (please clear cache).
