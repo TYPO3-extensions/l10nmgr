@@ -92,7 +92,7 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 *
 	 */
 	public function __destruct(){
-		parent::__destruct();
+
 		unset($this->initializedView);
 		unset($this->relativeZipPath);
 		unset($this->relativeFilePath);
