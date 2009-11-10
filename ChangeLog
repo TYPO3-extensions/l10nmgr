@@ -1,4 +1,9 @@
-2009-11--09 Timo Schmidt <timo.schmidt@aoemedia.de>
+2009-11-11 Timo Schmidt <timo.schmidt@aoemedia.de>
+	* fixed conversion of empty tags to self closing tags during import
+	* added testcase Path class.tx_l10nmgr_workflow_import_keepEmptyTags_default_testcase.php
+	* raised version to 4.6
+
+2009-11-09 Timo Schmidt <timo.schmidt@aoemedia.de>
 	* implemented logging during import and export
 	* removed dispensable whitespaces
 	* check during zipfile extraction if the item is really a file and not a directory

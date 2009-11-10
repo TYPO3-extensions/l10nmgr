@@ -131,22 +131,22 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		if ($removeBrockenUTF8Charakter === true) {
 			$content = self::utf8_bad_strip($content);
 		}
-		
+
 		if($convertEntities) {
 			$content = htmlspecialchars($content);
 		}
-		
+
 		if ($validateToXML === true) {
 			try {
 				$this->isValidXML($content);
-			} catch (tx_mvc_exception_invalidContent $e) {				
+			} catch (tx_mvc_exception_invalidContent $e) {
 				throw new tx_mvc_exception_converter($e->getMessage());
 			}
 		}
 
 		return $content;
 	}
-	
+
 	/**
 	* Strips out any bad bytes from a UTF-8 string and returns the rest
 	* PCRE Pattern to locate bad bytes in a UTF-8 string
@@ -349,8 +349,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 
 		return implode('',$parts);
 	}
-	
-	
+
 	/**
 	 * Get the contents of a SimpleXMLElement as string (XML)
 	 *
@@ -359,18 +358,64 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 */
 	public function getXMLContent( SimpleXMLElement $field ) {
 		if(count($field->children())>0) {
-			$fieldXML = str_replace("<?xml version=\"1.0\"?>\n",'',$field->asXML());
-			
+
+			/**
+			 * Here we need to convert the xml structure to it's string representation.
+			 * Usually we can simply use $field->asXML() but there is a problem
+			 * with empty tags. Empty tags will automaticlly converted to selfclosing tags. This
+			 * behavious is usefull for inline tags, but not for block level tags like <div>
+			 * Therefore we traverse the DOM and append an empty text node to all blocklevel nodes
+			 * to prevent the conversion into an self closing tag.
+			 *
+			 */
+			$domElement = dom_import_simplexml($field);
+
+			/* @var $dom DOMDocument */
+			$dom 		= $domElement->ownerDocument;
+			$dom->preserveWhiteSpace = true;
+
+			$this->appendEmptyStringToAllBlockLevelTags($dom->documentElement);
+
+			$fieldXML = $dom->saveXML($domElement);
+			$fieldXML = str_replace("<?xml version=\"1.0\"?>\n",'',$fieldXML);
+
 			if(preg_match('/^<!DOCTYPE/',$fieldXML)) {
 				$fieldXML = substr($fieldXML,strpos($fieldXML,"]>")+3);
 			}
+
 			$content = substr($fieldXML,strpos($fieldXML,'>')+1,strrpos($fieldXML,'<')-strpos($fieldXML,'>')-1);
 			if(substr($content,0,9)=='<![CDATA[') $content = substr($content,9,-3);
+
 		} else {
 			$content = (string)$field;
 		}
+
 		return $content;
 	}
+
+	/**
+	 * Recursive function which visits all childnodes and appends an empty textNode to all
+	 * blocklevel tags to prevent a conversion to self closing tags.
+	 *
+	 * @param DOMNode $parent
+	 * @param $maxRecursion
+	 */
+	protected function appendEmptyStringToAllBlockLevelTags(DOMNode $parent, $maxRecursion = 0){
+		if($maxRecursion > 30){ return 0; }
+
+		if($parent->hasChildNodes()){
+			foreach($parent->childNodes as $childNode){
+				$maxRecursion++;
+				$this->appendEmptyStringToAllBlockLevelTags($childNode,$maxRecursion);
+			}
+		}else{
+			//append empty text node to blocklevel tags
+			if(!in_array($parent->nodeName,array('img','br','a','hr','area','link'))){
+				$parent->appendChild(new DOMText(''));
+			}
+		}
+	}
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/service/class.tx_l10nmgr_service_textConverter.php']) {

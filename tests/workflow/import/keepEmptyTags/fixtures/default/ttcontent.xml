@@ -1,0 +1,42 @@
+<testcase>
+    <tt_content>
+        <uid>626451</uid>
+        <pid>150</pid>
+        <tstamp>1235127775</tstamp>
+        <crdate>1232534827</crdate>
+        <hidden>0</hidden>
+        <CType>html</CType>
+        <bodytext>&lt;div style="width: 233px; height: 11px; background: url(bg-box-b.gif) 0 0 no-repeat;"&gt;&lt;/div&gt;&lt;br/&gt;</bodytext>
+        <deleted>0</deleted>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <sys_language_uid>0</sys_language_uid>
+        <l18n_parent>0</l18n_parent>
+        <l18n_diffsource>a:25:{s:5:&quot;CType&quot;;N;s:16:&quot;sys_language_uid&quot;;N;s:6:&quot;colPos&quot;;N;s:11:&quot;spaceBefore&quot;;N;s:10:&quot;spaceAfter&quot;;N;s:13:&quot;section_frame&quot;;N;s:12:&quot;sectionIndex&quot;;N;s:6:&quot;hidden&quot;;N;s:6:&quot;header&quot;;N;s:15:&quot;header_position&quot;;N;s:13:&quot;header_layout&quot;;N;s:11:&quot;header_link&quot;;N;s:4:&quot;date&quot;;N;s:9:&quot;linkToTop&quot;;N;s:6:&quot;layout&quot;;N;s:13:&quot;table_bgColor&quot;;N;s:12:&quot;table_border&quot;;N;s:17:&quot;table_cellspacing&quot;;N;s:17:&quot;table_cellpadding&quot;;N;s:4:&quot;cols&quot;;N;s:8:&quot;bodytext&quot;;N;s:11:&quot;pi_flexform&quot;;N;s:9:&quot;starttime&quot;;N;s:7:&quot;endtime&quot;;N;s:8:&quot;fe_group&quot;;N;}</l18n_diffsource>
+        <tx_templavoila_ds></tx_templavoila_ds>
+        <tx_templavoila_to>0</tx_templavoila_to>
+        <tx_templavoila_flex></tx_templavoila_flex>
+        <tx_templavoila_pito>0</tx_templavoila_pito>
+        <tx_languagevisibility_visibility></tx_languagevisibility_visibility>
+    </tt_content>
+    <tt_content>
+        <uid>626452</uid>
+        <pid>150</pid>
+        <tstamp>1235127775</tstamp>
+        <crdate>1232534827</crdate>
+        <hidden>0</hidden>
+        <CType>html</CType>
+        <bodytext>&lt;div style="width: 233px; height: 11px; background: url(bg-box-b.gif) 0 0 no-repeat;"&gt;&lt;div&gt;&lt;img src="moc.gif"/&gt;&lt;/div&gt;&lt;br/&gt;&lt;/div&gt;&lt;br/&gt;</bodytext>
+        <deleted>0</deleted>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <sys_language_uid>0</sys_language_uid>
+        <l18n_parent>0</l18n_parent>
+        <l18n_diffsource>a:25:{s:5:&quot;CType&quot;;N;s:16:&quot;sys_language_uid&quot;;N;s:6:&quot;colPos&quot;;N;s:11:&quot;spaceBefore&quot;;N;s:10:&quot;spaceAfter&quot;;N;s:13:&quot;section_frame&quot;;N;s:12:&quot;sectionIndex&quot;;N;s:6:&quot;hidden&quot;;N;s:6:&quot;header&quot;;N;s:15:&quot;header_position&quot;;N;s:13:&quot;header_layout&quot;;N;s:11:&quot;header_link&quot;;N;s:4:&quot;date&quot;;N;s:9:&quot;linkToTop&quot;;N;s:6:&quot;layout&quot;;N;s:13:&quot;table_bgColor&quot;;N;s:12:&quot;table_border&quot;;N;s:17:&quot;table_cellspacing&quot;;N;s:17:&quot;table_cellpadding&quot;;N;s:4:&quot;cols&quot;;N;s:8:&quot;bodytext&quot;;N;s:11:&quot;pi_flexform&quot;;N;s:9:&quot;starttime&quot;;N;s:7:&quot;endtime&quot;;N;s:8:&quot;fe_group&quot;;N;}</l18n_diffsource>
+        <tx_templavoila_ds></tx_templavoila_ds>
+        <tx_templavoila_to>0</tx_templavoila_to>
+        <tx_templavoila_flex></tx_templavoila_flex>
+        <tx_templavoila_pito>0</tx_templavoila_pito>
+        <tx_languagevisibility_visibility></tx_languagevisibility_visibility>
+    </tt_content>    
+</testcase>

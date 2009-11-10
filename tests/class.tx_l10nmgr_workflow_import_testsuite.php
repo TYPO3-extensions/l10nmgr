@@ -24,6 +24,7 @@
 
 require_once t3lib_extMgm::extPath('mvc')     . 'common/class.tx_mvc_common_classloader.php';
 require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/workflow/import/forcedLanguage/class.tx_l10nmgr_workflow_import_forcedLanguage_default_testcase.php';
+require_once t3lib_extMgm::extPath('l10nmgr') . 'tests/workflow/import/keepEmptyTags/class.tx_l10nmgr_workflow_import_keepEmptyTags_default_testcase.php';
 
 /**
  *
@@ -56,6 +57,7 @@ class tx_l10nmgr_workflow_import_testsuite extends tx_phpunit_testsuite {
 		$this->setName('Workflow import');
 
 		$this->addTestSuite('tx_l10nmgr_workflow_import_forcedLanguage_default_testcase');
+		$this->addTestSuite('tx_l10nmgr_workflow_import_keepEmptyTags_default_testcase');
 	}
 
 	/**

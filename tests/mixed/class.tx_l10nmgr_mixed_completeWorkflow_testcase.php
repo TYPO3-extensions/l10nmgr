@@ -199,6 +199,7 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 	 */
 	public function completeLocalisationWorkflowCATXMLWithImportIntoWorkspace(){
 		$this->markTestIncomplete('This test is under construction.');
+		$this->markTestSkipped('incomplete testcase');
 
 		$this->importDataSet('/mixed/fixtures/completeWorkflow/workspace.xml');
 		$this->helper_testCompleteLocalisationWorkflow('xml',142);
