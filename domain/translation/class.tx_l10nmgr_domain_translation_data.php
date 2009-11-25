@@ -172,7 +172,30 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @return void
 	 */
 	public function writeProcessingLog() {
-		//!TODO implement "writeProcessingLog" method
+
+		if($this->PageCollection instanceof tx_l10nmgr_domain_translation_pageCollection){
+			foreach($this->PageCollection as $page){
+				/* @var $page tx_l10nmgr_domain_translation_page */
+				foreach($page->getElementCollection() as $element){
+					/* @var $element tx_l10nmgr_domain_translation_element */
+					foreach($element->getFieldCollection() as $field){
+						/* @var $field tx_l10nmgr_domain_translation_field */
+						if($field->isSkipped()){
+							$message = $field->getSkippedMessage();
+							@trigger_error($message,E_USER_WARNING);
+						}
+						elseif($field->isChanged()){
+							$messages = $field->getChangeMessages();
+							if(is_array($messages)){
+								foreach($messages as $message){
+									@trigger_error($message,E_USER_NOTICE);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -308,6 +331,18 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 */
 	public function getSysLanguageUid() {
 		return ( $this->forceTargetLanguageUid > 0 ) ? $this->forceTargetLanguageUid : $this->targetSysLanguageUid;
+	}
+
+	/**
+	 * Method to determine if the target language has been forced.
+	 * A target language is forced whenever the target language at the import time is diffrent
+	 * from the target language of the export file.
+	 *
+	 * @return boolean
+	 */
+	public function isTargetLanguageForced(){
+
+		return ($this->forceTargetLanguageUid > 0);
 	}
 
 	/**

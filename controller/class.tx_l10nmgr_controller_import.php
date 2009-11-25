@@ -98,7 +98,7 @@ class tx_l10nmgr_controller_import extends tx_l10nmgr_controller_abstractProgres
 	 *
 	 * @var array
 	 */
-	protected $keepArgumentKeys = array('importDataId','warningCount');
+	protected $keepArgumentKeys = array('importDataId','messageCount');
 
 	/**
 	 * Show the controll panel to give the user the options what he can do

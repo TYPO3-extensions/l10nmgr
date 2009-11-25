@@ -75,7 +75,7 @@ class tx_l10nmgr_controller_export extends tx_l10nmgr_controller_abstractProgres
 	 *
 	 * @var array
 	 */
-	protected $keepArgumentKeys = array('noHidden','noXMLCheck','checkUTF8','selectedExportFormat','exportDataId','warningCount');
+	protected $keepArgumentKeys = array('noHidden','noXMLCheck','checkUTF8','selectedExportFormat','exportDataId','messageCount');
 
 	/**
 	 * @var array mapping external parameters to arguments

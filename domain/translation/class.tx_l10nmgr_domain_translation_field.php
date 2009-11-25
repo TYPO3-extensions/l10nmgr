@@ -98,6 +98,21 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 	 */
 	protected $isSkipped = false;
 
+
+	/**
+	 * Indicator that there was a change during the import process.
+	 *
+	 * @var boolean
+	 */
+	protected $isChanged = false;
+
+	/**
+	 * Contains messages for changes during the import.
+	 *
+	 * @var array
+	 */
+	protected $changeMessages = array();
+
 	/**
 	 * Mark the current entity as skipped for the current translation import process
 	 *
@@ -112,6 +127,32 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 		$this->isSkipped      = true;
 
 		throw new tx_mvc_exception_skipped('Entity: "' . get_class($this) . '" with the uid: "' . $this->fieldPath . '" was skipped.');
+	}
+
+	/**
+	 * Mark the current entity as changed for the current translation import process.
+	 * This can for example happen when the identity key of an item changes.
+	 *
+	 * @param $message
+	 * @access public
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return void
+	 */
+	public function addChange($message){
+		$this->changeMessages[]= $message;
+		$this->isChanged = true;
+	}
+
+	/**
+	 * This method returns an array with change messages
+	 *
+	 * @param void
+	 * @access public
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return array
+	 */
+	public function getChangeMessages(){
+		return $this->changeMessages;
 	}
 
 	/**
@@ -145,6 +186,17 @@ class tx_l10nmgr_domain_translation_field implements tx_l10nmgr_interface_stateI
 	 */
 	public function isSkipped() {
 		return $this->isSkipped;
+	}
+
+	/**
+	 * Indicate that the field was changed during import processing
+	 *
+	 * @access public
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return boolean
+	 */
+	public function isChanged() {
+		return $this->isChanged;
 	}
 
 	/**

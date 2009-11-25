@@ -360,12 +360,13 @@ class tx_l10nmgr_domain_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 	/**
 	 * This method is used to attach a warning message to the export progress.
 	 *
-	 * @param string $warningMessage
+	 * @param string $type
+	 * @param string $message
 	 */
-	public function addWarningMessage($warningMessage){
-		$this->row['warning_messages'] .= 	'Warning in File '.$this->getCurrentFilename().': '.
+	public function addMessage($type,$message){
+		$this->row['messages'] .= 	$type.' in File '.$this->getCurrentFilename().': '.
 											"\n\n".
-											(string) $warningMessage.
+											(string) $message.
 											"\n".
 											"--------------------------------------------------".
 											"\n";

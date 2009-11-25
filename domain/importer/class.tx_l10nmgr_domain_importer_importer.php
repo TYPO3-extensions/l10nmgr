@@ -72,10 +72,10 @@ class tx_l10nmgr_domain_importer_importer {
 	}
 
 	/**
-  	 * Initializes the internalExportdata property from the translationData
-  	 *
-  	 * @param tx_l10nmgr_domain_translation_data $Translationdata
-  	 * @return tx_l10nmgr_domain_exporter_exportData $exportData
+	 * Initializes the internalExportdata property from the translationData
+	 *
+	 * @param tx_l10nmgr_domain_translation_data $Translationdata
+	 * @return tx_l10nmgr_domain_exporter_exportData $exportData
 	 */
 	protected function getExportDataFromTranslationData(tx_l10nmgr_domain_translation_data $Translationdata){
 		$exportDataUid			= $Translationdata->getExportDataRecordUid();

@@ -79,15 +79,15 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	 *
 	 * @var array
 	 */
-	public static $warningMessages;
+	public static $messages;
 
 	/**
 	 * (non-PHPdoc)
 	 * @see mvc/controller/tx_mvc_controller_action#initializeArguments()
 	 */
 	protected function initializeArguments(){
-		if(!isset($this->arguments['warningCount'] )){
-			$this->arguments['warningCount'] = 0;
+		if(!isset($this->arguments['messageCount'] )){
+			$this->arguments['messageCount'] = 0;
 		}
 
 		//we need to set this here because we can not read the information
@@ -185,12 +185,12 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		 *
 		 * To trigger own errors use trigger_error('your message',E_USER_WARNING)
 		 */
-		set_error_handler(array(get_class($this),'warningHandler'), E_WARNING | E_USER_WARNING);
+		set_error_handler(array(get_class($this),'errorHandler'), E_WARNING | E_USER_WARNING | E_USER_NOTICE);
 			ob_start();
 				$completed = $this->performProgressableRun($subject);
 				$output = ob_get_contents();
 			ob_end_clean();
-
+			//if there is any output during the progress we trigger our own user warning
 			if(!empty($output)){ trigger_error('Output during process: '.$output,E_USER_WARNING);}
 		restore_error_handler();
 
@@ -209,20 +209,28 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 		$this->initializeView($progressView);
 
 		try {
-			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['warningCount'],true);
+			tx_mvc_validator_factory::getIntValidator()->isValid($this->arguments['messageCount'],true);
 			$subject = $this->getProgressableSubject();
 			$completed = $this->performProgressableRunOnSubject($subject);
 
 			$percent = $subject->getProgressPercentage();
 			$progressView->setProgress($percent);
 
-			if(is_array(self::$warningMessages)) {
-				$warningMessage = implode('<br/><br/>',self::$warningMessages);
+			if(is_array(self::$messages)) {
+				foreach(self::$messages as $type => $items){
+					$message = implode('<br/><br/>',$items);
 
-				$progressView->setWarningMessage($warningMessage);
-				$subject->addWarningMessage($warningMessage);
+					//add the warning or notice to the progress bar
+					if($type == E_USER_WARNING || $type == E_WARNING){
+						$progressView->setWarningMessage($message);
+					}elseif($type == E_USER_NOTICE){
+						$progressView->setNoticeMessage($message);
+					}
 
-				$this->arguments['warningCount']++;
+					//attach the message to the subject
+					$subject->addMessage($type,$message);
+					$this->arguments['messageCount']++;
+				}
 			}
 
 			$this->saveProgressableSubject($subject);
@@ -230,8 +238,8 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 			if ($completed) {
 				$progressView->setProgressLabel('Completed');
 				$progressView->setCompleted(true);
-				if($this->arguments['warningCount'] > 0){
-					$progressView->setCompleteMessage('Task has been finished with '.$this->arguments['warningCount'].' warnings. Click "Ok" to be redirected to the overview.');
+				if($this->arguments['messageCount'] > 0){
+					$progressView->setCompleteMessage('Task has been finished with '.$this->arguments['messageCount'].' messages. Click "Ok" to be redirected to the overview.');
 				}
 			} else {
 				$progressView->setProgressLabel($subject->getProgressOutput());
@@ -268,16 +276,16 @@ abstract class tx_l10nmgr_controller_abstractProgressable extends tx_mvc_control
 	* @param string filename
 	* @param int line of code
 	*/
-	public function warningHandler($errno,$errstr,$file,$line) {
-		$message = 'Warning: '.$errstr."\n\n";
+	public function errorHandler($errno,$errstr,$file,$line) {
+		$message = 'Message: '.$errstr."\n\n";
 
 		if(self::$showDebuggingInfo == 1){
 			$message .= 'Error: '.$errno."\n\n".
 						'File: '.$file."\n\n".
-						'Line: '.$line."\n\n".
-						'Debug Backtrace: '.var_export(debug_backtrace(),true);
+						'Line: '.$line."\n\n";
+					//	'Debug Backtrace: '.var_export(debug_backtrace(),true);
 		}
-		self::$warningMessages[] = $message;
+		self::$messages[$errno][] = $message;
 	}
 }
 

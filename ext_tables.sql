@@ -101,7 +101,7 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	nohidden tinyint(4) DEFAULT '0' NOT NULL,
 	noxmlcheck tinyint(4) DEFAULT '0' NOT NULL,
 	checkutf8 tinyint(4) DEFAULT '0' NOT NULL,
-	warning_messages blob NOT NULL,
+	messages blob NOT NULL,
 
 	PRIMARY KEY (uid),
 );
@@ -158,7 +158,7 @@ CREATE TABLE tx_l10nmgr_importdata (
 	progress blob NOT NULL,
 	force_target_lang tinyint(4) NOT NULL,
 	importfiles int(11) DEFAULT '0' NOT NULL,
-	warning_messages blob NOT NULL,
+	messages blob NOT NULL,
 	PRIMARY KEY (uid),
 );
 

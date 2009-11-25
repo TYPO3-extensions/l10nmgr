@@ -118,16 +118,20 @@ class tx_l10nmgr_service_importTranslation {
 						$TranslationField = $TranslationData->findByTableUidAndKey($Page->getUid(), $Element->getTableName(), $Element->getUid(), $Field->getIdentityKey());
 
 						try {
-							$Field->setIdentityKey (
-								$DetectRecordService->verifyIdentityKey (
-									$Field->getIdentityKey(),
-									$TranslationData->getSysLanguageUid(),
-									$Element->getUid(),
-									$TranslationData->getWorkspaceId()
-								)
+							$oldKey = $Field->getIdentityKey();
+							$newKey = $DetectRecordService->verifyIdentityKey (
+								$oldKey,
+								$TranslationData->getSysLanguageUid(),
+								$Element->getUid(),
+								$TranslationData->getWorkspaceId()
 							);
+							$Field->setIdentityKey ($newKey);
+
+							if(($oldKey != $newKey) && !$TranslationData->isTargetLanguageForced()){
+								$TranslationField->addChange('Generated new key without forced target language: '.$oldKey.' new: '.$newKey);
+							}
+
 						} catch (tx_mvc_exception_skipped $e) {
-							tx_mvc_common_debug::logException($e);
 							$TranslationField->markSkipped($e->getMessage());
 						}
 
@@ -135,9 +139,9 @@ class tx_l10nmgr_service_importTranslation {
 					}catch (tx_mvc_exception_argumentOutOfRange $e ) {
 						tx_mvc_common_debug::debug($e->getMessage(), 'Exception out of range - Thrown because a element from the database is not in the import avaliable.', self::SHOW_DEBUG_INFORMATION);
 					} catch (tx_mvc_exception_skipped $e) {
-						$this->handleException($e);
+						tx_mvc_common_debug::logException($e);
 					} catch (tx_mvc_exception $e) {
-						$this->handleException($e);
+						tx_mvc_common_debug::logException($e);
 					}
 				}
 			}
@@ -149,18 +153,6 @@ class tx_l10nmgr_service_importTranslation {
 		if ( $TranslationData->isImported()) {
 			$TranslationData->writeProcessingLog();
 		}
-	}
-
-	/**
-	 * This method is used to handle exceptions during the import process.
-	 * Currently it triggers a warning and loggs the exception.
-	 *
-	 * @param $e
-	 */
-	protected function handleException(Exception $e) {
-//!TODO check the @ before the trigger_error method call. Is the E_USER_WARNING triggert and can we handle that with our custom error handler?
-		@trigger_error($e->getMessage(),E_USER_WARNING);
-		tx_mvc_common_debug::logException($e);
 	}
 
 	/**
