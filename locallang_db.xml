@@ -38,7 +38,7 @@
 				<label index="tx_l10nmgr_exportdata.title">Title</label>
 				<label index="tx_l10nmgr_exportdata.export_type">Format</label>
 				<label index="tx_l10nmgr_exportdata.translation_lang">Target language</label>
-				<label index="tx_l10nmgr_importdata.warning_messages">Warnings during import</label>
+				<label index="tx_l10nmgr_importdata.messages">Messages during import</label>
 				<label index="tx_l10nmgr_importdata.import_type">Import Type</label>
 				<label index="tx_l10nmgr_importdata.source_lang">Force source language</label>
 				<label index="tx_l10nmgr_importdata.force_target_lang">Force target language - Use only if you know what your do!!</label>
@@ -48,7 +48,7 @@
 				<label index="tx_l10nmgr_exportdata.nohidden">No hidden content</label>
 				<label index="tx_l10nmgr_exportdata.noxmlcheck">Do not check xml</label>
 				<label index="tx_l10nmgr_exportdata.checkutf8">Check UTF-8</label>
-				<label index="tx_l10nmgr_exportdata.warning_messages">Warning messages during export</label>
+				<label index="tx_l10nmgr_exportdata.messages">Messages during export</label>
 				<label index="tx_l10nmgr_exportdata.additional_information">Additional Information</label>
 
 			<label index="tx_l10nmgr_import">L10N Manager imports</label>

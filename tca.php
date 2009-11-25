@@ -312,9 +312,9 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 				'type' => 'check',
 			)
 		),
-		'warning_messages' => Array(
+		'messages' => Array(
 			'exclude' => 1,
-			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.warning_messages',
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.messages',
 			'config' => Array (
 				'type' => 'none',
 				'rows' => 30,
@@ -323,8 +323,8 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		)
 	),
 	"types" => Array (
-		"xml" => Array("showitem" => "l10ncfg_id, title, export_type;;1, --palette--;Languages;3, --palette--;Export Options;2,--div--;LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.additional_information, warning_messages"),
-		"xls" => Array("showitem" => "l10ncfg_id, title, export_type;;1, --palette--;Languages;3, --palette--;Export Options;2,--div--;LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.additional_information, warning_messages")
+		"xml" => Array("showitem" => "l10ncfg_id, title, export_type;;1, --palette--;Languages;3, --palette--;Export Options;2,--div--;LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.additional_information, messages"),
+		"xls" => Array("showitem" => "l10ncfg_id, title, export_type;;1, --palette--;Languages;3, --palette--;Export Options;2,--div--;LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_exportdata.additional_information, messages")
 	),
 	"palettes" => Array (
 		"1" => Array(
@@ -469,9 +469,9 @@ $TCA["tx_l10nmgr_importdata"] = Array (
 				'maxitems' => 100,
 			)
 		),
-		'warning_messages' => Array(
+		'messages' => Array(
 			'exclude' => 1,
-			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_importdata.warning_messages',
+			'label' => 'LLL:EXT:l10nmgr/locallang_db.xml:tx_l10nmgr_importdata.messages',
 			'config' => Array (
 				'type' => 'none',
 				'rows' => 20,
@@ -480,7 +480,7 @@ $TCA["tx_l10nmgr_importdata"] = Array (
 	),
 
 	"types" => Array (
-		"0" => Array("showitem" => "configuration_id, exportdata_id, warning_messages, import_type;;1 --palette--;;1,  importfiles")
+		"0" => Array("showitem" => "configuration_id, exportdata_id, messages, import_type;;1 --palette--;;1,  importfiles")
 	),
 	"palettes" => Array (
 		"1" => Array(
