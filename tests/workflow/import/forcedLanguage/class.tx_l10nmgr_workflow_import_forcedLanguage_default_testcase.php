@@ -74,7 +74,14 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 		$this->importStdDB();
 
 			// order of extension-loading is important !!!!
-		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog'));
+		$import = array ('cms','l10nmgr');
+		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog');
+		foreach($optional as $ext) {
+			if (t3lib_extMgm::isLoaded($ext)) {
+				$import[] = $ext;
+			}
+		}
+		$this->importExtensions($import);
 
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
 		$this->TranslatableFactory = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);

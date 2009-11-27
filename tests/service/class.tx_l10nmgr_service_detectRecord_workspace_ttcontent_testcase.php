@@ -56,7 +56,14 @@ class tx_l10nmgr_service_detectRecord_workspace_ttcontent_testcase extends tx_l1
 		$this->importStdDB();
 
 			// order of extension-loading is important !!!!
-		$this->importExtensions(array ('cms','l10nmgr','static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog'));
+		$import = array ('cms','l10nmgr');
+		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog');
+		foreach($optional as $ext) {
+			if (t3lib_extMgm::isLoaded($ext)) {
+				$import[] = $ext;
+			}
+		}
+		$this->importExtensions($import);
 		$this->DetectRecordService = t3lib_div::makeInstance('tx_l10nmgr_service_detectRecord');
 	}
 

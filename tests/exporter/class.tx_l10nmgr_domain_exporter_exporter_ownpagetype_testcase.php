@@ -71,8 +71,15 @@ class tx_l10nmgr_domain_exporter_exporter_ownpagetype_testcase extends tx_l10nmg
 		$db = $this->useTestDatabase();
 		$this->importStdDB();
 
-		// order of extension-loading is important !!!!
-		$this->importExtensions(array('cms','l10nmgr','static_info_tables','templavoila'));
+			// order of extension-loading is important !!!!
+		$import = array ('cms','l10nmgr');
+		$optional = array('static_info_tables','templavoila');
+		foreach($optional as $ext) {
+			if (t3lib_extMgm::isLoaded($ext)) {
+				$import[] = $ext;
+			}
+		}
+		$this->importExtensions($import);
 	}
 
 	/**
