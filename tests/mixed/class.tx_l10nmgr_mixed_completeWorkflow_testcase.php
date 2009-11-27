@@ -103,6 +103,8 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 	 * This helper method will be triggered from the testcase methods to ensure that the
 	 * importer does not create empty rows after heading.
 	 *
+	 * @todo use vfs:// instead of real filesystem
+	 *
 	 * @param string format
 	 */
 	protected function helper_importerDoesNotCreatesEmptyRowAfterHeading($format){
@@ -222,6 +224,8 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
  	*  <li>page 2 (Subpage of page 1 -> Testpage l10nmgr 33154):</li>
 	* </ul>
 	*
+	* @todo use vfs:// instead of real filesystem
+	*
 	* @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	* @param void
 	* @return void
@@ -339,6 +343,8 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
  	*
  	*  <li>page 2 (Subpage of page 1 -> Testpage l10nmgr 33154):</li>
 	* </ul>
+	*
+	* @todo use vfs:// instead of real filesystem
 	*
 	* @test
 	* @author Tolleiv Nietsch <tolleiv.nietsch@aoemedia.de
