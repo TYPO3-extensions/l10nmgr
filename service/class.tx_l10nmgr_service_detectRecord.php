@@ -83,6 +83,7 @@ class tx_l10nmgr_service_detectRecord {
 	 *
 	 * With that method you can force an import to another language.
 	 *
+	 * @todo Add support for inheritance and separate flexform localisation modes
 	 * @todo Find a better name for this method
 	 *
 	 * @param string $currentIdentityKey
@@ -156,6 +157,8 @@ class tx_l10nmgr_service_detectRecord {
 	 * @param string $cmdFieldFlexformPath
 	 * @param integer $forceLanguageUid
 	 * @param integer $localisationParentRecordUid
+	 *
+	 * @todo Add support for inheritance and separate flexform localisation modes
 	 *
 	 * @throws tx_mvc_exception_skipped
 	 *
