@@ -45,7 +45,7 @@ $BE_USER->modAccess($MCONF,1);
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_module0 extends t3lib_SCbase {
-	
+
 	var $pageinfo;
 
 	/**
@@ -90,9 +90,11 @@ class tx_l10nmgr_module0 extends t3lib_SCbase {
 			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/jquery.tooltip.js') . '"></script>
 			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'templates/mod1_list.js') . '"></script>
 		';
+
 		$TemplateClass = t3lib_div::makeInstanceClassName('tx_l10nmgr_template');
+		/* @var $Template tx_l10nmgr_template */
 		$Template = new $TemplateClass(
-							$configurationObjectsArray, 
+							$configurationObjectsArray,
 							t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'templates/mod1_list.php')
 						);
 		$Template->setDocument($this->doc);
