@@ -54,7 +54,14 @@ class tx_l10nmgr_domain_importer_importData_testcase extends tx_l10nmgr_tests_da
 		$db = $this->useTestDatabase();
 		$this->importStdDB();
 
-		$this->importExtensions(array('l10nmgr'));
+		$import = array ('cms','l10nmgr');
+		$optional = array('static_info_tables','templavoila', 'languagevisibility');
+		foreach($optional as $ext) {
+			if (t3lib_extMgm::isLoaded($ext)) {
+				$import[] = $ext;
+			}
+		}
+		$this->importExtensions($import);
 	}
 
 	public function tearDown(){

@@ -24,7 +24,14 @@ class tx_l10nmgr_l10nTranslatedInformationFactory_testcase extends tx_l10nmgr_te
 		$db = $this->useTestDatabase ();
 		$this->importStdDB();
 
-		$this->importExtensions ( array ('cms', 'l10nmgr', 'static_info_tables', 'templavoila' ) );
+		$import = array ('cms','l10nmgr');
+		$optional = array('static_info_tables','templavoila', 'languagevisibility', 'aoe_xml2array');
+		foreach($optional as $ext) {
+			if (t3lib_extMgm::isLoaded($ext)) {
+				$import[] = $ext;
+			}
+		}
+		$this->importExtensions ( $import );
 	}
 
 	public function tearDown() {

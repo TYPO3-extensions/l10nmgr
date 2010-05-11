@@ -78,11 +78,14 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_l10nmgr_tes
 
 		$GLOBALS['TYPO3_DB']->debugOutput = TRUE;
 		$this->importStdDB();
-
-		$this->importExtensions (
-			array ('cms','l10nmgr','static_info_tables','templavoila','realurl',  'aoe_realurlpath','cc_devlog')
-		);
-
+		$import = array ('cms','l10nmgr');
+		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog', 'aoe_xml2array');
+		foreach($optional as $ext) {
+			if (t3lib_extMgm::isLoaded($ext)) {
+				$import[] = $ext;
+			}
+		}
+		$this->importExtensions($import);
 		$this->TranslationFactory  = new tx_l10nmgr_domain_translationFactory();
 		$this->TranslatableFactory = $this->getMock($this->buildAccessibleProxy('tx_l10nmgr_domain_translateable_translateableInformationFactory'), array('dummy'), array(), '', FALSE);
 		$this->TranslationService  = new tx_l10nmgr_service_importTranslation();

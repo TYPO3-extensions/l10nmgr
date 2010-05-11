@@ -62,12 +62,13 @@ class tx_l10nmgr_domain_translation_field_transformation_testcase extends tx_l10
 
 			// order of extension-loading is important !!!!
 		$import = array ('cms','l10nmgr');
-		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog');
+		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog', 'aoe_xml2array');
 		foreach($optional as $ext) {
 			if (t3lib_extMgm::isLoaded($ext)) {
 				$import[] = $ext;
 			}
 		}
+		$this->importExtensions($import);
 		$this->Field = new tx_l10nmgr_domain_translation_field();
 	}
 

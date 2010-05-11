@@ -1,0 +1,27 @@
+<phpunit 
+	colors="true"
+	backupGlobals="false"
+	backupStaticAttributes="false"
+	syntaxCheck="false"
+	stopOnFailure="false"
+	convertErrorsToExceptions="true" 
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true">
+	
+	<testsuites>
+		<testsuite name="configuration"><directory suffix="testcase.php">configuration</directory></testsuite>
+		<testsuite name="converter"><directory suffix="testcase.php">converter</directory></testsuite>
+		<testsuite name="exporter"><directory suffix="testcase.php">exporter</directory></testsuite>
+		<testsuite name="importer"><directory suffix="testcase.php">importer</directory></testsuite>
+		<testsuite name="mixed"><directory suffix="testcase.php">mixed</directory></testsuite>
+		<testsuite name="service"><directory suffix="testcase.php">service</directory></testsuite>
+		<testsuite name="tools"><directory suffix="testcase.php">tools</directory></testsuite>
+		<testsuite name="translateable"><directory suffix="testcase.php">translateable</directory></testsuite>
+		<testsuite name="translation"><directory suffix="testcase.php">translation</directory></testsuite>
+		<testsuite name="workflow"><directory suffix="testcase.php">workflow</directory></testsuite>
+	</testsuites>
+	<php>
+		<ini name="memory_limit" value="50000M" />
+		<ini name="max_execution_time" value="5000" />
+	</php>
+</phpunit>

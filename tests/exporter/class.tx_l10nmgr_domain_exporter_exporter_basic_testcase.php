@@ -69,6 +69,12 @@ class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_l10nmgr_test
 			}
 		}
 		$this->importExtensions($import);
+
+		if (version_compare(TYPO3_version, '4.3.0', '<') && !isset($GLOBALS['LANG'])) {
+			require_once t3lib_extMgm::extPath('lang') . 'lang.php';
+			$GLOBALS['LANG'] = t3lib_div::makeInstance('language');
+			$GLOBALS['LANG']->init($GLOBALS['BE_USER']->uc['lang']);
+		}
 	}
 
 	public function tearDown(){
@@ -104,7 +110,7 @@ class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_l10nmgr_test
 
 		}
 
-		$this->assertEquals($runCount,3,'unexpected number of run counts in export');
+		$this->assertEquals(3, $runCount,'unexpected number of run counts in export');
 	}
 
 	/**

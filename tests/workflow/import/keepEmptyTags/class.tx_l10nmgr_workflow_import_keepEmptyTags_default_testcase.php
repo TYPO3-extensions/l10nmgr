@@ -79,7 +79,7 @@ class tx_l10nmgr_workflow_import_keepEmptyTags_default_testcase extends tx_l10nm
 
 			// order of extension-loading is important !!!!
 		$import = array ('cms','l10nmgr');
-		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog');
+		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog', 'aoe_xml2array');
 		foreach($optional as $ext) {
 			if (t3lib_extMgm::isLoaded($ext)) {
 				$import[] = $ext;

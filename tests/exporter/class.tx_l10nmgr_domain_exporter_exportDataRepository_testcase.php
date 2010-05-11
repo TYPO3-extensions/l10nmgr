@@ -10,7 +10,14 @@ class tx_l10nmgr_domain_exporter_exportDataRepository_testcase extends tx_l10nmg
 
 		$this->createDatabase();
 		$db = $this->useTestDatabase();
-		$this->importExtensions(array('l10nmgr'));
+		$import = array ('cms','l10nmgr');
+		$optional = array('static_info_tables','templavoila', 'languagevisibility');
+		foreach($optional as $ext) {
+			if (t3lib_extMgm::isLoaded($ext)) {
+				$import[] = $ext;
+			}
+		}
+		$this->importExtensions($import);
 	}
 
 	/**
