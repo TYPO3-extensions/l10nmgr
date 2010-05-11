@@ -115,7 +115,7 @@ class tx_l10nmgr_domain_exporter_exporter_testcase extends tx_l10nmgr_tests_data
 				$runCount++;
 			}
 
-		$this->assertEquals($runCount,3,'unexpected number of run counts in export');
+		$this->assertEquals(3, $runCount,'unexpected number of run counts in export');
 	}
 
 
