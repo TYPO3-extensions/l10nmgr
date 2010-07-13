@@ -200,7 +200,7 @@ class tx_l10nmgr_zip {
         function extractFile($file)     {
                 if (is_file($file))       {
                         $tempDir = PATH_site.'typo3temp/'.md5(microtime()).'/';
-                        mkdir($tempDir, 0777);
+                        t3lib_div::mkdir($tempDir);
                         if (is_dir($tempDir))   {
                                         // This is if I want to check the content:
                         #       $cmd = $this->unzipAppPath.' -t '.$this->file;
@@ -215,7 +215,7 @@ class tx_l10nmgr_zip {
 
 				$out['fileArr'] = $this->getAllFilesAndFoldersInPath(array(),$tempDir);
 				$out['tempDir'] = $tempDir;
-				
+
                                 return $out;
                         } else return 'No dir: '.$tempDir;
                 } else return 'No file: '.$file;
