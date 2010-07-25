@@ -113,8 +113,7 @@ class tx_l10nmgr_l10nConfiguration {
 		if ($depth>0)	$tree->getTree($treeStartingPoint, $depth, '');
 
 		//now create and init accum Info object:
-		$accumObjName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10nAccumulatedInformations');
-		$accumObj=new $accumObjName($tree,$l10ncfg,$sysLang);
+		$accumObj=t3lib_div::makeInstance('tx_l10nmgr_l10nAccumulatedInformations',$tree,$l10ncfg,$sysLang);
 
 		return $accumObj;
 	}

@@ -178,8 +178,7 @@ class tx_cliexport_cli extends t3lib_cli {
 	$l10nmgrCfgObj->load($l10ncfg);
 	if ($l10nmgrCfgObj->isLoaded()) {
 
-		$l10nmgrXML = t3lib_div::makeInstanceClassName( 'tx_l10nmgr_CATXMLView' );
-		$l10nmgrGetXML=new $l10nmgrXML($l10nmgrCfgObj,$tlang);
+		$l10nmgrGetXML=t3lib_div::makeInstance( 'tx_l10nmgr_CATXMLView', $l10nmgrCfgObj,$tlang);
 
 		$onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';
 		if ($onlyChanged === "TRUE") {

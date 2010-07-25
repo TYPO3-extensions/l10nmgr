@@ -1,3 +1,6 @@
+2010-07-25 Andreas Otto <a.otto@sma.de>
+	* Bugfix #7466: L10N Manager fills the deprecation_log
+
 2010-07-13 Andreas Otto <a.otto@sma.de>
 	* Bugfix #8831: CLI export module help text is never displayed
 	* Bugfix #8832: Method extractFile in class tx_l10nmgr_zip is not using TYPO3 API to create a directory
