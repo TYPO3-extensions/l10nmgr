@@ -54,7 +54,7 @@
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][export_type]=xml';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][title]='.$configuration->getTitle();
 							$editOnClickParams .= '&overrideVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configuration->getUid();
-							$redirectUrl = $extPath . 'export/index.php?tx_l10nmgrexport[action]=generateExport';
+							$redirectUrl = substr($extPath, 9) . 'export/index.php?tx_l10nmgrexport[action]=generateExport';
 						?>
 						<a title="Export XML" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $GLOBALS['BACK_PATH'], $redirectUrl)) ?>">
 							<img src="<?= $extPath ?>gfx/xml_export.png" alt="Export XML" />
@@ -69,7 +69,7 @@
 							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();
 							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][import_type]=xml';
 							$editOnClickParams .= '&overrideVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();
-							$redirectUrl = $extPath . 'import/index.php?tx_l10nmgrexport[action]=generateImport';
+							$redirectUrl = substr($extPath, 9) . 'import/index.php?tx_l10nmgrexport[action]=generateImport';
 						?>
 						<a title="Import XML" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $GLOBALS['BACK_PATH'], $redirectUrl)) ?>">
 							<img src="<?= $extPath ?>gfx/xml_import.png" alt="Import XML" />
@@ -85,7 +85,7 @@
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][export_type]=xls';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_exportdata][title]='.$configuration->getTitle();
 							$editOnClickParams .= '&overrideVals[tx_l10nmgr_exportdata][l10ncfg_id]='.$configuration->getUid();
-							$redirectUrl = $extPath . 'export/index.php?tx_l10nmgrexport[action]=generateExport';
+							$redirectUrl = substr($extPath, 9) . 'export/index.php?tx_l10nmgrexport[action]=generateExport';
 						?>
 						<a title="Export XLS" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $GLOBALS['BACK_PATH'], $redirectUrl)) ?>">
 							<img src="<?= $extPath ?>gfx/xls_export.png" alt="Export XLS" />
@@ -100,7 +100,7 @@
 							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();
 							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][import_type]=xls';
 							$editOnClickParams .= '&overrideVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();
-							$redirectUrl = $extPath . 'import/index.php?tx_l10nmgrexport[action]=generateImport';
+							$redirectUrl = substr($extPath, 9) . 'import/index.php?tx_l10nmgrexport[action]=generateImport';
 						?>
 						<a title="Import XLS" href="#" onclick="<?=htmlspecialchars(t3lib_BEfunc::editOnClick($editOnClickParams, $GLOBALS['BACK_PATH'], $redirectUrl)) ?>">
 							<img src="<?php echo $extPath;?>gfx/xls_import.png" alt="Import XLS" />
