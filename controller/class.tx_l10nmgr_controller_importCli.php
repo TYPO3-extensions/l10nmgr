@@ -121,6 +121,7 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 				$importData = new tx_l10nmgr_domain_importer_importData();
 				$importData['exportdata_id'] = 0; // will be updated later
 				$importData['configuration_id'] = 0; // will be updated later
+				$importData['import_type'] = 'xml';
 
 				$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
 				$importDataRepository->add($importData);
@@ -133,7 +134,9 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 				$destinationFile = $destinationFolder . DIRECTORY_SEPARATOR . $destinationFileName;
 
 				// move to upload folder
-				copy($file, $destinationFile);
+				if(!copy($file, $destinationFile)){
+					throw new tx_mvc_exception_invalidArgument('Can\'t copy '.$file.' to '.$destinationFile);
+				}
 
 				$this->cli_echo(sprintf('Copying file "%s" to "%s"'.chr(10), $file, $destinationFile));
 
