@@ -168,7 +168,7 @@ class tx_l10nmgr_domain_translationFactory {
 			$this->TranslationData->setTargetSysLanguageUid((int)$metaData->t3_sysLang);
 			$this->TranslationData->setTargetLanguageIsoCode((string)$metaData->t3_targetLang);
 			$this->TranslationData->setSourceLanguageISOcode((string)$metaData->t3_sourceLang);
-			$this->TranslationData->setBaseUrl((string)$metaData->baseURL);
+			$this->TranslationData->setBaseUrl((string)$metaData->t3_baseURL);
 			$this->TranslationData->setWorkspaceId((int)$metaData->t3_workspaceId);
 			$this->TranslationData->setFieldCount((int)$metaData->t3_count);
 			$this->TranslationData->setWordCount((int)$metaData->t3_wordCount);
