@@ -5,11 +5,11 @@
 	<table>
 		<tr>
 			<td>Export:</td>
-			<td><?= $this->getExportData()->getTitle(); ?></td>
+			<td><?php echo $this->getExportData()->getTitle(); ?></td>
 		</tr>
 		<tr>
 			<td>Total number of pages:</td>
-			<td><?= $this->getExportData()->getExportTotalNumberOfPages(); ?></td>
+			<td><?php echo $this->getExportData()->getExportTotalNumberOfPages(); ?></td>
 		</tr>
 		<?php if($this->getShowFiles()){ ?>
 			<tr>

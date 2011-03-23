@@ -66,8 +66,8 @@
 							<tr> 
 								<td colspan="5">
 									<input type="hidden" name="tx_l10nmgrtranslate[pageid]" value="<?php echo intval($pageId); ?>" />
-									<input type="submit" value="<?php echo $this->labels->get('general.action.save.button.title'); ?>" name="saveInline" onclick="return confirm(\'<?php echo $this->labels->get('inlineedit.save.alert.title'); ?>\');" />
-									<input type="submit" value="<?php echo $this->labels->get('general.action.cancel.button.title'); ?>" name="_" onclick="return confirm(\'<?php echo $this->labels->get('inlineedit.cancel.alert.title'); ?> \');" />
+									<input type="submit" value="<?php echo $this->labels->get('general.action.save.button.title'); ?>" name="saveInline" onclick="return confirm('<?php echo $this->labels->get('inlineedit.save.alert.title'); ?>');" />
+									<input type="submit" value="<?php echo $this->labels->get('general.action.cancel.button.title'); ?>" name="_" onclick="return confirm('<?php echo $this->labels->get('inlineedit.cancel.alert.title'); ?>');" />
 								</td>
 							</tr>	
 						<?php endif; ?>			

@@ -6,16 +6,16 @@
 	<table>
 		<tr>
 			<td>Export:</td>
-			<td><?= $this->getExportData()->getTitle(); ?></td>
+			<td><?php echo $this->getExportData()->getTitle(); ?></td>
 		</tr>
 		<tr>
 			<td>Total number of pages:</td>
-			<td><?= $this->getExportData()->getExportTotalNumberOfPages(); ?></td>
+			<td><?php echo $this->getExportData()->getExportTotalNumberOfPages(); ?></td>
 		</tr>
 	</table>
 
 	<div id="export_progress" style="width: 500px;">
-		<?= $this->progressView->render(); ?>
+		<?php echo $this->progressView->render(); ?>
 	</div>
 
 </div>

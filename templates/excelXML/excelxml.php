@@ -5,7 +5,7 @@
  xmlns:html="http://www.w3.org/TR/REC-html40"
  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
  <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
-  <Author>ConfigurationUid:<?= $this->l10ncfgObj->getUid(); ?>|ExportDataUid:<?= $this->getTranslateableInformation()->getExportData()->getUid(); ?>|TargetLanguageUid:<?= $this->getTranslateableInformation()->getTargetLanguage()->getUid(); ?>|FormatVersion:<? echo L10NMGR_FILEVERSION; ?></Author>
+  <Author>ConfigurationUid:<?php echo $this->l10ncfgObj->getUid(); ?>|ExportDataUid:<?php echo $this->getTranslateableInformation()->getExportData()->getUid(); ?>|TargetLanguageUid:<?php echo $this->getTranslateableInformation()->getTargetLanguage()->getUid(); ?>|FormatVersion:<?php echo L10NMGR_FILEVERSION; ?></Author>
   <LastAuthor>Office 2004 Test Drive User</LastAuthor>
   <Created>2006-12-01T02:10:16Z</Created>
   <Version>11.512</Version>
@@ -67,7 +67,7 @@
  </Styles>
  <Worksheet ss:Name="Translation">
 
-  <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="<?= $this->getRowCount(); ?>" x:FullColumns="1" x:FullRows="1">
+  <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="<?php echo $this->getRowCount(); ?>" x:FullColumns="1" x:FullRows="1">
 
    <Column ss:Hidden="1" ss:AutoFitWidth="0"/>
    <Column ss:AutoFitWidth="0" ss:Width="85.0"/>
@@ -75,7 +75,7 @@
    <Column ss:AutoFitWidth="0" ss:Width="233.0"/>
    <Column ss:AutoFitWidth="0" ss:Width="151.0"/>
    <Column ss:AutoFitWidth="0" ss:Width="233.0"/>
-		<?= $this->getRenderedPageGroups(); ?>
+		<?php echo $this->getRenderedPageGroups(); ?>
   </Table>
   <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
    <PageSetup>

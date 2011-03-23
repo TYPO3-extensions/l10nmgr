@@ -3,6 +3,6 @@
 <table>
 	<tr>
 		<td>Total number of files:</td>
-		<td><?= $this->getImportData()->getImportTotalNumberOfFiles(); ?></td>
+		<td><?php echo $this->getImportData()->getImportTotalNumberOfFiles(); ?></td>
 	</tr>
 </table>
