@@ -1,0 +1,123 @@
+<MemoQResource ResourceType="FilterConfigs" Version="1.0">
+  <Resource>
+    <Guid>94bfc27e-914a-40f3-9008-a8a7035d9b75</Guid>
+    <FileName>XMLConverter#typo_3</FileName>
+    <Name>typo_3</Name>
+    <Description />
+    <FilterName>MemoQ.DocConverters.XML.XMLConverter</FilterName>
+  </Resource>
+</MemoQResource>
+<MemoQFilterConfiguration filtername="XML Filter" version="V2" name="TYPO3">
+  <SampleFileList>
+    <SampleFile path="C:\intro_de_DE_to_en_GB_201108-183118.xml" encoding="65001" />
+  </SampleFileList>
+  <SampleDTDPath value="" />
+  <GeneralOptions logwarnings="no" importcomments="no" detectencoding="yes" inputencodingkey="65001" outputencodingkey="-1" normalizews="yes" observexmlspace="yes" restoreentities="no" assocdtd="" />
+  <HandledTags>
+    <Tag name="TYPO3L10N" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="no" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="head" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_l10ncfg" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_sysLang" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_sourceLang" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_targetLang" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_baseURL" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_workspaceId" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_count" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_wordCount" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_internal" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_formatVersion" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="yes" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="pageGrp" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="no" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+        <Attribute name="id" translatable="no" required="no" filtered="no" context="None" comment="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+      </Attributes>
+    </Tag>
+    <Tag name="data" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="no" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+        <Attribute name="table" translatable="no" required="no" filtered="no" context="None" comment="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="elementUid" translatable="no" required="no" filtered="no" context="None" comment="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="key" translatable="no" required="no" filtered="no" context="None" comment="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="transformations" translatable="no" required="no" filtered="no" context="None" comment="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+      </Attributes>
+    </Tag>
+    <Tag name="p" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="no" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="STRONG" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="no" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="br" inline="no" placeholder="no" iscontxt="no" iscomment="no" nontranslated="no" wshandling="Inherit" breaksegmentaftertag="none">
+      <Attributes>
+      </Attributes>
+    </Tag>
+  </HandledTags>
+  <EntityGroupes>
+    <EntityGroupe value="XMLPredefined" />
+  </EntityGroupes>
+  <CustomEntities>
+  </CustomEntities>
+  <ImportedEntities>
+  </ImportedEntities>
+</MemoQFilterConfiguration>
