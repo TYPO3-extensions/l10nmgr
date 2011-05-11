@@ -177,6 +177,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$this->content.=$this->doc->header($LANG->getLL('general.title'));
 
 				//create and render view to show details for the current l10nmgrcfg
+				//$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
+				//$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc); DZ: 2011-05-11
 				$l10nmgrconfigurationView= t3lib_div::makeInstance('tx_l10nmgr_l10ncfgDetailView',$l10ncfgObj, $this->doc);
 				$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
 
@@ -262,7 +264,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			'across'     => 'acrossL10nmgrConfig.dst',
 			'dejaVu'     => 'dejaVuL10nmgrConfig.dvflt',
 			'memoq'     => 'MemoQ.xml',
-			'sdltrados'  => 'SDLTradosTagEditor.ini',
+			'transit'     => 'StarTransit_XML_UTF_TYPO3.FFD',
+			'sdltrados2007'  => 'SDLTradosTagEditor.ini',
+			'sdltrados2009'  => 'TYPO3_Localization_Manager_v._3.3.5.sdlfiletype',
 			'sdlpassolo' => 'SDLPassolo.xfg',
 		);
 
@@ -337,6 +341,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			}
 			else {
 				// Relevant processing of XML Import with the help of the Importmanager
+				//$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
+				//$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage, $xmlString=""); DZ 2011-05-11
 				$importManager=t3lib_div::makeInstance('tx_l10nmgr_CATXMLImportManager',$uploadedTempFile,$this->sysLanguage, $xmlString="");
 				if ($importManager->parseAndCheckXMLFile()===false) {
 					$info.='<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
@@ -350,6 +356,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 					if (t3lib_div::_POST('make_preview_link')=='1') {
 						$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
 						$info.='<b>'.$LANG->getLL('import.xml.preview_links.title').'</b><br/>';
+						//$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
+						//$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds); DZ 2011-05-11
 						$mkPreviewLinks=t3lib_div::makeInstance('tx_l10nmgr_mkPreviewLinkService',$t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
 						$info.=$mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
 					}
@@ -369,6 +377,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			$BE_USER->pushModuleData('l10nmgr/cm1/checkUTF8',t3lib_div::_POST('check_utf8'));
 
 			// Render the XML
+			//$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLView');
+			//$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage); DZ 2011-05-11
 			$viewClass=t3lib_div::makeInstance('tx_l10nmgr_CATXMLView',$l10ncfgObj,$this->sysLanguage);
 			$export_xml_forcepreviewlanguage=intval(t3lib_div::_POST('export_xml_forcepreviewlanguage'));
 			if ($export_xml_forcepreviewlanguage > 0) {
@@ -399,6 +409,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 		// Buttons:
+		$_selectOptions=array('0'=>'-default-');
+		$_selectOptions=$_selectOptions+$this->MOD_MENU["lang"];
+		$info.= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions).'<br/>';
 		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" />';
 		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.export.xml.button.title').'" name="export_excel" />';
 		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.import.xml.button.title').'" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
@@ -424,7 +437,14 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		if (t3lib_div::_POST('export_excel')) {
 
 			// Render the XML
+			//$viewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_excelXMLView');
+			//$viewClass=new $viewClassName($l10ncfgObj,$this->sysLanguage); DZ 2011-05-11
 			$viewClass=t3lib_div::makeInstance('tx_l10nmgr_excelXMLView',$l10ncfgObj,$this->sysLanguage);
+
+			$export_xml_forcepreviewlanguage=intval(t3lib_div::_POST('export_xml_forcepreviewlanguage'));
+			if ($export_xml_forcepreviewlanguage > 0) {
+				$viewClass->setForcedSourceLanguage($export_xml_forcepreviewlanguage);
+			}
 
 			//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
@@ -450,6 +470,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 		switch ($this->MOD_SETTINGS["action"]) {
 			case 'inlineEdit': case 'link':
+				//$htmlListViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10nHTMLListView');
+				//$htmlListView=new $htmlListViewClassName($l10ncfgObj,$this->sysLanguage); DZ 2011-05-11
 				$htmlListView=t3lib_div::makeInstance('tx_l10nmgr_l10nHTMLListView',$l10ncfgObj,$this->sysLanguage);
 				$subheader=$LANG->getLL('inlineEdit');
 

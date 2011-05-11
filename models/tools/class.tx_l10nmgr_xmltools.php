@@ -74,8 +74,9 @@ class tx_l10nmgr_xmltools {
 		$content = $this->parseHTML->TS_transform_rte($content,$css=1);
 		
 		//substitute & with &amp;
-		$content=str_replace('&','&amp;',$content);
+		//$content=str_replace('&','&amp;',$content); Changed by DZ 2011-05-11
 		$content=str_replace('<hr>','<hr />',$content);
+		$content=str_replace('<br>','<br />',$content);
 		
 		$content=t3lib_div::deHSCentities($content);
 		if ($withStripBadUTF8==1) {
@@ -104,6 +105,7 @@ class tx_l10nmgr_xmltools {
 			
 			$xmlstring=str_replace('<hr/>','<hr>',$xmlstring);
 			$xmlstring=str_replace('<hr />','<hr>',$xmlstring);
+			$xmlstring=str_replace('<p/>','<p></p>',$xmlstring); // DZ: Added 2011-05-11 to avoid import problem with <p/> elements
 
 			$this->parseHTML->procOptions['typolist']=FALSE;
 			$this->parseHTML->procOptions['typohead']=FALSE;

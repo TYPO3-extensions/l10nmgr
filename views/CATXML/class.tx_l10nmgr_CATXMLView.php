@@ -106,7 +106,14 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 										}
 										$_isTranformedXML=FALSE;
 										// Following checks are not enough! Fields that could be transformed to be XML conform are not transformed! textpic fields are not isRTE=1!!! No idea why...
-										if ($tData['fieldType']=='text' &&  $tData['isRTE']) {
+										//DZ 2010-09-08
+										// > if > else loop instead of ||
+										// Test re-import of XML! RTE-Back transformation
+										//echo $tData['fieldType'];
+										//if (preg_match('/templavoila_flex/',$key)) { echo "1 -"; }
+										//echo $key."\n";
+										
+										if ($tData['fieldType']=='text' &&  $tData['isRTE'] || (preg_match('/templavoila_flex/',$key))) {
 											$dataForTranslationTranformed=$xmlTool->RTE2XML($dataForTranslation);
 											if ($dataForTranslationTranformed!==false) {
 												$_isTranformedXML=TRUE;
@@ -119,7 +126,6 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 										else {
 											//Substitute & with &amp; in non-RTE fields
 											$dataForTranslation=str_replace('&','&amp;',$dataForTranslation);
-											$dataForTranslation=str_replace('< ','&lt;',$dataForTranslation);
 											//$dataForTranslation = t3lib_div::deHSCentities($dataForTranslation);
 
 											$params = $BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');

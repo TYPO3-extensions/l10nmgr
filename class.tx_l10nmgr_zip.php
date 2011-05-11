@@ -215,7 +215,7 @@ class tx_l10nmgr_zip {
 
 				$out['fileArr'] = $this->getAllFilesAndFoldersInPath(array(),$tempDir);
 				$out['tempDir'] = $tempDir;
-
+				
                                 return $out;
                         } else return 'No dir: '.$tempDir;
                 } else return 'No file: '.$file;

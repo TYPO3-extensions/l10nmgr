@@ -120,6 +120,8 @@ class tx_cliimport_cli extends t3lib_cli {
 	$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 	$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
+	//$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
+	//$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage,$xml); DZ 2011-05-11
 	$importManager=t3lib_div::makeInstance('tx_l10nmgr_CATXMLImportManager',$uploadedTempFile,$this->sysLanguage,$xml);
 
 	//Parse and check XML, load header data
@@ -157,6 +159,8 @@ class tx_cliimport_cli extends t3lib_cli {
 			} else {
 				$pageIds[0]=$importManager->headerData['t3_previewId'];
 			}
+			//$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
+			//$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
 			$mkPreviewLinks=t3lib_div::makeInstance('tx_l10nmgr_mkPreviewLinkService',$t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
 			$previewLink=$mkPreviewLinks->mkSinglePreviewLink($importManager->headerData['t3_baseURL'],$serverlink);
 			$out.= $previewLink;
@@ -197,6 +201,8 @@ class tx_cliimport_cli extends t3lib_cli {
 	$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 	$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
+	//$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
+	//$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage,$xml);
 	$importManager=t3lib_div::makeInstance('tx_l10nmgr_CATXMLImportManager',$uploadedTempFile,$this->sysLanguage,$xml);
 
 	//Parse and check XML, load header data
@@ -208,6 +214,8 @@ class tx_cliimport_cli extends t3lib_cli {
     		$this->cli_echo($error);
         } else {
 		$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
+		//$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
+		//$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds); //DZ 2011-05-11
 		$mkPreviewLinks=t3lib_div::makeInstance('tx_l10nmgr_mkPreviewLinkService',$t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
 		//Only valid if source language = default language (id=0)
 		$previewLink=$mkPreviewLinks->mkSingleSrcPreviewLink($importManager->headerData['t3_baseURL'],$srcLang=0);
@@ -251,6 +259,8 @@ class tx_cliimport_cli extends t3lib_cli {
 		$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
 		// Relevant processing of XML Import with the help of the Importmanager
+		//$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
+		//$importManager=new $importManagerClass($xmlFile,$this->sysLanguage,$xml); DZ 2011-05-11
 		$importManager=t3lib_div::makeInstance('tx_l10nmgr_CATXMLImportManager',$xmlFile,$this->sysLanguage,$xml);
 		if ($importManager->parseAndCheckXMLFile()===false) {
 			$out.='<br/><br/>'.$importManager->getErrorMessages();
@@ -274,6 +284,8 @@ class tx_cliimport_cli extends t3lib_cli {
 				} else {
 					$pageIds[0]=$importManager->headerData['t3_previewId'];
 				}
+				//$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
+				//$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds); DZ 2011-05-2011
 				$mkPreviewLinks=t3lib_div::makeInstance('tx_l10nmgr_mkPreviewLinkService',$t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
 				$previewLink=$mkPreviewLinks->mkSinglePreviewLink($importManager->headerData['t3_baseURL'],$serverlink);
 				$out.= $previewLink;

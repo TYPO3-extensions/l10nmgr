@@ -41,7 +41,7 @@ require_once($extPath.'models/class.tx_l10nmgr_l10nBaseService.php');
 require_once(PATH_t3lib.'class.t3lib_parsehtml_proc.php');
 
 class tx_cliexport_cli extends t3lib_cli {
-
+	
 	/**
 	 * Constructor
 	 */
@@ -61,7 +61,7 @@ class tx_cliexport_cli extends t3lib_cli {
 	$this->cli_options[] = array('-h', 'Same as --help', "");
 
         // Setting help texts:
-        $this->cli_help['name'] = 'Localization Manager exporter';
+        $this->cli_help['name'] = 'Localization Manager exporter';        
         $this->cli_help['synopsis'] = '###OPTIONS###';
         $this->cli_help['description'] = 'Class with export functionality for l10nmgr';
         $this->cli_help['examples'] = '/.../cli_dispatch.phpsh l10nmgr_export --format=CATXML --config=l10ncfg --target=tlangs --workspace=wsid --hidden=TRUE --updated=FALSE';
@@ -80,15 +80,9 @@ class tx_cliexport_cli extends t3lib_cli {
 
 	// Performance measuring
 	$time_start = microtime(true);
-
+	
 	// Load the configuration
 	$this->loadExtConf();
-
-	if (isset($this->cli_args['--help']) || isset($this->cli_args['-h'])){
-		$this->cli_validateArgs();
-		$this->cli_help();
-		exit;
-	}
 
         // get format (CATXML,EXCEL)
         //$format = (string)$this->cli_args['_DEFAULT'][1];
@@ -107,7 +101,7 @@ class tx_cliexport_cli extends t3lib_cli {
 		$this->cli_echo($lang->getLL('error.no_l10ncfg.msg')."\n");
 		exit;
 	}
-
+	
 	// get target languages
 	//$tlang = (string)$this->cli_args['_DEFAULT'][3]; //extend to list of target languages!
 	$tlang = isset($this->cli_args['--target']) ? $this->cli_args['--target'][0] : '0';
@@ -131,13 +125,19 @@ class tx_cliexport_cli extends t3lib_cli {
 	}
 	$msg = "";
 
-        // Force user to admin state
+        if (isset($this->cli_args['--help']) || isset($this->cli_args['-h'])){
+            $this->cli_validateArgs();
+            $this->cli_help();
+            exit;
+        }
+
+        // Force user to admin state 
         $GLOBALS['BE_USER']->user['admin'] = 1;
 
         // Set workspace to the required workspace ID from CATXML:
        	$GLOBALS['BE_USER']->setWorkspace($wsId);
 
-        if ($format == 'CATXML') {
+        if ($format == 'CATXML') {          
 		foreach ($l10ncfgs as $l10ncfg){
 			if (t3lib_div::testInt($l10ncfg)===FALSE) {
 				$this->cli_echo($lang->getLL('error.l10ncfg_id_int.msg')."\n");
@@ -148,36 +148,38 @@ class tx_cliexport_cli extends t3lib_cli {
 					$this->cli_echo($lang->getLL('error.target_language_id_integer.msg')."\n");
 					exit;
 				}
-            			$msg.= $this->exportCATXML($l10ncfg,$tlang);
+            			$msg.= $this->exportCATXML($l10ncfg,$tlang);            
 			}
 		}
         } elseif ($format == 'EXCEL') {
             $msg.= "Not yet implemented!";
-        }
+        } 
 	// Send email notification if set
 
 	$time_end = microtime(true);
 	$time = $time_end - $time_start;
 	$this->cli_echo($msg."\n".$time."\n");
     }
-
+    
     /**
     * exportCATXML which is called over cli
     *
     */
     function exportCATXML($l10ncfg,$tlang){
-
+        
 	global $lang;
 
 	$error = "";
 
 	// Load the configuration
 	$this->loadExtConf();
-
+	
 	$l10nmgrCfgObj = t3lib_div::makeInstance( 'tx_l10nmgr_l10nConfiguration' );
 	$l10nmgrCfgObj->load($l10ncfg);
 	if ($l10nmgrCfgObj->isLoaded()) {
 
+		//$l10nmgrXML = t3lib_div::makeInstanceClassName( 'tx_l10nmgr_CATXMLView' );
+		//$l10nmgrGetXML=new $l10nmgrXML($l10nmgrCfgObj,$tlang);
 		$l10nmgrGetXML=t3lib_div::makeInstance( 'tx_l10nmgr_CATXMLView', $l10nmgrCfgObj,$tlang);
 
 		$onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';
@@ -282,7 +284,7 @@ class tx_cliexport_cli extends t3lib_cli {
 		$message['msg3'] = sprintf($lang->getLL('email.new_translation_job_attached.msg'),$sourceLang,$targetLang,$GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
 	}
 	$msg = implode( chr(10), $message );
-
+	
 	$email->addPlain($msg);
 	if ($this->lConf['email_attachment']) {
 		$email->addAttachment($xmlFileName);
@@ -301,7 +303,7 @@ class tx_cliexport_cli extends t3lib_cli {
 
 	$connection = ftp_connect($this->lConf['ftp_server']) or die("Connection failed");
 	if ($connection) {
-		if (@ftp_login($connection, $this->lConf['ftp_server_username'], $this->lConf['ftp_server_password'])) {
+		if (@ftp_login($connection, $this->lConf['ftp_server_username'], $this->lConf['ftp_server_password'])) { 
 			if(ftp_put($connection, $this->lConf['ftp_server_path'].$filename, $xmlFileName, FTP_BINARY) or die("Transfer failed")) {
 				ftp_close($connection) or die("Couldn't close connection");
 			} else {
@@ -327,7 +329,7 @@ class tx_cliexport_cli extends t3lib_cli {
          $this->lConf = unserialize( $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr'] );
     }
 
-
+    
 }
 
 // Call the functionality
