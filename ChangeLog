@@ -1,5 +1,7 @@
 2011-05-10 Daniel Zielinski <development@loctimize.com>
-	* Changed version to 3.3.7
+	* Changed version to 3.3.8
+	* Added memoQ.mqres filter
+	* Added SDl Trados 2009 filetype
 	* Changed XML2RTE to correct import of empty <p/> elements
 	* Fixed bug with double escaped entities &amp;amp; for RTE fields
 
