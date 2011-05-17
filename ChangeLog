@@ -1,3 +1,6 @@
+2011-05-17 Daniel Zielinski <development@loctimize.com>
+	* Added version requirement
+
 2011-05-10 Daniel Zielinski <development@loctimize.com>
 	* Changed version to 3.3.8
 	* Added memoQ.mqres filter
