@@ -84,6 +84,12 @@ class tx_cliexport_cli extends t3lib_cli {
 	// Load the configuration
 	$this->loadExtConf();
 
+	if (isset($this->cli_args['--help']) || isset($this->cli_args['-h'])){
+		$this->cli_validateArgs();
+		$this->cli_help();
+		exit;
+	}
+
         // get format (CATXML,EXCEL)
         //$format = (string)$this->cli_args['_DEFAULT'][1];
 	$format = isset($this->cli_args['--format']) ? $this->cli_args['--format'][0] : 'CATXML';
@@ -125,13 +131,7 @@ class tx_cliexport_cli extends t3lib_cli {
 	}
 	$msg = "";
 
-        if (isset($this->cli_args['--help']) || isset($this->cli_args['-h'])){
-            $this->cli_validateArgs();
-            $this->cli_help();
-            exit;
-        }
-
-        // Force user to admin state 
+        // Force user to admin state
         $GLOBALS['BE_USER']->user['admin'] = 1;
 
         // Set workspace to the required workspace ID from CATXML:
@@ -178,8 +178,6 @@ class tx_cliexport_cli extends t3lib_cli {
 	$l10nmgrCfgObj->load($l10ncfg);
 	if ($l10nmgrCfgObj->isLoaded()) {
 
-		//$l10nmgrXML = t3lib_div::makeInstanceClassName( 'tx_l10nmgr_CATXMLView' );
-		//$l10nmgrGetXML=new $l10nmgrXML($l10nmgrCfgObj,$tlang);
 		$l10nmgrGetXML=t3lib_div::makeInstance( 'tx_l10nmgr_CATXMLView', $l10nmgrCfgObj,$tlang);
 
 		$onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';

@@ -90,8 +90,6 @@ class tx_l10nmgr_module1 extends t3lib_SCbase {
 			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/jquery.tooltip.js') . '"></script>
 			<script language="javascript" type="text/javascript" src="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'templates/mod1_list.js') . '"></script>
 		';
-		//$TemplateClass = t3lib_div::makeInstanceClassName('tx_l10nmgr_template');
-		//$Template = new $TemplateClass( DZ: 2011-05-11
 		$Template = t3lib_div::makeInstance('tx_l10nmgr_template',
 			$configurationObjectsArray, 
 			t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'templates/mod1_list.php')
