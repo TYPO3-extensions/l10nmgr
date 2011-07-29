@@ -65,7 +65,7 @@ $TCA["tx_l10nmgr_cfg"] = Array (
 				'special' => 'tables',
 				'size' => '5',
 				'autoSizeMax' => 50,
-				'maxitems' => 20,
+				'maxitems' => 100,
 				'renderMode' => $GLOBALS['TYPO3_CONF_VARS']['BE']['accessListRenderMode'],
 				'iconsInOptionTags' => 1,
 			)
