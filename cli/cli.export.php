@@ -180,6 +180,13 @@ class tx_cliexport_cli extends t3lib_cli {
 
 		$l10nmgrGetXML=t3lib_div::makeInstance( 'tx_l10nmgr_CATXMLView', $l10nmgrCfgObj,$tlang);
 
+		// Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
+		if ($l10nmgrCfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables')) {
+			$staticLangArr = t3lib_BEfunc::getRecordRaw('sys_language', 'static_lang_isocode = ' . $l10nmgrCfgObj->getData('sourceLangStaticId'), 'uid');
+			$forceLanguage = $staticLangArr['uid'];
+			$l10nmgrGetXML->setForcedSourceLanguage($forceLanguage);
+		}
+
 		$onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';
 		if ($onlyChanged === "TRUE") {
 			$l10nmgrGetXML->setModeOnlyChanged();
@@ -298,6 +305,7 @@ class tx_cliexport_cli extends t3lib_cli {
     function ftpUpload($xmlFileName,$filename) {
 
 	global $lang;
+	$error = '';
 
 	$connection = ftp_connect($this->lConf['ftp_server']) or die("Connection failed");
 	if ($connection) {
@@ -305,14 +313,14 @@ class tx_cliexport_cli extends t3lib_cli {
 			if(ftp_put($connection, $this->lConf['ftp_server_path'].$filename, $xmlFileName, FTP_BINARY) or die("Transfer failed")) {
 				ftp_close($connection) or die("Couldn't close connection");
 			} else {
-				$error.= sprintf($lang->getLL('error.ftp.connection.msg'),$this->lConf['ftp_server_path'],$filename)."\n";
+				$error .= sprintf($lang->getLL('error.ftp.connection.msg'),$this->lConf['ftp_server_path'],$filename)."\n";
 			}
 		} else {
-			$error.= sprintf($lang->getLL('error.ftp.connection_user.msg'),$this->lConf['ftp_server_username'])."\n";
+			$error .= sprintf($lang->getLL('error.ftp.connection_user.msg'),$this->lConf['ftp_server_username'])."\n";
 			ftp_close($connection) or die("Couldn't close connection");
 		}
 	} else {
-			$error.= $lang->getLL('error.ftp.connection_failed.msg');
+			$error .= $lang->getLL('error.ftp.connection_failed.msg');
 	}
 	return $error;
     }
