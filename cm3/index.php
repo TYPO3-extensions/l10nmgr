@@ -140,7 +140,7 @@ class tx_l10nmgr_cm3 extends t3lib_SCbase {
 			switch((string)$cmd)	{
 				case 'updateIndex':
 					$output = $this->l10nMgrTools->updateIndexForRecord($table,$uid);
-					t3lib_BEfunc::getSetUpdateSignal('updatePageTree');
+					t3lib_BEfunc::setUpdateSignal('updatePageTree');
 				break;
 				case 'flushTranslations':
 					if ($GLOBALS['BE_USER']->isAdmin())	{
@@ -155,7 +155,7 @@ class tx_l10nmgr_cm3 extends t3lib_SCbase {
 					
 						if (t3lib_div::_POST('_flush'))	{
 							$output.=$this->l10nMgrTools->updateIndexForRecord($table,$uid);
-							t3lib_BEfunc::getSetUpdateSignal('updatePageTree');
+							t3lib_BEfunc::setUpdateSignal('updatePageTree');
 						}
 					}
 				break;

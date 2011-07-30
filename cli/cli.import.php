@@ -244,8 +244,8 @@ class tx_cliimport_cli extends t3lib_cli {
 	foreach ($xmlFilesArr as $xmlFile) {
 		$xmlFileHead = $this->getXMLFileHead($xmlFile);
        		// Set workspace to the required workspace ID from CATXML:
-		$GLOBALS['BE_USER']->setWorkspace($xmlFileHead['t3_workspaceId'][0][XMLvalue]);
-		$this->sysLanguage = $xmlFileHead['t3_sysLang'][0][XMLvalue]; //set import language to t3_sysLang from XML
+		$GLOBALS['BE_USER']->setWorkspace($xmlFileHead['t3_workspaceId'][0]['XMLvalue']);
+		$this->sysLanguage = $xmlFileHead['t3_sysLang'][0]['XMLvalue']; //set import language to t3_sysLang from XML
 
 		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 		$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');

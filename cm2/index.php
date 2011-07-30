@@ -138,7 +138,7 @@ class tx_l10nmgr_cm2 extends t3lib_SCbase {
 			$output = '';
 			if (t3lib_div::_POST('_updateIndex'))	{
 				$output.=$this->l10nMgrTools->updateIndexForRecord($table,$uid);
-				t3lib_BEfunc::getSetUpdateSignal('updatePageTree');
+				t3lib_BEfunc::setUpdateSignal('updatePageTree');
 			}
 
 

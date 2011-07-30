@@ -99,10 +99,10 @@ class tx_cliexport_cli extends t3lib_cli {
 	$l10ncfg = isset($this->cli_args['--config']) ? $this->cli_args['--config'][0] : 'EXTCONF';
 	if ($l10ncfg !== "EXTCONF" && !empty($l10ncfg)) {
 		//export single
-		$l10ncfgs = split(",",$l10ncfg);
+		$l10ncfgs = explode(',',$l10ncfg);
 	} elseif (!empty($this->lConf['l10nmgr_cfg'])) {
 		//export multiple
-		$l10ncfgs = split(",",$this->lConf['l10nmgr_cfg']);
+		$l10ncfgs = explode(',',$this->lConf['l10nmgr_cfg']);
 	} else {
 		$this->cli_echo($lang->getLL('error.no_l10ncfg.msg')."\n");
 		exit;
@@ -113,10 +113,10 @@ class tx_cliexport_cli extends t3lib_cli {
 	$tlang = isset($this->cli_args['--target']) ? $this->cli_args['--target'][0] : '0';
 	if ($tlang !== "0") {
 		//export single
-		$tlangs = split(",",$tlang);
+		$tlangs = explode(',',$tlang);
 	} elseif (!empty($this->lConf['l10nmgr_tlangs'])) {
 		//export multiple
-		$tlangs = split(",",$this->lConf['l10nmgr_tlangs']);
+		$tlangs = explode(',',$this->lConf['l10nmgr_tlangs']);
 	} else {
 		$this->cli_echo($lang->getLL('error.target_language_id.msg')."\n");
 		exit;
