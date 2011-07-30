@@ -11,6 +11,9 @@ enable_notification = 0
 # cat=basic/enable/30; type=boolean[1]; label=Enable FTP upload: Use this for uploading exports to translation agencies' FTP server. Provide login credentials below.
 enable_ftp = 0
 
+# cat=basic/enable/40; type=boolean[1]; label=Display status icons: Enable hook for displaying small icon in page tree, web>List and page module.
+enable_stat_hook = 0
+
 # Load L10N manager configration
 #
 # cat=basic/l10nmgr/10; type=string; label=L10N Manager configurations: The uids of L10N Manager configurations (CSV).
