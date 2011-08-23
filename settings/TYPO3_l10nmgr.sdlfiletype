@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright © 2009 SDL. All rights reserved.
+  Copyright © 2011 Loctimize. All rights reserved.
   
   Original file name: XML_Template.sdlfiletype
-  Last change:        13 August 2009
+  Last change:        23 August 2011
 -->
 <objects xmlns="http://www.springframework.net">
   <!-- file type information -->
@@ -24,7 +24,7 @@
     <property name="FileTypeName">
       <object type="Sdl.Core.Globalization.LocalizableString, Sdl.Core.Globalization">
         <constructor-arg>
-          <value>TYPO3 Localization Manager v. 3.3.8</value>
+          <value>TYPO3 Localization Manager v. 3.3.10</value>
         </constructor-arg>
       </object>
     </property>
@@ -75,6 +75,34 @@
                   <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserRules, Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1" singleton="true">
                     <constructor-arg>
                       <list>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>//STRONG</value>
+                          </property>
+                          <property name="TagPairFormatting">
+                            <object type="Sdl.FileTypeSupport.Framework.Core.Utilities.Formatting.Formatting,  Sdl.FileTypeSupport.Framework.Core.Utilities" factory-method="Create">
+                              <constructor-arg>
+                                <list>
+                                  <object type="Sdl.FileTypeSupport.Framework.Formatting.Bold,  Sdl.FileTypeSupport.Framework.Core">
+                                    <property name="StringValue">
+                                      <value>True</value>
+                                    </property>
+                                  </object>
+                                </list>
+                              </constructor-arg>
+                            </object>
+                          </property>
+                          <property name="AdvancedTagProperties">
+                            <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserRuleAdvancedTagProperties,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                              <property name="IsSoftBreak">
+                                <value>true</value>
+                              </property>
+                              <property name="CanHide">
+                                <value>true</value>
+                              </property>
+                            </object>
+                          </property>
+                        </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
                           <property name="XPathSelector">
                             <value>//span</value>
@@ -478,15 +506,15 @@
                         </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
                           <property name="XPathSelector">
-                            <value>//img</value>
-                          </property>
-                        </object>
-                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
-                          <property name="XPathSelector">
                             <value>//img/@alt</value>
                           </property>
                           <property name="Translate">
                             <value>yes</value>
+                          </property>
+                        </object>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>//img</value>
                           </property>
                         </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
@@ -1861,11 +1889,6 @@
                         </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
                           <property name="XPathSelector">
-                            <value>//html</value>
-                          </property>
-                        </object>
-                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
-                          <property name="XPathSelector">
                             <value>//*/@title</value>
                           </property>
                           <property name="Translate">
@@ -1875,6 +1898,11 @@
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
                           <property name="XPathSelector">
                             <value>//br</value>
+                          </property>
+                        </object>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>//html</value>
                           </property>
                         </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
@@ -1924,10 +1952,44 @@
                         </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
                           <property name="XPathSelector">
-                            <value>/TYPO3L10N/head</value>
+                            <value>//data[contains(@key, 'bodytext')]</value>
                           </property>
-                          <property name="Translate">
-                            <value>no</value>
+                          <property name="XmlContextProperties">
+                            <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextProperties,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                              <constructor-arg>
+                                <list>
+                                  <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextInfo,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                                    <property name="ContextType">
+                                      <value>content element</value>
+                                    </property>
+                                    <property name="DisplayName">
+                                      <value>Content element</value>
+                                    </property>
+                                    <property name="DisplayCode">
+                                      <value>CE</value>
+                                    </property>
+                                    <property name="Description">
+                                      <value>Content element</value>
+                                    </property>
+                                    <property name="DisplayColor">
+                                      <value>SkyBlue</value>
+                                    </property>
+                                    <property name="ContextPurpose">
+                                      <value>Match</value>
+                                    </property>
+                                  </object>
+                                </list>
+                              </constructor-arg>
+                              <property name="StructureContextIndex">
+                                <value>0</value>
+                              </property>
+                              <property name="MustUseDisplayName">
+                                <value>false</value>
+                              </property>
+                              <property name="InheritFromParent">
+                                <value>true</value>
+                              </property>
+                            </object>
                           </property>
                         </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
@@ -1983,6 +2045,69 @@
                               </property>
                               <property name="MustUseDisplayName">
                                 <value>false</value>
+                              </property>
+                              <property name="InheritFromParent">
+                                <value>true</value>
+                              </property>
+                            </object>
+                          </property>
+                        </object>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>//data[contains(@key,'keywords')]</value>
+                          </property>
+                          <property name="XmlContextProperties">
+                            <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextProperties,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                              <constructor-arg>
+                                <list>
+                                  <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextInfo,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                                    <property name="ContextType">
+                                      <value>sdl:keywords</value>
+                                    </property>
+                                    <property name="DisplayName">
+                                      <value>Keyword-Liste</value>
+                                    </property>
+                                    <property name="DisplayCode">
+                                      <value>KL</value>
+                                    </property>
+                                    <property name="Description">
+                                      <value>Eine Keyword-Liste</value>
+                                    </property>
+                                    <property name="DisplayColor">
+                                      <value>Control</value>
+                                    </property>
+                                    <property name="DefaultFormatting">
+                                      <object type="Sdl.FileTypeSupport.Framework.Core.Utilities.Formatting.Formatting,  Sdl.FileTypeSupport.Framework.Core.Utilities" factory-method="Create">
+                                        <constructor-arg>
+                                          <list>
+                                            <object type="Sdl.FileTypeSupport.Framework.Formatting.FontSize,  Sdl.FileTypeSupport.Framework.Core">
+                                              <property name="StringValue">
+                                                <value>8</value>
+                                              </property>
+                                            </object>
+                                            <object type="Sdl.FileTypeSupport.Framework.Formatting.Italic,  Sdl.FileTypeSupport.Framework.Core">
+                                              <property name="StringValue">
+                                                <value>True</value>
+                                              </property>
+                                            </object>
+                                          </list>
+                                        </constructor-arg>
+                                      </object>
+                                    </property>
+                                    <property name="ContextPurpose">
+                                      <value>Match</value>
+                                    </property>
+                                    <property name="IsStandardContext">
+                                      <value>true</value>
+                                    </property>
+                                  </object>
+                                </list>
+                              </constructor-arg>
+                              <property name="StructureContextIndex">
+                                <value>0</value>
+                              </property>
+                              <property name="MustUseDisplayName">
+                                <value>true</value>
                               </property>
                               <property name="InheritFromParent">
                                 <value>true</value>
@@ -2118,51 +2243,6 @@
                         </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
                           <property name="XPathSelector">
-                            <value>//pageGrp</value>
-                          </property>
-                          <property name="XmlContextProperties">
-                            <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextProperties,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
-                              <constructor-arg>
-                                <list>
-                                  <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextInfo,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
-                                    <property name="ContextType">
-                                      <value>page</value>
-                                    </property>
-                                    <property name="DisplayName">
-                                      <value>Page</value>
-                                    </property>
-                                    <property name="DisplayCode">
-                                      <value>PAG</value>
-                                    </property>
-                                    <property name="Description">
-                                      <value></value>
-                                    </property>
-                                    <property name="DisplayColor">
-                                      <value>White</value>
-                                    </property>
-                                    <property name="ContextPurpose">
-                                      <value>Match</value>
-                                    </property>
-                                    <property name="DescriptionXPath">
-                                      <value>@id</value>
-                                    </property>
-                                  </object>
-                                </list>
-                              </constructor-arg>
-                              <property name="StructureContextIndex">
-                                <value>0</value>
-                              </property>
-                              <property name="MustUseDisplayName">
-                                <value>true</value>
-                              </property>
-                              <property name="InheritFromParent">
-                                <value>true</value>
-                              </property>
-                            </object>
-                          </property>
-                        </object>
-                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
-                          <property name="XPathSelector">
                             <value>//data[contains(@key, 'header')]</value>
                           </property>
                           <property name="XmlContextProperties">
@@ -2198,6 +2278,95 @@
                                 <value>false</value>
                               </property>
                               <property name="InheritFromParent">
+                                <value>true</value>
+                              </property>
+                            </object>
+                          </property>
+                        </object>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>//data</value>
+                          </property>
+                        </object>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>//pageGrp</value>
+                          </property>
+                          <property name="XmlContextProperties">
+                            <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextProperties,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                              <constructor-arg>
+                                <list>
+                                  <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextInfo,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                                    <property name="ContextType">
+                                      <value>page</value>
+                                    </property>
+                                    <property name="DisplayName">
+                                      <value>Page</value>
+                                    </property>
+                                    <property name="DisplayCode">
+                                      <value>PAG</value>
+                                    </property>
+                                    <property name="Description">
+                                      <value></value>
+                                    </property>
+                                    <property name="DisplayColor">
+                                      <value>White</value>
+                                    </property>
+                                    <property name="ContextPurpose">
+                                      <value>Match</value>
+                                    </property>
+                                    <property name="DescriptionXPath">
+                                      <value>@sourceUrl</value>
+                                    </property>
+                                  </object>
+                                </list>
+                              </constructor-arg>
+                              <property name="StructureContextIndex">
+                                <value>0</value>
+                              </property>
+                              <property name="MustUseDisplayName">
+                                <value>true</value>
+                              </property>
+                              <property name="InheritFromParent">
+                                <value>true</value>
+                              </property>
+                            </object>
+                          </property>
+                        </object>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserTranslateRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>/TYPO3L10N/head</value>
+                          </property>
+                          <property name="Translate">
+                            <value>no</value>
+                          </property>
+                        </object>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserWithinTextRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>//STRONG</value>
+                          </property>
+                          <property name="WithinText">
+                            <value>yes</value>
+                          </property>
+                          <property name="TagPairFormatting">
+                            <object type="Sdl.FileTypeSupport.Framework.Core.Utilities.Formatting.Formatting,  Sdl.FileTypeSupport.Framework.Core.Utilities" factory-method="Create">
+                              <constructor-arg>
+                                <list>
+                                  <object type="Sdl.FileTypeSupport.Framework.Formatting.Bold,  Sdl.FileTypeSupport.Framework.Core">
+                                    <property name="StringValue">
+                                      <value>True</value>
+                                    </property>
+                                  </object>
+                                </list>
+                              </constructor-arg>
+                            </object>
+                          </property>
+                          <property name="AdvancedTagProperties">
+                            <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserRuleAdvancedTagProperties,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                              <property name="IsSoftBreak">
+                                <value>true</value>
+                              </property>
+                              <property name="CanHide">
                                 <value>true</value>
                               </property>
                             </object>
@@ -3690,15 +3859,15 @@
                         </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserWithinTextRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
                           <property name="XPathSelector">
-                            <value>//html</value>
-                          </property>
-                        </object>
-                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserWithinTextRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
-                          <property name="XPathSelector">
                             <value>//br</value>
                           </property>
                           <property name="WithinText">
                             <value>yes</value>
+                          </property>
+                        </object>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserWithinTextRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>//html</value>
                           </property>
                         </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserWithinTextRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
@@ -3754,6 +3923,69 @@
                               </property>
                               <property name="MustUseDisplayName">
                                 <value>false</value>
+                              </property>
+                              <property name="InheritFromParent">
+                                <value>true</value>
+                              </property>
+                            </object>
+                          </property>
+                        </object>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserWithinTextRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>//data[contains(@key,'keywords')]</value>
+                          </property>
+                          <property name="XmlContextProperties">
+                            <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextProperties,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                              <constructor-arg>
+                                <list>
+                                  <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextInfo,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                                    <property name="ContextType">
+                                      <value>sdl:keywords</value>
+                                    </property>
+                                    <property name="DisplayName">
+                                      <value>Keyword-Liste</value>
+                                    </property>
+                                    <property name="DisplayCode">
+                                      <value>KL</value>
+                                    </property>
+                                    <property name="Description">
+                                      <value>Eine Keyword-Liste</value>
+                                    </property>
+                                    <property name="DisplayColor">
+                                      <value>Control</value>
+                                    </property>
+                                    <property name="DefaultFormatting">
+                                      <object type="Sdl.FileTypeSupport.Framework.Core.Utilities.Formatting.Formatting,  Sdl.FileTypeSupport.Framework.Core.Utilities" factory-method="Create">
+                                        <constructor-arg>
+                                          <list>
+                                            <object type="Sdl.FileTypeSupport.Framework.Formatting.FontSize,  Sdl.FileTypeSupport.Framework.Core">
+                                              <property name="StringValue">
+                                                <value>8</value>
+                                              </property>
+                                            </object>
+                                            <object type="Sdl.FileTypeSupport.Framework.Formatting.Italic,  Sdl.FileTypeSupport.Framework.Core">
+                                              <property name="StringValue">
+                                                <value>True</value>
+                                              </property>
+                                            </object>
+                                          </list>
+                                        </constructor-arg>
+                                      </object>
+                                    </property>
+                                    <property name="ContextPurpose">
+                                      <value>Match</value>
+                                    </property>
+                                    <property name="IsStandardContext">
+                                      <value>true</value>
+                                    </property>
+                                  </object>
+                                </list>
+                              </constructor-arg>
+                              <property name="StructureContextIndex">
+                                <value>0</value>
+                              </property>
+                              <property name="MustUseDisplayName">
+                                <value>true</value>
                               </property>
                               <property name="InheritFromParent">
                                 <value>true</value>
@@ -3889,51 +4121,6 @@
                         </object>
                         <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserWithinTextRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
                           <property name="XPathSelector">
-                            <value>//pageGrp</value>
-                          </property>
-                          <property name="XmlContextProperties">
-                            <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextProperties,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
-                              <constructor-arg>
-                                <list>
-                                  <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextInfo,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
-                                    <property name="ContextType">
-                                      <value>page</value>
-                                    </property>
-                                    <property name="DisplayName">
-                                      <value>Page</value>
-                                    </property>
-                                    <property name="DisplayCode">
-                                      <value>PAG</value>
-                                    </property>
-                                    <property name="Description">
-                                      <value></value>
-                                    </property>
-                                    <property name="DisplayColor">
-                                      <value>White</value>
-                                    </property>
-                                    <property name="ContextPurpose">
-                                      <value>Match</value>
-                                    </property>
-                                    <property name="DescriptionXPath">
-                                      <value>@id</value>
-                                    </property>
-                                  </object>
-                                </list>
-                              </constructor-arg>
-                              <property name="StructureContextIndex">
-                                <value>0</value>
-                              </property>
-                              <property name="MustUseDisplayName">
-                                <value>true</value>
-                              </property>
-                              <property name="InheritFromParent">
-                                <value>true</value>
-                              </property>
-                            </object>
-                          </property>
-                        </object>
-                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserWithinTextRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
-                          <property name="XPathSelector">
                             <value>//data[contains(@key, 'header')]</value>
                           </property>
                           <property name="XmlContextProperties">
@@ -3974,11 +4161,65 @@
                             </object>
                           </property>
                         </object>
+                        <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlParserWithinTextRule,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                          <property name="XPathSelector">
+                            <value>//pageGrp</value>
+                          </property>
+                          <property name="XmlContextProperties">
+                            <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextProperties,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                              <constructor-arg>
+                                <list>
+                                  <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlContextInfo,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                                    <property name="ContextType">
+                                      <value>page</value>
+                                    </property>
+                                    <property name="DisplayName">
+                                      <value>Page</value>
+                                    </property>
+                                    <property name="DisplayCode">
+                                      <value>PAG</value>
+                                    </property>
+                                    <property name="Description">
+                                      <value></value>
+                                    </property>
+                                    <property name="DisplayColor">
+                                      <value>White</value>
+                                    </property>
+                                    <property name="ContextPurpose">
+                                      <value>Match</value>
+                                    </property>
+                                    <property name="DescriptionXPath">
+                                      <value>@sourceUrl</value>
+                                    </property>
+                                  </object>
+                                </list>
+                              </constructor-arg>
+                              <property name="StructureContextIndex">
+                                <value>0</value>
+                              </property>
+                              <property name="MustUseDisplayName">
+                                <value>true</value>
+                              </property>
+                              <property name="InheritFromParent">
+                                <value>true</value>
+                              </property>
+                            </object>
+                          </property>
+                        </object>
                       </list>
                     </constructor-arg>
                   </object>
                 </property>
+                <property name="NamespaceUsage">
+                  <value>UseDocumentNamespaces</value>
+                </property>
+                <property name="Namespaces">
+                  <list />
+                </property>
               </object>
+            </property>
+            <property name="EntitySets">
+              <ref object="EntitySettings" />
             </property>
           </object>
         </property>
@@ -3986,6 +4227,15 @@
           <list>
             <object type="Sdl.FileTypeSupport.Native.Xml.LockedContentProcessor, Sdl.FileTypeSupport.Native.Xml_1_1" singleton="false" />
             <object type="Sdl.FileTypeSupport.Filters.Processors.RegexEmbeddedNativeProcessor, Sdl.FileTypeSupport.Filters.Processors" singleton="false" />
+            <object type="Sdl.FileTypeSupport.Native.Xml.WhitespaceProcessor, Sdl.FileTypeSupport.Native.Xml_1_1" singleton="false">
+              <property name="WhitespaceProcessorSettings">
+                <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.WhitespaceProcessorSettings,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                  <property name="WhitespaceSetting">
+                    <value>AlwaysPreserve</value>
+                  </property>
+                </object>
+              </property>
+            </object>
           </list>
         </property>
       </object>
@@ -4009,13 +4259,16 @@
                 </property>
               </object>
             </property>
+            <property name="EntitySets">
+              <ref object="EntitySettings" />
+            </property>
           </object>
         </property>
         <property name="Processors">
           <list>
             <object type="Sdl.FileTypeSupport.Native.Xml.XmlLangProcessor, Sdl.FileTypeSupport.Native.Xml_1_1" singleton="false">
               <property name="XmlLangProcessorSettings">
-                <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlLangProcessorSettings, Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
+                <object type="Sdl.FileTypeSupport.Native.Xml.FilterSettings.XmlLangProcessorSettings,  Sdl.FileTypeSupport.Native.Xml.FilterSettings_1_1">
                   <property name="XmlLangSetting">
                     <value>ChangeSourceToTarget</value>
                   </property>
@@ -4047,8 +4300,6 @@
             <constructor-arg>
               <list>
                 <value>TYPO3L10N</value>
-                <value>objects</value>
-                <value>html</value>
               </list>
             </constructor-arg>
           </object>
@@ -4764,7 +5015,7 @@
       <value>False</value>
     </property>
     <property name="ValidateDuringTranslation">
-      <value>True</value>
+      <value>False</value>
     </property>
     <property name="ApplySchemaOverride">
       <value>True</value>
@@ -6788,6 +7039,17 @@
           </property>
         </object>
       </list>
+    </property>
+  </object>
+  <object id="EntitySettings" type="Sdl.FileTypeSupport.Filters.SharedSettings.EntitySettings,  Sdl.FileTypeSupport.Filters.SharedSettings" singleton="false">
+    <property name="ConvertEntities">
+      <value>False</value>
+    </property>
+    <property name="DefaultOverrides">
+      <list element-type="Sdl.FileTypeSupport.Filters.SharedSettings.EntitySet, Sdl.FileTypeSupport.Filters.SharedSettings" />
+    </property>
+    <property name="RemoveDefaultOverrides">
+      <list element-type="Sdl.FileTypeSupport.Filters.SharedSettings.EntitySet, Sdl.FileTypeSupport.Filters.SharedSettings" />
     </property>
   </object>
 </objects>

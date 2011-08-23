@@ -77,7 +77,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 
 			// Traverse the structure and generate XML output:
 		foreach($accum as $pId => $page) {
-			$output[] =  "\t" . '<pageGrp id="'.$pId.'">'."\n";
+			$output[] =  "\t" . '<pageGrp id="'.$pId.'" sourceUrl="'.t3lib_div::getIndpEnv("TYPO3_SITE_URL").'index.php?id='.$pId.'">'."\n";
 			foreach($accum[$pId]['items'] as $table => $elements) {
 				foreach($elements as $elementUid => $data) {
 					if (!empty($data['ISOcode'])) {
@@ -177,6 +177,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		$XML .= "\t\t" . '<t3_wordCount>'.$accumObj->getWordCount().'</t3_wordCount>'."\n";
 		$XML .= "\t\t" . '<t3_internal>' . "\r\t" . implode("\n\t", $this->internalMessges) . "\t\t" . '</t3_internal>' . "\n";
 		$XML .= "\t\t" . '<t3_formatVersion>'.L10NMGR_FILEVERSION.'</t3_formatVersion>'."\n";
+		$XML .= "\t\t" . '<t3_l10nmgrVersion>'.L10NMGR_VERSION.'</t3_l10nmgrVersion>'."\n";
 		$XML .= "\t"   . '</head>'."\n";
 		$XML .= implode('', $output) . "\n";
 		$XML .= "</TYPO3L10N>";

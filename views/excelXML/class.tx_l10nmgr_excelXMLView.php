@@ -33,10 +33,21 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  */
 class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 	
+    /**
+    * @var array           $internalMessges                Part of XML with fail logging information content elements
+    */
+    var $internalMessges = array();
+
+	
 	//internal flags:
 	var $modeOnlyChanged=FALSE;
 	
 	var $exportType = '0';
+	
+    /**
+    * @var integer         $forcedSourceLanguage           Overwrite the default language uid with the desired language to export
+    */
+    var $forcedSourceLanguage = false;
 	
 	function tx_l10nmgr_excelXMLView($l10ncfgObj, $sysLang) {
 		parent::__construct($l10ncfgObj, $sysLang);		
@@ -49,8 +60,12 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 	 * @return	string		HTML content
 	 */
 	function render()	{
+		global $LANG,$BE_USER;
 		$sysLang=$this->sysLang;
 		$accumObj=$this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
+		if ($this->forcedSourceLanguage) {
+            $accumObj->setForcedPreviewLanguage($this->forcedSourceLanguage);
+        }
 		$accum=$accumObj->getInfoArray();	
 
 		$output = array();
@@ -72,10 +87,10 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 			<!-- Field list header -->
 		   <Row>
 		    <Cell ss:Index="2" ss:StyleID="s38"><Data ss:Type="String">Fieldname:</Data></Cell>
-		    <Cell ss:StyleID="s38"><Data ss:Type="String">Original Value:</Data></Cell>
+		    <Cell ss:StyleID="s38"><Data ss:Type="String">Source language:</Data></Cell>
+			<Cell ss:StyleID="s38"><Data ss:Type="String">Alternative source language:</Data></Cell>
 		    <Cell ss:StyleID="s38"><Data ss:Type="String">Translation:</Data></Cell>
 		    <Cell ss:StyleID="s38"><Data ss:Type="String">Difference since last tr.:</Data></Cell>
-		    '.($page['header']['prevLang'] ? '<Cell ss:StyleID="s38"><Data ss:Type="String">Preview Language:</Data></Cell>' : '').'
 		   </Row>';
 
 			foreach($accum[$pId]['items'] as $table => $elements)	{
@@ -87,6 +102,20 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 							if (is_array($tData))	{
 								list(,$uidString,$fieldName) = explode(':',$key);
 								list($uidValue) = explode('/',$uidString);
+								
+								//DZ
+                                if ( ($this->forcedSourceLanguage && isset($tData['previewLanguageValues'][$this->forcedSourceLanguage])) || $this->forcedSourceLanguage === false) {
+                                //DZ
+                                if ($this->forcedSourceLanguage) {
+                                    $dataForTranslation = $tData['previewLanguageValues'][$this->forcedSourceLanguage];
+                                    $sourceColState = 'ss:Hidden="1" ss:AutoFitWidth="0"';
+                                    $altSourceColState = 'ss:AutoFitWidth="0" ss:Width="233.0"';
+                                }
+                                else {
+                                    $dataForTranslation = $tData['defaultValue'];
+                                    $sourceColState = 'ss:AutoFitWidth="0" ss:Width="233.0"';
+                                    $altSourceColState = 'ss:Hidden="1" ss:AutoFitWidth="0"';
+                                }
 
 								$diff = '';
 								$noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),trim($tData['defaultValue']));
@@ -112,13 +141,27 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 								    <Cell><Data ss:Type="String">'.htmlspecialchars('translation['.$table.']['.$elementUid.']['.$key.']').'</Data></Cell>
 								    <Cell ss:StyleID="s26"><Data ss:Type="String">'.htmlspecialchars($fieldName).'</Data></Cell>
 								    <Cell ss:StyleID="s27"><Data ss:Type="String">'.str_replace(chr(10),'&#10;',htmlspecialchars($tData['defaultValue'])).'</Data></Cell>
+									<Cell ss:StyleID="s27"><Data ss:Type="String">'.str_replace(chr(10),'&#10;',htmlspecialchars(current($tData['previewLanguageValues']))).'</Data></Cell>
 								    <Cell ss:StyleID="s39"><Data ss:Type="String">'.str_replace(chr(10),'&#10;',htmlspecialchars($tData['translationValue'])).'</Data></Cell>
 								    <Cell ss:StyleID="s27"><Data ss:Type="String">'.$diff.'</Data></Cell>
-								    '.($page['header']['prevLang'] ? '<Cell ss:StyleID="s27"><Data ss:Type="String">'.str_replace(chr(10),'&#10;',htmlspecialchars(current($tData['previewLanguageValues']))).'</Data></Cell>' : '').'
 								   </Row>
 									';
 								}
+							} else {
+                                $fieldsForRecord[]= '
+                                <!-- Translation row: -->
+                                <Row ss:StyleID="s25">
+                                <Cell><Data ss:Type="String">'.htmlspecialchars('translation['.$table.']['.$elementUid.']['.$key.']').'</Data></Cell>
+                                <Cell ss:StyleID="s26"><Data ss:Type="String">'.htmlspecialchars($fieldName).'</Data></Cell>
+                                <Cell ss:StyleID="s40"><Data ss:Type="String">'.$LANG->getLL('export.process.error.empty.message').'!</Data></Cell>
+                                <Cell ss:StyleID="s39"><Data ss:Type="String"></Data></Cell>
+                                <Cell ss:StyleID="s27"><Data ss:Type="String"></Data></Cell>
+                                '.($page['header']['prevLang'] ? '<Cell ss:StyleID="s27"><Data ss:Type="String">'.str_replace(chr(10),'&#10;',htmlspecialchars(current($tData['previewLanguageValues']))).'</Data></Cell>' : '').'
+                                </Row>
+                                ';
+                            }
 							}
+
 						}
 
 						if (count($fieldsForRecord))	{
@@ -150,6 +193,9 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 		$excelXML = t3lib_div::getUrl('../views/excelXML/excel_template.xml');
 		$excelXML = str_replace('###INSERT_ROWS###',implode('', $output), $excelXML);
 		$excelXML = str_replace('###INSERT_ROW_COUNT###',count($output), $excelXML);
+        $excelXML = str_replace('###SOURCE_COL_STATE###',$sourceColState, $excelXML);
+        $excelXML = str_replace('###ALT_SOURCE_COL_STATE###',$altSourceColState, $excelXML);
+
 		
 		$this->saveExportFile($excelXML);
 		
@@ -161,7 +207,17 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 		return 'excel_export_'.$this->sysLang.'_'.date('dmy-Hi').'.xml';
 	}
 	
-	
+	/**
+      * Force a new source language to export the content to translate
+      *
+      * @param        integer         $id
+      * @access       public
+      * @return       void
+    */
+        function setForcedSourceLanguage($id) {
+                $this->forcedSourceLanguage = $id;
+        }
+
 	
 }
 

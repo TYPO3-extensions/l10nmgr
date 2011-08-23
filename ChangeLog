@@ -1,10 +1,17 @@
+2011-08-23 Daniel Zielinski <development@loctimize.com>
+	* Fixed bug with Excel XML export/import
+	* Added preview URL attribute in CATXML for source language
+	* Improved filetype for SDL Trados Studio 2009
+	* Changed version to 3.3.10
+
 2011-05-17 Daniel Zielinski <development@loctimize.com>
 	* Added version requirement
+	* Changed version to 3.3.9
 
 2011-05-10 Daniel Zielinski <development@loctimize.com>
 	* Changed version to 3.3.8
 	* Added memoQ.mqres filter
-	* Added SDl Trados 2009 filetype
+	* Added SDL Trados 2009 filetype
 	* Changed XML2RTE to correct import of empty <p/> elements
 	* Fixed bug with double escaped entities &amp;amp; for RTE fields
 
