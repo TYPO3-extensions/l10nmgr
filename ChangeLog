@@ -1,8 +1,20 @@
+2011-09-29 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #27132. Use 1=1 instead of 1 in where clause.
+
 2011-08-23 Daniel Zielinski <development@loctimize.com>
 	* Fixed bug with Excel XML export/import
 	* Added preview URL attribute in CATXML for source language
 	* Improved filetype for SDL Trados Studio 2009
 	* Changed version to 3.3.10
+
+2011-07-30 Andreas Otto <andreas@otto-hanika.de>
+	* [~TASK] Change calls to deprecated PHP methods and deprecated TYPO3 methods up to version 4.4.
+	* [~BUG] Fixes a bug where the XML export was only exporting the default language in CLI mode even when a different source language was set in the configuration.
+	* [~FEATURE] Add option to enable / disable the use of status icons in pre 4.5 pagetree.
+
+2011-07-29 Andreas Otto <andreas@otto-hanika.de>
+	* [~TASK] Fixes #8873. Increase limit for tablelist.
+	* [~BUGFIX] Merge difference between 36038 and head.
 
 2011-05-17 Daniel Zielinski <development@loctimize.com>
 	* Added version requirement

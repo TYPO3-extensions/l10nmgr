@@ -76,7 +76,7 @@ class tx_l10nmgr_module1 extends t3lib_SCbase {
 		$configurationObjectsArray = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                         '*',
 			'tx_l10nmgr_cfg',
-                        '1'.t3lib_BEfunc::deleteClause('tx_l10nmgr_cfg')
+                        '1=1'.t3lib_BEfunc::deleteClause('tx_l10nmgr_cfg')
                  );
 
 			// JavaScript
