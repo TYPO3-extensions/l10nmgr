@@ -1,5 +1,6 @@
 2011-09-29 Andreas Otto <andreas@otto-hanika.de>
 	* [~BUG] Fixes #27132. Use 1=1 instead of 1 in where clause.
+	* [~BUG] Improved RTE handling. Credits go to Helmut Hummel for sending a patch.
 
 2011-08-23 Daniel Zielinski <development@loctimize.com>
 	* Fixed bug with Excel XML export/import

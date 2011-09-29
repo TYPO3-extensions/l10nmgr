@@ -555,12 +555,14 @@ class tx_l10nmgr_tools {
 				return true;
 			}
 		}
-		//TODO: check richtext settings depeding on type value (TCA based)
 		if (($contentRow['CType']=='text') || ($contentRow['CType']=='textpic') || ($contentRow['CType']=='bullets') || ($contentRow['CType']=='image') || ($contentRow['CType']=='templavoila_pi1') || ($contentRow['CType']=='shortcut')) {
 			list(,,$kFieldName) = explode(':',$key);
 			if ($kFieldName=='bodytext') {				
 				return true;
 			}		
+		}
+		if (isset($TCEformsCfg['config']['wizards']['RTE']) || isset($TCEformsCfg['config']['_isRTE'])) {
+			return true;
 		}
 		return false;		
 	}
