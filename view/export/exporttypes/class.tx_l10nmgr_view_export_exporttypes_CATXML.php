@@ -119,7 +119,7 @@ class tx_l10nmgr_view_export_exporttypes_CATXML extends tx_l10nmgr_view_export_a
 								// changed in version 1.2 of the XML format
 								//$transformationAttribute = $needsTrafo ? ' transformations="1"' : '';
 							$transformationType = $translateableField->getTransformationType();
-							$dataTag 	= "\t\t".sprintf('<data table="%s" elementUid="%d" cType="%s" fieldType="%s" transformationType="%s" key="%s">%s</data> ',$table,$uid,$cType,$fieldType,$transformationType,$key,$data)."\n";
+							$dataTag 	= "\t\t".sprintf('<data table="%s" elementUid="%d" cType="%s" fieldType="%s" transformationType="%s" key="%s">%s</data>',$table,$uid,$cType,$fieldType,$transformationType,$key,$data)."\n";
 							$xml .= $dataTag;
 
 						} catch(tx_mvc_exception_invalidContent $e) {
