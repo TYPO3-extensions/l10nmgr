@@ -261,7 +261,7 @@ class tx_l10nmgr_CATXMLImportManager {
 		//delete previous L10Ns
 		$cmdCount = 0;
 		foreach ($delL10NData as $element) {
-			list($table,$elementUid) = explode(',', $element);
+			list($table,$elementUid) = explode(':', $element);
 			$where = "l18n_parent = $elementUid AND sys_language_uid = ".$this->headerData['t3_sysLang']." AND t3ver_wsid = ".$this->headerData['t3_workspaceId'];
 			if ($table == 'pages') {
 				$table = 'pages_language_overlay';
