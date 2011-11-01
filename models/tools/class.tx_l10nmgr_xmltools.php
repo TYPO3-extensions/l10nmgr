@@ -32,10 +32,11 @@
  require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_utf8tools.php');
 
 class tx_l10nmgr_xmltools {
+	/** @var $parseHTML t3lib_parsehtml_proc */
 	var $parseHTML;
 
 	function tx_l10nmgr_xmltools() {
-		$this->parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
+		$this->parseHTML = t3lib_div::makeInstance('t3lib_parsehtml_proc');
 
 	}
 	function isValidXMLString($xmlString) {
@@ -62,25 +63,32 @@ class tx_l10nmgr_xmltools {
 	 * @param	string		HTML String which should be transformed
 	 * @return	mixed		false if transformation failed, string with XML if all fine
 	 */
-	function RTE2XML($content,$withStripBadUTF8=0) {
+	function RTE2XML($content, $withStripBadUTF8 = 0) {
 	//function RTE2XML($content,$withStripBadUTF8=$GLOBALS['BE_USER']->getModuleData('l10nmgr/cm1/checkUTF8', '')) {
 		//if (!$withStripBadUTF8) {
 		//	$withStripBadUTF8 = $GLOBALS['BE_USER']->getModuleData('l10nmgr/cm1/checkUTF8', '');
 		//}
 		//echo '###'.$withStripBadUTF8;
-		$content_org=$content;
+		$content_org = $content;
+			// First call special transformations (registered using hooks)
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['transformation'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['transformation'] as $classReference) {
+				$processingObject = t3lib_div::getUserObj($classReference);
+				$content = $processingObject->transform_rte($content, $this->parseHTML);
+			}
+		}
 		$content = $this->parseHTML->TS_images_rte($content);
 		$content = $this->parseHTML->TS_links_rte($content);
-		$content = $this->parseHTML->TS_transform_rte($content,$css=1);
-		
+		$content = $this->parseHTML->TS_transform_rte($content, 1);
+
 		//substitute & with &amp;
 		//$content=str_replace('&','&amp;',$content); Changed by DZ 2011-05-11
-		$content=str_replace('<hr>','<hr />',$content);
-		$content=str_replace('<br>','<br />',$content);
-		
-		$content=t3lib_div::deHSCentities($content);
-		if ($withStripBadUTF8==1) {
-			$content=tx_l10nmgr_utf8tools::utf8_bad_strip($content);
+		$content = str_replace('<hr>','<hr />',$content);
+		$content = str_replace('<br>','<br />',$content);
+
+		$content = t3lib_div::deHSCentities($content);
+		if ($withStripBadUTF8 == 1) {
+			$content = tx_l10nmgr_utf8tools::utf8_bad_strip($content);
 		}
 		if ($this->isValidXMLString($content)) {
 			return $content;
@@ -98,11 +106,11 @@ class tx_l10nmgr_xmltools {
 	 */
 	function XML2RTE($xmlstring) {
 		//fixed setting of Parser (TO-DO set it via typoscript)
-			
+
 			//Added because import failed
 			$xmlstring=str_replace('<br/>','<br>',$xmlstring);
 			$xmlstring=str_replace('<br />','<br>',$xmlstring);
-			
+
 			$xmlstring=str_replace('<hr/>','<hr>',$xmlstring);
 			$xmlstring=str_replace('<hr />','<hr>',$xmlstring);
 			$xmlstring=str_replace('<p/>','<p></p>',$xmlstring); // DZ: Added 2011-05-11 to avoid import problem with <p/> elements
@@ -130,15 +138,22 @@ class tx_l10nmgr_xmltools {
 			$content = $this->parseHTML->TS_transform_db($xmlstring,$css=0); // removes links from content if not called first!
 			$content = $this->parseHTML->TS_images_db($content);
 			$content = $this->parseHTML->TS_links_db($content);
-			
+				// Last call special transformations (registered using hooks)
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['transformation'])) {
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['transformation'] as $classReference) {
+					$processingObject = t3lib_div::getUserObj($classReference);
+					$content = $processingObject->transform_db($content, $this->parseHTML);
+				}
+			}
+
 			//substitute URL in <link> for CLI import
 			$content = preg_replace('/<link http(s)?:\/\/[\w\.\/]*\?id=/', '<link ', $content);
-			
+
 			//debug for CLI Import
 			$current = file_get_contents($file);
 			$current .= $content;
 			file_put_contents($file, $current);
-			
+
 			return $content;
 	}
 

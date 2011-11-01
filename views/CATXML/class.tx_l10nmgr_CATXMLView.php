@@ -71,8 +71,9 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 			$accumObj->setForcedPreviewLanguage($this->forcedSourceLanguage);
 		}
 		$accum=$accumObj->getInfoArray();
-		$errorMessage=array();
-		$xmlTool= t3lib_div::makeInstance("tx_l10nmgr_xmltools");
+		$errorMessage = array();
+			/** @var $xmlTool tx_l10nmgr_xmltools */
+		$xmlTool= t3lib_div::makeInstance('tx_l10nmgr_xmltools');
 		$output = array();
 
 			// Traverse the structure and generate XML output:
@@ -112,12 +113,12 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 										//echo $tData['fieldType'];
 										//if (preg_match('/templavoila_flex/',$key)) { echo "1 -"; }
 										//echo $key."\n";
-										
+
 										if ($tData['fieldType']=='text' &&  $tData['isRTE'] || (preg_match('/templavoila_flex/',$key))) {
-											$dataForTranslationTranformed=$xmlTool->RTE2XML($dataForTranslation);
-											if ($dataForTranslationTranformed!==false) {
-												$_isTranformedXML=TRUE;
-												$dataForTranslation=$dataForTranslationTranformed;
+											$dataForTranslationTranformed = $xmlTool->RTE2XML($dataForTranslation);
+											if ($dataForTranslationTranformed !== FALSE) {
+												$_isTranformedXML = TRUE;
+												$dataForTranslation = $dataForTranslationTranformed;
 											}
 										}
 										if ($_isTranformedXML) {

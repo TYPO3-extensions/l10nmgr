@@ -1,3 +1,10 @@
+2011-11-01 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #30397. Allow for transformation of custom tags in CAT XML export process. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #27683 Fixes #8875. Add langDatabaseOverlay to documentation.
+
+2011-10-14 Daniel Zielinski <development@loctimize.com>
+	* [~BUG] Fixes #31469. Delete old translations did not work. Credits also go to Francois Suter.
+
 2011-09-29 Andreas Otto <andreas@otto-hanika.de>
 	* [~BUG] Fixes #27132. Use 1=1 instead of 1 in where clause.
 	* [~BUG] Improved RTE handling. Credits go to Helmut Hummel for sending a patch.

@@ -184,7 +184,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$this->content.=$this->doc->section($LANG->getLL('general.export.choose.action.title'),
 						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[lang]",$this->sysLanguage,$this->MOD_MENU["lang"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
 						t3lib_BEfunc::getFuncMenu($l10ncfgObj->getId(),"SET[action]",$this->MOD_SETTINGS["action"],$this->MOD_MENU["action"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))).
-						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[onlyChangedContent]",$this->MOD_SETTINGS["onlyChangedContent"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.new.title') . 
+						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[onlyChangedContent]",$this->MOD_SETTINGS["onlyChangedContent"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.new.title') .
 						t3lib_BEfunc::getFuncCheck($l10ncfgObj->getId(),"SET[noHidden]",$this->MOD_SETTINGS["noHidden"],'','&srcPID='.rawurlencode(t3lib_div::_GET('srcPID'))) . ' ' . $LANG->getLL('export.xml.noHidden.title'). '</br>'
 					);
 
@@ -272,7 +272,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 		$info .= '<br/>';
 		$info .= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" /><br /><br/>';
-		
+
 		$info .= '<div id="ddtabs" class="basictab" style="border:0px solid gray;margin:0px;">
                                 <ul style="border:0px solid #999999; ">
                                 <li><a onClick="expandcontent(\'sc1\', this)" style="margin:0px;">'.$LANG->getLL('export.xml.headline.title').'</a></li>
@@ -347,7 +347,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 					if (t3lib_div::_POST('import_delL10N')=='1') {
 						$info.=$LANG->getLL('import.xml.delL10N.message').'<br/>';
 						$delCount = $importManager->delL10N($importManager->getDelL10NDataFromCATXMLNodes($importManager->xmlNodes));
-						$info.= sprintf($LANG->getLL('import.xml.delL10N.count.message'),$delCount).'<br/><br/>'; 
+						$info.= sprintf($LANG->getLL('import.xml.delL10N.count.message'),$delCount).'<br/><br/>';
 					}
 					if (t3lib_div::_POST('make_preview_link')=='1') {
 						$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
@@ -370,19 +370,20 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			// Save user prefs
 			$BE_USER->pushModuleData('l10nmgr/cm1/checkUTF8',t3lib_div::_POST('check_utf8'));
 
-			// Render the XML
-			$viewClass=t3lib_div::makeInstance('tx_l10nmgr_CATXMLView',$l10ncfgObj,$this->sysLanguage);
-			$export_xml_forcepreviewlanguage=intval(t3lib_div::_POST('export_xml_forcepreviewlanguage'));
+				// Render the XML
+				/** @var $viewClass tx_l10nmgr_CATXMLView */
+			$viewClass = t3lib_div::makeInstance('tx_l10nmgr_CATXMLView',$l10ncfgObj,$this->sysLanguage);
+			$export_xml_forcepreviewlanguage = intval(t3lib_div::_POST('export_xml_forcepreviewlanguage'));
 			if ($export_xml_forcepreviewlanguage > 0) {
 				$viewClass->setForcedSourceLanguage($export_xml_forcepreviewlanguage);
 			}
-			if ($this->MOD_SETTINGS["onlyChangedContent"]) {
+			if ($this->MOD_SETTINGS['onlyChangedContent']) {
 				$viewClass->setModeOnlyChanged();
 			}
-			if ($this->MOD_SETTINGS["noHidden"]) {
+			if ($this->MOD_SETTINGS['noHidden']) {
 				$viewClass->setModeNoHidden();
 			}
-			//Check the export
+				//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
 				$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
 				$info .= $viewClass->renderExports();
