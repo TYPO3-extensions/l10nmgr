@@ -1,3 +1,6 @@
+2011-12-11 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #31865. Cleanup of CLI export script. Credits go to Francois Suter for investigating the issue and providing patches.
+
 2011-11-01 Andreas Otto <andreas@otto-hanika.de>
 	* [~BUG] Fixes #30397. Allow for transformation of custom tags in CAT XML export process. Credits go to Francois Suter for investigating the issue and providing patches.
 	* [~BUG] Fixes #27683 Fixes #8875. Add langDatabaseOverlay to documentation.
@@ -58,10 +61,10 @@
 
 2009-06-22 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Changed field definition for tablelist in table tx_l10nmgr_cfg to accomodate more tables to export
-	
+
 2009-05-13 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* Changed XML2RTE for CLI import (substitute url in <link) [models/tools/class.l10nmgr.xmltools.php]
-	
+
 2009-03-30 Daniel Zielinski <d.zielinski@l10ntech.de>
 	* CLI import file XML or ZIP (local file) TODO: If http:// or ftp://...
 	* Unzip file (not Win compatible)
@@ -100,7 +103,7 @@
 	* Added option to enable/disable FTP upload via extension configuration
 
 2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
-	* Added option to hide/display hidden system languages via extension configuration 
+	* Added option to hide/display hidden system languages via extension configuration
 
 2009-01-27 Kasper Skarhoj
 	* Various modifications.
