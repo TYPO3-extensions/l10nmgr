@@ -20,4 +20,12 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['proc
 if ($_EXTCONF['enable_stat_hook']) {
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['recStatInfoHooks']['tx_l10nmgr'] = 'EXT:l10nmgr/class.l10nmgr_tcemain_hook.php:&tx_l10nmgr_tcemain_hook->stat';
 }
+
+	// Add file cleanup task
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_l10nmgr_FileGarbageCollection'] = array(
+	'extension'        => $_EXTKEY,
+	'title'            => 'LLL:EXT:' . $_EXTKEY . '/tasks/locallang.xml:fileGarbageCollection.name',
+	'description'      => 'LLL:EXT:' . $_EXTKEY . '/tasks/locallang.xml:fileGarbageCollection.description',
+	'additionalFields' => 'tx_l10nmgr_FileGarbageCollection_AdditionalFieldProvider',
+);
 ?>
