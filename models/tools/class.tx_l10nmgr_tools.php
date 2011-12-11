@@ -212,7 +212,7 @@ class tx_l10nmgr_tools {
 		global $TCA;
 
 			// Initialize:
-		$tInfo = $this->t8Tools->translationInfo($table,$row['uid'],$sysLang);		
+		$tInfo = $this->t8Tools->translationInfo($table,$row['uid'],$sysLang);
 		$this->detailsOutput = array();
 		$this->flexFormDiff = $flexFormDiff;
 
@@ -222,22 +222,22 @@ class tx_l10nmgr_tools {
 			t3lib_div::loadTCA($table);
 			$this->sysLanguages = $this->t8Tools->getSystemLanguages();
 			$this->detailsOutput['ISOcode'] = $this->sysLanguages[$sysLang]['ISOcode'];
-			
+
 			//decide how translations are stored:
 			// there are three ways: flexformInternalTranslation (for FCE with langChildren)
 			//												useOverlay (for 	elements with classic overlay record)
 			//												noTranslation
 			$translationModes=$this->_detectTranslationModes($tInfo,$table,$row);
-		
-			
+
+
 			foreach ($translationModes as $translationMode) {
 				switch ($translationMode) {
-					case 'flexformInternalTranslation':						
+					case 'flexformInternalTranslation':
 						$this->detailsOutput['log'][] = 'Mode: flexFormTranslation with no translation set; looking for flexform fields';
 						$this->_lookForFlexFormFieldAndAddToInternalTranslationDetails($table,$row);
 					break;
 					case 'useOverlay':
-							
+
 							if (count($tInfo['translations']))	{
 								$this->detailsOutput['log'][] = 'Mode: translate existing record';
 								$translationUID = $tInfo['translations'][$sysLang]['uid'];
@@ -248,14 +248,14 @@ class tx_l10nmgr_tools {
 								$translationUID = 'NEW/'.$sysLang.'/'.$row['uid'];
 								$translationRecord = array();
 							}
-			
+
 							if ($TCA[$tInfo['translation_table']]['ctrl']['transOrigDiffSourceField'])	{
 								$diffArray = unserialize($translationRecord[$TCA[$tInfo['translation_table']]['ctrl']['transOrigDiffSourceField']]);
 			#					debug($diffArray);
 							} else {
 								$diffArray = array();
 							}
-			
+
 							$prevLangRec = array();
 							foreach($this->previewLanguages as $prevSysUid)	{
 								$prevLangInfo = $this->t8Tools->translationInfo($table,$row['uid'],$prevSysUid);
@@ -263,23 +263,23 @@ class tx_l10nmgr_tools {
 									$prevLangRec[$prevSysUid] = t3lib_BEfunc::getRecordWSOL($prevLangInfo['translation_table'],$prevLangInfo['translations'][$prevSysUid]['uid']);
 								}
 							}
-			
+
 							foreach($TCA[$tInfo['translation_table']]['columns'] as $field => $cfg)	{
 								if ($TCA[$tInfo['translation_table']]['ctrl']['languageField']!==$field
 									&& $TCA[$tInfo['translation_table']]['ctrl']['transOrigPointerField']!==$field
 									&& $TCA[$tInfo['translation_table']]['ctrl']['transOrigDiffSourceField']!==$field)	{
-										
+
 										$key=$tInfo['translation_table'].':'.t3lib_BEfunc::wsMapId($tInfo['translation_table'],$translationUID).':'.$field;
-										if ($cfg['config']['type']=='flex') {											
+										if ($cfg['config']['type']=='flex') {
 											$dataStructArray=$this->_getFlexFormMetaDataForContentElement($table,$row);
-											if ($dataStructArray['meta']['langDisable'] && $dataStructArray['meta']['langDatabaseOverlay']==1) {											
+											if ($dataStructArray['meta']['langDisable'] && $dataStructArray['meta']['langDatabaseOverlay']==1) {
 												// Create and call iterator object:
 												$flexObj = t3lib_div::makeInstance('t3lib_flexformtools');
 												$this->_callBackParams_keyForTranslationDetails=$key;
 												$this->_callBackParams_translationXMLArray=t3lib_div::xml2array($translationRecord[$field]);
 												foreach($this->previewLanguages as $prevSysUid)	{
 													$this->_callBackParams_previewLanguageXMLArrays[$prevSysUid] = t3lib_div::xml2array($prevLangRec[$prevSysUid][$field]);
-												}	
+												}
 												$this->_callBackParams_currentRow=$row;
 												$flexObj->traverseFlexFormXMLData($table,$field,$row,$this,'translationDetails_flexFormCallBackForOverlay');
 											}
@@ -287,14 +287,14 @@ class tx_l10nmgr_tools {
 										}
 										else {
 											//handle normal fields:
-											$diffDefaultValue = $diffArray[$field];			
+											$diffDefaultValue = $diffArray[$field];
 											$previewLanguageValues = array();
 											foreach($this->previewLanguages as $prevSysUid)	{
 												$previewLanguageValues[$prevSysUid] = $prevLangRec[$prevSysUid][$field];
-											}			
+											}
 											//debug($row[$field]);
-											
-											
+
+
 											$this->translationDetails_addField($key, $cfg, $row[$field], $translationRecord[$field], $diffDefaultValue, $previewLanguageValues,$row);
 										}
 								}
@@ -309,18 +309,18 @@ class tx_l10nmgr_tools {
 
 		return $this->detailsOutput;
 	}
-	
+
 	/**
 	* Function checks which translationMode is used. Mainly it checks the FlexForm (FCE) logic and language
 		returns a array with useOverlay | flexformInternalTranslation
-	**/	
+	**/
 	function _detectTranslationModes($tInfo,$table,$row) {
 			$translationModes=array();
 			if ($table === 'pages') {
 				$translationModes[]='flexformInternalTranslation';
 				$this->detailsOutput['log'][] = 'Mode: "flexformInternalTranslation" detected because we have page Record';
 			}
-			
+
 			if (count($tInfo['translations']) && $tInfo['sys_language_uid']!=-1) {
 				$translationModes[]='useOverlay';
 				$useOverlay=TRUE;
@@ -329,7 +329,7 @@ class tx_l10nmgr_tools {
 			if ($row['CType']=='templavoila_pi1' && !$useOverlay) {
 				if (($this->includeFceWithDefaultLanguage && $tInfo['sys_language_uid']==0) || $tInfo['sys_language_uid']==-1) {
 					$dataStructArray=$this->_getFlexFormMetaDataForContentElement($table,$row);
-					
+
 					if (is_array($dataStructArray) && $dataStructArray !==false) {
 						if ($dataStructArray['meta']['langDisable']) {
 								if ($dataStructArray['meta']['langDatabaseOverlay']==1) {
@@ -352,12 +352,12 @@ class tx_l10nmgr_tools {
 				else {
 					$this->detailsOutput['log'][] = 'Mode: "noTranslation" detected because we FCE in Default Language and its not cofigured to include FCE in Default language';
 				}
-				
+
 			}
 			elseif($tInfo['sys_language_uid']==0 && $tInfo['translation_table'])  {
 				//no FCE
 				$translationModes[]='useOverlay';
-				$this->detailsOutput['log'][] = 'Mode: "useOverlay" detected because we have a normal record (no FCE) in default language';				
+				$this->detailsOutput['log'][] = 'Mode: "useOverlay" detected because we have a normal record (no FCE) in default language';
 			}
 			return array_unique($translationModes);
 		}
@@ -368,10 +368,10 @@ class tx_l10nmgr_tools {
 		global $TCA;
 		$conf = $TCA[$table]['columns']['tx_templavoila_flex']['config'];
 		$dataStructArray = t3lib_BEfunc::getFlexFormDS($conf, $row, $table);
-		if (is_array($dataStructArray)) {			
+		if (is_array($dataStructArray)) {
 			return $dataStructArray;
 		}
-	
+
 		return false;
 	}
 	function _lookForFlexFormFieldAndAddToInternalTranslationDetails($table,$row) {
@@ -460,7 +460,7 @@ class tx_l10nmgr_tools {
 			$this->translationDetails_addField($key, $dsArr['TCEforms'], $dataValue, $translValue, $diffDefaultValue, $previewLanguageValues);
 		}
 	}
-	
+
 	/**
 	 * FlexForm call back function, see translationDetails. This is used for langDatabaseOverlay FCEs!
 	 *  two additional paramas are use: $this->_callBackParams_translationXMLArray / $this->_callBackParams_keyForTranslationDetails
@@ -473,22 +473,22 @@ class tx_l10nmgr_tools {
 	 * @return	void
 	 */
 	function translationDetails_flexFormCallBackForOverlay($dsArr, $dataValue, $PA, $structurePath, &$pObj)	{
-		
+
 		//echo $dataValue.'<hr>';
 		$translValue=$pObj->getArrayValueByPath($structurePath, $this->_callBackParams_translationXMLArray);
 		//TODO:
 			$diffDefaultValue=$dataValue;
-		
-		foreach($this->previewLanguages as $prevSysUid)	{			 
-			$previewLanguageValues[$prevSysUid] = $pObj->getArrayValueByPath($structurePath, $this->_callBackParams_previewLanguageXMLArrays[$prevSysUid]);			
-		}	
-		
-			
+
+		foreach($this->previewLanguages as $prevSysUid)	{
+			$previewLanguageValues[$prevSysUid] = $pObj->getArrayValueByPath($structurePath, $this->_callBackParams_previewLanguageXMLArrays[$prevSysUid]);
+		}
+
+
 		$key=$this->_callBackParams_keyForTranslationDetails.':'.$structurePath;
-		$this->translationDetails_addField($key, $dsArr['TCEforms'], $dataValue, $translValue, $diffDefaultValue, $previewLanguageValues,$this->_callBackParams_currentRow);		
-			
+		$this->translationDetails_addField($key, $dsArr['TCEforms'], $dataValue, $translValue, $diffDefaultValue, $previewLanguageValues,$this->_callBackParams_currentRow);
+
 	}
-	
+
 
 	/**
 	 * Add field to detailsOutput array. First, a lot of checks are done...
@@ -536,35 +536,30 @@ class tx_l10nmgr_tools {
 			} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; "l10n_mode" for the field was "exclude" and field is not translated then.';
 		} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; fields of type "flex" can only be translated in the context of an "ALL" language record';
 	}
-	
+
 	/**
-	 * Check if the field is an RTE in the Backend
+	 * Check if the field is an RTE in the Backend, for a given row of data
 	 *
-	 * @param	string		Key is a combination of table, uid, field and structure path, identifying the field
-	 * @param	array		TCA configuration for field
-	 * @return	boolean
+	 * @param string $key Key is a combination of table, uid, field and structure path, identifying the field
+	 * @param array $TCEformsCfg TCA configuration for field
+     * @param array $contentRow The table row being handled
+	 * @return boolean
 	 */
-	function _isRTEField($key,$TCEformsCfg,$contentRow) {		
-		if (!is_array($contentRow)) {
-			return false;
-		}
-		
-		if ($contentRow['CType']=='templavoila_pi1') {
-			if (strstr($TCEformsCfg['defaultExtras'],'richtext')) {
-				
-				return true;
+	protected function _isRTEField($key, $TCEformsCfg, $contentRow) {
+		$isRTE = FALSE;
+		if (is_array($contentRow)) {
+			list($table, $uid, $field) = explode(':', $key);
+				// Check if the RTE is explicitly declared in the defaultExtras configuration
+			if (isset($TCEformsCfg['defaultExtras']) && strpos($TCEformsCfg['defaultExtras'], 'richtext') !== FALSE) {
+				$isRTE = TRUE;
+
+				// If not, then we must check per type configuration
+			} else {
+				$typesDefinition = t3lib_BEfunc::getTCAtypes($table, $contentRow, TRUE);
+				$isRTE = !empty($typesDefinition[$field]['spec']['richtext']);
 			}
 		}
-		if (($contentRow['CType']=='text') || ($contentRow['CType']=='textpic') || ($contentRow['CType']=='bullets') || ($contentRow['CType']=='image') || ($contentRow['CType']=='templavoila_pi1') || ($contentRow['CType']=='shortcut')) {
-			list(,,$kFieldName) = explode(':',$key);
-			if ($kFieldName=='bodytext') {				
-				return true;
-			}		
-		}
-		if (isset($TCEformsCfg['config']['wizards']['RTE']) || isset($TCEformsCfg['config']['_isRTE'])) {
-			return true;
-		}
-		return false;		
+		return $isRTE;
 	}
 
 	/**
