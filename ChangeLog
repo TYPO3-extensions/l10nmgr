@@ -1,4 +1,5 @@
 2011-12-11 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #32153. Add FTP support to CLI import script. Credits go to Francois Suter for investigating the issue and providing patches.
 	* [~BUG] Fixes #31863. Missing messages in export script. Credits go to Francois Suter for investigating the issue and providing patches.
 	* [~TASK] Fixes #31865. Cleanup of CLI export script. Credits go to Francois Suter for investigating the issue and providing patches.
 
