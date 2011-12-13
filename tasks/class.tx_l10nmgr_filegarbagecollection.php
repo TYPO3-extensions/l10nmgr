@@ -51,7 +51,6 @@ class tx_l10nmgr_FileGarbageCollection extends tx_scheduler_Task {
 	protected static $targetDirectories = array(
 		'uploads/tx_l10nmgr/saved_files',
 		'uploads/tx_l10nmgr/jobs/out',
-		'typo3temp/tx_l10nmgr/downloads'
 	);
 
 	/**
