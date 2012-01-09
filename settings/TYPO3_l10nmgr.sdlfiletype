@@ -24,7 +24,7 @@
     <property name="FileTypeName">
       <object type="Sdl.Core.Globalization.LocalizableString, Sdl.Core.Globalization">
         <constructor-arg>
-          <value>TYPO3 Localization Manager v. 3.3.11</value>
+          <value>TYPO3 Localization Manager v. 3.3.12</value>
         </constructor-arg>
       </object>
     </property>
