@@ -1,3 +1,6 @@
+2012-01-09 Daniel Zielinski <development@loctimize.com>
+	* Changed version to 3.3.11
+
 2011-12-11 Andreas Otto <andreas@otto-hanika.de>
 	* [~BUG] Fixes #31864. Insufficient test for detecting RTE fields. Credits go to Francois Suter for investigating the issue and providing patches.
 	* [+FEATURE] Fixes #32379. Add system to clean up old files. Credits go to Francois Suter for investigating the issue and providing patches.
