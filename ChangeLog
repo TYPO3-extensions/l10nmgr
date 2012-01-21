@@ -1,3 +1,6 @@
+2012-01-21 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #27683. Add langDatabaseOverlay to documentation.
+
 2012-01-09 Daniel Zielinski <development@loctimize.com>
 	* Changed version to 3.3.11
 
