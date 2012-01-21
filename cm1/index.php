@@ -84,6 +84,10 @@ require_once(PATH_t3lib.'class.t3lib_parsehtml_proc.php');
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_cm1 extends t3lib_SCbase {
+	/**
+	 * @var array Extension configuration
+	 */
+	protected $lConf = array();
 
 	var $flexFormDiffArray = array();	// Internal
 
@@ -115,6 +119,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		);
 
 			// Load system languages into menu:
+			/** @var $t8Tools t3lib_transl8tools */
 		$t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
 		$sysL = $t8Tools->getSystemLanguages();
 
@@ -136,16 +141,17 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 *
 	 * @return	void
 	 */
-	function main() {
-		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
+	public function main() {
+		global $BE_USER,$LANG,$BACK_PATH,$TYPO3_CONF_VARS;
 
 			// Get language to export/import
 		$this->sysLanguage = $this->MOD_SETTINGS["lang"];
 
 			// Draw the header.
-		$this->doc = t3lib_div::makeInstance('noDoc');
+		$this->doc = t3lib_div::makeInstance('template');
 		$this->doc->backPath = $BACK_PATH;
-		$this->doc->form='<form action="" method="post" enctype="'.$TYPO3_CONF_VARS['SYS']['form_enctype'].'">';
+		$this->doc->setModuleTemplate('EXT:l10nmgr/templates/cm1_template.html');
+		$this->doc->form = '<form action="" method="post" enctype="' . $TYPO3_CONF_VARS['SYS']['form_enctype'] . '">';
 
 			// JavaScript
 		$this->doc->JScode = '
@@ -159,7 +165,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			<link rel="stylesheet" type="text/css" href="' . t3lib_div::resolveBackPath($BACK_PATH . t3lib_extMgm::extRelPath('l10nmgr') . 'res/contrib/tabs.css') . '" />';
 
 
-			// Find l10n configuration record:
+			// Find l10n configuration record
+			/** @var $l10ncfgObj tx_l10nmgr_l10nConfiguration */
 		$l10ncfgObj=t3lib_div::makeInstance('tx_l10nmgr_l10nConfiguration');
 		$l10ncfgObj->load($this->id);
 
@@ -170,15 +177,16 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			$this->perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
 			$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
 			$access = is_array($this->pageinfo) ? 1 : 0;
-			if ($this->id && $access)	{
+			if ($this->id && $access) {
 
 					// Header:
-				$this->content.=$this->doc->startPage($LANG->getLL('general.title'));
-				$this->content.=$this->doc->header($LANG->getLL('general.title'));
+//				$this->content.=$this->doc->startPage($LANG->getLL('general.title'));
+//				$this->content.=$this->doc->header($LANG->getLL('general.title'));
 
-				//create and render view to show details for the current l10nmgrcfg
-				$l10nmgrconfigurationView= t3lib_div::makeInstance('tx_l10nmgr_l10ncfgDetailView',$l10ncfgObj, $this->doc);
-				$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
+					// Create and render view to show details for the current l10nmgrcfg
+					/** @var $l10nmgrconfigurationView tx_l10nmgr_l10ncfgDetailView */
+				$l10nmgrconfigurationView= t3lib_div::makeInstance('tx_l10nmgr_l10ncfgDetailView', $l10ncfgObj, $this->doc);
+				$this->content.=$this->doc->section('', $l10nmgrconfigurationView->render());
 
 				$this->content.=$this->doc->divider(15);
 				$this->content.=$this->doc->section($LANG->getLL('general.export.choose.action.title'),
@@ -190,19 +198,23 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 					// Render content:
 				if (!count($this->MOD_MENU['lang'])) {
-					$this->content.= $this->doc->section('ERROR',$LANG->getLL('general.access.error.title'));
+					$this->content .= $this->doc->section('ERROR', $LANG->getLL('general.access.error.title'));
 				} else {
 					$this->moduleContent($l10ncfgObj);
-				}
-
-				// ShortCut
-				if ($BE_USER->mayMakeShortcut()) {
-					$this->content.=$this->doc->spacer(20).$this->doc->section('',$this->doc->makeShortcutIcon('id',implode(',',array_keys($this->MOD_MENU)),$this->MCONF['name']));
 				}
 			}
 		}
 
-		$this->content.=$this->doc->spacer(10);
+		$this->content .= $this->doc->spacer(10);
+
+		$markers['CONTENT'] = $this->content;
+
+			// Build the <body> for the module
+		$docHeaderButtons = $this->getButtons();
+		$this->content = $this->doc->startPage($GLOBALS['LANG']->getLL('general.title'));
+		$this->content .= $this->doc->moduleBody($this->pageinfo, $docHeaderButtons, $markers);
+		$this->content .= $this->doc->endPage();
+		$this->content = $this->doc->insertStylesAndJS($this->content);
 	}
 
 	/**
@@ -210,22 +222,24 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 *
 	 * @return	void
 	 */
-	function printContent() {
+	public function printContent() {
 
-		$this->content.=$this->doc->endPage();
+//		$this->content .= $this->doc->endPage();
 		echo $this->content;
 	}
 
 	function inlineEditAction($l10ncfgObj) {
 		global $LANG, $BACK_PATH;
 
-		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
+			/** @var $service tx_l10nmgr_l10nBaseService */
+		$service = t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 		$info='';
 		// Buttons:
 		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.save.button.title').'" name="saveInline" onclick="return confirm(\''.$LANG->getLL('inlineedit.save.alert.title').'\');" />';
 		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.cancel.button.title').'" name="_" onclick="return confirm(\''.$LANG->getLL('inlineedit.cancel.alert.title').'\');" />';
 
 		//simple init of translation object:
+			/** @var $translationData tx_l10nmgr_translationData */
 		$translationData=t3lib_div::makeInstance('tx_l10nmgr_translationData');
 		$translationData->setTranslationData(t3lib_div::_POST('translation'));
 		$translationData->setLanguage($this->sysLanguage);
@@ -239,6 +253,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 
 	function _getSelectField($elementName,$currentValue,$menuItems) {
+		$options = array();
 
 		foreach($menuItems as $value => $label)	{
 			$options[] = '<option value="'.htmlspecialchars($value).'"'.(!strcmp($currentValue,$value)?' selected="selected"':'').'>'.
@@ -246,7 +261,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 						'</option>';
 		}
 
-		if (count($options)) {
+		if (count($options) > 0) {
 			return '
 				<select name="'.$elementName.'" >
 					'.implode('
@@ -268,9 +283,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			'sdlpassolo' => 'SDLPassolo.xfg',
 		);
 
-		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
+			/** @var $service tx_l10nmgr_l10nBaseService */
+		$service = t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
 
-		$info .= '<br/>';
+		$info = '<br/>';
 		$info .= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" /><br /><br/>';
 
 		$info .= '<div id="ddtabs" class="basictab" style="border:0px solid gray;margin:0px;">
@@ -319,48 +335,51 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$info .= '<a href="'.t3lib_extMgm::extRelPath('l10nmgr').'doc/manual.sxw" target="_new">Download</a>';
 		$info .= '</div>';
 		$info .= '</div>';
-		$info .= $this->doc->header($LANG->getLL('misc.messages.title'));
 
+		$actionInfo = '';
 		// Read uploaded file:
 		if (t3lib_div::_POST('import_xml') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name']))	{
 			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
-			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
+				/** @var $factory tx_l10nmgr_translationDataFactory */
+			$factory = t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
 		//print "<pre>";
 		//var_dump($GLOBALS['BE_USER']->user);
 		//print "</pre>";
 			if (t3lib_div::_POST('import_oldformat')=='1') {
 				//Support for the old Format of XML Import (without pageGrp element)
-				$info.=$LANG->getLL('import.xml.old-format.message');
-				$translationData=$factory->getTranslationDataFromOldFormatCATXMLFile($uploadedTempFile);
-				$translationData->setLanguage($sysLang);
+				$actionInfo .= $LANG->getLL('import.xml.old-format.message');
+				$translationData = $factory->getTranslationDataFromOldFormatCATXMLFile($uploadedTempFile);
+				$translationData->setLanguage($this->sysLanguage);
 				$service->saveTranslation($l10ncfgObj,$translationData);
-				$info.='<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
+				$actionInfo .= '<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
 			}
 			else {
-				// Relevant processing of XML Import with the help of the Importmanager
-				$importManager=t3lib_div::makeInstance('tx_l10nmgr_CATXMLImportManager',$uploadedTempFile,$this->sysLanguage, $xmlString="");
+					// Relevant processing of XML Import with the help of the Importmanager
+					/** @var $importManager tx_l10nmgr_CATXMLImportManager */
+				$importManager=t3lib_div::makeInstance('tx_l10nmgr_CATXMLImportManager', $uploadedTempFile, $this->sysLanguage, $xmlString="");
 				if ($importManager->parseAndCheckXMLFile()===false) {
-					$info.='<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
+					$actionInfo .= '<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
 				}
 				else {
 					if (t3lib_div::_POST('import_delL10N')=='1') {
-						$info.=$LANG->getLL('import.xml.delL10N.message').'<br/>';
+						$actionInfo .= $LANG->getLL('import.xml.delL10N.message').'<br/>';
 						$delCount = $importManager->delL10N($importManager->getDelL10NDataFromCATXMLNodes($importManager->xmlNodes));
-						$info.= sprintf($LANG->getLL('import.xml.delL10N.count.message'),$delCount).'<br/><br/>';
+						$actionInfo .= sprintf($LANG->getLL('import.xml.delL10N.count.message'),$delCount).'<br/><br/>';
 					}
 					if (t3lib_div::_POST('make_preview_link')=='1') {
 						$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
-						$info.='<b>'.$LANG->getLL('import.xml.preview_links.title').'</b><br/>';
-						$mkPreviewLinks=t3lib_div::makeInstance('tx_l10nmgr_mkPreviewLinkService',$t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
-						$info.=$mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
+						$actionInfo .= '<b>'.$LANG->getLL('import.xml.preview_links.title').'</b><br/>';
+							/** @var $mkPreviewLinks tx_l10nmgr_mkPreviewLinkService */
+						$mkPreviewLinks=t3lib_div::makeInstance('tx_l10nmgr_mkPreviewLinkService', $t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
+						$actionInfo .= $mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
 					}
-					$translationData=$factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
+					$translationData = $factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
 					$translationData->setLanguage($this->sysLanguage);
-					//$info.="<pre>".var_export($GLOBALS['BE_USER'],true)."</pre>";
+					//$actionInfo.="<pre>".var_export($GLOBALS['BE_USER'],true)."</pre>";
 					unset($importManager);
 					$service->saveTranslation($l10ncfgObj,$translationData);
-					$info.='<br/>'.$this->doc->icons(-1).$LANG->getLL('import.xml.done.message').'<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
+					$actionInfo .= '<br/>'.$this->doc->icons(-1).$LANG->getLL('import.xml.done.message').'<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
 				}
 			}
 			t3lib_div::unlink_tempfile($uploadedTempFile);
@@ -385,13 +404,18 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			}
 				//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
-				$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
-				$info .= $viewClass->renderExports();
+				$actionInfo .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
+				$actionInfo .= $viewClass->renderExports();
 			} else {
 				$viewClass->saveExportInformation();
 				$this->_downloadXML($viewClass);
 			}
 		}
+		if (!empty($actionInfo)) {
+			$info .= $this->doc->header($LANG->getLL('misc.messages.title'));
+			$info .= $actionInfo;
+		}
+
 		$info .= '</div>';
 
 		return $info;
@@ -404,7 +428,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		// Buttons:
 		$_selectOptions=array('0'=>'-default-');
 		$_selectOptions=$_selectOptions+$this->MOD_MENU["lang"];
-		$info.= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions).'<br/>';
+		$info = $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions).'<br/>';
 		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" />';
 		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.export.xml.button.title').'" name="export_excel" />';
 		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.import.xml.button.title').'" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
@@ -457,16 +481,19 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 * @return	void
 	 */
 	function moduleContent($l10ncfgObj) {
-		global $TCA,$LANG,$BE_USER;
+		global $LANG,$BE_USER;
 
 		switch ($this->MOD_SETTINGS["action"]) {
-			case 'inlineEdit': case 'link':
-				$htmlListView=t3lib_div::makeInstance('tx_l10nmgr_l10nHTMLListView',$l10ncfgObj,$this->sysLanguage);
+			case 'inlineEdit':
+			case 'link':
+					/** @var $htmlListView tx_l10nmgr_l10nHTMLListView */
+				$htmlListView = t3lib_div::makeInstance('tx_l10nmgr_l10nHTMLListView', $l10ncfgObj, $this->sysLanguage);
 				$subheader=$LANG->getLL('inlineEdit');
+				$subcontent = '';
 
 				if ($this->MOD_SETTINGS["action"]=='inlineEdit') {
-					$subheader=$LANG->getLL('link');
-					$subcontent=$this->inlineEditAction($l10ncfgObj);
+					$subheader = $LANG->getLL('link');
+					$subcontent = $this->inlineEditAction($l10ncfgObj);
 					$htmlListView->setModeWithInlineEdit();
 				}
 				// Render the module content (for all modes):
@@ -536,6 +563,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 */
 	function diffCMP($old, $new) {
 			// Create diff-result:
+			/** @var $t3lib_diff_Obj t3lib_diff */
 		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
 		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
 	}
@@ -549,6 +577,26 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		// Load the configuration
 		$this->lConf = unserialize( $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr'] );
 	}
+
+	/**
+	 * Create the panel of buttons for submitting the form or otherwise perform operations.
+	 *
+	 * @return	array	all available buttons as an assoc. array
+	 */
+	protected function getButtons()	{
+		$buttons = array();
+
+		$buttons['reload'] = '<a href="' . $GLOBALS['MCONF']['_'] . '" title="' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xml:labels.reload', TRUE) . '">' .
+			t3lib_iconWorks::getSpriteIcon('actions-system-refresh') .
+			'</a>';
+
+			// Shortcut
+		if ($GLOBALS['BE_USER']->mayMakeShortcut())	{
+			$buttons['shortcut'] = $this->doc->makeShortcutIcon('', 'function', $this->MCONF['name']);
+		}
+
+		return $buttons;
+	}
 }
 
 
@@ -557,7 +605,8 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr
 }
 
 
-// Make instance:
+	// Make instance:
+	/** @var $SOBE tx_l10nmgr_cm1 */
 $SOBE = t3lib_div::makeInstance('tx_l10nmgr_cm1');
 $SOBE->init();
 

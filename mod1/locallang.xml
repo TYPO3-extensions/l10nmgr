@@ -7,7 +7,8 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="general.title">L10N Manager</label>
-			<label index="general.description.message">Please select one of the following L10N Manager configurations to start the export/import.</label>
+			<label index="general.no_data">No configurations are available.</label>
+			<label index="general.description.message">Please select one of the following L10N Manager configurations to start the export/import (click on the title).</label>
 			<label index="general.list.configuration.title">Available configurations:</label>
 			<label index="general.list.headline.info.title">Info</label>
 			<label index="general.list.headline.title.title">Title</label>
@@ -17,12 +18,13 @@
 			<label index="general.list.headline.tables.title">Tables</label>
 			<label index="general.list.headline.exclude.title">Exclude</label>
 			<label index="general.list.headline.include.title">Include</label>
-            
+
 			<label index="general.list.infodetail.pid.title">Parent page: </label>
 			<label index="general.list.infodetail.title.title">Title: </label>
 			<label index="general.list.infodetail.filenameprefix.title">Filename: </label>
 			<label index="general.list.infodetail.depth.title">Depth: </label>
 			<label index="general.list.infodetail.sourceLangStaticId.title">Language: </label>
+			<label index="general.list.infodetail.default">Default</label>
 			<label index="general.list.infodetail.tablelist.title">Tables: </label>
 			<label index="general.list.infodetail.exclude.title">Exclude: </label>
 			<label index="general.list.infodetail.include.title">Include: </label>
@@ -32,6 +34,7 @@
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="general.title">L10N Manager</label>
+			<label index="general.no_data">Es wurden noch keine Einstellungen angelegt.</label>
 			<label index="general.description.message">Wählen Sie eine der folgenden L10N-Manager-Konfigurationen aus, um mit dem Export/Import zu beginnen.</label>
 			<label index="general.list.configuration.title">Verfügbare Konfigurationen:</label>
 			<label index="general.list.headline.info.title">Info</label>
@@ -43,7 +46,7 @@
 			<label index="general.list.headline.exclude.title">Auszuschließen</label>
 			<label index="general.list.headline.include.title">Einzuschließen</label>
 			<label index="general.list.headline.incfcewithdefaultlanguage.title">Default FCE</label>
-            
+
 			<label index="general.list.infodetail.pid.title">Übergeordnete Seite: </label>
 			<label index="general.list.infodetail.title.title">Titel: </label>
 			<label index="general.list.infodetail.filenameprefix.title">Dateiname: </label>
@@ -113,7 +116,7 @@
 			<label index="general.list.headline.tables.title">Tabelle</label>
 			<label index="general.list.headline.exclude.title">Excludere</label>
 			<label index="general.list.headline.include.title">Includere</label>
-            
+
 			<label index="general.list.infodetail.pid.title">Pagina padre: </label>
 			<label index="general.list.infodetail.title.title">Titolo: </label>
 			<label index="general.list.infodetail.filenameprefix.title">Nome del file: </label>
