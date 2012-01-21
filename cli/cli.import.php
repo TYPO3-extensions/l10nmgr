@@ -524,9 +524,10 @@ class tx_cliimport_cli extends t3lib_cli {
 					// If there are any files, loop on them
 				if ($filesToDownload != FALSE) {
 						// Check that download directory exists
-					$downloadPath = PATH_site . 'uploads/tx_l10nmgr/jobs/in/';
+					$downloadFolder = 'uploads/tx_l10nmgr/jobs/in/';
+					$downloadPath = PATH_site . $downloadFolder;
 					if (!is_dir(t3lib_div::getFileAbsFileName($downloadPath))) {
-						t3lib_div::mkdir_deep(t3lib_div::getFileAbsFileName($downloadPath));
+						t3lib_div::mkdir_deep(PATH_site, $downloadFolder);
 					}
 					foreach ($filesToDownload as $aFile) {
 							// Ignore current directory and reference to upper level
@@ -668,37 +669,37 @@ class tx_cliimport_cli extends t3lib_cli {
 						$configurationName = $GLOBALS['LANG']->getLL('import.mail.l10nconfig.unknown');
 					}
 					$message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.l10nconfig'), $configurationName, $fileInformation['configuration']) . "\n";
+				}
 
-						// Add signature
-					$message .= "\n\n" . $GLOBALS['LANG']->getLL('email.goodbye.msg');
-					$message .= "\n" . $this->extensionConfiguration['email_sender_name'];
-					$subject = sprintf($GLOBALS['LANG']->getLL('import.mail.subject'), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
+					// Add signature
+				$message .= "\n\n" . $GLOBALS['LANG']->getLL('email.goodbye.msg');
+				$message .= "\n" . $this->extensionConfiguration['email_sender_name'];
+				$subject = sprintf($GLOBALS['LANG']->getLL('import.mail.subject'), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
 
-						// Instantiate the mail object, set all necessary properties and send the mail
-					if (class_exists(t3lib_mail_Message)) {
-							/** @var $mailObject t3lib_mail_Message */
-						$mailObject = t3lib_div::makeInstance('t3lib_mail_Message');
-						$mailObject->setFrom(array($this->extensionConfiguration['email_sender'] => $this->extensionConfiguration['email_sender_name']));
-						$mailObject->setTo($recipients);
-						$mailObject->setSubject($subject);
-						$mailObject->setFormat('text/plain');
-						$mailObject->setBody($message);
-						$mailObject->send();
+					// Instantiate the mail object, set all necessary properties and send the mail
+				if (class_exists('t3lib_mail_Message')) {
+						/** @var $mailObject t3lib_mail_Message */
+					$mailObject = t3lib_div::makeInstance('t3lib_mail_Message');
+					$mailObject->setFrom(array($this->extensionConfiguration['email_sender'] => $this->extensionConfiguration['email_sender_name']));
+					$mailObject->setTo($recipients);
+					$mailObject->setSubject($subject);
+					$mailObject->setFormat('text/plain');
+					$mailObject->setBody($message);
+					$mailObject->send();
 
-						// @TODO: Compatibility with TYPO3 4.4 or lower. Should be removed at some point.
-					} else {
-							/** @var $email t3lib_htmlmail */
-						$email = t3lib_div::makeInstance('t3lib_htmlmail');
-						$email->start();
-						$email->useQuotedPrintable();
-						$email->from_email = $this->extensionConfiguration['email_sender'];
-						$email->from_name = $this->extensionConfiguration['email_sender_name'];
-						$email->replyto_email = $this->extensionConfiguration['email_sender'];
-						$email->replyto_name = $this->extensionConfiguration['email_sender_name'];
-						$email->subject = $subject;
-						$email->addPlain($message);
-						$email->send(implode(',', $recipients));
-					}
+					// @TODO: Compatibility with TYPO3 4.4 or lower. Should be removed at some point.
+				} else {
+						/** @var $email t3lib_htmlmail */
+					$email = t3lib_div::makeInstance('t3lib_htmlmail');
+					$email->start();
+					$email->useQuotedPrintable();
+					$email->from_email = $this->extensionConfiguration['email_sender'];
+					$email->from_name = $this->extensionConfiguration['email_sender_name'];
+					$email->replyto_email = $this->extensionConfiguration['email_sender'];
+					$email->replyto_name = $this->extensionConfiguration['email_sender_name'];
+					$email->subject = $subject;
+					$email->addPlain($message);
+					$email->send(implode(',', $recipients));
 				}
 			}
 		}

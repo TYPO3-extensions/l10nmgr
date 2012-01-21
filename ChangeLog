@@ -1,6 +1,7 @@
 2012-01-21 Andreas Otto <andreas@otto-hanika.de>
 	* [~BUG] Fixes #27683. Add langDatabaseOverlay to documentation.
 	* [~BUG] Fixes #33224. Direction cleanup task: add downloads directory. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #33259. Wrong mail actions in automated import process. Credits go to Francois Suter for investigating the issue and providing patches.
 
 2012-01-09 Daniel Zielinski <development@loctimize.com>
 	* Changed version to 3.3.11
