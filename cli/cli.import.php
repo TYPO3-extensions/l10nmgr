@@ -512,6 +512,7 @@ class tx_cliimport_cli extends t3lib_cli {
 			throw new Exception('Could not connect to FTP server', 1322489458);
 		} else {
 			if (@ftp_login($connection, $this->extensionConfiguration['ftp_server_username'], $this->extensionConfiguration['ftp_server_password'])) {
+				ftp_pasv($connection, TRUE);
 					// If a path was defined, change directory to this path
 				if (!empty($this->extensionConfiguration['ftp_server_downpath'])) {
 					$result = ftp_chdir($connection, $this->extensionConfiguration['ftp_server_downpath']);
@@ -520,7 +521,7 @@ class tx_cliimport_cli extends t3lib_cli {
 					}
 				}
 					// Get list of files to download from current directory
-				$filesToDownload = ftp_nlist($connection, '.');
+				$filesToDownload = ftp_nlist($connection, '');
 					// If there are any files, loop on them
 				if ($filesToDownload != FALSE) {
 						// Check that download directory exists
