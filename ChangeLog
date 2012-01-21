@@ -4,6 +4,7 @@
 	* [~BUG] Fixes #33259. Wrong mail actions in automated import process. Credits go to Francois Suter for investigating the issue and providing patches.
 	* [~BUG] Fixes #33260. Wrong FTP interactions in import process. Credits go to Francois Suter for investigating the issue and providing patches.
 	* [~BUG] Fixes #33291. Adapt BE modules to new TYPO3 skin. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Replace default icon with.
 
 2012-01-09 Daniel Zielinski <development@loctimize.com>
 	* Changed version to 3.3.11
