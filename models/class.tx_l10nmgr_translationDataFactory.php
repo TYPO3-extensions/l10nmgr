@@ -36,57 +36,63 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_xml
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_translationDataFactory {
-	
 	/**
-	* public Factory method to get initialised tranlationData Object from the passed XMLNodes Array
-	* see tx_l10nmgr_CATXMLImportManager
-	* 
-	* @param Array with XMLNodes from the CATXML
-	* @return translationData Object with data
-	**/
-	function getTranslationDataFromCATXMLNodes(&$xmlNodes) {	
-		$data= $this->_getParsedCATXMLFromXMLNodes($xmlNodes);		
-		
-		$translationData=t3lib_div::makeInstance('tx_l10nmgr_translationData');		
+	 * @var string List of error messages
+	 */
+	protected $_errorMsg;
+
+	/**
+	 * public Factory method to get initialised tranlationData Object from the passed XMLNodes Array
+	 * see tx_l10nmgr_CATXMLImportManager
+	 *
+	 * @param array $xmlNodes Array with XMLNodes from the CATXML
+	 * @return tx_l10nmgr_translationData Object with data
+	 **/
+	function getTranslationDataFromCATXMLNodes(&$xmlNodes) {
+		$data = $this->_getParsedCATXMLFromXMLNodes($xmlNodes);
+
+			/** @var $translationData tx_l10nmgr_translationData */
+		$translationData = t3lib_div::makeInstance('tx_l10nmgr_translationData');
 		$translationData->setTranslationData($data);
-			
+
 		return $translationData;
-		
+
 	}
-	
+
 	/**
-	* public Factory method to get initialised tranlationData Object from the passed XML
-	* 
-	* @param path to the XML file
-	* @return translationData Object with data
-	**/
+	 * public Factory method to get initialized translationData Object from the passed XML
+	 *
+	 * @param string $xmlFile Path to the XML file
+	 * @return tx_l10nmgr_translationData Object with data
+	 **/
 	function getTranslationDataFromExcelXMLFile($xmlFile) {
 		$fileContent = t3lib_div::getUrl($xmlFile);
-		
-		$data= $this->_getParsedExcelXML($fileContent);
-		if ($data ===false) {
+
+		$data = $this->_getParsedExcelXML($fileContent);
+		if ($data === FALSE) {
 			die($this->_errorMsg);
 		}
-		
-		$translationData=t3lib_div::makeInstance('tx_l10nmgr_translationData');		
+
+			/** @var $translationData tx_l10nmgr_translationData */
+		$translationData = t3lib_div::makeInstance('tx_l10nmgr_translationData');
 		$translationData->setTranslationData($data);
-			
+
 		return $translationData;
 	}
-	
-	/** 
-	* private internal fuction to parse the excel import XML format.
-	* TODO: possibly make seperate class for this.
-	*
-	* @param String with XML
-	* @return array with translated informations
-	**/
-	function _getParsedExcelXML( $fileContent ) {
+
+	/**
+	 * Private internal function to parse the excel import XML format.
+	 * TODO: possibly make separate class for this.
+	 *
+	 * @param string $fileContent String with XML
+	 * @return array with translated information
+	 **/
+	function _getParsedExcelXML($fileContent) {
 			// Parse XML in a rude fashion:
 			// Check if &nbsp; has to be substituted -> DOCTYPE -> entity?
 		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent));	// For some reason PHP chokes on incoming &nbsp; in XML!
 		$translation = array();
-		
+
 		if (!is_array($xmlNodes)) {
 			$this->_errorMsg.=$xmlNodes;
 			return false;
@@ -111,17 +117,19 @@ class tx_l10nmgr_translationDataFactory {
 		}
 		return $translation;
 	}
-	
-	
+
+
 
 	/**
-	* Parses XML String and returns translationData
-	* @param Array with XMLNodes
-	* @return array with translated informations
-	**/
-	function _getParsedCATXMLFromXMLNodes(&$xmlNodes) {		
-		$xmlTool= t3lib_div::makeInstance("tx_l10nmgr_xmltools");		
-		
+	 * Parses XML String and returns translationData
+	 *
+	 * @param array $xmlNodes Array with XMLNodes
+	 * @return array with translated information
+	 **/
+	function _getParsedCATXMLFromXMLNodes(&$xmlNodes) {
+			/** @var $xmlTool tx_l10nmgr_xmltools */
+		$xmlTool= t3lib_div::makeInstance('tx_l10nmgr_xmltools');
+
 		//print_r($xmlNodes); exit;
 		$translation = array();
 
@@ -130,11 +138,11 @@ class tx_l10nmgr_translationDataFactory {
 		   	foreach($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'] as $pageGrp)	{
 				if (is_array($pageGrp['ch']['data'])) {
 					foreach($pageGrp['ch']['data'] as $row)	{
-						$attrs=$row['attrs'];						
-						list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
-						if ($attrs['transformations']=='1') { 
-							$translationValue=$xmlTool->XML2RTE($row['XMLvalue']);									
-							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
+						$attrs=$row['attrs'];
+						list(,$uidString,$fieldName) = explode(':',$attrs['key']);
+						if ($attrs['transformations']=='1') {
+							$translationValue=$xmlTool->XML2RTE($row['XMLvalue']);
+							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;
 						} else {
 							//Substitute &amp; with & and <br/> with <br>
 							$row['XMLvalue']=str_replace('&amp;','&',$row['XMLvalue']);
@@ -169,7 +177,7 @@ class tx_l10nmgr_translationDataFactory {
 							}
 							//print "IMPORT: ".$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']]."<br/>\n";
 							//print "---<br>\n";
-							
+
 						}
 					}
 				}
@@ -177,57 +185,59 @@ class tx_l10nmgr_translationDataFactory {
 		}
 		//print_r($translation);
 		return $translation;
-	}	
-	
-	
-	
+	}
+
+
+
 	/**
-	* For supporting older Format (without pagegrp element)
-	*		public Factory method to get initialised tranlationData Object from the passed XML
-	* 
-	* @param path to the XML file
-	* @return translationData Object with data
-	**/
+	 * For supporting older Format (without pagegrp element)
+	 *		public Factory method to get initialised tranlationData Object from the passed XML
+	 *
+	 * @param string $xmlFile Path to the XML file
+	 * @return tx_l10nmgr_translationData Object with data
+	 **/
 	function getTranslationDataFromOldFormatCATXMLFile($xmlFile) {
 		$fileContent = t3lib_div::getUrl($xmlFile);
 		$data= $this->_getParsedCATXMLFromOldFormat($fileContent);
-		if ($data ===false) {
+		if ($data === FALSE) {
 			die($this->_errorMsg);
 		}
-		
-		$translationData=t3lib_div::makeInstance('tx_l10nmgr_translationData');		
+
+			/** @var $translationData tx_l10nmgr_translationData */
+		$translationData = t3lib_div::makeInstance('tx_l10nmgr_translationData');
 		$translationData->setTranslationData($data);
-			
+
 		return $translationData;
-		
 	}
+
 	/**
-	* For supporting older Format (without pagegrp element)
-	* @param String with XML
-	* @return array with translated informations
-	**/
+	 * For supporting older Format (without pagegrp element)
+	 * @param string $fileContent String with XML
+	 * @return array with translated information
+	 **/
 	function _getParsedCATXMLFromOldFormat($fileContent) {
-		$parseHTML = t3lib_div::makeInstance("t3lib_parseHTML_proc");
-		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent),2);	// For some reason PHP chokes on incoming &nbsp; in XML!		
-		
+			/** @var $parseHTML t3lib_parseHTML_proc */
+		$parseHTML = t3lib_div::makeInstance('t3lib_parseHTML_proc');
+		$xmlNodes = t3lib_div::xml2tree(str_replace('&nbsp;',' ',$fileContent),2);	// For some reason PHP chokes on incoming &nbsp; in XML!
+
 		if (!is_array($xmlNodes)) {
 			$this->_errorMsg.=$xmlNodes;
 			return false;
 		}
 				$translation = array();
-	
+
 					// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
 				if (is_array($xmlNodes['TYPO3L10N'][0]['ch']['Data']))	{
 					foreach($xmlNodes['TYPO3L10N'][0]['ch']['Data'] as $row)	{
 						$attrs=$row['attrs'];
-						
-						list(,$uidString,$fieldName) = explode(':',$attrs['key']); 
+
+						list(,$uidString,$fieldName) = explode(':',$attrs['key']);
 						if ($attrs['transformations']=='1') { //substitute check with rte enabled fields from TCA
-							
-							//$translationValue =$this->_getXMLFromTreeArray($row);							
+
+							//$translationValue =$this->_getXMLFromTreeArray($row);
 							$translationValue=$row['XMLvalue'];
-							
-							//fixed setting of Parser (TO-DO set it via typoscript)	
+
+							//fixed setting of Parser (TO-DO set it via typoscript)
 								$parseHTML->procOptions['typolist']=FALSE;
 								$parseHTML->procOptions['typohead']=FALSE;
 								$parseHTML->procOptions['keepPDIVattribs']=TRUE;
@@ -241,26 +251,26 @@ class tx_l10nmgr_translationDataFactory {
 								$parseHTML->procOptions['denyTags']='strong';
 								//$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
 								$parseHTML->procOptions['dontRemoveUnknownTags_db']=TRUE;
-								
-							$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!						
+
+							$translationValue = $parseHTML->TS_transform_db($translationValue,$css=0); // removes links from content if not called first!
 							//print_r($translationValue);
-							$translationValue = $parseHTML->TS_images_db($translationValue);													
+							$translationValue = $parseHTML->TS_images_db($translationValue);
 							//print_r($translationValue);
 							$translationValue = $parseHTML->TS_links_db($translationValue);
 							//print_r($translationValue);
 							//	print_r($translationValue);
 							//substitute & with &amp;
 							$translationValue=str_replace('&amp;','&',$translationValue);
-							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;						
+							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;
 						} else {
-							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];						
+							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0];
 						}
 					}
 				}
 			return $translation;
 	}
-	
-	
+
+
 }
 
 

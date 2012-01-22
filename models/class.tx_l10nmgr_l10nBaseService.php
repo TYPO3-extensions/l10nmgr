@@ -34,28 +34,49 @@
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_l10nBaseService {
-	var $createTranslationAlsoIfEmpty=FALSE;
-	
-	function saveTranslation($l10ncfgObj,$translationObj) {
-		$sysLang=$translationObj->getLanguage();
-		$accumObj=$l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
-		$flexFormDiffArray=$this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray($sysLang),$translationObj->getTranslationData());
+	var $createTranslationAlsoIfEmpty = FALSE;
 
-		if ($flexFormDiffArray !== false) {
-			$l10ncfgObj->updateFlexFormDiff($sysLang,$flexFormDiffArray);
+	/**
+	 * Save the translation
+	 *
+	 * @param tx_l10nmgr_l10nConfiguration $l10ncfgObj
+	 * @param tx_l10nmgr_translationData $translationObj
+	 * @return void
+	 */
+	function saveTranslation(tx_l10nmgr_l10nConfiguration $l10ncfgObj, tx_l10nmgr_translationData $translationObj) {
+			// Provide a hook for specific manipulations before saving
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['savePreProcess'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['savePreProcess'] as $classReference) {
+				$processingObject = t3lib_div::getUserObj($classReference);
+				$processingObject->processBeforeSaving($l10ncfgObj, $translationObj, $this);
+			}
+		}
+
+		$sysLang = $translationObj->getLanguage();
+		$accumObj = $l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
+		$flexFormDiffArray = $this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray($sysLang), $translationObj->getTranslationData());
+
+		if ($flexFormDiffArray !== FALSE) {
+			$l10ncfgObj->updateFlexFormDiff($sysLang, $flexFormDiffArray);
+		}
+
+			// Provide a hook for specific manipulations after saving
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['savePostProcess'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['savePostProcess'] as $classReference) {
+				$processingObject = t3lib_div::getUserObj($classReference);
+				$processingObject->processAfterSaving($l10ncfgObj, $translationObj, $flexFormDiffArray, $this);
+			}
 		}
 	}
-	
-		
-	
+
 	/**
 	 * Submit incoming content to database. Must match what is available in $accum.
 	 *
-	 * @param	array		Translation configuration
-	 * @param	array		Array with incoming translation. Must match what is found in $accum
-	 * @return	mixed		False if error - else flexFormDiffArray (if $inputArray was an array and processing was performed.)
+	 * @param array $accum Translation configuration
+	 * @param array $inputArray Array with incoming translation. Must match what is found in $accum
+	 * @return mixed False if error - else flexFormDiffArray (if $inputArray was an array and processing was performed.)
 	 */
-	function _submitContentAndGetFlexFormDiff($accum,$inputArray)	{
+	function _submitContentAndGetFlexFormDiff($accum, $inputArray) {
 
 		//CLI $accum and $inputArray OK!
 		//print "<pre>";
@@ -65,24 +86,25 @@ class tx_l10nmgr_l10nBaseService {
 		if (is_array($inputArray))	{
 
 				// Initialize:
+				/** @var $flexToolObj t3lib_flexformtools */
 			$flexToolObj = t3lib_div::makeInstance('t3lib_flexformtools');
 			$TCEmain_data = array();
 			$TCEmain_cmd = array();
-			
+
 			$_flexFormDiffArray = array();
 				// Traverse:
 			foreach($accum as $pId => $page)	{
 				foreach($accum[$pId]['items'] as $table => $elements)	{
 					foreach($elements as $elementUid => $data)	{
 						if (is_array($data['fields']))	{
-								
-							foreach($data['fields'] as $key => $tData)	{	
-														
-								if ( is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {									
-									
+
+							foreach($data['fields'] as $key => $tData)	{
+
+								if ( is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {
+
 									list($Ttable,$TuidString,$Tfield,$Tpath) = explode(':',$key);
 									list($Tuid,$Tlang,$TdefRecord) = explode('/',$TuidString);
-									
+
 									if (!$this->createTranslationAlsoIfEmpty  && $inputArray[$table][$elementUid][$key] =='' && $Tuid=='NEW')	{
 										//if data is empty do not save it
 										unset($inputArray[$table][$elementUid][$key]);
@@ -100,7 +122,7 @@ class tx_l10nmgr_l10nBaseService {
 										if (!is_array($TCEmain_data[$Ttable][$TuidString][$Tfield]))	{
 											$TCEmain_data[$Ttable][$TuidString][$Tfield] = array();
 										}
-										//TCEMAINDATA is passed as refernece here:
+										//TCEMAINDATA is passed as reference here:
 										$flexToolObj->setArrayValueByPath($Tpath,$TCEmain_data[$Ttable][$TuidString][$Tfield],$inputArray[$table][$elementUid][$key]);
 										$_flexFormDiffArray[$key] = array('translated' => $inputArray[$table][$elementUid][$key], 'default' => $tData['defaultValue']);
 									} else {
@@ -109,9 +131,9 @@ class tx_l10nmgr_l10nBaseService {
 									unset($inputArray[$table][$elementUid][$key]);	// Unsetting so in the end we can see if $inputArray was fully processed.
 								}
 								else {
-									//debug($tData,'fields not set for: '.$elementUid.'-'.$key);							
+									//debug($tData,'fields not set for: '.$elementUid.'-'.$key);
 									//debug($inputArray[$table],'inputarray');
-								}	
+								}
 							}
 							if (is_array($inputArray[$table][$elementUid]) && !count($inputArray[$table][$elementUid]))	{
 								unset($inputArray[$table][$elementUid]);	// Unsetting so in the end we can see if $inputArray was fully processed.
@@ -127,6 +149,7 @@ class tx_l10nmgr_l10nBaseService {
 //debug($TCEmain_data,'$TCEmain_data');
 
 				// Execute CMD array: Localizing records:
+				/** @var $tce t3lib_TCEmain */
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
 			$tce->stripslashes_values = FALSE;
 			if (count($TCEmain_cmd))	{
@@ -162,15 +185,15 @@ class tx_l10nmgr_l10nBaseService {
 				// Now, submitting translation data:
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
 			$tce->stripslashes_values = FALSE;
-			$tce->dontProcessTransformations = TRUE; 
+			$tce->dontProcessTransformations = TRUE;
 			//print_r($TCEmain_data);
 			$tce->start($TCEmain_data,array());	// check has been done previously that there is a backend user which is Admin and also in live workspace
 			$tce->process_datamap();
-			
+
 			if (count($tce->errorLog))	{
 				debug($tce->errorLog,'TCEmain update errors:');
 			}
-			
+
 			if (count($tce->autoVersionIdMap) && count($_flexFormDiffArray))	{
 			#	debug($this->flexFormDiffArray);
 				foreach($_flexFormDiffArray as $key => $value)	{
@@ -183,8 +206,8 @@ class tx_l10nmgr_l10nBaseService {
 #				debug($tce->autoVersionIdMap);
 #				debug($_flexFormDiffArray);
 			}
-			
-			
+
+
 				// Should be empty now - or there were more information in the incoming array than there should be!
 			if (count($inputArray))	{
 				debug($inputArray,'These fields were ignored since they were not in the configuration:');
@@ -194,9 +217,9 @@ class tx_l10nmgr_l10nBaseService {
 		}
 		return false;
 	}
-	
-	
-	
+
+
+
 }
 
 

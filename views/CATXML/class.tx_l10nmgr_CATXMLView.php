@@ -157,6 +157,13 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 			}
 			$output[] = "\t" . '</pageGrp>'."\r";
 		}
+			// Provide a hook for specific manipulations before building the actual XML
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportCatXmlPreProcess'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportCatXmlPreProcess'] as $classReference) {
+				$processingObject = t3lib_div::getUserObj($classReference);
+				$output = $processingObject->processBeforeExportingCatXml($output, $this);
+			}
+		}
 
 			// get ISO2L code for source language
 		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {

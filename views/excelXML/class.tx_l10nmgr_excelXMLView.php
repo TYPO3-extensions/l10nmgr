@@ -32,27 +32,27 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
-	
+
     /**
     * @var array           $internalMessges                Part of XML with fail logging information content elements
     */
     var $internalMessges = array();
 
-	
+
 	//internal flags:
 	var $modeOnlyChanged=FALSE;
-	
+
 	var $exportType = '0';
-	
+
     /**
     * @var integer         $forcedSourceLanguage           Overwrite the default language uid with the desired language to export
     */
     var $forcedSourceLanguage = false;
-	
+
 	function tx_l10nmgr_excelXMLView($l10ncfgObj, $sysLang) {
-		parent::__construct($l10ncfgObj, $sysLang);		
+		parent::__construct($l10ncfgObj, $sysLang);
 	}
-	
+
 	/**
 	 * Render the excel XML export
 	 *
@@ -66,13 +66,13 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 		if ($this->forcedSourceLanguage) {
             $accumObj->setForcedPreviewLanguage($this->forcedSourceLanguage);
         }
-		$accum=$accumObj->getInfoArray();	
+		$accum=$accumObj->getInfoArray();
 
 		$output = array();
 
 			// Traverse the structure and generate HTML output:
 		foreach($accum as $pId => $page)	{
-						
+
 			$output[]= '
 			<!-- Page header -->
 		   <Row>
@@ -102,7 +102,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 							if (is_array($tData))	{
 								list(,$uidString,$fieldName) = explode(':',$key);
 								list($uidValue) = explode('/',$uidString);
-								
+
 								//DZ
                                 if ( ($this->forcedSourceLanguage && isset($tData['previewLanguageValues'][$this->forcedSourceLanguage])) || $this->forcedSourceLanguage === false) {
                                 //DZ
@@ -132,7 +132,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 									$diff = str_replace('</span>','</Font>',$diff);
 								}
 								$diff.= ($tData['msg']?'[NOTE: '.htmlspecialchars($tData['msg']).']':'');
-								
+
 								if (!$this->modeOnlyChanged || !$noChangeFlag)	{
 									reset($tData['previewLanguageValues']);
 									$fieldsForRecord[]= '
@@ -175,7 +175,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 						    '.($page['header']['prevLang'] ? '<Cell ss:StyleID="s37"></Cell>' : '').'
 						   </Row>
 							';
-							
+
 							$output = array_merge($output, $fieldsForRecord);
 						}
 					}
@@ -189,6 +189,13 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 			   </Row>
 				';
 		}
+			// Provide a hook for specific manipulations before building the actual XML
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportExcelXmlPreProcess'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportExcelXmlPreProcess'] as $classReference) {
+				$processingObject = t3lib_div::getUserObj($classReference);
+				$output = $processingObject->processBeforeExportingExcelXml($output, $this);
+			}
+		}
 
 		$excelXML = t3lib_div::getUrl('../views/excelXML/excel_template.xml');
 		$excelXML = str_replace('###INSERT_ROWS###',implode('', $output), $excelXML);
@@ -196,17 +203,17 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
         $excelXML = str_replace('###SOURCE_COL_STATE###',$sourceColState, $excelXML);
         $excelXML = str_replace('###ALT_SOURCE_COL_STATE###',$altSourceColState, $excelXML);
 
-		
+
 		$this->saveExportFile($excelXML);
-		
+
 		return $excelXML;
 		exit;
 	}
-	
+
 	function getFileName() {
 		return 'excel_export_'.$this->sysLang.'_'.date('dmy-Hi').'.xml';
 	}
-	
+
 	/**
       * Force a new source language to export the content to translate
       *
@@ -218,7 +225,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
                 $this->forcedSourceLanguage = $id;
         }
 
-	
+
 }
 
 
