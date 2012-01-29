@@ -1,5 +1,6 @@
 2012-01-29 Andreas Otto <andreas@otto-hanika.de>
-	* [~BUG] Fixes #33291. Some parts of the first patch did not apply. Credits go to Francois Suter for investigating the issue and providing patches.[~BUG] Fixes #33291. Some parts of the first patch did not apply. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #33291. Some parts of the first patch did not apply. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #33379. Enable FTP upload on manual export. Credits go to Francois Suter for investigating the issue and providing patches.
 
 2012-01-22 Andreas Otto <andreas@otto-hanika.de>
 	* [~FEATURE] Fixes #3082. Hooks after importing/exporting. Credits go to Francois Suter for providing patches.

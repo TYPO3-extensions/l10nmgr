@@ -297,7 +297,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
                                 <li><a onClick="expandcontent(\'sc4\', this)" style="margin:0px;">'.$LANG->getLL('l10nmgr.documentation.title').'</a></li>
 				</ul></div>';
 
-		$info .= '<div id="tabcontentcontainer" style="height:120px;border:1px solid gray;padding-right:5px;width:100%;">';
+		$info .= '<div id="tabcontentcontainer" style="height:150px;border:1px solid gray;padding-right:5px;width:100%;">';
 
 		$info .= '<div id="sc1" class="tabcontent">';
 		//$info .= '<div id="sc1" class="tabcontent">';
@@ -306,7 +306,11 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$info .= '<input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
 		$info .= '<input type="checkbox" value="1" name="no_check_xml" /> ' . $LANG->getLL('export.xml.no_check_xml.title') . '<br />';
 		$info .= '<input type="checkbox" value="1" name="check_utf8" /> ' . $LANG->getLL('export.xml.checkUtf8.title') . '<br />';
-		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions);
+		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions) . '<br />';
+			// Add the option to send to FTP server, if FTP information is defined
+		if (!empty($this->lConf['ftp_server']) && !empty($this->lConf['ftp_server_username']) && !empty($this->lConf['ftp_server_password'])) {
+			$info .= '<input type="checkbox" value="1" name="ftp_upload" id="tx_l10nmgr_ftp_upload" /> <label for="tx_l10nmgr_ftp_upload">' . $GLOBALS['LANG']->getLL('export.xml.ftp.title') . '</label>';
+		}
 		$info .= '<br /><br/>';
 		$info .= '<input type="submit" value="Export" name="export_xml" /><br /><br /><br/>';
 		$info .= '</div>';
@@ -384,14 +388,14 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			}
 			t3lib_div::unlink_tempfile($uploadedTempFile);
 		}
-		// If export of XML is asked for, do that (this will exit and push a file for download)
+		// If export of XML is asked for, do that (this will exit and push a file for download, or upload to FTP is option is checked)
 		if (t3lib_div::_POST('export_xml')) {
 			// Save user prefs
 			$BE_USER->pushModuleData('l10nmgr/cm1/checkUTF8',t3lib_div::_POST('check_utf8'));
 
 				// Render the XML
 				/** @var $viewClass tx_l10nmgr_CATXMLView */
-			$viewClass = t3lib_div::makeInstance('tx_l10nmgr_CATXMLView',$l10ncfgObj,$this->sysLanguage);
+			$viewClass = t3lib_div::makeInstance('tx_l10nmgr_CATXMLView', $l10ncfgObj, $this->sysLanguage);
 			$export_xml_forcepreviewlanguage = intval(t3lib_div::_POST('export_xml_forcepreviewlanguage'));
 			if ($export_xml_forcepreviewlanguage > 0) {
 				$viewClass->setForcedSourceLanguage($export_xml_forcepreviewlanguage);
@@ -402,13 +406,37 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			if ($this->MOD_SETTINGS['noHidden']) {
 				$viewClass->setModeNoHidden();
 			}
-				//Check the export
+				// Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
 				$actionInfo .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
 				$actionInfo .= $viewClass->renderExports();
 			} else {
 				$viewClass->saveExportInformation();
-				$this->_downloadXML($viewClass);
+					// Upload to FTP
+				if (t3lib_div::_POST('ftp_upload') == '1') {
+					try {
+						$filename = $this->uploadToFtp($viewClass);
+							// Send a mail notification
+						$this->emailNotification($filename, $l10ncfgObj, $this->sysLanguage);
+							// Prepare a success message for display
+						$title = $GLOBALS['LANG']->getLL('export.ftp.success');
+						$message = sprintf($GLOBALS['LANG']->getLL('export.ftp.success.detail'), $this->lConf['ftp_server_path'] . $filename);
+						$status = t3lib_FlashMessage::OK;
+					}
+					catch (Exception $e) {
+							// Prepare an error message for display
+						$title = $GLOBALS['LANG']->getLL('export.ftp.error');
+						$message = $e->getMessage() . ' (' . $e->getCode() . ')';
+						$status = t3lib_FlashMessage::ERROR;
+					}
+						/** @var $flashMessage t3lib_FlashMessage */
+					$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage', $message, $title, $status);
+					$actionInfo .= $flashMessage->render();
+
+					// Download the XML file
+				} else {
+					$this->_downloadXML($viewClass);
+				}
 			}
 		}
 		if (!empty($actionInfo)) {
@@ -536,9 +564,12 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	/**
 	 * function sends downloadheader and calls render method of the view.
 	 * it is used for excelXML and CATXML
-	 **/
-	function _downloadXML($xmlView) {
-		// Setting filename:
+	 *
+	 * @param tx_l10nmgr_CATXMLView $xmlView Object for generating the XML export
+	 * @return void
+	 */
+	function _downloadXML(tx_l10nmgr_CATXMLView $xmlView) {
+			// Setting filename:
 		$filename = $xmlView->getFileName();
 		$mimeType = 'text/xml';
 		$this->_sendDownloadHeader($mimeType,$filename);
@@ -552,6 +583,123 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		Header('Charset: utf-8');
 		Header('Content-Type: '.$mimeType);
 		Header('Content-Disposition: attachment; filename='.$filename);
+	}
+
+	/**
+	 * Uploads the XML export to the FTP server
+	 *
+	 * @param tx_l10nmgr_CATXMLView $xmlView Object for generating the XML export
+	 * @return string The file name, if successful
+	 * @throws Exception
+	 */
+	protected function uploadToFtp(tx_l10nmgr_CATXMLView $xmlView) {
+			// Render the content and save it the disk
+		$exportContent = $xmlView->render();
+		$xmlView->saveExportFile($exportContent);
+			// Get the file name
+		$filename = PATH_site . 'uploads/tx_l10nmgr/saved_files/'. $xmlView->getLocalFilename();
+		$xmlFileName = basename($filename);
+
+			// Try connecting to FTP server and uploading the file
+			// If any step fails, an exception is thrown
+		$connection = ftp_connect($this->lConf['ftp_server']);
+		if ($connection) {
+			if (@ftp_login($connection, $this->lConf['ftp_server_username'], $this->lConf['ftp_server_password'])) {
+				if (ftp_put($connection, $this->lConf['ftp_server_path'] . $xmlFileName, $filename, FTP_BINARY)) {
+					ftp_close($connection);
+				} else {
+					ftp_close($connection);
+					throw new Exception(sprintf($GLOBALS['LANG']->getLL('export.ftp.upload_failed'), $filename, $this->lConf['ftp_server_path']), 1326906926);
+				}
+			} else {
+				ftp_close($connection);
+				throw new Exception(sprintf($GLOBALS['LANG']->getLL('export.ftp.login_failed'), $this->lConf['ftp_server_username']), 1326906772);
+			}
+		} else {
+			throw new Exception($GLOBALS['LANG']->getLL('export.ftp.connection_failed'), 1326906675);
+		}
+			// If everything went well, return the file's base name
+		return $xmlFileName;
+	}
+
+	/**
+	 * The function emailNotification sends an email with a translation job to the recipient specified in the extension config.
+	 *
+	 * @param string $xmlFileName Name of the XML file
+	 * @param tx_l10nmgr_l10nConfiguration $l10nmgrCfgObj L10N Manager configuration object
+	 * @param integer $tlang ID of the language to translate to
+	 * @return void
+	 */
+	protected function emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang) {
+			// If at least a recipient is indeed defined, proceed with sending the mail
+		$recipients = t3lib_div::trimExplode(',', $this->lConf['email_recipient']);
+		if (count($recipients) > 0) {
+			$fullFilename = PATH_site . 'uploads/tx_l10nmgr/saved_files/'. $xmlFileName;
+
+				// Get source & target language ISO codes
+			$sourceStaticLangArr = t3lib_BEfunc::getRecord('static_languages', $l10nmgrCfgObj->l10ncfg['sourceLangStaticId'], 'lg_iso_2');
+			$targetStaticLang = t3lib_BEfunc::getRecord('sys_language', $tlang, 'static_lang_isocode');
+			$targetStaticLangArr = t3lib_BEfunc::getRecord('static_languages', $targetStaticLang['static_lang_isocode'], 'lg_iso_2');
+			$sourceLang = $sourceStaticLangArr['lg_iso_2'];
+			$targetLang = $targetStaticLangArr['lg_iso_2'];
+				// Collect mail data
+			$fromMail = $this->lConf['email_sender'];
+			$fromName = $this->lConf['email_sender_name'];
+			$organisation = $this->lConf['email_sender_organisation'];
+			$subject = sprintf($GLOBALS['LANG']->getLL('email.suject.msg'), $sourceLang, $targetLang, $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
+				// Assemble message body
+			$message = array(
+				'msg1' => $GLOBALS['LANG']->getLL('email.greeting.msg'),
+				'msg2' => '',
+				'msg3' => sprintf($GLOBALS['LANG']->getLL('email.new_translation_job.msg'), $sourceLang, $targetLang, $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']),
+				'msg4' => $GLOBALS['LANG']->getLL('email.info.msg'),
+				'msg5' => $GLOBALS['LANG']->getLL('email.info.import.msg'),
+				'msg6' => '',
+				'msg7' => $GLOBALS['LANG']->getLL('email.goodbye.msg'),
+				'msg8' => $fromName,
+				'msg9' => '--',
+				'msg10' => $GLOBALS['LANG']->getLL('email.info.exportef_file.msg'),
+				'msg11' => $xmlFileName,
+			);
+			if ($this->lConf['email_attachment']) {
+				$message['msg3'] = sprintf($GLOBALS['LANG']->getLL('email.new_translation_job_attached.msg'), $sourceLang, $targetLang, $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
+			}
+			$msg = implode(chr(10), $message);
+
+				// Instantiate the mail object, set all necessary properties and send the mail
+			if (class_exists('t3lib_mail_Message')) {
+					/** @var $mailObject t3lib_mail_Message */
+				$mailObject = t3lib_div::makeInstance('t3lib_mail_Message');
+				$mailObject->setFrom(array($fromMail => $fromName));
+				$mailObject->setTo($recipients);
+				$mailObject->setSubject($subject);
+				$mailObject->setFormat('text/plain');
+				$mailObject->setBody($msg);
+				if ($this->lConf['email_attachment']) {
+					$attachment = Swift_Attachment::fromPath($fullFilename, 'text/xml');
+					$mailObject->attach($attachment);
+				}
+				$mailObject->send();
+
+				// @TODO: Compatibility with TYPO3 4.4 or lower. Should be removed at some point.
+			} else {
+					/** @var $email t3lib_htmlmail */
+				$email = t3lib_div::makeInstance('t3lib_htmlmail');
+				$email->start();
+				$email->useQuotedPrintable();
+				$email->from_email = $fromMail;
+				$email->from_name = $fromName;
+				$email->replyto_email = $fromMail;
+				$email->replyto_name = $fromName;
+				$email->organisation = $organisation;
+				$email->subject = $subject;
+				$email->addPlain($msg);
+				if ($this->lConf['email_attachment']) {
+					$email->addAttachment($fullFilename);
+				}
+				$email->send(implode(',', $recipients));
+			}
+		}
 	}
 
 	/**
