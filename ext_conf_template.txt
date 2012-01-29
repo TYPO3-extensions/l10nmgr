@@ -26,7 +26,7 @@ l10nmgr_tlangs =
 #
 # cat=basic/email/10; type=string; label=Email address: The email address of the recipient when new files are available for translation (export).
 email_recipient =
-# cat=basic/email/10; type=string; label=Email address: The email address of the recipient when new translations have been imxported.
+# cat=basic/email/10; type=string; label=Email address: The email address of the recipient when new translations have been imported.
 email_recipient_import =
 # cat=basic/email/20; type=string; label=Email address: The email address of the sender (for all mails).
 email_sender =
