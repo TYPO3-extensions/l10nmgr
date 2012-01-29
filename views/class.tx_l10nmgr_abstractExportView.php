@@ -198,7 +198,7 @@ class tx_l10nmgr_abstractExportView {
 
 		foreach( $exports AS $export => $exportData ) {
 			$content[$export] = sprintf('
-<tr class="bgColor3">
+<tr class="db_list_normal">
 	<td>%s</td>
 	<td>%s</td>
 	<td>%s</td>
@@ -214,14 +214,14 @@ class tx_l10nmgr_abstractExportView {
 		}
 
 		$out = sprintf('
-<table>
+<table border="0" cellpadding="0" cellspacing="0" class="typo3-dblist">
 	<thead>
-		<tr class="bgColor5 tableheader">
-			<th>%s</th>
-			<th>%s</th>
-			<th>%s</th>
-			<th>%s</th>
-			<th>%s</th>
+		<tr class="t3-row-header">
+			<td>%s</td>
+			<td>%s</td>
+			<td>%s</td>
+			<td>%s</td>
+			<td>%s</td>
 		</tr>
 	</thead>
 	<tbody>

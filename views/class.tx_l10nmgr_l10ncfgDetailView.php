@@ -36,25 +36,32 @@
  */
 class tx_l10nmgr_l10ncfgDetailView {
 
-	var $l10ncfgObj = array();	// Internal array (=datarow of config record)
+	/**
+	 * @var tx_l10nmgr_l10nConfiguration
+	 */
+	var $l10ncfgObj;	// Internal array (=datarow of config record)
 
 	/**
 	 * @var $doc
 	 */
 	var $doc = null;
-	
+
 	/**
-	* constructor. Set the internal required objects as paramter in constructor (kind of dependency injection, and communicate the dependencies)
-	* @param tx_l10nmgr_l10nConfiguration	
-	**/
+	 * constructor. Set the internal required objects as parameter in constructor (kind of dependency injection, and communicate the dependencies)
+	 * @param tx_l10nmgr_l10nConfiguration $l10ncfgObj
+	 * @param template $doc Reference to the calling template object
+	 * @return void
+	 **/
 	function tx_l10nmgr_l10ncfgDetailView($l10ncfgObj, $doc) {
-		$this->l10ncfgObj=&$l10ncfgObj;
+		$this->l10ncfgObj = $l10ncfgObj;
 		$this->doc = $doc;
 	}
-	
+
 	/**
-	* checks if the internal tx_l10nmgr_l10nConfiguration object is valid
-	**/
+	 * checks if the internal tx_l10nmgr_l10nConfiguration object is valid
+	 *
+	 * @return void
+	 **/
 	function _hasValidConfig() {
 		if (is_object($this->l10ncfgObj) && $this->l10ncfgObj->isLoaded()) {
 			return true;
@@ -64,9 +71,11 @@ class tx_l10nmgr_l10ncfgDetailView {
 		}
 	}
 	/**
-	* returns HTML table with infos for the l10nmgr config.
-	*	(needs valid configuration to be set)
-	**/
+	 * returns HTML table with infos for the l10nmgr config.
+	 *	(needs valid configuration to be set)
+	 *
+	 * @return string HTML to display
+	 **/
 	function render()	{
 		global $LANG;
 		$content = '';
@@ -76,17 +85,17 @@ class tx_l10nmgr_l10ncfgDetailView {
 		}
 
 		$configurationSettings = '
-				<table border="1" cellpadding="1" cellspacing="0" width="400">
-					<tr class="bgColor5 tableheader">
+				<table border="0" cellpadding="0" cellspacing="0" class="typo3-dblist">
+					<tr class="t3-row-header">
 						<td colspan="4"><strong>'.htmlspecialchars($this->l10ncfgObj->getData('title')).' ['.$this->l10ncfgObj->getData('uid').']</strong></td>
 					</tr>
-					<tr class="bgColor3">
+					<tr class="db_list_normal">
 						<td><strong>'.$LANG->getLL('general.list.headline.depth.title').':</strong></td>
 						<td>'.htmlspecialchars($this->l10ncfgObj->getData('depth')).'&nbsp;</td>
 						<td><strong>'.$LANG->getLL('general.list.headline.tables').':</strong></td>
 						<td>'.htmlspecialchars($this->l10ncfgObj->getData('tablelist')).'&nbsp;</td>
 					</tr>
-					<tr class="bgColor3">
+					<tr class="db_list_normal">
 						<td><strong>'.$LANG->getLL('general.list.headline.exclude.title').':</strong></td>
 						<td>'.htmlspecialchars($this->l10ncfgObj->getData('exclude')).'&nbsp;</td>
 						<td><strong>'.$LANG->getLL('general.list.headline.include.title').':</strong></td>
@@ -99,8 +108,8 @@ class tx_l10nmgr_l10ncfgDetailView {
 		return $content;
 
 	}
-	
-	
+
+
 }
 
 
