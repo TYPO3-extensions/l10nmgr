@@ -34,7 +34,21 @@
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_l10nBaseService {
+	/**
+	 * @var bool Translate even if empty.
+	 */
 	var $createTranslationAlsoIfEmpty = FALSE;
+
+	/**
+	 * @var array Extension's configuration as from the EM
+	 */
+	protected $extensionConfiguration = array();
+
+	public function __construct(){
+			// Load the extension's configuration
+		$this->extensionConfiguration = unserialize( $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr'] );
+
+	}
 
 	/**
 	 * Save the translation
@@ -151,6 +165,9 @@ class tx_l10nmgr_l10nBaseService {
 				// Execute CMD array: Localizing records:
 				/** @var $tce t3lib_TCEmain */
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
+			if ($this->extensionConfiguration['enable_neverHideAtCopy'] == 1) {
+				$tce->neverHideAtCopy = TRUE;
+			}
 			$tce->stripslashes_values = FALSE;
 			if (count($TCEmain_cmd))	{
 				$tce->start(array(),$TCEmain_cmd);
@@ -183,7 +200,11 @@ class tx_l10nmgr_l10nBaseService {
 //debug($TCEmain_data,'$TCEmain_data');
 
 				// Now, submitting translation data:
+				/** @var $tce t3lib_TCEmain */
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
+			if ($this->extensionConfiguration['enable_neverHideAtCopy'] == 1) {
+				$tce->neverHideAtCopy = TRUE;
+			}
 			$tce->stripslashes_values = FALSE;
 			$tce->dontProcessTransformations = TRUE;
 			//print_r($TCEmain_data);

@@ -1,6 +1,6 @@
 # Revision: $Id: ext_conf_template.txt 30653 2009-01-23 15:11:31Z d.zielinski $
 
-# Enable hooks
+# Enable settings
 #
 # cat=basic/enable/10; type=boolean[1]; label=Enable hidden languages: Decide whether to make available hidden system languages for export/import.
 enable_hidden_languages = 0
@@ -13,6 +13,9 @@ enable_ftp = 0
 
 # cat=basic/enable/40; type=boolean[1]; label=Display status icons: Enable hook for displaying small icon in page tree, web>List and page module.
 enable_stat_hook = 0
+
+# cat=basic/enable/50; type=boolean[1]; label=Enable neverHideAtCopy: If translations should be visible in the FE after the import you have to enable this.
+enable_neverHideAtCopy = 1
 
 # Load L10N manager configration
 #
