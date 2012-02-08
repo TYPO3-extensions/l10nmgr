@@ -1,5 +1,5 @@
 2012-02-08 Andreas Otto <andreas@otto-hanika.de>
-	* [~FEATURE] Add configuration enable_neverHideAtCopy. TYPO3 4.5 changed the standard behaviour for copied records to be hidden. Technicaly a transpaltion of a record is a copy and would result in translations not being visible. For manual translations this might be a good idea, but for XML imports of finished translations this is counter productive. Just imagine you imported the translation for a larger website and you now have to go through every page and enable the translated records manualy.
+	* [~FEATURE] Add configuration enable_neverHideAtCopy. TYPO3 4.5 changed the standard behaviour for copied records to be hidden. Technicaly a translation of a record is a copy and would result in translations not being visible. For manual translations this might be a good idea, but for XML imports of finished translations this is counter productive. Just imagine you imported the translation for a larger website and you now have to go through every page and enable the translated records manualy.
 	* [~FEATURE] Fixes #33522. Raise TYPO3 version compatibility to 4.6.99.
 	* [RELEASE] Version 3.3.15
 
