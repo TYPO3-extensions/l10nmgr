@@ -222,8 +222,7 @@ class tx_l10nmgr_import extends t3lib_SCbase {
 				
 				$this->content.= $this->doc->spacer(10);
 				//create and render view to show details for the current l10nmgrcfg
-				$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
-				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
+				$l10nmgrconfigurationView=t3lib_div::makeInstance('tx_l10nmgr_l10ncfgDetailView', $l10ncfgObj, $this->doc);
 				$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
 
 				// ShortCut
@@ -290,8 +289,7 @@ class tx_l10nmgr_import extends t3lib_SCbase {
 			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
 			// Relevant processing of XML Import with the help of the Importmanager
-			$importManagerClass=t3lib_div::makeInstanceClassName('tx_l10nmgr_CATXMLImportManager');
-			$importManager=new $importManagerClass($uploadedTempFile,$this->sysLanguage, $xmlString="");
+			$importManager=t3lib_div::makeInstance('tx_l10nmgr_CATXMLImportManager', $uploadedTempFile, $this->sysLanguage, $xmlString="");
 			if ($importManager->parseAndCheckXMLFile()===false) {
 				$info.='<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
 			}
@@ -304,8 +302,7 @@ class tx_l10nmgr_import extends t3lib_SCbase {
 				if (t3lib_div::_POST('make_preview_link')=='1') {
 					$pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
 					$info.='<b>'.$LANG->getLL('import.xml.preview_links.title').'</b><br/>';
-					$mkPreviewLinksClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_mkPreviewLinkService');
-					$mkPreviewLinks=new $mkPreviewLinksClassName($t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
+					$mkPreviewLinks = t3lib_div::makeInstance('tx_l10nmgr_mkPreviewLinkService', $t3_workspaceId=$importManager->headerData['t3_workspaceId'], $t3_sysLang=$importManager->headerData['t3_sysLang'], $pageIds);
 					$info.=$mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
 				}
 				$translationData=$factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());

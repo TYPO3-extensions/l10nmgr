@@ -198,9 +198,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$this->content.=$this->doc->startPage($LANG->getLL('general.title'));
 				$this->content.=$this->doc->header($LANG->getLL('general.title'));
 
-				//create and render view to show details for the current l10nmgrcfg
-				$l10nmgrconfigurationViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_l10ncfgDetailView');
-				$l10nmgrconfigurationView= new $l10nmgrconfigurationViewClassName($l10ncfgObj, $this->doc);
+					//create and render view to show details for the current l10nmgrcfg
+				$l10nmgrconfigurationView=t3lib_div::makeInstance('tx_l10nmgr_l10ncfgDetailView', $l10ncfgObj, $this->doc);
 				//$this->content.=$this->doc->section('',$l10nmgrconfigurationView->render());
 
 				$this->content.=$this->doc->divider(15);
@@ -290,8 +289,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		switch ($this->MOD_SETTINGS["action"]) {
 			//Please use translate module from now on!
 			/* case 'inlineEdit': case 'link':
-				$htmlListViewClassName=t3lib_div::makeInstanceClassName('tx_l10nmgr_view_export_exporttypes_l10nHTMLList');
-				$htmlListView=new $htmlListViewClassName($l10ncfgObj,$this->sysLanguage);
+				$htmlListView=t3lib_div::makeInstance('tx_l10nmgr_view_export_exporttypes_l10nHTMLList', $l10ncfgObj, $this->sysLanguage);
 				$subheader=$LANG->getLL('inlineEdit');
 
 				if ($this->MOD_SETTINGS["action"]=='inlineEdit') {
