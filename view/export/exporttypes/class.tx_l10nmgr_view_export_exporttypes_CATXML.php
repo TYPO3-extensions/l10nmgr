@@ -112,7 +112,7 @@ class tx_l10nmgr_view_export_exporttypes_CATXML extends tx_l10nmgr_view_export_a
 							$cType 		= $translateableElement->getCType();
 							$fieldType  = $translateableField->getFieldType();
 							$key 		= $translateableField->getIdentityKey();
-							$data		= $this->getTransformedTranslationDataFromTranslateableField($this->getSkipXMLCheck(), $this->getUseUTF8Mode(),$translateableField,$this->forcedSourceLanguage);
+							$data		= $this->getTransformedTranslationDataFromTranslateableField($this->getSkipXMLCheck(), $this->getUseUTF8Mode(),$translateableField,$this->forcedSourceLanguage, $pageGroup->getUid(), $table, $fieldType, $key);
 							$needsTrafo = $translateableField->needsTransformation();
 
 								//TODO switch to new format

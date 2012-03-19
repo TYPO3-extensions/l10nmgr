@@ -298,13 +298,13 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string
 	 */
-	protected function getTransformedTranslationDataFromTranslateableField($skipXMLCheck, $useUTF8mode, $translateableField, $forcedSourceLanguage) {
+	protected function getTransformedTranslationDataFromTranslateableField($skipXMLCheck, $useUTF8mode, $translateableField, $forcedSourceLanguage, $pageUid = 0, $table = 'tt_content', $fieldType = 'text', $fieldPath = 'tt_content:0:bodytext') {
 		$dataForTranslation = $translateableField->getDataForTranslation($forcedSourceLanguage);
 		$result = '';
 
 		try {
 			if ($translateableField->needsTransformation()) {
-				$result = $this->TextConverter()->toXML($dataForTranslation);
+				$result = $this->TextConverter()->toXML($dataForTranslation, $pageUid, $table, $fieldType, $fieldPath);
 			} else {
 				$result = $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, true, false);
 			}

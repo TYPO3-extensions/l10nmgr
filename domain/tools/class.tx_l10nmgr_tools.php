@@ -615,7 +615,7 @@ class tx_l10nmgr_tools {
 			if ($kFieldName=='bodytext') {
 				return true;
 			}
-		} elseif (array_key_exists('l10nTransformationType',$TCEformsCfg['config']) && $TCEformsCfg['config']['l10nTransformationType']) {
+		} elseif (array_key_exists('l10nTransformationType',$TCEformsCfg['config']) && $TCEformsCfg['config']['l10nTransformationType']=='html') {
 			return true;
 		}
 		return false;

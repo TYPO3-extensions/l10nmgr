@@ -96,6 +96,7 @@ class tx_l10nmgr_domain_translationFactory {
 
 			foreach ($pagerow->children() as $field) {
 				$table = (string)$field['table'];
+				$fieldType = (string)$field['fieldType'];
 				$uid   = (int)$field['elementUid'];
 				$Field = new tx_l10nmgr_domain_translation_field();
 				$Field->setFieldPath((string)$field['key']);
@@ -103,14 +104,34 @@ class tx_l10nmgr_domain_translationFactory {
 
 				switch($Field->getTransformationType($uid,$needsAutoDetection)) {
 					case 'html':
-							$Field->setContent($TextConverter->getXMLContent($field));
+							$Field->setContent($TextConverter->toHtml($TextConverter->getXMLContent($field)));
 						break;
 					case 'text':
 							$Field->setTransformation(true);
-							$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field,true)));
+							$Field->setContent(
+									$TextConverter->toText(
+										$TextConverter->getXMLContent($field,true),
+										false,
+										true,
+										$Page->getUid(),
+										$table,
+										$fieldType,
+										$Field->getFieldPath()
+									)
+								);
 						break;
 					default:
-							$Field->setContent($TextConverter->toText($TextConverter->getXMLContent($field), false, false));
+							$Field->setContent(
+									$TextConverter->toText(
+										$TextConverter->getXMLContent($field), 
+										false, 
+										false,
+										$Page->getUid(),
+										$table,								
+										$fieldType,
+										$Field->getFieldPath()
+									)
+								);
 				}
 
 				$Element = $this->createOrGetElementFromElementCollection($ElementCollection, $table, $uid);

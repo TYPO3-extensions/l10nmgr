@@ -1,8 +1,10 @@
-<?php echo'<?xml version="1.0" encoding="UTF-8"?>'; ?>
+<?php 
+$staticSourceLanguage = $this->l10ncfgObj->getStaticSourceLanguage();
+
+echo'<?xml version="1.0" encoding="UTF-8"?>'; ?>
 <!DOCTYPE TYPO3L10N [ <!ENTITY nbsp "&#160;"> ]>
 <TYPO3L10N>
 	<head>
-		<?php $staticSourceLanguage = $this->l10ncfgObj->getStaticSourceLanguage(); ?>
 		<t3_l10ncfg><?php echo $this->l10ncfgObj->getUid(); ?></t3_l10ncfg>
 		<t3_sysLang><?php echo $this->getTranslateableInformation()->getTargetLanguage()->getUid(); ?></t3_sysLang>
 		<t3_sourceLang><?php if($staticSourceLanguage instanceof tx_l10nmgr_domain_language_staticLanguage ){?><?php echo $staticSourceLanguage->getLg_iso_2(); ?><?php } ?></t3_sourceLang>

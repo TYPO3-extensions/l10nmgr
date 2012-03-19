@@ -69,28 +69,35 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 * @throws tx_mvc_exception_converter
 	 * @return string XML valid structure
 	 */
-	public function toXML($content, $removeBrockenUTF8 = false) {
+	public function toXML($content, $removeBrockenUTF8 = false, $pageUid = 0, $table = 'tt_content', $fieldType = 'text', $fieldPath = 'tt_content:0:bodytext') {
 
 		$content = $this->toRaw($content, $removeBrockenUTF8, false);
 
+			//use the RTE configuration from pageTSconfig
+			/* @var $beUser t3lib_beUserAuth */
+		$beUser = $GLOBALS['BE_USER'];
+		$RTEsetup = $beUser->getTSConfig('RTE', t3lib_BEfunc::getPagesTSconfig($pageUid));
+		$fieldPathSegments = t3lib_div::trimExplode(':', $fieldPath, false, 4);
+		$thisConfig = t3lib_BEfunc::RTEsetup($RTEsetup['properties'], $table, $fieldPathSegment[2], $fieldType);
+			// TODO: switch to use the RTE parameters from field configuration
+			// NOTE: this will pass for practically all RTE fields
+		$specConf = array(
+				'richtext' => 1,
+				'rte_transform' => array (
+						'parameters' => array ('flag=rte_enabled', 'mode=ts_css')
+				)
+		);
+		$this->HTMLparser->init($table . ':' . $fieldPathSegment[2], $pageUid);
+		$this->HTMLparser->setRelPath('');
+		
 			// convert any &amp; you'll find
 		$this->HTMLparser->procOptions['dontConvAmpInNBSP_rte'] = false;
-		$this->HTMLparser->procOptions['allowTagsOutside ']     = 'img,hr,div';
-		$this->HTMLparser->procOptions['preserveDIVSections']   = true;
-
-			//!TODO switch to use the RTE configuration from pageTSconfig - $this->HTMLparser->RTE_transform();
-			//!TODO configure the parser that xhtml_cleaning is used
-			// Transform the content into valid XHTML style
-		$content = $this->HTMLparser->TS_transform_rte (
-			$this->HTMLparser->TS_links_rte (
-				$this->HTMLparser->TS_images_rte($content)
-			),
-			true
-		);
-
+		
+		$content = $this->HTMLparser->RTE_transform($content, $specConf, 'rte', $thisConfig);		
+		
 			// this is needed while the "t3lib_parseHTML_proc" replaces all "&" to the entity "&amp;" he can find.
 		$content = t3lib_div::deHSCentities($content);
-
+		
 		try {
 			$this->isValidXML($content);
 		} catch (tx_mvc_exception_invalidContent $e) {
@@ -198,41 +205,33 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return string
 	 */
-	public function toText($content, $importFlexFieldValue = false, $forceCleaningForRTE = true) {
-			//!TODO switch to use the RTE configuration from pageTSconfig
-		//$this->HTMLparser->RTE_transform();
-
-		$this->HTMLparser->procOptions['typolist']              = false;
-		$this->HTMLparser->procOptions['typohead']              = false;
-		$this->HTMLparser->procOptions['keepPDIVattribs']       = true;
-		$this->HTMLparser->procOptions['dontConvBRtoParagraph'] = true;
-			//trick to preserve strong tags
-		$this->HTMLparser->procOptions['denyTags']                 = 'strong';
-		$this->HTMLparser->procOptions['preserveTables']           = true;
-		$this->HTMLparser->procOptions['dontRemoveUnknownTags_db'] = true;
-
-		if (!is_array($this->HTMLparser->procOptions['HTMLparser_db.'])) {
-			$this->HTMLparser->procOptions['HTMLparser_db.']    = array();
-		}
-
-		$this->HTMLparser->procOptions['HTMLparser_db.']['xhtml_cleaning'] = true;
-
-		if ($forceCleaningForRTE === true) {
-			$content = $this->HTMLparser->TS_transform_db($content, 0);  // removes links from content if not called first!
-		}
-
-		$content = $this->HTMLparser->TS_links_db (
-			$this->HTMLparser->TS_images_db (
-				$content
-			)
-		);
-
+	public function toText($content, $importFlexFieldValue = false, $forceCleaningForRTE = true, $pageUid = 0, $table = 'tt_content', $fieldType = 'text', $fieldPath = 'tt_content:0:bodytext') {
 			// this is needed because the "t3lib_parseHTML_proc" dosn't recognise <br/> whitin <li> tags
 		$content = str_replace (
-			array('<br/>', '<br>'),
-			array('<br />', '<br />'),
-			$content
+				array('<br/>', '<br>'),
+				array('<br />', '<br />'),
+				$content
+		);		
+		
+			//use the RTE configuration from pageTSconfig
+			/* @var $beUser t3lib_beUserAuth */
+		$beUser = $GLOBALS['BE_USER'];
+		$RTEsetup = $beUser->getTSConfig('RTE', t3lib_BEfunc::getPagesTSconfig($pageUid));
+		$fieldPathSegments = t3lib_div::trimExplode(':', $fieldPath, false, 4);
+		$thisConfig = t3lib_BEfunc::RTEsetup($RTEsetup['properties'], $table, $fieldPathSegment[2], $fieldType);
+			// TODO: switch to use the RTE parameters from field configuration
+			// NOTE: this will pass for practically all RTE fields
+		$specConf = array(
+			'richtext' => 1,
+			'rte_transform' => array (
+				'parameters' => array ('flag=rte_enabled', 'mode=ts_css')			
+			)	
 		);
+		$this->HTMLparser->init($table . ':' . $fieldPathSegment[2], $pageUid);
+		$this->HTMLparser->setRelPath('');
+		$this->HTMLparser->procOptions['HTMLparser_db.']['xhtml_cleaning'] = true;
+		
+		$content = $this->HTMLparser->RTE_transform($content, $specConf, 'db', $thisConfig);
 
 			/* @internal We need to escape the content for the XML flexform structure and reconvert the "&nbsp;" */
 		if ($importFlexFieldValue === true) {
@@ -246,9 +245,29 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 				// => check this option "$this->HTMLparser->procOptions['HTMLparser_db.']['htmlSpecialChars'] = -1;"
 			$content = htmlspecialchars_decode($content);
 		}
-
+		
 		return $content;
 	}
+	
+	/**
+	 * This method is used to convert thext form an import XML file into a valid database shema.
+	 *
+	 * @param string $content XML string to convert
+	 * @access public
+	 * @throws tx_mvc_exception_converter
+	 * @author Nikola Stojiljkovic
+	 * @return string
+	 */
+	public function toHtml($content) {
+		// this is needed because the "t3lib_parseHTML_proc" dosn't recognise <br/> whitin <li> tags
+		$content = str_replace (
+				array('<br/>', '<br>'),
+				array('<br />', '<br />'),
+				$content
+		);
+	
+		return $content;
+	}	
 
 	/**
 	 * Verify that the given string contains a valid XML structure.
