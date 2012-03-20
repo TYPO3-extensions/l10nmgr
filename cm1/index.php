@@ -565,10 +565,10 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 * function sends downloadheader and calls render method of the view.
 	 * it is used for excelXML and CATXML
 	 *
-	 * @param tx_l10nmgr_CATXMLView $xmlView Object for generating the XML export
+	 * @param tx_l10nmgr_abstractExportView $xmlView Object for generating the XML export
 	 * @return void
 	 */
-	function _downloadXML(tx_l10nmgr_CATXMLView $xmlView) {
+	function _downloadXML(tx_l10nmgr_abstractExportView $xmlView) {
 			// Setting filename:
 		$filename = $xmlView->getFileName();
 		$mimeType = 'text/xml';
