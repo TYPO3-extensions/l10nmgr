@@ -439,7 +439,12 @@ class tx_cliimport_cli extends t3lib_cli {
 					}
 				}
 				catch (Exception $e) {
-					$out .= "\n\n" . $xmlFile . ': Badly formatted file (' . $e->getMessage() . ')';
+					$errorMessage = 'Badly formatted file (' . $e->getMessage() . ')';
+					$out .= "\n\n" . $xmlFile . ': ' . $errorMessage;
+						// Store the error message for later reporting by mail
+					$this->filesImported[$xmlFile] = array(
+						'error' => $errorMessage
+					);
 				}
 			}
 		} else {
@@ -450,7 +455,7 @@ class tx_cliimport_cli extends t3lib_cli {
 
 			// Report non-fatal errors that happened
 		if (count($this->errors) > 0) {
-			$out .= "\n\nThe following non-fatal errors occurred:\n";
+			$out .= "\n\n". $GLOBALS['LANG']->getLL('import.nonfatal.errors') . "\n";
 			foreach ($this->errors as $error) {
 				$out .= "\t" . $error . "\n";
 			}
@@ -649,27 +654,45 @@ class tx_cliimport_cli extends t3lib_cli {
 					// Start assembling the mail message
 				$message = sprintf($GLOBALS['LANG']->getLL('import.mail.intro'), date('d.m.Y H:i:s', $GLOBALS['EXEC_TIME']), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']) . "\n\n";
 				foreach ($this->filesImported as $file => $fileInformation) {
-					$message .= sprintf($GLOBALS['LANG']->getLL('import.mail.file'), $file) . "\n";
-						// Get the workspace's name and add workspace information
-					if ($fileInformation['workspace'] == 0) {
-						$workspaceName = 'LIVE';
+					if (isset($fileInformation['error'])) {
+						$status = $GLOBALS['LANG']->getLL('import.mail.error');
+						$message .= '[' . $status . '] ' . sprintf($GLOBALS['LANG']->getLL('import.mail.file'), $file) . "\n";
+						$message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.import.failed'), $fileInformation['error']) . "\n";
+
 					} else {
-						if (isset($workspaces[$fileInformation['workspace']])) {
-							$workspaceName = $workspaces[$fileInformation['workspace']]['title'];
+						$status = $GLOBALS['LANG']->getLL('import.mail.ok');
+						$message .= '[' . $status . '] ' . sprintf($GLOBALS['LANG']->getLL('import.mail.file'), $file) . "\n";
+							// Get the workspace's name and add workspace information
+						if ($fileInformation['workspace'] == 0) {
+							$workspaceName = 'LIVE';
 						} else {
-							$workspaceName = $GLOBALS['LANG']->getLL('import.mail.workspace.unknown');
+							if (isset($workspaces[$fileInformation['workspace']])) {
+								$workspaceName = $workspaces[$fileInformation['workspace']]['title'];
+							} else {
+								$workspaceName = $GLOBALS['LANG']->getLL('import.mail.workspace.unknown');
+							}
 						}
+						$message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.workspace'), $workspaceName, $fileInformation['workspace']) . "\n";
+							// Add language information
+						$message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.language'), $fileInformation['language']) . "\n";
+							// Get configuration's name and add configuration information
+						if (isset($l10nConfigurations[$fileInformation['configuration']])) {
+							$configurationName = $l10nConfigurations[$fileInformation['configuration']]['title'];
+						} else {
+							$configurationName = $GLOBALS['LANG']->getLL('import.mail.l10nconfig.unknown');
+						}
+						$message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.l10nconfig'), $configurationName, $fileInformation['configuration']) . "\n";
 					}
-					$message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.workspace'), $workspaceName, $fileInformation['workspace']) . "\n";
-						// Add language information
-					$message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.language'), $fileInformation['language']) . "\n";
-						// Get configuration's name and add configuration information
-					if (isset($l10nConfigurations[$fileInformation['configuration']])) {
-						$configurationName = $l10nConfigurations[$fileInformation['configuration']]['title'];
-					} else {
-						$configurationName = $GLOBALS['LANG']->getLL('import.mail.l10nconfig.unknown');
+				}
+
+					// Report non-fatal errors that happened
+				if (count($this->errors) > 0) {
+					$message .= "\n\n----------------------------------------\n";
+					$message .= $GLOBALS['LANG']->getLL('import.nonfatal.errors') . "\n";
+					foreach ($this->errors as $error) {
+						$message .= "\t" . $error . "\n";
 					}
-					$message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.l10nconfig'), $configurationName, $fileInformation['configuration']) . "\n";
+					$message .= "----------------------------------------\n";
 				}
 
 					// Add signature

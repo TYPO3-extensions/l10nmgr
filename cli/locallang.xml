@@ -31,14 +31,18 @@
 			<label index="export.process.error.invalid.message">Detected invalid characters in element</label>
 			<label index="import.manager.error.parsing.xml2tree.message">XML2Tree parsing error: </label>
 			<label index="import.manager.error.missing.head.message">No header part found in XML structure</label>
+			<label index="import.nonfatal.errors">The following non-fatal errors occurred:</label>
 			<label index="import.mail.subject">Translations imported for site %s</label>
 			<label index="import.mail.intro">The following files were imported on %1$s into %2$s:</label>
+			<label index="import.mail.ok">OK</label>
+			<label index="import.mail.error">ERROR</label>
 			<label index="import.mail.file">File %s:</label>
 			<label index="import.mail.workspace">- Workspace: %1$s (%2$d)</label>
 			<label index="import.mail.workspace.unknown">Unknown, should not happen</label>
 			<label index="import.mail.language">- Translation language: %s</label>
 			<label index="import.mail.l10nconfig">- L10N Manager configuration: %1$s (%2$d)</label>
 			<label index="import.mail.l10nconfig.unknown">Unknown, should have aborted</label>
+			<label index="import.mail.import.failed">Import failed with following error: %s</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="error.target_language_id.msg">Keine ID für Zielsprache angegeben!</label>
