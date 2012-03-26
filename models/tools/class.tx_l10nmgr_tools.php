@@ -271,7 +271,7 @@ class tx_l10nmgr_tools {
 
 										$key=$tInfo['translation_table'].':'.t3lib_BEfunc::wsMapId($tInfo['translation_table'],$translationUID).':'.$field;
 										if ($cfg['config']['type']=='flex') {
-											$dataStructArray=$this->_getFlexFormMetaDataForContentElement($table,$row);
+											$dataStructArray = $this->_getFlexFormMetaDataForContentElement($table, $field, $row);
 											if ($dataStructArray['meta']['langDisable'] && $dataStructArray['meta']['langDatabaseOverlay']==1) {
 												// Create and call iterator object:
 												$flexObj = t3lib_div::makeInstance('t3lib_flexformtools');
@@ -328,7 +328,7 @@ class tx_l10nmgr_tools {
 			}
 			if ($row['CType']=='templavoila_pi1' && !$useOverlay) {
 				if (($this->includeFceWithDefaultLanguage && $tInfo['sys_language_uid']==0) || $tInfo['sys_language_uid']==-1) {
-					$dataStructArray=$this->_getFlexFormMetaDataForContentElement($table,$row);
+					$dataStructArray = $this->_getFlexFormMetaDataForContentElement($table, 'tx_templavoila_flex', $row);
 
 					if (is_array($dataStructArray) && $dataStructArray !==false) {
 						if ($dataStructArray['meta']['langDisable']) {
@@ -361,19 +361,25 @@ class tx_l10nmgr_tools {
 			}
 			return array_unique($translationModes);
 		}
+
 	/*
-	* return Meta data of FCE, or false if no flexform is found
-	*/
-	function _getFlexFormMetaDataForContentElement($table,$row) {
-		global $TCA;
-		$conf = $TCA[$table]['columns']['tx_templavoila_flex']['config'];
+	 * Return meta data of flexform field, or false if no flexform is found
+	 *
+	 * @param string $table Name of the table
+	 * @param string $field Name of the field
+	 * @param array $row Current row of data
+	 * @return array|boolean Flexform structure (or false, if not found)
+	 */
+	protected function _getFlexFormMetaDataForContentElement($table, $field, $row) {
+		$conf = $GLOBALS['TCA'][$table]['columns'][$field]['config'];
 		$dataStructArray = t3lib_BEfunc::getFlexFormDS($conf, $row, $table);
 		if (is_array($dataStructArray)) {
 			return $dataStructArray;
 		}
 
-		return false;
+		return FALSE;
 	}
+
 	function _lookForFlexFormFieldAndAddToInternalTranslationDetails($table,$row) {
 		global $TCA;
 		foreach($TCA[$table]['columns'] as $field => $cfg)	{
