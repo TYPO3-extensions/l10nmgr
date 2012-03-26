@@ -151,7 +151,7 @@ class tx_l10nmgr_cm3 extends t3lib_SCbase {
 						} else {
 							$output.='Translations below were flushed!';
 						}
-						$output.=t3lib_div::view_array($res[0]); 
+						$output.=t3lib_utility_Debug::viewArray($res[0]);
 					
 						if (t3lib_div::_POST('_flush'))	{
 							$output.=$this->l10nMgrTools->updateIndexForRecord($table,$uid);
