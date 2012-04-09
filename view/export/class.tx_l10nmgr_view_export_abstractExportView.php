@@ -306,6 +306,13 @@ abstract class tx_l10nmgr_view_export_abstractExportView extends tx_mvc_view_bac
 			if ($translateableField->needsTransformation()) {
 				$result = $this->TextConverter()->toXML($dataForTranslation, $pageUid, $table, $fieldType, $fieldPath);
 			} else {
+					// Cleaning the XHTML in order to provide better experience for the translators
+					//
+					// Invalid XHTML will result in HTML code being displayed to the translators in most 
+					// translating applications.
+					/* @var $parsehtml t3lib_parsehtml */
+				$parsehtml = t3lib_div::makeInstance('t3lib_parsehtml');
+				$dataForTranslation = $parsehtml->XHTML_clean($dataForTranslation);
 				$result = $this->TextConverter()->toRaw($dataForTranslation, (bool)$useUTF8mode, true, false);
 			}
 		} catch (tx_mvc_exception_converter $e) {

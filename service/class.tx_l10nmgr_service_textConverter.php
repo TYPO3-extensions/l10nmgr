@@ -206,12 +206,8 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 * @return string
 	 */
 	public function toText($content, $importFlexFieldValue = false, $forceCleaningForRTE = true, $pageUid = 0, $table = 'tt_content', $fieldType = 'text', $fieldPath = 'tt_content:0:bodytext') {
-			// this is needed because the "t3lib_parseHTML_proc" dosn't recognise <br/> whitin <li> tags
-		$content = str_replace (
-				array('<br/>', '<br>'),
-				array('<br />', '<br />'),
-				$content
-		);		
+			// cleaning up text
+		$content = $this->toHtml($content);
 		
 			//use the RTE configuration from pageTSconfig
 			/* @var $beUser t3lib_beUserAuth */
@@ -259,13 +255,32 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 * @return string
 	 */
 	public function toHtml($content) {
-		// this is needed because the "t3lib_parseHTML_proc" dosn't recognise <br/> whitin <li> tags
-		$content = str_replace (
-				array('<br/>', '<br>'),
-				array('<br />', '<br />'),
-				$content
-		);
-	
+		$tagsWhichNeedClosing = array(
+				'a', 'abbr', 'acronym', 'address', 'applet', 'b', 'bdo', 'big', 'blockquote', 'body', 
+				'button', 'caption', 'center', 'cite', 'code', 'colgroup', 'dd', 'del', 'dfn', 'dir', 'div',
+				'dl', 'dt', 'em', 'fieldset', 'font', 'form', 'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
+				'head', 'html', 'i', 'iframe', 'ins', 'kbd', 'label', 'legend', 'li', 'map', 'menu', 'noframes',
+				'noscript', 'object', 'ol', 'optgroup', 'option', 'p', 'pre', 'q', 's', 'samp', 'script', 'select',
+				'small', 'span', 'strike', 'strong', 'style', 'sub', 'sup', 'table', 'tbody', 'td', 'textarea',
+				'tfoot', 'th', 'thead', 'title', 'tr', 'tt', 'u', 'ul', 'var', 'xmp');
+			// tags which need closing, SimpleXML is not aware of this
+		foreach ($tagsWhichNeedClosing as $tag) {
+			$content = preg_replace('|<'.$tag.' ([^>]*)\/>|msU', '<'.$tag.' $1></'.$tag.'>', $content);
+			$content = preg_replace('|<'.$tag.'\/>|msU', '<'.$tag.'></'.$tag.'>', $content);
+		}
+			// this is needed because the "t3lib_parseHTML_proc" dosn't recognise <br/> whitin <li> tags
+		$tagsWhichHaveToClose = array (
+				'area', 'base', 'basefont', 'br', 'col', 'frame', 'hr', 'img', 'input', 'link', 'meta', 'param');
+		foreach ($tagsWhichHaveToClose as $tag) {
+			$content = preg_replace('|<'.$tag.'([^>]*)>|msU', '<'.$tag.'$1 />', $content);
+			$content = preg_replace('|<'.$tag.'([^>]*)\/ \/>|msU', '<'.$tag.'$1 />', $content);
+			$content = preg_replace('|<'.$tag.'([^>]*)\/\/>|msU', '<'.$tag.'$1 />', $content);
+		}
+		
+			/* @var $parsehtml t3lib_parsehtml */
+		$parsehtml = t3lib_div::makeInstance('t3lib_parsehtml');
+		$content = $parsehtml->XHTML_clean($content);
+		
 		return $content;
 	}	
 
@@ -408,7 +423,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		} else {
 			$content = (string)$field;
 		}
-
+		
 		return $content;
 	}
 
