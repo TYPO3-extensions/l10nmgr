@@ -597,7 +597,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$exportContent = $xmlView->render();
 		$xmlView->saveExportFile($exportContent);
 			// Get the file name
-		$filename = PATH_site . 'uploads/tx_l10nmgr/saved_files/'. $xmlView->getLocalFilename();
+		$filename = PATH_site . 'uploads/tx_l10nmgr/saved_files/'. $xmlView->getFilename();
 		$xmlFileName = basename($filename);
 
 			// Try connecting to FTP server and uploading the file

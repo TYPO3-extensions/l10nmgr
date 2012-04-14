@@ -53,6 +53,11 @@ abstract class tx_l10nmgr_abstractExportView {
 	var $modeOnlyNew = FALSE;
 	var $exportType;
 
+	/**
+	 * @var string
+	 */
+	var $filename = '';
+
 
 	function __construct($l10ncfgObj, $sysLang) {
 		$this->sysLang = $sysLang;
@@ -73,22 +78,31 @@ abstract class tx_l10nmgr_abstractExportView {
 		$this->modeOnlyNew = TRUE;
 	}
 
-	function getFilename() {
-	}
-
 	/**
-	 * Creates a filename to save the File
+	 * Get filename
 	 *
 	 * @return string File name
 	 */
-	function getLocalFilename(){
+	function getFilename(){
+		if(empty($this->filename)) {
+			$this->setFilename();
+		}
+		return $this->filename;
+	}
+
+	/**
+	 * Set filename
+	 *
+	 * @return void
+	 */
+	function setFilename() {
 		$sourceLang = '';
 		$targetLang = '';
 
 		if ($this->exportType == '0') {
-			$fileType = 'excel_export';
+			$fileType = 'excel';
 		} else {
-			$fileType = 'catxml_export';
+			$fileType = 'catxml';
 		}
 
 		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables')) {
@@ -115,11 +129,11 @@ abstract class tx_l10nmgr_abstractExportView {
 			$targetLang = $targetLangArr['lg_iso_2'];
 		}
 
-		$fileNamePrefix = (trim($this->l10ncfgObj->getData('filenameprefix'))) ? $this->l10ncfgObj->getData('filenameprefix') : $fileType ;
+		$fileNamePrefix = (trim($this->l10ncfgObj->getData('filenameprefix'))) ? $this->l10ncfgObj->getData('filenameprefix').'_'.$fileType : $fileType ;
 
 			// Setting filename:
 		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
-		return $filename;
+		$this->filename = $filename;
 	}
 
 	/**
@@ -146,7 +160,7 @@ abstract class tx_l10nmgr_abstractExportView {
 			'tablelist' => $this->l10ncfgObj->getData('tablelist'),
 			'title' => $this->l10ncfgObj->getData('title'),
 			'cruser_id' => $this->l10ncfgObj->getData('cruser_id'),
-			'filename' => $this->getLocalFilename(),
+			'filename' => $this->getFilename(),
 			'exportType' => $this->exportType
 		);
 
@@ -271,7 +285,7 @@ abstract class tx_l10nmgr_abstractExportView {
 	 * @param string $fileContent The content to save to file
 	 */
 	function saveExportFile($fileContent) {
-		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/saved_files/' . $this->getLocalFilename();
+		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/saved_files/' . $this->getFilename();
 		t3lib_div::writeFile($fileExportName, $fileContent);
 	}
 

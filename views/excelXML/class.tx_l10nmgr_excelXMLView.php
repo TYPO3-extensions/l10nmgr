@@ -210,10 +210,6 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 		exit;
 	}
 
-	function getFileName() {
-		return 'excel_export_'.$this->sysLang.'_'.date('dmy-Hi').'.xml';
-	}
-
 	/**
       * Force a new source language to export the content to translate
       *
