@@ -27,26 +27,32 @@
 
 
 /**
-* abstrakt Base class for rendering the export or htmllist of a l10ncfg
-**/
-class tx_l10nmgr_abstractExportView {
+ * Abstract class for all export views
+ *
+ * @author	Fabian Seltmann <fs@marketing-factory.de>
+ * @package TYPO3
+ * @subpackage tx_l10nmgr
+ **/
+abstract class tx_l10nmgr_abstractExportView {
 
 	/**
-	 * @var	tx_l10nmgr_l10nConfiguration		$l10ncfgObj		The language configuration object
+	 * @var	tx_l10nmgr_l10nConfiguration The language configuration object
 	 */
 	var $l10ncfgObj;
 
 	/**
-	 * @var	integer		$sysLang		The sys_language_uid of language to export
+	 * @var	integer The sys_language_uid of language to export
 	 */
 	var $sysLang;
 
 	/**
-	*	 flags for controlling the fields which should render in the output:
-	*/
-	var $modeOnlyChanged=FALSE;
-	var $modeNoHidden=FALSE;
-	var $modeOnlyNew=FALSE;
+	 *	 flags for controlling the fields which should render in the output:
+	 */
+	var $modeOnlyChanged = FALSE;
+	var $modeNoHidden = FALSE;
+	var $modeOnlyNew = FALSE;
+	var $exportType;
+
 
 	function __construct($l10ncfgObj, $sysLang) {
 		$this->sysLang = $sysLang;
@@ -54,43 +60,46 @@ class tx_l10nmgr_abstractExportView {
 	}
 
 	function getExportType() {
-		return $exportType;
+		return $this->exportType;
 	}
 
 	function setModeNoHidden() {
-
-		$this->modeNoHidden=TRUE;
+		$this->modeNoHidden = TRUE;
 	}
 	function setModeOnlyChanged() {
-
-		$this->modeOnlyChanged=TRUE;
+		$this->modeOnlyChanged = TRUE;
 	}
 	function setModeOnlyNew() {
-		$this->modeOnlyNew=TRUE;
+		$this->modeOnlyNew = TRUE;
+	}
+
+	function getFilename() {
 	}
 
 	/**
-	 * create a filename to save the File
+	 * Creates a filename to save the File
+	 *
+	 * @return string File name
 	 */
 	function getLocalFilename(){
 		$sourceLang = '';
 		$targetLang = '';
 
-		if($this->exportType == '0'){
+		if ($this->exportType == '0') {
 			$fileType = 'excel_export';
-		}else{
+		} else {
 			$fileType = 'catxml_export';
 		}
 
-		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables'))        {
+		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables')) {
 			$sourceIso2L = '';
-			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'),'lg_iso_2');
-			$sourceIso2L = ' sourceLang="'.$staticLangArr['lg_iso_2'].'"';
+			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'), 'lg_iso_2');
+			$sourceIso2L = ' sourceLang = "' . $staticLangArr['lg_iso_2'] . '"';
 		}
 
-		if ($this->sysLang && t3lib_extMgm::isLoaded('static_info_tables'))        {
-			$targetLangSysLangArr = t3lib_BEfunc::getRecord('sys_language',$this->sysLang);
-			$targetLangArr = t3lib_BEfunc::getRecord('static_languages',$targetLangSysLangArr['static_lang_isocode']);
+		if ($this->sysLang && t3lib_extMgm::isLoaded('static_info_tables')) {
+			$targetLangSysLangArr = t3lib_BEfunc::getRecord('sys_language', $this->sysLang);
+			$targetLangArr = t3lib_BEfunc::getRecord('static_languages', $targetLangSysLangArr['static_lang_isocode']);
 		}
 
 			// Set sourceLang for filename
@@ -99,24 +108,26 @@ class tx_l10nmgr_abstractExportView {
 		}
 
 			// Use locale for targetLang in filename if available
-		if (isset( $targetLangArr['lg_collate_locale'] ) && !empty( $targetLangArr['lg_collate_locale'] )) {
+		if (isset($targetLangArr['lg_collate_locale']) && !empty($targetLangArr['lg_collate_locale'])) {
 			$targetLang = $targetLangArr['lg_collate_locale'];
 			// Use two letter ISO code if locale is not available
-		}else if (isset( $targetLangArr['lg_iso_2'] ) && !empty( $targetLangArr['lg_iso_2'] )) {
+		} elseif (isset($targetLangArr['lg_iso_2']) && !empty($targetLangArr['lg_iso_2'])) {
 			$targetLang = $targetLangArr['lg_iso_2'];
 		}
 
-		$fileNamePrefix = (trim( $this->l10ncfgObj->getData('filenameprefix') )) ? $this->l10ncfgObj->getData('filenameprefix') : $fileType ;
+		$fileNamePrefix = (trim($this->l10ncfgObj->getData('filenameprefix'))) ? $this->l10ncfgObj->getData('filenameprefix') : $fileType ;
 
-		// Setting filename:
+			// Setting filename:
 		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
 		return $filename;
 	}
 
 	/**
-	 * save the information of the export in the database table 'tx_l10nmgr_sava_data'
+	 * Saves the information of the export in the database table 'tx_l10nmgr_sava_data'
+	 *
+	 * @return resource Handle to the database query
 	 */
-	function saveExportInformation(){
+	function saveExportInformation() {
 
 		// get current date
 		$date = time();
@@ -125,17 +136,19 @@ class tx_l10nmgr_abstractExportView {
 		$sourceLanguageId=0;
 
 		// query to insert the data in the database
-		$field_values = array(						'source_lang' => $sourceLanguageId,
-													'translation_lang' => $this->sysLang,
-													'crdate' => $date,
-													'tstamp' => $date,
-													'l10ncfg_id' => $this->l10ncfgObj->getData('uid'),
-													'pid' => $this->l10ncfgObj->getData('pid'),
-													'tablelist' => $this->l10ncfgObj->getData('tablelist'),
-													'title' => $this->l10ncfgObj->getData('title'),
-													'cruser_id' => $this->l10ncfgObj->getData('cruser_id'),
-													'filename' => $this->getLocalFilename(),
-													'exportType' => $this->exportType);
+		$field_values = array(
+			'source_lang' => $sourceLanguageId,
+			'translation_lang' => $this->sysLang,
+			'crdate' => $date,
+			'tstamp' => $date,
+			'l10ncfg_id' => $this->l10ncfgObj->getData('uid'),
+			'pid' => $this->l10ncfgObj->getData('pid'),
+			'tablelist' => $this->l10ncfgObj->getData('tablelist'),
+			'title' => $this->l10ncfgObj->getData('title'),
+			'cruser_id' => $this->l10ncfgObj->getData('cruser_id'),
+			'filename' => $this->getLocalFilename(),
+			'exportType' => $this->exportType
+		);
 
 		$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_l10nmgr_exportdata', $field_values);
 
@@ -144,23 +157,28 @@ class tx_l10nmgr_abstractExportView {
 	}
 
 	/**
-	 * checks if an export exists
+	 * Checks if an export exists
 	 *
+	 * @return boolean
 	 */
 	function checkExports(){
 		$ret = FALSE;
 
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('l10ncfg_id,exportType,translation_lang','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$this->sysLang);
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'l10ncfg_id,exportType,translation_lang',
+			'tx_l10nmgr_exportdata',
+			'l10ncfg_id =' . $this->l10ncfgObj->getData('uid') . ' AND exportType = ' . $this->exportType . ' AND translation_lang = ' . $this->sysLang
+		);
 
-		if ( !$GLOBALS['TYPO3_DB']->sql_error() ) {
+		if (!$GLOBALS['TYPO3_DB']->sql_error()) {
 			$numRows = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
-		}else{
+		} else {
 			$numRows = 0;
 		}
 
 		if ( $numRows > 0){
 			$ret = FALSE;
-		}else{
+		} else {
 			$ret = TRUE;
 		}
 
@@ -176,9 +194,13 @@ class tx_l10nmgr_abstractExportView {
 	function fetchExports() {
 		$exports = array();
 
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('crdate,l10ncfg_id,exportType,translation_lang,filename','tx_l10nmgr_exportdata','l10ncfg_id ='.$this->l10ncfgObj->getData('uid').' AND exportType ='.$this->exportType.' AND translation_lang ='.$this->sysLang);
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'crdate,l10ncfg_id,exportType,translation_lang,filename',
+			'tx_l10nmgr_exportdata',
+				'l10ncfg_id = ' . $this->l10ncfgObj->getData('uid') . ' AND exportType = ' . $this->exportType . ' AND translation_lang = ' . $this->sysLang
+		);
 
-		if ( is_array( $res ) ) {
+		if (is_array($res)) {
 			$exports = $res;
 		}
 
@@ -209,7 +231,11 @@ class tx_l10nmgr_abstractExportView {
 				$exportData['l10ncfg_id'],
 				$exportData['exportType'],
 				$exportData['translation_lang'],
-				sprintf('<a href="%suploads/tx_l10nmgr/saved_files/%s">%s</a>', t3lib_div::getIndpEnv('TYPO3_SITE_URL'), $exportData['filename'], $exportData['filename'])
+				sprintf('<a href="%suploads/tx_l10nmgr/saved_files/%s">%s</a>',
+					t3lib_div::getIndpEnv('TYPO3_SITE_URL'),
+					$exportData['filename'],
+					$exportData['filename']
+				)
 			);
 		}
 
@@ -233,39 +259,39 @@ class tx_l10nmgr_abstractExportView {
 			$LANG->getLL('export.overview.type.label'),
 			$LANG->getLL('export.overview.targetlanguage.label'),
 			$LANG->getLL('export.overview.filename.label'),
-			implode( chr(10), $content )
+			implode(chr(10), $content)
 		);
 
 		return $out;
 	}
 
 	/**
-	 *  save the exported files in the file /uploads/tx_l10nmgr/saved_files/
+	 * Saves the exported files in the file /uploads/tx_l10nmgr/saved_files/
+	 *
+	 * @param string $fileContent The content to save to file
 	 */
-	function saveExportFile($fileContent){
-		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/saved_files/'.$this->getLocalFilename();
-		t3lib_div::writeFile($fileExportName,$fileContent);
+	function saveExportFile($fileContent) {
+		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/saved_files/' . $this->getLocalFilename();
+		t3lib_div::writeFile($fileExportName, $fileContent);
 	}
 
 	/**
 	 * Diff-compare markup
 	 *
-	 * @param	string		Old content
-	 * @param	string		New content
-	 * @return	string		Marked up string.
+	 * @param string $old Old content
+	 * @param string $new New content
+	 * @return string Marked up string.
 	 */
-	function diffCMP($old, $new)	{
-			// Create diff-result:
+	function diffCMP($old, $new) {
+			// Creates diff-result
+			/** @var $t3lib_diff_Obj t3lib_diff */
 		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
 		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
 	}
 
 }
 
-
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_abstractExportView.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_abstractExportView.php']);
 }
-
-
 ?>
