@@ -112,7 +112,7 @@ class tx_l10nmgr_l10nAccumulatedInformations {
 		foreach($tree->tree as $treeElement)	{
 
 			$pageId = $treeElement['row']['uid'];
-			if (!isset($excludeIndex['pages:'.$pageId]) && ($treeElement['row']['l18n_cfg']&2)!=2 && !in_array($treeElement['row']['doktype'], $this->disallowDoktypes) )	{
+			if (!isset($excludeIndex['pages:'.$pageId]) && !in_array($treeElement['row']['doktype'], $this->disallowDoktypes) )	{
 
 				$accum[$pageId]['header']['title']	= $treeElement['row']['title'];
 				$accum[$pageId]['header']['icon']	= $treeElement['HTML'];

@@ -154,7 +154,7 @@ Traversing page tree and building an index of translation needs
 				$t8Tools->bypassFilter = $this->cli_isArg('--bypassFilter') ? TRUE : FALSE;
 
 				$pageRecord = t3lib_BEfunc::getRecord('pages',$uid);
-				if (($pageRecord['l18n_cfg']&2)!=2 && $pageRecord['doktype']<200 && !isset($excludeIndex['pages:'.$pageId]))	{
+				if ($pageRecord['doktype']<200 && !isset($excludeIndex['pages:'.$pageId]))	{
 
 					$accum['header']['title']	= $pageRecord['title'];
 					$accum['items'] = $t8Tools->indexDetailsPage($pageId);
