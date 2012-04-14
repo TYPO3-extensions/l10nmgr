@@ -131,9 +131,10 @@ class tx_l10nmgr_xmltools {
 			//$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
 			$this->parseHTML->procOptions['dontRemoveUnknownTags_db']=TRUE;
 
-			//debug for CLI import
-			$file = t3lib_extMgm::extPath('l10nmgr').'debug_xml2rte.txt';
-			file_put_contents($file,"Before RTE:\n".$xmlstring."\n---\n");
+				//Writes debug information for CLI import to syslog if $TYPO3_CONF_VARS['SYS']['enable_DLOG'] is set.
+			if (TYPO3_DLOG) {
+				t3lib_div::sysLog(__FILE__.': Before RTE transformation:'.LF.$xmlstring.LF, 'l10nmgr');
+			}
 
 			$content = $this->parseHTML->TS_transform_db($xmlstring,$css=0); // removes links from content if not called first!
 			$content = $this->parseHTML->TS_images_db($content);
@@ -149,10 +150,10 @@ class tx_l10nmgr_xmltools {
 			//substitute URL in <link> for CLI import
 			$content = preg_replace('/<link http(s)?:\/\/[\w\.\/]*\?id=/', '<link ', $content);
 
-			//debug for CLI Import
-			$current = file_get_contents($file);
-			$current .= $content;
-			file_put_contents($file, $current);
+				//Writes debug information for CLI import to syslog if $TYPO3_CONF_VARS['SYS']['enable_DLOG'] is set.
+			if (TYPO3_DLOG) {
+				t3lib_div::sysLog(__FILE__.': After RTE transformation:'.LF.$content.LF, 'l10nmgr');
+			}
 
 			return $content;
 	}
