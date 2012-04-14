@@ -63,10 +63,29 @@ require_once (t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_to
  * @subpackage tx_lowlevel
  */
 class tx_l10nmgr_index extends tx_lowlevel_cleaner_core {
+	/**
+	 * @var array Extension's configuration as from the EM
+	 */
+	protected $extensionConfiguration = array();
 
+	/**
+	 * @var array List of not allowed doktypes
+	 */
+	var $disallowDoktypes = array('--div--','255');
+
+	/**
+	 * @var bool Check reference index
+	 */
 	var $checkRefIndex = FALSE;
 
+	/**
+	 * @var bool
+	 */
 	var $genTree_traverseDeleted = FALSE;
+
+	/**
+	 * @var bool
+	 */
 	var $genTree_traverseVersions = FALSE;
 
 
@@ -76,6 +95,10 @@ class tx_l10nmgr_index extends tx_lowlevel_cleaner_core {
 	 * @return	void
 	 */
 	function tx_l10nmgr_index()	{
+			// Load the extension's configuration
+		$this->extensionConfiguration = unserialize( $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr'] );
+		$this->disallowDoktypes = t3lib_div::trimExplode(',', $this->extensionConfiguration['disallowDoktypes']);
+
 		parent::tx_lowlevel_cleaner_core();
 
 			// Setting up help:
@@ -154,7 +177,7 @@ Traversing page tree and building an index of translation needs
 				$t8Tools->bypassFilter = $this->cli_isArg('--bypassFilter') ? TRUE : FALSE;
 
 				$pageRecord = t3lib_BEfunc::getRecord('pages',$uid);
-				if ($pageRecord['doktype']<200 && !isset($excludeIndex['pages:'.$pageId]))	{
+				if (!in_array($pageRecord['doktype'], $this->disallowDoktypes) && !isset($excludeIndex['pages:'.$pageId]))	{
 
 					$accum['header']['title']	= $pageRecord['title'];
 					$accum['items'] = $t8Tools->indexDetailsPage($pageId);
@@ -162,7 +185,7 @@ Traversing page tree and building an index of translation needs
 					$this->resultArray['index'][$uid] = $accum;
 				}
 			} else {
-				if ($echoLevel>2) echo chr(10).'			[tx_templavoila_unusedce:] Did not check page - was on offline page.';
+				if ($echoLevel>2) echo chr(10).'[tx_templavoila_unusedce:] Did not check page - was on offline page.';
 			}
 		}
 	}

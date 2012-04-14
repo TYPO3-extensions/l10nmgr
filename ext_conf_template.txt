@@ -17,6 +17,9 @@ enable_stat_hook = 0
 # cat=basic/enable/50; type=boolean[1]; label=Enable neverHideAtCopy: If translations should be visible in the FE after the import you have to enable this.
 enable_neverHideAtCopy = 1
 
+# cat=basic/enable/60; type=string; label=Disallow doktypes: If pages of certain doktypes should not be translated/exported you can define the doktypes here. Available doktypes are 1 (Standard), 2 (Advanced), 3 (External URL), 4 (Shortcut), 5 (Not in menu), 5 (Backend User Section), 7 (Mount Page), 199 (Spacer), 254 (Sys Folder), 255 (Recycler), ---div--- (------)
+disallowDoktypes = 255, ---div---
+
 # Load L10N manager configration
 #
 # cat=basic/l10nmgr/10; type=string; label=L10N Manager configurations: The uids of L10N Manager configurations (CSV).

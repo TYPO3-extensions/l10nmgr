@@ -41,21 +41,71 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_too
  */
 class tx_l10nmgr_l10nAccumulatedInformations {
 
-	var $objectStatus='new';	//status of this object. Is set to processed if internal Variables are calculated.
+	/**
+	 * @var array Extension's configuration as from the EM
+	 */
+	protected $extensionConfiguration = array();
 
+	/**
+	 * @var string The status of this object, set to processed if internal variables are calculated.
+	 */
+	var $objectStatus='new';
+
+	/**
+	 * @var array Page tree
+	 */
 	var $tree=array();
+
+	/**
+	 * @var array Selected l10nmgr configuration
+	 */
 	var $l10ncfg=array();
-	var $disallowDoktypes = array('--div--','3','255');
+
+	/**
+	 * @var array List of not allowed doktypes
+	 */
+	var $disallowDoktypes = array('--div--','255');
+
+	/**
+	 * @var int sys_language_uid of source language
+	 */
 	var $sysLang;
+
+	/**
+	 * @var int sys_language_uid of target language
+	 */
 	var $forcedPreviewLanguage;
 
+	/**
+	 * @var array Information about collected data for translation
+	 */
 	var $_accumulatedInformations=array();
 
+	/**
+	 * @var int Field count, might be needed by tranlation agencies
+	 */
 	var $_fieldCount=0;
+
+	/**
+	 * @var int Word count, might be needed by tranlation agencies
+	 */
 	var $_wordCount=0;
 
 
+	/**
+	 * Constructor
+	 *
+	 * @param $tree
+	 * @param $l10ncfg
+	 * @param $sysLang
+	 *
+	 * @return void
+	 */
 	function tx_l10nmgr_l10nAccumulatedInformations($tree,$l10ncfg,$sysLang) {
+			// Load the extension's configuration
+		$this->extensionConfiguration = unserialize( $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr'] );
+		$this->disallowDoktypes = t3lib_div::trimExplode(',', $this->extensionConfiguration['disallowDoktypes']);
+
 		$this->tree=$tree;
 		$this->l10ncfg=$l10ncfg;
 		$this->sysLang=$sysLang;
