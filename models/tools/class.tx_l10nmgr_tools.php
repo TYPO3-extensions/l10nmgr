@@ -510,19 +510,22 @@ class tx_l10nmgr_tools {
 	function translationDetails_addField($key, $TCEformsCfg, $dataValue, $translationValue, $diffDefaultValue='', $previewLanguageValues=array(),$contentRow=array())	{
 		$msg = '';
 
-		list(,,$kFieldName) = explode(':',$key);
+		list($kTableName,,$kFieldName) = explode(':',$key);
 
 		if ($TCEformsCfg['config']['type']!=='flex')	{
 			if ($TCEformsCfg['l10n_mode']!='exclude')	{
 				if ($TCEformsCfg['l10n_mode']=='mergeIfNotBlank')	{
 					$msg.='This field is optional. If not filled in, the default language value will be used.';
 				}
+				if (t3lib_div::inList('shortcut,shortcut_mode,urltype,url_scheme',$kFieldName) && t3lib_div::inList('pages,pages_language_overlay',$kTableName)) {
+					$this->bypassFilter = TRUE;
+				}
 				if (!t3lib_div::isFirstPartOfStr($TCEformsCfg['displayCond'],'HIDE_L10N_SIBLINGS'))	{
 					if (!t3lib_div::isFirstPartOfStr($kFieldName,'t3ver_'))	{
 						if (!$this->filters['l10n_categories'] || t3lib_div::inList($this->filters['l10n_categories'],$TCEformsCfg['l10n_cat']))	{
-							if (!$this->filters['fieldTypes'] || t3lib_div::inList($this->filters['fieldTypes'],$TCEformsCfg['config']['type']))	{
+							if (!$this->filters['fieldTypes'] || t3lib_div::inList($this->filters['fieldTypes'],$TCEformsCfg['config']['type']) || $this->bypassFilter)	{
 								if (!$this->filters['noEmptyValues'] || !(!$dataValue && !$translationValue))	{	// Checking that no translation value exists either; if a translation value is found it is considered that it should be translated even if the default value is empty for some reason.
-									if (!$this->filters['noIntegers'] || !t3lib_div::testInt($dataValue))	{
+									if (!$this->filters['noIntegers'] || !t3lib_div::testInt($dataValue) || $this->bypassFilter)	{
 										$this->detailsOutput['fields'][$key] = array(
 												'defaultValue' => $dataValue,
 												'translationValue' => $translationValue,
@@ -541,6 +544,8 @@ class tx_l10nmgr_tools {
 				} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; displayCondition HIDE_L10N_SIBLINGS was set.';
 			} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; "l10n_mode" for the field was "exclude" and field is not translated then.';
 		} elseif ($this->verbose) $this->detailsOutput['fields'][$key] = 'Bypassing; fields of type "flex" can only be translated in the context of an "ALL" language record';
+
+		$this->bypassFilter = FALSE;
 	}
 
 	/**
