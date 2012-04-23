@@ -153,37 +153,45 @@ class tx_l10nmgr_translationDataFactory {
 							$row['values'][0]=str_replace('<br />','<br>',$row['values'][0]);
 
 							//check if $row['values'][0] is beginning of $row['XMLvalue']
-							t3lib_div::sysLog(__FILE__.': _getParsedCATXMLFromXMLNodes: V0: '.$row['values'][0], 'l10nmgr');
-							t3lib_div::sysLog(__FILE__.': _getParsedCATXMLFromXMLNodes: XML: '.$row['XMLvalue'], 'l10nmgr');
+							if (TYPO3_DLOG) {
+								t3lib_div::sysLog(__FILE__.': '.__LINE__.': V0: '.$row['values'][0], 'l10nmgr');
+								t3lib_div::sysLog(__FILE__.': '.__LINE__.': XML: '.$row['XMLvalue'], 'l10nmgr');
+							}
 							$pattern = $row['values'][0];
-							t3lib_div::sysLog(__FILE__.': _getParsedCATXMLFromXMLNodes: Pattern: '.$pattern, 'l10nmgr');
+							if (TYPO3_DLOG) {
+								t3lib_div::sysLog(__FILE__.': '.__LINE__.': Pattern: '.$pattern, 'l10nmgr');
+							}
 							$pattern2 = '/'.preg_replace('/\//i','\/',preg_quote($pattern)).'/';
 							$pattern = '/^'.preg_replace('/\//i','\/',preg_quote($pattern)).'/';
-							t3lib_div::sysLog(__FILE__.': _getParsedCATXMLFromXMLNodes: Pattern: '.$pattern, 'l10nmgr');
-							t3lib_div::sysLog(__FILE__.': _getParsedCATXMLFromXMLNodes: Pattern 2: '.$pattern2, 'l10nmgr');
+							if (TYPO3_DLOG) {
+								t3lib_div::sysLog(__FILE__.': '.__LINE__.': Pattern: '.$pattern, 'l10nmgr');
+								t3lib_div::sysLog(__FILE__.': '.__LINE__.': Pattern 2: '.$pattern2, 'l10nmgr');
+							}
 							if (preg_match($pattern, $row['XMLvalue'],$treffer)) {
-								//print "Start row[values][0] eq start row[XMLvalue]!!!<br>\n";
-								//print $row['XMLvalue']."<br>\n";
+								if (TYPO3_DLOG) {
+									t3lib_div::sysLog(__FILE__.': '.__LINE__.': Start row[values][0] eq start row[XMLvalue]!!!'.LF.'XMLvalue: '.$row['XMLvalue'], 'l10nmgr');
+								}
 								$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['XMLvalue'];
 							} elseif ((preg_match('/<[^>]+>/i', $row['XMLvalue'])) && (!preg_match($pattern2, $row['XMLvalue'],$treffer))) {
-								//print "TAG found in row[XMLvalue]!!!<br>\n";
-								//print "1: ".$row['XMLvalue']."<br>\n";
-								//print "2: ".$row['values'][0]."<br>\n";
+								if (TYPO3_DLOG) {
+									t3lib_div::sysLog(__FILE__.': '.__LINE__.': TAG found in: '.$row['XMLvalue'], 'l10nmgr');
+									t3lib_div::sysLog(__FILE__.': '.__LINE__.': TAG found: '.$row['values'][0], 'l10nmgr');
+								}
 								$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['values'][0].$row['XMLvalue'];
 							} else {
-								//print "No TAG found in row[XMLvalue]!!!<br>\n";
-								//print $row['XMLvalue']."<br>\n";
+								if (TYPO3_DLOG) {
+									t3lib_div::sysLog(__FILE__.': '.__LINE__.': No TAG found in: '.$row['XMLvalue'], 'l10nmgr');
+								}
 								$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['XMLvalue'];
 							}
-							//print "IMPORT: ".$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']]."<br/>\n";
-							//print "---<br>\n";
-
+							if (TYPO3_DLOG) {
+								t3lib_div::sysLog(__FILE__.': '.__LINE__.': IMPORT: '.$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']], 'l10nmgr');
+							}
 						}
 					}
 				}
 			}
 		}
-		//print_r($translation);
 		return $translation;
 	}
 
