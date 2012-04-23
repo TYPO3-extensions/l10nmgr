@@ -153,14 +153,14 @@ class tx_l10nmgr_translationDataFactory {
 							$row['values'][0]=str_replace('<br />','<br>',$row['values'][0]);
 
 							//check if $row['values'][0] is beginning of $row['XMLvalue']
-							//print "V0: ".$row['values'][0]."<br>\n";
-							//print "XML:".$row['XMLvalue']." |<br>\n";
-							$pattern = preg_replace('/\//i','\/',$row['values'][0]);
-							//print "Pattern: \"".$pattern."\"<br>\n";
-							$pattern2 = '/'.preg_quote($pattern).'/';
-							$pattern = '/^'.preg_quote($pattern).'/';
-							//print "Pattern: \"".$pattern."\"<br>\n";
-							//print "Pattern 2: \"".$pattern2."\"<br>\n";
+							t3lib_div::sysLog(__FILE__.': _getParsedCATXMLFromXMLNodes: V0: '.$row['values'][0], 'l10nmgr');
+							t3lib_div::sysLog(__FILE__.': _getParsedCATXMLFromXMLNodes: XML: '.$row['XMLvalue'], 'l10nmgr');
+							$pattern = $row['values'][0];
+							t3lib_div::sysLog(__FILE__.': _getParsedCATXMLFromXMLNodes: Pattern: '.$pattern, 'l10nmgr');
+							$pattern2 = '/'.preg_replace('/\//i','\/',preg_quote($pattern)).'/';
+							$pattern = '/^'.preg_replace('/\//i','\/',preg_quote($pattern)).'/';
+							t3lib_div::sysLog(__FILE__.': _getParsedCATXMLFromXMLNodes: Pattern: '.$pattern, 'l10nmgr');
+							t3lib_div::sysLog(__FILE__.': _getParsedCATXMLFromXMLNodes: Pattern 2: '.$pattern2, 'l10nmgr');
 							if (preg_match($pattern, $row['XMLvalue'],$treffer)) {
 								//print "Start row[values][0] eq start row[XMLvalue]!!!<br>\n";
 								//print $row['XMLvalue']."<br>\n";
