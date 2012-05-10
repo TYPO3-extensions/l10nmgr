@@ -176,8 +176,11 @@ class tx_l10nmgr_l10nBaseService {
 					debug($tce->errorLog,'TCEmain localization errors:');
 				}
 			}
-//debug($tce->copyMappingArray_merged,'$tce->copyMappingArray_merged');
-//debug($TCEmain_data,'==> $TCEmain_data');
+
+				// Before remapping
+			if (TYPO3_DLOG) {
+				t3lib_div::sysLog(__FILE__ . ': ' . __LINE__ . ': TCEmain_data before remapping: ' . t3lib_div::arrayToLogString($TCEmain_data), 'l10nmgr');
+			}
 				// Remapping those elements which are new:
 			$this->lastTCEMAINCommandsCount=0;
 			foreach($TCEmain_data as $table => $items)	{
@@ -185,19 +188,19 @@ class tx_l10nmgr_l10nBaseService {
 					list($Tuid,$Tlang,$TdefRecord) = explode('/',$TuidString);
 					$this->lastTCEMAINCommandsCount++;
 					if ($Tuid === 'NEW')	{
-//debug($TCEmain_data,'$TCEmain_data');
 						if ($tce->copyMappingArray_merged[$table][$TdefRecord])	{
 							$TCEmain_data[$table][t3lib_BEfunc::wsMapId($table,$tce->copyMappingArray_merged[$table][$TdefRecord])] = $fields;
 						} else {
-							print "HERE NOT LOCALIZED!!!";
-							debug('Record "'.$table.':'.$TdefRecord.'" was NOT localized as it should have been!');
+							t3lib_div::sysLog(__FILE__.': '.__LINE__.': Record "'.$table.':'.$TdefRecord.'" was NOT localized as it should have been!', 'l10nmgr');
 						}
-//debug($TCEmain_data,'$TCEmain_data');
 						unset($TCEmain_data[$table][$TuidString]);
 					}
 				}
 			}
-//debug($TCEmain_data,'$TCEmain_data');
+				// After remapping
+			if (TYPO3_DLOG) {
+				t3lib_div::sysLog(__FILE__ . ': ' . __LINE__ . ': TCEmain_data after remapping: ' . t3lib_div::arrayToLogString($TCEmain_data), 'l10nmgr');
+			}
 
 				// Now, submitting translation data:
 				/** @var $tce t3lib_TCEmain */
@@ -212,11 +215,13 @@ class tx_l10nmgr_l10nBaseService {
 			$tce->process_datamap();
 
 			if (count($tce->errorLog))	{
-				debug($tce->errorLog,'TCEmain update errors:');
+				t3lib_div::sysLog(__FILE__ . ': ' . __LINE__ . ': TCEmain update errors: ' . t3lib_div::arrayToLogString($tce->errorLog), 'l10nmgr');
 			}
 
 			if (count($tce->autoVersionIdMap) && count($_flexFormDiffArray))	{
-			#	debug($this->flexFormDiffArray);
+				if (TYPO3_DLOG) {
+					t3lib_div::sysLog(__FILE__ . ': ' . __LINE__ . ': flexFormDiffArry: ' . t3lib_div::arrayToLogString($this->flexFormDiffArray), 'l10nmgr');
+				}
 				foreach($_flexFormDiffArray as $key => $value)	{
 					list($Ttable,$Tuid,$Trest) = explode(':',$key,3);
 					if ($tce->autoVersionIdMap[$Ttable][$Tuid])	{
@@ -224,8 +229,10 @@ class tx_l10nmgr_l10nBaseService {
 						unset($_flexFormDiffArray[$key]);
 					}
 				}
-#				debug($tce->autoVersionIdMap);
-#				debug($_flexFormDiffArray);
+				if (TYPO3_DLOG) {
+					t3lib_div::sysLog(__FILE__ . ': ' . __LINE__ . ': autoVersionIdMap: ' . $tce->autoVersionIdMap, 'l10nmgr');
+					t3lib_div::sysLog(__FILE__ . ': ' . __LINE__ . ': _flexFormDiffArray: ' . t3lib_div::arrayToLogString($_flexFormDiffArray), 'l10nmgr');
+				}
 			}
 
 

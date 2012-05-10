@@ -1,3 +1,18 @@
+2012-05-10 Andreas Otto <andreas@otto-hanika.de>
+	* [~TASK] Uses t3lib_div::sysLog to write debug messages if the PHP constant
+	TYPO3_DLOG is defined.
+	* [~BUG] Fixes #3739: problems with pattern in class.tx_l10nmgr_translationDataFactory.php.
+	* [~BUG] Bypass filter to include fields shortcut, shortcut_mode, urltype and url_scheme in translation.
+	* [~BUG] Fixes #36047. Filenames in database don't match exported files.
+	* [~BUG] Fixes #29102. No export for pages with doktype "External URL". Not allowed doktypes can now be configured in the EM. Thanks to Bernd Wilke for submitting the bug report.
+	* [~BUG] Fixes #31993. Pages with l18n_cfg = 2 are excluded. Thanks to Patric Pesch for providing a first patch.
+	* [~BUG] Fixes #35546. Move debug file out of extension folder. Writes debug information for CLI import now to syslog if $TYPO3_CONF_VARS['SYS']['enable_DLOG'] is set. Credits go to Francois Suter for investigating the issue and providing a first patch.
+	* [~BUG] Fixes #35543. Clean up tx_l10nmgr_abstractExportView. Credits go to Francois Suter for investigating the issue and providing a patch.
+	* [~TASK] Replace deprecated method t3lib_div::view_array() with t3lib_utility_Debug::viewArray().
+	* [~BUG] Fixes #35234. Flexform handling considers only TemplaVoilà field. Credits go to Francois Suter for investigating the issue and providing a patch.
+	* [~BUG] Fixes #34167. Errors should be reported during automated import. Credits go to Francois Suter for investigating the issue and providing a patch.
+	* [~BUG] Fixes #33806. PHP-Error on Excel-Export (wrong type-hint). Credits go to Hannes Gessmann for reporting the issue.
+
 2012-02-08 Andreas Otto <andreas@otto-hanika.de>
 	* [~FEATURE] Add configuration enable_neverHideAtCopy. TYPO3 4.5 changed the standard behaviour for copied records to be hidden. Technicaly a translation of a record is a copy and would result in translations not being visible. For manual translations this might be a good idea, but for XML imports of finished translations this is counter productive. Just imagine you imported the translation for a larger website and you now have to go through every page and enable the translated records manualy.
 	* [~FEATURE] Fixes #33522. Raise TYPO3 version compatibility to 4.6.99.
