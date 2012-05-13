@@ -55,7 +55,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	 * Render the simple XML export
 	 *
 	 * @param	array		Translation data for configuration
-	 * @return	string		HTML content
+	 * @return	string		Filename
 	 */
 	function render() {
 		global $LANG,$BE_USER;
@@ -185,10 +185,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		$XML .= implode('', $output) . "\n";
 		$XML .= "</TYPO3L10N>";
 
-		$this->saveExportFile($XML);
-
-		//DZ: why return XML here
-		return $XML;
+		return $this->saveExportFile($XML);
 	}
 
 	/**

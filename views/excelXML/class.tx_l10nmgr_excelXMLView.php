@@ -32,13 +32,6 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
-
-    /**
-    * @var array           $internalMessges                Part of XML with fail logging information content elements
-    */
-    var $internalMessges = array();
-
-
 	//internal flags:
 	var $modeOnlyChanged=FALSE;
 
@@ -202,12 +195,24 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 		$excelXML = str_replace('###INSERT_ROW_COUNT###',count($output), $excelXML);
         $excelXML = str_replace('###SOURCE_COL_STATE###',$sourceColState, $excelXML);
         $excelXML = str_replace('###ALT_SOURCE_COL_STATE###',$altSourceColState, $excelXML);
+		$excelXML = str_replace('###INSERT_INFORMATION###', $this->renderInternalMessage(), $excelXML);
 
+		return $this->saveExportFile($excelXML);
+	}
 
-		$this->saveExportFile($excelXML);
-
-		return $excelXML;
-		exit;
+	/**
+	 * Renders the list of internal message as XML tags
+	 *
+	 * @return string The XML structure to output
+	 */
+	protected function renderInternalMessage() {
+		$messages = '';
+		foreach ($this->internalMessages as $messageInformation) {
+			$messages .=  "\n\t\t\t" . '<Row>' . "\n\t\t\t\t" . '<Cell ss:Index="1" ss:StyleID="s37"><Data ss:Type="String">Skipped item	</Data></Cell>' . "\n\t\t\t" . '</Row>';
+			$messages .=  "\n\t\t\t" . '<Row>' . "\n\t\t\t\t" . '<Cell ss:Index="2" ss:StyleID="s26"><Data ss:Type="String">Description</Data></Cell>' . "\n\t\t\t\t" . '<Cell ss:StyleID="s27"><Data ss:Type="String">' . $messageInformation['message'] . '</Data></Cell>' . "\n\t\t\t" . '</Row>';
+			$messages .=  "\n\t\t\t" . '<Row>' . "\n\t\t\t\t" . '<Cell ss:Index="2" ss:StyleID="s26"><Data ss:Type="String">Key</Data></Cell>' . "\n\t\t\t\t" . '<Cell ss:StyleID="s27"><Data ss:Type="String">' . $messageInformation['key'] . '</Data></Cell>' . "\n\t\t\t" . '</Row>';
+		}
+		return $messages;
 	}
 
 	/**

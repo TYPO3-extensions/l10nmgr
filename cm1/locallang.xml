@@ -55,6 +55,9 @@
 			<label index="export.overview.type.label">Type</label>
 			<label index="export.overview.targetlanguage.label">Target language</label>
 			<label index="export.overview.filename.label">Filename</label>
+			<label index="export.download.error">Export failed</label>
+			<label index="export.download.success">Export successful</label>
+			<label index="export.download.success.detail">To download the export click on %s.</label>
 			<label index="export.ftp.error">FTP upload failed</label>
 			<label index="export.ftp.success">FTP upload successful</label>
 			<label index="export.ftp.success.detail">Export successfully uploaded to %s on FTP server</label>

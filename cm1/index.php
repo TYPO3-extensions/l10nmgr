@@ -411,7 +411,6 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$actionInfo .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
 				$actionInfo .= $viewClass->renderExports();
 			} else {
-				$viewClass->saveExportInformation();
 					// Upload to FTP
 				if (t3lib_div::_POST('ftp_upload') == '1') {
 					try {
@@ -432,29 +431,28 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 						/** @var $flashMessage t3lib_FlashMessage */
 					$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage', $message, $title, $status);
 					$actionInfo .= $flashMessage->render();
-						// If the export was successful, check if there were any internal warnings
-						// If yes, display them below the success message
-					if ($status == t3lib_FlashMessage::OK) {
-						$internalMessages = $viewClass->getMessages();
-						if (count($internalMessages) > 0) {
-							$messageBody = '';
-							foreach ($internalMessages as $messageInformation) {
-								$messageBody .= $messageInformation['message'] . ' (' . $messageInformation['key'] . ')<br />';
-							}
-								/** @var $flashMessage t3lib_FlashMessage */
-							$flashMessage = t3lib_div::makeInstance(
-								't3lib_FlashMessage',
-								$messageBody,
-								$GLOBALS['LANG']->getLL('export.ftp.warnings'),
-								t3lib_FlashMessage::WARNING
-							);
-							$actionInfo .= $flashMessage->render();
-						}
-					}
+					$actionInfo .= $viewClass->renderInternalMessagesAsFlashMessage($status);
 
 					// Download the XML file
 				} else {
-					$this->_downloadXML($viewClass);
+					try {
+						$filename = $this->downloadXML($viewClass);
+							// Prepare a success message for display
+						$link = sprintf('<a href="%s" target="_blank">%s</a>', t3lib_div::getIndpEnv('TYPO3_SITE_URL').$filename, $filename);
+						$title = $GLOBALS['LANG']->getLL('export.download.success');
+						$message = sprintf($GLOBALS['LANG']->getLL('export.download.success.detail'), $link);
+						$status = t3lib_FlashMessage::OK;
+					}
+					catch (Exception $e) {
+							// Prepare an error message for display
+						$title = $GLOBALS['LANG']->getLL('export.download.error');
+						$message = $e->getMessage() . ' (' . $e->getCode() . ')';
+						$status = t3lib_FlashMessage::ERROR;
+					}
+						/** @var $flashMessage t3lib_FlashMessage */
+					$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage', $message, $title, $status);
+					$actionInfo .= $flashMessage->render();
+					$actionInfo .= $viewClass->renderInternalMessagesAsFlashMessage($status);
 				}
 			}
 		}
@@ -513,8 +511,24 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
 				$info .= $viewClass->renderExports();
 			} else {
-				$viewClass->saveExportInformation();
-				$this->_downloadXML($viewClass);
+				try {
+					$filename = $this->downloadXML($viewClass);
+						// Prepare a success message for display
+					$link = sprintf('<a href="%s" target="_blank">%s</a>', t3lib_div::getIndpEnv('TYPO3_SITE_URL').$filename, $filename);
+					$title = $GLOBALS['LANG']->getLL('export.download.success');
+					$message = sprintf($GLOBALS['LANG']->getLL('export.download.success.detail'), $link);
+					$status = t3lib_FlashMessage::OK;
+				}
+				catch (Exception $e) {
+						// Prepare an error message for display
+					$title = $GLOBALS['LANG']->getLL('export.download.error');
+					$message = $e->getMessage() . ' (' . $e->getCode() . ')';
+					$status = t3lib_FlashMessage::ERROR;
+				}
+					/** @var $flashMessage t3lib_FlashMessage */
+				$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage', $message, $title, $status);
+				$info .= $flashMessage->render();
+				$info .= $viewClass->renderInternalMessagesAsFlashMessage($status);
 			}
 		}
 
@@ -581,23 +595,25 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	}
 
 	/**
-	 * function sends downloadheader and calls render method of the view.
-	 * it is used for excelXML and CATXML
+	 * Sends download header and calls render method of the view.
+	 * Used for excelXML and CATXML.
 	 *
 	 * @param tx_l10nmgr_abstractExportView $xmlView Object for generating the XML export
-	 * @return void
+	 * @return string $filename
 	 */
-	function _downloadXML(tx_l10nmgr_abstractExportView $xmlView) {
-			// Setting filename:
-		$filename = $xmlView->getFileName();
-		$mimeType = 'text/xml';
-		$this->_sendDownloadHeader($mimeType,$filename);
-		echo $xmlView->render();
-		exit;
+	protected function downloadXML(tx_l10nmgr_abstractExportView $xmlView) {
+			// Save content to the disk and get the file name
+		$filename = $xmlView->render();
+
+		return $filename;
 	}
 
-	function _sendDownloadHeader($mimeType,$filename) {
-
+	/**
+	 * @param string Mime type
+	 * @param string Filename
+	 * @return void
+	 */
+	protected function sendDownloadHeader($mimeType,$filename) {
 			// Creating output header:
 		Header('Charset: utf-8');
 		Header('Content-Type: '.$mimeType);
@@ -612,11 +628,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	 * @throws Exception
 	 */
 	protected function uploadToFtp(tx_l10nmgr_CATXMLView $xmlView) {
-			// Render the content and save it the disk
-		$exportContent = $xmlView->render();
-		$xmlView->saveExportFile($exportContent);
-			// Get the file name
-		$filename = PATH_site . 'uploads/tx_l10nmgr/saved_files/'. $xmlView->getFilename();
+			// Save content to the disk and get the file name
+		$filename = $xmlView->render();
 		$xmlFileName = basename($filename);
 
 			// Try connecting to FTP server and uploading the file

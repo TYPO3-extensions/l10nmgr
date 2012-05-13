@@ -310,13 +310,16 @@ abstract class tx_l10nmgr_abstractExportView {
 	}
 
 	/**
-	 * Saves the exported files in the file /uploads/tx_l10nmgr/saved_files/
+	 * Saves the exported files to the folder /uploads/tx_l10nmgr/saved_files/
 	 *
 	 * @param string $fileContent The content to save to file
+	 * @return string $fileExportName The complete filename
 	 */
 	function saveExportFile($fileContent) {
-		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/saved_files/' . $this->getFilename();
-		t3lib_div::writeFile($fileExportName, $fileContent);
+		$fileExportName = 'uploads/tx_l10nmgr/saved_files/' . $this->getFilename();
+		t3lib_div::writeFile(PATH_site . $fileExportName, $fileContent);
+
+		return $fileExportName;
 	}
 
 	/**
@@ -331,6 +334,37 @@ abstract class tx_l10nmgr_abstractExportView {
 			/** @var $t3lib_diff_Obj t3lib_diff */
 		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
 		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
+	}
+
+	/**
+	 * Renders internal messages as flash message.
+	 * If the export was successful, check if there were any internal warnings.
+	 * If yes, display them below the success message.
+	 *
+	 * @param string $status Flag which indicates if the export was successful.
+	 * @return string Rendered flash message or empty string if there are no messages.
+	 */
+	function renderInternalMessagesAsFlashMessage($status) {
+		$ret = '';
+		if ($status == t3lib_FlashMessage::OK) {
+			$internalMessages = $this->getMessages();
+			if (count($internalMessages) > 0) {
+				$messageBody = '';
+				foreach ($internalMessages as $messageInformation) {
+					$messageBody .= $messageInformation['message'] . ' (' . $messageInformation['key'] . ')<br />';
+				}
+					/** @var $flashMessage t3lib_FlashMessage */
+				$flashMessage = t3lib_div::makeInstance(
+					't3lib_FlashMessage',
+					$messageBody,
+					$GLOBALS['LANG']->getLL('export.ftp.warnings'),
+					t3lib_FlashMessage::WARNING
+				);
+				$ret .= $flashMessage->render();
+			}
+		}
+
+		return $ret;
 	}
 
 }
