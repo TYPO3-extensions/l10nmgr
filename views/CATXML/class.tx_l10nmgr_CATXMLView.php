@@ -40,11 +40,6 @@ require_once(t3lib_extMgm::extPath('l10nmgr').'views/class.tx_l10nmgr_abstractEx
 class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 
 	/**
-	 * @var	array		$internalMessges		Part of XML with fail logging information content elements
-	 */
-	var $internalMessges = array();
-
-	/**
 	 * @var	integer		$forcedSourceLanguage		Overwrite the default language uid with the desired language to export
 	 */
 	var $forcedSourceLanguage = false;
@@ -183,7 +178,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 		$XML .= "\t\t" . '<t3_workspaceId>'.$GLOBALS['BE_USER']->workspace.'</t3_workspaceId>'."\n";
 		$XML .= "\t\t" . '<t3_count>'.$accumObj->getFieldCount().'</t3_count>'."\n";
 		$XML .= "\t\t" . '<t3_wordCount>'.$accumObj->getWordCount().'</t3_wordCount>'."\n";
-		$XML .= "\t\t" . '<t3_internal>' . "\r\t" . implode("\n\t", $this->internalMessges) . "\t\t" . '</t3_internal>' . "\n";
+		$XML .= "\t\t" . '<t3_internal>' . "\r\t" . $this->renderInternalMessage() . "\t\t" . '</t3_internal>' . "\n";
 		$XML .= "\t\t" . '<t3_formatVersion>'.L10NMGR_FILEVERSION.'</t3_formatVersion>'."\n";
 		$XML .= "\t\t" . '<t3_l10nmgrVersion>'.L10NMGR_VERSION.'</t3_l10nmgrVersion>'."\n";
 		$XML .= "\t"   . '</head>'."\n";
@@ -197,15 +192,19 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 	}
 
 	/**
-	 * Build single item of "internal" message
+	 * Renders the list of internal message as XML tags
 	 *
-	 * @param	string		$message
-	 * @param	string		$key
-	 * @access	private
-	 * @return	void
+	 * @return string The XML structure to output
 	 */
-	function setInternalMessage($message, $key) {
-		$this->internalMessges[] = "\t\t" . '<t3_skippedItem>' . "\n\t\t\t\t" . '<t3_description>' . $message . '</t3_description>' . "\n\t\t\t\t" . '<t3_key>' . $key . '</t3_key>' . "\n\t\t\t" . '</t3_skippedItem>' . "\r";
+	protected function renderInternalMessage() {
+		$messages = '';
+		foreach ($this->internalMessages as $messageInformation) {
+			if (!empty($messages)) {
+				$messages .= "\n\t";
+			}
+			$messages .= "\t\t" . '<t3_skippedItem>' . "\n\t\t\t\t" . '<t3_description>' . $messageInformation['message'] . '</t3_description>' . "\n\t\t\t\t" . '<t3_key>' . $messageInformation['key'] . '</t3_key>' . "\n\t\t\t" . '</t3_skippedItem>' . "\r";
+		}
+		return $messages;
 	}
 
 	/**
@@ -221,10 +220,7 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView{
 
 }
 
-
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/CATXML/class.tx_l10nmgr_CATXMLView.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/CATXML/class.tx_l10nmgr_CATXMLView.php']);
 }
-
-
 ?>

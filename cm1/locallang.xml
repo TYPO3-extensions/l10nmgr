@@ -58,6 +58,7 @@
 			<label index="export.ftp.error">FTP upload failed</label>
 			<label index="export.ftp.success">FTP upload successful</label>
 			<label index="export.ftp.success.detail">Export successfully uploaded to %s on FTP server</label>
+			<label index="export.ftp.warnings">Some problems occurred during export however</label>
 			<label index="export.ftp.connection_failed">Failed to connect to FTP server</label>
 			<label index="export.ftp.login_failed">Could not log into FTP server with user %s</label>
 			<label index="export.ftp.upload_failed">Could not upload file %1$s to FTP server in path %2$s</label>

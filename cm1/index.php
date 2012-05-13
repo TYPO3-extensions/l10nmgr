@@ -432,6 +432,25 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 						/** @var $flashMessage t3lib_FlashMessage */
 					$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage', $message, $title, $status);
 					$actionInfo .= $flashMessage->render();
+						// If the export was successful, check if there were any internal warnings
+						// If yes, display them below the success message
+					if ($status == t3lib_FlashMessage::OK) {
+						$internalMessages = $viewClass->getMessages();
+						if (count($internalMessages) > 0) {
+							$messageBody = '';
+							foreach ($internalMessages as $messageInformation) {
+								$messageBody .= $messageInformation['message'] . ' (' . $messageInformation['key'] . ')<br />';
+							}
+								/** @var $flashMessage t3lib_FlashMessage */
+							$flashMessage = t3lib_div::makeInstance(
+								't3lib_FlashMessage',
+								$messageBody,
+								$GLOBALS['LANG']->getLL('export.ftp.warnings'),
+								t3lib_FlashMessage::WARNING
+							);
+							$actionInfo .= $flashMessage->render();
+						}
+					}
 
 					// Download the XML file
 				} else {

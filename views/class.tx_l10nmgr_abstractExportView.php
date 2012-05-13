@@ -36,6 +36,11 @@
 abstract class tx_l10nmgr_abstractExportView {
 
 	/**
+ 	 * @var	array List of messages issued during rendering
+ 	 */
+ 	protected $internalMessages = array();
+
+	/**
 	 * @var	tx_l10nmgr_l10nConfiguration The language configuration object
 	 */
 	var $l10ncfgObj;
@@ -77,6 +82,31 @@ abstract class tx_l10nmgr_abstractExportView {
 	function setModeOnlyNew() {
 		$this->modeOnlyNew = TRUE;
 	}
+
+	/**
+ 	 * Store a message in the internal queue
+ 	 *
+ 	 * Note: this method is protected. Messages should not be set from the outside.
+ 	 *
+ 	 * @param string $message Text of the message
+ 	 * @param string $key Key identifying the element where the problem happened
+ 	 * @return void
+ 	 */
+ 	protected function setInternalMessage($message, $key) {
+ 		$this->internalMessages[] = array(
+ 			'message' => $message,
+ 			'key' => $key
+ 		);
+ 	}
+
+ 	/**
+ 	 * Returns the list of internal messages
+ 	 *
+ 	 * @return array List of messages
+ 	 */
+ 	public function getMessages() {
+ 		return $this->internalMessages;
+ 	}
 
 	/**
 	 * Get filename

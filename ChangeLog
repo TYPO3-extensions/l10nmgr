@@ -1,6 +1,8 @@
+2012-05-11 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #35545. Report XML export issues in BE module. Credits go to Francois Suter for investigating the issue and providing a patch.
+
 2012-05-10 Andreas Otto <andreas@otto-hanika.de>
-	* [~TASK] Uses t3lib_div::sysLog to write debug messages if the PHP constant
-	TYPO3_DLOG is defined.
+	* [~TASK] Uses t3lib_div::sysLog to write debug messages if the PHP constant TYPO3_DLOG is defined.
 	* [~BUG] Fixes #3739: problems with pattern in class.tx_l10nmgr_translationDataFactory.php.
 	* [~BUG] Bypass filter to include fields shortcut, shortcut_mode, urltype and url_scheme in translation.
 	* [~BUG] Fixes #36047. Filenames in database don't match exported files.
