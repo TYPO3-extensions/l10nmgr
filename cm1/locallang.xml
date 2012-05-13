@@ -49,7 +49,8 @@
 			<label index="export.xml.ftp.title">Send to FTP server</label>
 			<label index="export.process.error.empty.message">Empty element</label>
 			<label index="export.process.error.invalid.message">Detected invalid characters in element</label>
-			<label index="export.process.duplicate.message">Contents already exported for translation! </label>
+			<label index="export.process.duplicate.title">Contents are already exported for translation!</label>
+			<label index="export.process.duplicate.message">Please select one of the listed exports below.</label>
 			<label index="export.overview.date.label">Date</label>
 			<label index="export.overview.configuration.label">Configuration</label>
 			<label index="export.overview.type.label">Type</label>
@@ -141,7 +142,8 @@
 			<label index="export.xml.checkUtf8.title">Prüfe UTF-8</label>
 			<label index="export.process.error.empty.message">Leeres Element</label>
 			<label index="export.process.error.invalid.message">Ungültige Zeichen in Element entdeckt</label>
-			<label index="export.process.duplicate.message">Inhalte schon für Übersetzung exportiert!</label>
+			<label index="export.process.duplicate.title">Inhalte wurden schon für Übersetzung exportiert!</label>
+			<label index="export.process.duplicate.message">Bitte wählen Sie einen der existierenden Exporte.</label>
 			<label index="export.overview.date.label">Datum</label>
 			<label index="export.overview.configuration.label">Konfiguration</label>
 			<label index="export.overview.type.label">Typ</label>
@@ -208,7 +210,7 @@
 			<label index="export.xml.checkUtf8.title">Verificar codificación</label>
 			<label index="export.process.error.empty.message">Elemento vacío</label>
 			<label index="export.process.error.invalid.message">Carácter inválido en el elemento</label>
-			<label index="export.process.duplicate.message">Contenidos ya exportados para la traducción!</label>
+			<label index="export.process.duplicate.title">Contenidos ya exportados para la traducción!</label>
 			<label index="export.overview.date.label">Fecha</label>
 			<label index="export.overview.configuration.label">Configuración</label>
 			<label index="export.overview.type.label">Tipo</label>
@@ -275,7 +277,7 @@
 			<label index="export.xml.checkUtf8.title">Vérification du codage (UTF-8)</label>
 			<label index="export.process.error.empty.message">Elément vide</label>
 			<label index="export.process.error.invalid.message">Caractère invalide dans l'élément</label>
-			<label index="export.process.duplicate.message">Les contenus ont déjà été (partiellement) exportés pour la traduction!</label>
+			<label index="export.process.duplicate.title">Les contenus ont déjà été (partiellement) exportés pour la traduction!</label>
 			<label index="export.overview.date.label">Date</label>
 			<label index="export.overview.configuration.label">Configuration</label>
 			<label index="export.overview.type.label">Type</label>
@@ -342,7 +344,7 @@
 			<label index="export.xml.checkUtf8.title">Controllo della codifica dei caratteri (UTF-8)</label>
 			<label index="export.process.error.empty.message">Elemento vuoto</label>
 			<label index="export.process.error.invalid.message">Carattere non valido nell'elemento</label>
-			<label index="export.process.duplicate.message">Contenuti già esportati per la traduzione!</label>
+			<label index="export.process.duplicate.title">Contenuti già esportati per la traduzione!</label>
 			<label index="export.overview.date.label">Data</label>
 			<label index="export.overview.configuration.label">Configurazione</label>
 			<label index="export.overview.type.label">Tipo</label>

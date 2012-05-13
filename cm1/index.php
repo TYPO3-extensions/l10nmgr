@@ -408,7 +408,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			}
 				// Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
-				$actionInfo .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
+					/** @var $flashMessage t3lib_FlashMessage */
+				$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage', $LANG->getLL('export.process.duplicate.message'), $LANG->getLL('export.process.duplicate.title'), t3lib_FlashMessage::INFO);
+				$actionInfo .= $flashMessage->render();
 				$actionInfo .= $viewClass->renderExports();
 			} else {
 					// Upload to FTP
@@ -508,7 +510,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 
 			//Check the export
 			if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
-				$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
+					/** @var $flashMessage t3lib_FlashMessage */
+				$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage', $LANG->getLL('export.process.duplicate.message'), $LANG->getLL('export.process.duplicate.title'), t3lib_FlashMessage::INFO);
+				$info .= $flashMessage->render();
 				$info .= $viewClass->renderExports();
 			} else {
 				try {
