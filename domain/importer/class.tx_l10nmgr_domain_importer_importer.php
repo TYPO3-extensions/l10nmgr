@@ -107,6 +107,16 @@ class tx_l10nmgr_domain_importer_importer {
 
 		if (! $this->importData->getImportIsCompletelyProcessed() ) {
 
+				// Hook: Preprocess data before import run
+			if (is_array($GLOBALS['TYPO3_CONF_VARAS']['SC_OPTIONS']['l10nmgr/domain/importer/class.tx_l10nmgr_domain_importer_importer.php']['preprocessImportRun'])) {
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['l10nmgr/domain/importer/class.tx_l10nmgr_domain_importer_importer.php']['preprocessImportRun'] as $hookFunction) {
+					$hookParameters = array();
+					t3lib_div::callUserFunction($hookFunction, $hookParameters, $this);
+				}
+				unset($hookFunction);
+				unset($hookParameters);
+			}
+
 				// determine the next file to import
 			$currentFile = $this->importData->getNextFilename();
 			$TranslationFactory = new tx_l10nmgr_domain_translationFactory();
