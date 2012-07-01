@@ -501,11 +501,17 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		if (t3lib_div::_POST('export_excel')) {
 
 			// Render the XML
+			/** @var $viewClass tx_l10nmgr_excelXMLView */
 			$viewClass=t3lib_div::makeInstance('tx_l10nmgr_excelXMLView',$l10ncfgObj,$this->sysLanguage);
-
 			$export_xml_forcepreviewlanguage=intval(t3lib_div::_POST('export_xml_forcepreviewlanguage'));
 			if ($export_xml_forcepreviewlanguage > 0) {
 				$viewClass->setForcedSourceLanguage($export_xml_forcepreviewlanguage);
+			}
+			if ($this->MOD_SETTINGS['onlyChangedContent']) {
+				$viewClass->setModeOnlyChanged();
+			}
+			if ($this->MOD_SETTINGS['noHidden']) {
+				$viewClass->setModeNoHidden();
 			}
 
 			//Check the export
