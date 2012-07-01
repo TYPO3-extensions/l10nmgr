@@ -1,3 +1,6 @@
+2012-07-01 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #38219. Display status icons [enable_stat_hook]. Credits go to Dietrich Heise for investigating the issue and providing a patch.
+
 2012-05-11 Andreas Otto <andreas@otto-hanika.de>
 	* [~BUG] Fixes #35545. Report XML export issues in BE module. Credits go to Francois Suter for investigating the issue and providing a patch.
 
