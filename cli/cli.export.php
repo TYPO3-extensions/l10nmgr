@@ -158,7 +158,19 @@ class tx_cliexport_cli extends t3lib_cli {
 				}
 			}
 		} elseif ($format == 'EXCEL') {
-			$msg .= "Not yet implemented!";
+			foreach ($l10ncfgs as $l10ncfg) {
+				if (t3lib_div::testInt($l10ncfg) === FALSE) {
+					$this->cli_echo($lang->getLL('error.l10ncfg_id_int.msg') . "\n");
+					exit;
+				}
+				foreach ($tlangs as $tlang) {
+					if (t3lib_div::testInt($tlang) === FALSE) {
+						$this->cli_echo($lang->getLL('error.target_language_id_integer.msg') . "\n");
+						exit;
+					}
+					$msg .= $this->exportEXCELXML($l10ncfg, $tlang);
+				}
+			}
 		}
 		// Send email notification if set
 
@@ -190,6 +202,91 @@ class tx_cliexport_cli extends t3lib_cli {
 
 				/** @var $l10nmgrGetXML tx_l10nmgr_CATXMLView */
 			$l10nmgrGetXML = t3lib_div::makeInstance('tx_l10nmgr_CATXMLView', $l10nmgrCfgObj, $tlang);
+
+				// Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
+			if ($l10nmgrCfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables')) {
+				$staticLangArr = t3lib_BEfunc::getRecordRaw('sys_language', 'static_lang_isocode = ' . $l10nmgrCfgObj->getData('sourceLangStaticId'), 'uid');
+				if (is_array($staticLangArr) && ($staticLangArr['uid'] > 0)) {
+					$forceLanguage = $staticLangArr['uid'];
+					$l10nmgrGetXML->setForcedSourceLanguage($forceLanguage);
+				}
+			}
+
+			$onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';
+			if ($onlyChanged === 'TRUE') {
+				$l10nmgrGetXML->setModeOnlyChanged();
+			}
+			$hidden = isset($this->cli_args['--hidden']) ? $this->cli_args['--hidden'][0] : 'FALSE';
+			if ($hidden === 'TRUE') {
+				$GLOBALS['BE_USER']->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden'] = TRUE;
+				$l10nmgrGetXML->setModeNoHidden();
+			}
+			//Check the export
+			//if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
+			//	$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
+			//	$info .= $viewClass->renderExports();
+			//} else {
+			//$viewClass->saveExportInformation();
+			//}
+
+				// Save export to XML file
+			$xmlFileName = PATH_site . $l10nmgrGetXML->render();
+
+				// If email notification is set send export files to responsible translator
+			if ($this->lConf['enable_notification'] == 1) {
+				if (empty($this->lConf['email_recipient'])) {
+					$this->cli_echo($lang->getLL('error.email.repient_missing.msg') . "\n");
+				} else {
+					$this->emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang);
+				}
+			} else {
+				$this->cli_echo($lang->getLL('error.email.notification_disabled.msg') . "\n");
+			}
+
+			// If FTP option is set upload files to remote server
+			if ($this->lConf['enable_ftp'] == 1) {
+				if (file_exists($xmlFileName)) {
+					$error .= $this->ftpUpload($xmlFileName, $l10nmgrGetXML->getFileName());
+				} else {
+					$this->cli_echo($lang->getLL('error.ftp.file_not_found.msg') . "\n");
+				}
+			} else {
+				$this->cli_echo($lang->getLL('error.ftp.disabled.msg') . "\n");
+			}
+
+			if( $this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
+				$this->cli_echo(sprintf($lang->getLL('export.file_saved.msg'), $xmlFileName) . "\n");
+			}
+		} else {
+			$error .= $lang->getLL('error.l10nmgr.object_not_loaded.msg') . "\n";
+		}
+
+		return ($error);
+	}
+
+	/**
+	 * exportEXCELXML which is called over cli
+	 *
+	 * @param integer $l10ncfg ID of the configuration to load
+	 * @param integer $tlang ID of the language to translate to
+	 * @return string An error message in case of failure
+	 */
+	function exportEXCELXML($l10ncfg, $tlang) {
+
+		global $lang;
+
+		$error = '';
+
+			// Load the configuration
+		$this->loadExtConf();
+
+			/** @var $l10nmgrCfgObj tx_l10nmgr_l10nConfiguration */
+		$l10nmgrCfgObj = t3lib_div::makeInstance('tx_l10nmgr_l10nConfiguration');
+		$l10nmgrCfgObj->load($l10ncfg);
+		if ($l10nmgrCfgObj->isLoaded()) {
+
+				/** @var $l10nmgrGetXML tx_l10nmgr_excelXMLView */
+			$l10nmgrGetXML = t3lib_div::makeInstance('tx_l10nmgr_excelXMLView', $l10nmgrCfgObj, $tlang);
 
 				// Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
 			if ($l10nmgrCfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables')) {

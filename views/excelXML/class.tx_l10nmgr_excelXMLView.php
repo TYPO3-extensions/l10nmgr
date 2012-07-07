@@ -190,7 +190,7 @@ class tx_l10nmgr_excelXMLView extends tx_l10nmgr_abstractExportView{
 			}
 		}
 
-		$excelXML = t3lib_div::getUrl('../views/excelXML/excel_template.xml');
+		$excelXML = t3lib_div::getUrl(t3lib_extMgm::extPath('l10nmgr') . 'views/excelXML/excel_template.xml');
 		$excelXML = str_replace('###INSERT_ROWS###',implode('', $output), $excelXML);
 		$excelXML = str_replace('###INSERT_ROW_COUNT###',count($output), $excelXML);
         $excelXML = str_replace('###SOURCE_COL_STATE###',$sourceColState, $excelXML);

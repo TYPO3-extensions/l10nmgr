@@ -316,8 +316,8 @@ abstract class tx_l10nmgr_abstractExportView {
 	 * @return string $fileExportName The complete filename
 	 */
 	function saveExportFile($fileContent) {
-		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/jobs/out/' . $this->getFilename();
-		t3lib_div::writeFile($fileExportName, $fileContent);
+		$fileExportName = 'uploads/tx_l10nmgr/jobs/out/' . $this->getFilename();
+		t3lib_div::writeFile(PATH_site . $fileExportName, $fileContent);
 
 		return $fileExportName;
 	}
