@@ -180,22 +180,24 @@ class tx_cliexport_cli extends t3lib_cli {
 
 		$error = '';
 
-		// Load the configuration
+			// Load the configuration
 		$this->loadExtConf();
 
-		/** @var $l10nmgrCfgObj tx_l10nmgr_l10nConfiguration */
+			/** @var $l10nmgrCfgObj tx_l10nmgr_l10nConfiguration */
 		$l10nmgrCfgObj = t3lib_div::makeInstance('tx_l10nmgr_l10nConfiguration');
 		$l10nmgrCfgObj->load($l10ncfg);
 		if ($l10nmgrCfgObj->isLoaded()) {
 
-			/** @var $l10nmgrGetXML tx_l10nmgr_CATXMLView */
+				/** @var $l10nmgrGetXML tx_l10nmgr_CATXMLView */
 			$l10nmgrGetXML = t3lib_div::makeInstance('tx_l10nmgr_CATXMLView', $l10nmgrCfgObj, $tlang);
 
-			// Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
+				// Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
 			if ($l10nmgrCfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables')) {
 				$staticLangArr = t3lib_BEfunc::getRecordRaw('sys_language', 'static_lang_isocode = ' . $l10nmgrCfgObj->getData('sourceLangStaticId'), 'uid');
-				$forceLanguage = $staticLangArr['uid'];
-				$l10nmgrGetXML->setForcedSourceLanguage($forceLanguage);
+				if (is_array($staticLangArr) && ($staticLangArr['uid'] > 0)) {
+					$forceLanguage = $staticLangArr['uid'];
+					$l10nmgrGetXML->setForcedSourceLanguage($forceLanguage);
+				}
 			}
 
 			$onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';
@@ -214,11 +216,11 @@ class tx_cliexport_cli extends t3lib_cli {
 			//} else {
 			//$viewClass->saveExportInformation();
 			//}
-			$xmlFileName = PATH_site . 'uploads/tx_l10nmgr/jobs/out/' . $l10nmgrGetXML->getFileName();
-			$xmlContent = $l10nmgrGetXML->render();
-			$writeXmlFile = t3lib_div::writeFile($xmlFileName, $xmlContent);
 
-			// If email notification is set send export files to responsible translator
+				// Save export to XML file
+			$xmlFileName = $l10nmgrGetXML->render();
+
+				// If email notification is set send export files to responsible translator
 			if ($this->lConf['enable_notification'] == 1) {
 				if (empty($this->lConf['email_recipient'])) {
 					$this->cli_echo($lang->getLL('error.email.repient_missing.msg') . "\n");
@@ -239,7 +241,10 @@ class tx_cliexport_cli extends t3lib_cli {
 			} else {
 				$this->cli_echo($lang->getLL('error.ftp.disabled.msg') . "\n");
 			}
-			//$removeXmlFile = t3lib_div::unlink_tempfile($xmlFileName);
+
+			if( $this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
+				$this->cli_echo(sprintf($lang->getLL('export.file_saved.msg'), $xmlFileName) . "\n");
+			}
 		} else {
 			$error .= $lang->getLL('error.l10nmgr.object_not_loaded.msg') . "\n";
 		}

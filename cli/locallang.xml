@@ -6,6 +6,7 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+			<label index="export.file_saved.msg">The export was saved to %s.</label>
 			<label index="error.target_language_id.msg">No target language ID given!</label>
 			<label index="error.target_language_id_integer.msg">Target language ID is not an integer!</label>
 			<label index="error.no_l10ncfg.msg">No localization configuration given!</label>

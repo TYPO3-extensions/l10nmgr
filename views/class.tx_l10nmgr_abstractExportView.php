@@ -310,14 +310,14 @@ abstract class tx_l10nmgr_abstractExportView {
 	}
 
 	/**
-	 * Saves the exported files to the folder /uploads/tx_l10nmgr/saved_files/
+	 * Saves the exported files to the folder /uploads/tx_l10nmgr/jobs/out/
 	 *
 	 * @param string $fileContent The content to save to file
 	 * @return string $fileExportName The complete filename
 	 */
 	function saveExportFile($fileContent) {
-		$fileExportName = 'uploads/tx_l10nmgr/saved_files/' . $this->getFilename();
-		t3lib_div::writeFile(PATH_site . $fileExportName, $fileContent);
+		$fileExportName = PATH_site . 'uploads/tx_l10nmgr/jobs/out/' . $this->getFilename();
+		t3lib_div::writeFile($fileExportName, $fileContent);
 
 		return $fileExportName;
 	}
