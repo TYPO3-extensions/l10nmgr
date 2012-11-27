@@ -594,12 +594,15 @@ class tx_l10nmgr_tools {
 			if ($kFieldName=='bodytext') {
 				return true;
 			}
+		} //TODO: make this a clean solition. Currently works as a quickfix.
+		elseif (array_key_exists('l10nTransformationType',$TCEformsCfg['config']) && $TCEformsCfg['config']['l10nTransformationType'] == 'text') {
+			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Check if the field is an RTE in the Backend
+	 * Check if the field is an HTML in the Backend
 	 *
 	 * @param	string		Key is a combination of table, uid, field and structure path, identifying the field
 	 * @param	array		TCA configuration for field
