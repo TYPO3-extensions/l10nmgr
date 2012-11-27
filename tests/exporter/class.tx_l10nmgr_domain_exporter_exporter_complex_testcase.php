@@ -145,7 +145,7 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_l10nmgr_te
 		$this->assertEquals((string)$exporterResult->pageGrp->data[0],'headertest');
 
 		//this comes from a cdata tag
-		$this->assertEquals((string)$exporterResult->pageGrp->data[1],'This is a <br> dirty header element & uses an ampersand');
+		$this->assertEquals((string)$exporterResult->pageGrp->data[1],'This is a <br /> dirty header element & uses an ampersand');
 	}
 
 	/**
