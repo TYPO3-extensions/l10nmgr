@@ -185,9 +185,7 @@ class tx_l10nmgr_domain_translation_page_testcase extends tx_l10nmgr_tests_baseT
 			'tx_l10nmgr_domain_translation_page contains wrong uid.'
 		);
 
-		$this->assertType (
-			'tx_l10nmgr_domain_translation_elementCollection',
-			$this->Page->getElementCollection(),
+		$this->assertTrue($this->Page->getElementCollection() instanceof tx_l10nmgr_domain_translation_elementCollection,
 			'Page contains object of wrong class.'
 		);
 	}

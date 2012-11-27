@@ -301,10 +301,7 @@ class tx_l10nmgr_domain_translation_elementCollection_testcase extends tx_l10nmg
 	 */
 	public function test_retriveRightTypeOfObjectFromTheElementCollectionUsingOffsetGet() {
 		$this->ElementCollection->append($this->fixtureElement());
-
-		$this->assertType (
-			'tx_l10nmgr_domain_translation_element',
-			$this->ElementCollection->offsetGet(0),
+		$this->assertTrue($this->ElementCollection->offsetGet(0) instanceof tx_l10nmgr_domain_translation_element,
 			'Object of wrong type returned using the offsetGet method of the tx_l10nmgr_domain_translaiton_elementCollection.'
 		);
 	}

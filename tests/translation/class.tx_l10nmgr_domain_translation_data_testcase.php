@@ -284,9 +284,7 @@ class tx_l10nmgr_domain_translation_data_testcase extends tx_l10nmgr_tests_baseT
 			'tx_l10nmgr_domain_translation_data member "workspaceId" contains wrong value'
 		);
 
-		$this->assertType (
-			'tx_l10nmgr_domain_translation_pageCollection',
-			$this->Data->getPageCollection(),
+		$this->assertTrue($this->Data->getPageCollection() instanceof tx_l10nmgr_domain_translation_pageCollection,
 			'Data contains object of wrong class.'
 		);
 	}

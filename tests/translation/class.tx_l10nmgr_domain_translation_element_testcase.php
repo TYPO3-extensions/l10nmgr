@@ -150,9 +150,7 @@ class tx_l10nmgr_domain_translation_element_testcase extends tx_l10nmgr_tests_ba
 			'tx_l10nmgr_domain_translation_element contains wrong uid.'
 		);
 
-		$this->assertType (
-			'tx_l10nmgr_domain_translation_fieldCollection',
-			$this->Element->getFieldCollection(),
+		$this->assertTrue($this->Element->getFieldCollection() instanceof tx_l10nmgr_domain_translation_fieldCollection,
 			'Element contains object of wrong class.'
 		);
 	}

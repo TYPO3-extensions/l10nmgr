@@ -337,9 +337,7 @@ class tx_l10nmgr_domain_translation_pageCollection_testcase extends tx_l10nmgr_t
 	public function test_retriveRightTypeOfObjectFromThePageCollectionUsingOffsetGet() {
 		$this->PageCollection->append($this->fixturePage());
 
-		$this->assertType (
-			'tx_l10nmgr_domain_translation_page',
-			$this->PageCollection->offsetGet(0),
+		$this->assertTrue($this->PageCollection->offsetGet(0) instanceof tx_l10nmgr_domain_translation_page,
 			'Object of wrong type returned using the offsetGet method of the tx_l10nmgr_domain_translaiton_elementCollection.'
 		);
 	}

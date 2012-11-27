@@ -211,7 +211,6 @@ class tx_l10nmgr_domain_translation_fieldCollection_testcase extends tx_l10nmgr_
 	}
 
 	/**
-	 * @expectedException Exception
 	 * @test
 	 *
 	 * @access public
@@ -220,11 +219,13 @@ class tx_l10nmgr_domain_translation_fieldCollection_testcase extends tx_l10nmgr_
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function throwsExceptionOnWrongTypeGivenToTheFieldCollectionUsingAppend() {
-		$this->FieldCollection->append(new stdClass());
+		try {
+			$this->FieldCollection->append(new stdClass());
+			$this->fail('Exception expected');
+		} catch (Exception $e) { /* this is ok */ }
 	}
 
 	/**
-	 * @expectedException Exception
 	 * @test
 	 *
 	 * @access public
@@ -233,7 +234,11 @@ class tx_l10nmgr_domain_translation_fieldCollection_testcase extends tx_l10nmgr_
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function throwsExceptionWhileAccessingDeprecatedMethod() {
-		$this->FieldCollection->append($this->fixtureField());
+		try {
+			$this->FieldCollection->append($this->fixtureField());
+			$this->fail('Exception expected');
+		} catch (Exception $e) { /* this is ok */ }
+
 	}
 }
 
