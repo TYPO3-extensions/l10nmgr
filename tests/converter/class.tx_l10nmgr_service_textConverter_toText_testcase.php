@@ -79,8 +79,8 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	 */
 	public function test_transformationOfLinkWithFurtherParameterToTypolink() {
 
-		$fixtureText  = '<p><a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'?id=3" target="target" class="class" title="title text" name="name">&gt;my link</a><strong>strong text</strong></p><p>test</p>';
-		$expectedText = '<link 3 target class "title text" name>>my link</link><strong>strong text</strong>'."\n" . 'test';
+		$fixtureText  = '<p><a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'?id=3" target="target" class="class" title="title text">&gt;my link</a><strong>strong text</strong></p><p>test</p>';
+		$expectedText = '<link 3 target class "title text">>my link</link><b>strong text</b>'.CRLF. 'test';
 
 		$this->assertEquals (
 			$expectedText,
@@ -209,7 +209,7 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	}
 
 	/**
-	 * Test that the htmlspecialchar are excaped while we import the text into flexform XML structure.
+	 * Test that the htmlspecialchar are escaped while we import the text into flexform XML structure.
 	 *
 	 * @access public
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>

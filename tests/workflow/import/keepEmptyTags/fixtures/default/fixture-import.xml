@@ -15,9 +15,9 @@
 		<t3_formatVersion>1.2</t3_formatVersion>
 	</head>
 	<pageGrp id="150">
-		<data table="tt_content" elementUid="626451" cType="html" fieldType="text" transformationType="html" key="tt_content:NEW/1/626451:bodytext"><div style="width: 233px; height: 11px; background: url(bg-box-b.gif) 0 0 no-repeat;"></div><br/></data> 
+		<data table="tt_content" elementUid="626451" cType="html" fieldType="text" transformationType="html" key="tt_content:NEW/1/626451:bodytext"><div style="width: 233px; height: 11px; background: url(bg-box-b.gif) 0 0 no-repeat;"></div><br /></data>
 		<data table="tt_content" elementUid="626452" cType="html" fieldType="text" transformationType="html" key="tt_content:NEW/1/626452:bodytext">
-			<div style="width: 233px; height: 11px; background: url(bg-box-b.gif) 0 0 no-repeat;"><div><img src="moc.gif"/></div><br/></div><br/>
+			<div style="width: 233px; height: 11px; background: url(bg-box-b.gif) 0 0 no-repeat;"><div><img src="moc.gif"/></div><br /></div><br />
 		</data> 
 
 	</pageGrp>

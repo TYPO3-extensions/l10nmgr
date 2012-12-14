@@ -112,7 +112,7 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 * @return void
 	 */
 	public function roundTransformationOfTypoLinkInlcudingNewlineCharacter() {
-		$fixtureText  = '<link 3>my link</link><strong>strong text</strong>'."\n" . 'test';
+		$fixtureText  = '<link 3>my link</link><b>strong text</b>'. CRLF . 'test';
 		$expectedText = $fixtureText;
 
 		$this->assertEquals (
@@ -135,7 +135,7 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 * @return void
 	 */
 	public function roundTransformationOfTypoLinkWithFurtherParameterIncludingNewlineCharacter() {
-		$fixtureText  = '<link 3 target class "title text" name>>my link</link><strong>strong text</strong>'."\n" . 'test';
+		$fixtureText  = '<link 3 target class "title text">>my link</link><b>strong text</b>'. CRLF . 'test';
 		$expectedText = $fixtureText;
 
 		$this->assertEquals (
@@ -252,7 +252,7 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 * @return void
 	 */
 	public function transformBulletlistWithTypolinksAndEntity(){
-		$fixtureRTE 	= '<ul><li><link 25771 >WebEx Meeting Center</link></li><li><link 25611 >Who uses WebEx &amp; why?</link></li><li><link 24961 >Buy WebEx</link></li><li><link http://www.webex.com/go/live_demo >Live online demo</link></li><li><link http://www.webex.com/go/quick_tour 1050x700:resizable=0>Quick tour</link></li></ul>';
+		$fixtureRTE 	= '<ul><li><link 25771>WebEx Meeting Center</link></li><li><link 25611>Who uses WebEx &amp; why?</link></li><li><link 24961>Buy WebEx</link></li><li><link http://www.webex.com/go/live_demo>Live online demo</link></li><li><link http://www.webex.com/go/quick_tour 1050x700:resizable=0>Quick tour</link></li></ul>';
 		$expected		= '<ul><li><link 25771>WebEx Meeting Center</link></li><li><link 25611>Who uses WebEx & why?</link></li><li><link 24961>Buy WebEx</link></li><li><link http://www.webex.com/go/live_demo>Live online demo</link></li><li><link http://www.webex.com/go/quick_tour 1050x700:resizable=0>Quick tour</link></li></ul>';
 
 		$transformed = $this->TextConverter->toText (
@@ -271,12 +271,12 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 * @return void
 	 */
 	public function test_roundTransformationRTEWithHeadingsAndLinebreaksAfter(){
-		$fixtureRTE 	= 	'<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'."\r\n".
-							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/ >Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\r\n".
+		$fixtureRTE 	= 	'<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'."\n".
+							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/ >Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\n".
 							'<link http://customer.com/ >Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
 
-		$expectedResult =   '<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'."\n".
-							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/>Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\n".
+		$expectedResult =   '<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'.CRLF.
+							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/>Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'.CRLF.
 							'<link http://customer.com/>Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
 
 

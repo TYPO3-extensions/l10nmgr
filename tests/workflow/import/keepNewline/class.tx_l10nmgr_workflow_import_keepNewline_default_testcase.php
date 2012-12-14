@@ -153,8 +153,8 @@ class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_l10nmgr
 
 		$fixtureRecord = t3lib_BEfunc::getRecord('tt_content', 839);
 		$this->assertEquals(
-			$fixtureRecord['bodytext'],
-			$translationRecordArray[0]['bodytext'],
+			str_replace(CRLF, LF, $fixtureRecord['bodytext']),
+			str_replace(CRLF, LF, $translationRecordArray[0]['bodytext']),
 			'The bodytext contains wrong / missing newline characters in some way.'
 		);
 

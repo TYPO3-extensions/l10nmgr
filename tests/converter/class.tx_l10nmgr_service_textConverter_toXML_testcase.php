@@ -100,7 +100,7 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 	}
 
 	/**
-	 * Test that valid XHTML styled break tags (empty element) are keeped by the converter.
+	 * Test that valid XHTML styled break tags (empty element) are kept by the converter.
 	 *
 	 * @access public
 	 * @test

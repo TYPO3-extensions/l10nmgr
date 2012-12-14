@@ -153,7 +153,7 @@ class tx_l10nmgr_workflow_import_keepEmptyTags_default_testcase extends tx_l10nm
 
 		$this->assertEquals(
 			trim($fixtureRecord['bodytext']),
-			trim($translationRecordArray[0]['bodytext']),
+			trim(str_replace(array(" />", " alt=\"\""), array("/>", ""), $translationRecordArray[0]['bodytext'])),
 			'The imported bodytext is not as expected'
 		);
 
@@ -163,7 +163,7 @@ class tx_l10nmgr_workflow_import_keepEmptyTags_default_testcase extends tx_l10nm
 
 		$this->assertEquals(
 			trim($secondFixtureRecord['bodytext']),
-			trim($secondTranslationRecordArray[0]['bodytext']),
+			trim(str_replace(array(" />", " alt=\"\""), array("/>", ""), $secondTranslationRecordArray[0]['bodytext'])),
 			'The imported bodytext is not as expected'
 		);
 	}

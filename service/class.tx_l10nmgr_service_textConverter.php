@@ -78,26 +78,28 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		$beUser = $GLOBALS['BE_USER'];
 		$RTEsetup = $beUser->getTSConfig('RTE', t3lib_BEfunc::getPagesTSconfig($pageUid));
 		$fieldPathSegments = t3lib_div::trimExplode(':', $fieldPath, false, 4);
-		$thisConfig = t3lib_BEfunc::RTEsetup($RTEsetup['properties'], $table, $fieldPathSegment[2], $fieldType);
+		$thisConfig = t3lib_BEfunc::RTEsetup($RTEsetup['properties'], $table, $fieldPathSegments[2], $fieldType);
+	//	var_dump($thisConfig);
+		$thisConfig['proc.']['dontHSC_rte'] = 0;
 			// TODO: switch to use the RTE parameters from field configuration
 			// NOTE: this will pass for practically all RTE fields
 		$specConf = array(
 				'richtext' => 1,
 				'rte_transform' => array (
-						'parameters' => array ('flag=rte_enabled', 'mode=ts_css')
+						'parameters' => array ('flag=rte_enabled', 'mode=ts')
 				)
 		);
-		$this->HTMLparser->init($table . ':' . $fieldPathSegment[2], $pageUid);
+		$this->HTMLparser->init($table . ':' . $fieldPathSegments[2], $pageUid);
 		$this->HTMLparser->setRelPath('');
-		
+
 			// convert any &amp; you'll find
-		$this->HTMLparser->procOptions['dontConvAmpInNBSP_rte'] = false;
-		
-		$content = $this->HTMLparser->RTE_transform($content, $specConf, 'rte', $thisConfig);		
-		
+		$this->HTMLparser->procOptions['dontConvAmpInNBSP_rte'] = true;
+
+		$content = $this->HTMLparser->RTE_transform($content, $specConf, 'rte', $thisConfig);
+
 			// this is needed while the "t3lib_parseHTML_proc" replaces all "&" to the entity "&amp;" he can find.
 		$content = t3lib_div::deHSCentities($content);
-		
+
 		try {
 			$this->isValidXML($content);
 		} catch (tx_mvc_exception_invalidContent $e) {
@@ -208,43 +210,44 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	public function toText($content, $importFlexFieldValue = false, $forceCleaningForRTE = true, $pageUid = 0, $table = 'tt_content', $fieldType = 'text', $fieldPath = 'tt_content:0:bodytext') {
 			// cleaning up text
 		$content = $this->toHtml($content);
-		
+
 			//use the RTE configuration from pageTSconfig
 			/* @var $beUser t3lib_beUserAuth */
 		$beUser = $GLOBALS['BE_USER'];
 		$RTEsetup = $beUser->getTSConfig('RTE', t3lib_BEfunc::getPagesTSconfig($pageUid));
 		$fieldPathSegments = t3lib_div::trimExplode(':', $fieldPath, false, 4);
-		$thisConfig = t3lib_BEfunc::RTEsetup($RTEsetup['properties'], $table, $fieldPathSegment[2], $fieldType);
+		$thisConfig = t3lib_BEfunc::RTEsetup($RTEsetup['properties'], $table, $fieldPathSegments[2], $fieldType);
 			// TODO: switch to use the RTE parameters from field configuration
 			// NOTE: this will pass for practically all RTE fields
 		$specConf = array(
 			'richtext' => 1,
 			'rte_transform' => array (
-				'parameters' => array ('flag=rte_enabled', 'mode=ts_css')			
-			)	
+				'parameters' => array ('flag=rte_enabled', 'mode=ts')
+			)
 		);
-		$this->HTMLparser->init($table . ':' . $fieldPathSegment[2], $pageUid);
+		$this->HTMLparser->init($table . ':' . $fieldPathSegments[2], $pageUid);
 		$this->HTMLparser->setRelPath('');
 		$this->HTMLparser->procOptions['HTMLparser_db.']['xhtml_cleaning'] = true;
-		
+
 		$content = $this->HTMLparser->RTE_transform($content, $specConf, 'db', $thisConfig);
 
 			/* @internal We need to escape the content for the XML flexform structure and reconvert the "&nbsp;" */
 		if ($importFlexFieldValue === true) {
-			$content = str_replace (
-				'&amp;nbsp;',
-				'&nbsp;',
-				htmlspecialchars($content)
-			);
+
+			$input = htmlspecialchars($content);
+			while(preg_match('/&amp;(\S+);/',$input)) {
+				$input = preg_replace('/&amp;(\S+);/','&\1;',$input, 1);
+			}
+			$content = $input;
 		} else {
 				// we need this while the HTMLparser won't convert entities to their character if the value comes without "<p>"-Tags
 				// => check this option "$this->HTMLparser->procOptions['HTMLparser_db.']['htmlSpecialChars'] = -1;"
 			$content = htmlspecialchars_decode($content);
 		}
-		
+
 		return $content;
 	}
-	
+
 	/**
 	 * This method is used to convert thext form an import XML file into a valid database shema.
 	 *
@@ -256,9 +259,9 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 	 */
 	public function toHtml($content) {
 		$tagsWhichNeedClosing = array(
-				'a', 'abbr', 'acronym', 'address', 'applet', 'b', 'bdo', 'big', 'blockquote', 'body', 
+				'a', 'abbr', 'acronym', 'address', 'applet', 'b', 'bdo', 'big', 'blockquote', 'body',
 				'button', 'caption', 'center', 'cite', 'code', 'colgroup', 'dd', 'del', 'dfn', 'dir', 'div',
-				'dl', 'dt', 'em', 'fieldset', 'font', 'form', 'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
+				'dl', 'dt', 'em', 'fieldset', 'font', 'form', 'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
 				'head', 'html', 'i', 'iframe', 'ins', 'kbd', 'label', 'legend', 'li', 'map', 'menu', 'noframes',
 				'noscript', 'object', 'ol', 'optgroup', 'option', 'p', 'pre', 'q', 's', 'samp', 'script', 'select',
 				'small', 'span', 'strike', 'strong', 'style', 'sub', 'sup', 'table', 'tbody', 'td', 'textarea',
@@ -276,13 +279,13 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 			$content = preg_replace('|<'.$tag.'([^>]*)\/ \/>|msU', '<'.$tag.'$1 />', $content);
 			$content = preg_replace('|<'.$tag.'([^>]*)\/\/>|msU', '<'.$tag.'$1 />', $content);
 		}
-		
+
 			/* @var $parsehtml t3lib_parsehtml */
 		$parsehtml = t3lib_div::makeInstance('t3lib_parsehtml');
 		$content = $parsehtml->XHTML_clean($content);
-		
+
 		return $content;
-	}	
+	}
 
 	/**
 	 * Verify that the given string contains a valid XML structure.
@@ -307,8 +310,9 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 
 		$xmlParserErrorCode = xml_get_error_code($parser);
 
-		if ($xmlParserErrorCode !== 0)
+		if ($xmlParserErrorCode !== 0) {
 			throw new tx_mvc_exception_invalidContent('Given XML string is not valid. [' . xml_error_string($xmlParserErrorCode) . ']');
+		}
 	}
 
 	/**
@@ -423,7 +427,7 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		} else {
 			$content = (string)$field;
 		}
-		
+
 		return $content;
 	}
 
