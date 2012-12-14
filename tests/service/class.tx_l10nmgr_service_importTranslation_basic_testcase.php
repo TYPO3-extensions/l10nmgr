@@ -166,7 +166,7 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_l10nmgr_tes
 		$contentOverlay = tx_mvc_system_dbtools::getTYPO3RowOverlay($contentRow, 'tt_content', 1);
 
 		$this->assertEquals($contentOverlay['l18n_parent'],619943,'Overlay has not the expected l18n_parent');
-		$this->assertEquals($contentOverlay['bodytext'],'Importer tt_content <strong>bodytext</strong> - Translated');
+		$this->assertEquals($contentOverlay['bodytext'],'Importer tt_content <b>bodytext</b> - Translated');
 
 
 		##
