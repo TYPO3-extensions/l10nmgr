@@ -395,7 +395,7 @@ class tx_l10nmgr_domain_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 		$forceLangUid = 0;
 
 		if (is_array($this->row) && array_key_exists('force_target_lang', $this->row)) {
-			$forceLangUid = t3lib_div::intval_positive($this->row['force_target_lang']);
+			$forceLangUid = intval($this->row['force_target_lang']);
 		}
 
 		return $forceLangUid;

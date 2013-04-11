@@ -98,8 +98,8 @@ class tx_l10nmgr_service_detectRecord {
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function verifyIdentityKey($currentIdentityKey, $forceTargetLanguageUid = 0, $localisationParentRecord = 0) {
-		$forceLanguageUid         = t3lib_div::intval_positive($forceTargetLanguageUid);
-		$localisationParentRecord = t3lib_div::intval_positive($localisationParentRecord);
+		$forceLanguageUid         = intval($forceTargetLanguageUid);
+		$localisationParentRecord = intval($localisationParentRecord);
 		$currentIdentityKey       = (string)$currentIdentityKey;
 		$identityKey              = '';
 
@@ -112,7 +112,7 @@ class tx_l10nmgr_service_detectRecord {
 		list ($cmdTableName, $cmdProcessString, $cmdFieldName, $cmdFieldFlexformPath) = explode(':', $currentIdentityKey);
 		list ($cmdForceCreateNew, , )  = explode('/', $cmdProcessString);
 
-		if ($cmdForceCreateNew !== 'NEW' && t3lib_div::intval_positive($cmdForceCreateNew) === 0) {
+		if ($cmdForceCreateNew !== 'NEW' && intval($cmdForceCreateNew) === 0) {
 			throw new tx_mvc_exception_skipped('FORCE TARGET LANGUAGE: Process skipped - The cmdProcessingString can not handled correct. The requested identity_key: "' . var_export($currentIdentityKey, true) . '"');
 		}
 

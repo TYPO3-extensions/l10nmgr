@@ -548,7 +548,7 @@ class tx_l10nmgr_tools {
 						if (!$this->filters['l10n_categories'] || t3lib_div::inList($this->filters['l10n_categories'],$TCEformsCfg['l10n_cat']))	{
 							if (!$this->filters['fieldTypes'] || t3lib_div::inList($this->filters['fieldTypes'],$TCEformsCfg['config']['type']))	{
 								if (!$this->filters['noEmptyValues'] || !(!$dataValue && !$translationValue))	{	// Checking that no translation value exists either; if a translation value is found it is considered that it should be translated even if the default value is empty for some reason.
-									if (!$this->filters['noIntegers'] || !t3lib_div::testInt($dataValue))	{
+									if (!$this->filters['noIntegers'] || !t3lib_utility_Math::canBeInterpretedAsInteger($dataValue))	{
 										$this->detailsOutput['fields'][$key] = array(
 												'defaultValue' => $dataValue,
 												'translationValue' => $translationValue,

@@ -564,7 +564,7 @@ class tx_l10nmgr_domain_exporter_exportData extends tx_mvc_ddd_typo3_abstractTCA
 	 * @since 2009-04-06
 	 */
 	public function getSourceLanguageObject() {
-		if (t3lib_div::intval_positive($this->row['source_lang']) > 0) {
+		if (intval($this->row['source_lang']) > 0) {
 			if (! $this->row['sourcelanguageobject'] instanceOf tx_l10nmgr_domain_language_language) {
 				$languageRepository = new tx_l10nmgr_domain_language_languageRepository();
 				$this->row['sourcelanguageobject'] = $languageRepository->findById($this->row['source_lang']);

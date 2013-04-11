@@ -157,7 +157,7 @@ class tx_l10nmgr_domain_translation_data implements tx_l10nmgr_interface_stateIm
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function setForceTargetLanguageUid($targetLanguageUid) {
-		$this->forceTargetLanguageUid = t3lib_div::intval_positive($targetLanguageUid);
+		$this->forceTargetLanguageUid = intval($targetLanguageUid);
 	}
 
 	/**
