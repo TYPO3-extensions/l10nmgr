@@ -11,7 +11,7 @@ class tx_l10nmgr_view_translate_borderPanel extends tx_mvc_view_widget_panelBord
 		parent::__construct();
 		
 		$extPath = t3lib_div::resolveBackPath($GLOBALS['BACK_PATH'] . t3lib_extMgm::extRelPath('l10nmgr'));
-		$cssInclude = $extPath . 'templates/translates/css/panel.css';		
+		$cssInclude = $extPath . 'templates/translate/css/panel.css';		
 		$cssIncludes[] = $cssInclude;
 		$this->setCSSIncludes($cssIncludes);
 				

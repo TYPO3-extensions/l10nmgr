@@ -21,6 +21,13 @@
 				<?php $editLink 	= $this->getEditLink($translateableElement); ?>
 				<?php $flags 		= array();?>
 				<?php $flags 		= $this->getFlagsForElement($translateableElement); ?>
+				<?php $uidString = $translateableElement->getTranslateableFields()->offsetGet(0)->getUidValue();
+					$isTranslated=FALSE;
+				      if (substr($uidString,0,3)!=='NEW')     {
+					$isTranslated=TRUE;
+					}
+				?>
+
 
 				<?php 	//if mode only changed is active there need to be updated or unknow changes
 						if(	
@@ -34,7 +41,7 @@
 						<td colspan="2" style="width:300px;">
 							<?php  echo $this->linkCreator->getActionLink(htmlspecialchars($table.':'.$elementUid),'inlineTranslate')->setScriptPath('index.php')->setParameter('selectedTable',$table)->setParameter('selectedUid',$elementUid)->useOverruledParameters().' '.$editLink ?>
 						</td>
-						<td colspan="3" style="width:200px;"><?php if(is_array($flags) && $analyseMode){ echo htmlspecialchars(t3lib_div::arrayToLogString($flags)); } ?></td>
+						<td colspan="3" style="width:200px;" class="<?php echo implode(' ',$flags) ?> status <?php if($isTranslated) echo "translated"; ?>"><?php if(is_array($flags) && $analyseMode){ echo htmlspecialchars(t3lib_div::arrayToLogString($flags)); } ?></td>
 					</tr>
 					
 					<?php if($this->isSelectedItem($table,$elementUid)): ?>
