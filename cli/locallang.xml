@@ -30,6 +30,15 @@
 			<label index="error.ftp.connection_failed.msg">FTP error: Connection failed!</label>
 			<label index="export.process.error.empty.message">Empty element</label>
 			<label index="export.process.error.invalid.message">Detected invalid characters in element</label>
+			<label index="export.process.duplicate.title">Contents are already exported for translation!</label>
+			<label index="export.process.duplicate.message">Please select one of the listed exports below.</label>
+			<label index="export.process.duration.message">The export took %f seconds.</label>
+			<label index="export.overview.date.label">Date</label>
+			<label index="export.overview.configuration.label">Configuration</label>
+			<label index="export.overview.type.label">Type</label>
+			<label index="export.overview.targetlanguage.label">Target language</label>
+			<label index="export.overview.filename.label">Filename</label>
+			<label index="import.process.duration.message">The import took %f seconds.</label>
 			<label index="import.manager.error.parsing.xml2tree.message">XML2Tree parsing error: </label>
 			<label index="import.manager.error.missing.head.message">No header part found in XML structure</label>
 			<label index="import.nonfatal.errors">The following non-fatal errors occurred:</label>
@@ -48,6 +57,15 @@
 		<languageKey index="de" type="array">
 			<label index="error.target_language_id.msg">Keine ID für Zielsprache angegeben!</label>
 			<label index="error.target_language_id_integer.msg">ID für Zielsprache ist keine Zahl!</label>
+			<label index="export.process.duplicate.title">Inhalte wurden schon für Übersetzung exportiert!</label>
+			<label index="export.process.duplicate.message">Bitte wählen Sie einen der existierenden Exporte.</label>
+			<label index="export.process.duration.message">Der Export hat %f Sekunden gedauert.</label>
+			<label index="export.overview.date.label">Datum</label>
+			<label index="export.overview.configuration.label">Konfiguration</label>
+			<label index="export.overview.type.label">Typ</label>
+			<label index="export.overview.targetlanguage.label">Zielsprache</label>
+			<label index="export.overview.filename.label">Dateiname</label>
+			<label index="import.process.duration.message">Der Import hat %f Sekunden gedauert.</label>
 		</languageKey>
 	</data>
 	<orig_hash type="array">

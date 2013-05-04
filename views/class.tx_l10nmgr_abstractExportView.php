@@ -205,7 +205,7 @@ abstract class tx_l10nmgr_abstractExportView {
 	 *
 	 * @return boolean
 	 */
-	function checkExports(){
+	function checkExports() {
 		$ret = FALSE;
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -213,14 +213,13 @@ abstract class tx_l10nmgr_abstractExportView {
 			'tx_l10nmgr_exportdata',
 			'l10ncfg_id =' . $this->l10ncfgObj->getData('uid') . ' AND exportType = ' . $this->exportType . ' AND translation_lang = ' . $this->sysLang
 		);
-
 		if (!$GLOBALS['TYPO3_DB']->sql_error()) {
 			$numRows = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
 		} else {
 			$numRows = 0;
 		}
 
-		if ( $numRows > 0){
+		if ($numRows > 0) {
 			$ret = FALSE;
 		} else {
 			$ret = TRUE;
@@ -241,7 +240,9 @@ abstract class tx_l10nmgr_abstractExportView {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'crdate,l10ncfg_id,exportType,translation_lang,filename',
 			'tx_l10nmgr_exportdata',
-				'l10ncfg_id = ' . $this->l10ncfgObj->getData('uid') . ' AND exportType = ' . $this->exportType . ' AND translation_lang = ' . $this->sysLang
+				'l10ncfg_id = ' . $this->l10ncfgObj->getData('uid') . ' AND exportType = ' . $this->exportType . ' AND translation_lang = ' . $this->sysLang,
+			'',
+			'crdate DESC'
 		);
 
 		if (is_array($res)) {
@@ -275,7 +276,7 @@ abstract class tx_l10nmgr_abstractExportView {
 				$exportData['l10ncfg_id'],
 				$exportData['exportType'],
 				$exportData['translation_lang'],
-				sprintf('<a href="%suploads/tx_l10nmgr/saved_files/%s">%s</a>',
+				sprintf('<a href="%suploads/tx_l10nmgr/jobs/out/%s">%s</a>',
 					t3lib_div::getIndpEnv('TYPO3_SITE_URL'),
 					$exportData['filename'],
 					$exportData['filename']
@@ -304,6 +305,43 @@ abstract class tx_l10nmgr_abstractExportView {
 			$LANG->getLL('export.overview.targetlanguage.label'),
 			$LANG->getLL('export.overview.filename.label'),
 			implode(chr(10), $content)
+		);
+
+		return $out;
+	}
+
+	/**
+	 * Renders a list of saved exports as text.
+	 *
+	 * @return string text
+	 */
+	function renderExportsCli() {
+		global $LANG;
+		$out = '';
+		$content = array();
+		$exports = $this->fetchExports();
+
+		foreach( $exports AS $export => $exportData ) {
+			$content[$export] = sprintf('%-15s%-15s%-15s%-15s%s',
+				t3lib_BEfunc::datetime($exportData['crdate']),
+				$exportData['l10ncfg_id'],
+				$exportData['exportType'],
+				$exportData['translation_lang'],
+				sprintf('%suploads/tx_l10nmgr/jobs/out/%s',
+					PATH_site,
+					$exportData['filename']
+				)
+			);
+		}
+
+		$out = sprintf('%-15s%-15s%-15s%-15s%s%s%s',
+			$LANG->getLL('export.overview.date.label'),
+			$LANG->getLL('export.overview.configuration.label'),
+			$LANG->getLL('export.overview.type.label'),
+			$LANG->getLL('export.overview.targetlanguage.label'),
+			$LANG->getLL('export.overview.filename.label'),
+			LF,
+			implode(LF, $content)
 		);
 
 		return $out;

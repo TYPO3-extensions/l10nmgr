@@ -57,12 +57,13 @@ class tx_cliexport_cli extends t3lib_cli {
 		parent::t3lib_cli();
 
 		// Adding options to help archive:
-		$this->cli_options[] = array('--format', 'Format for export of tranlatable data', "The value of level can be:\n  CATXML = XML for translation tools (default)\n  EXCEL = Microsoft XML format \n");
+		$this->cli_options[] = array('--format', 'Format for export of translatable data', "The value can be:\n  CATXML = XML for translation tools (default)\n  EXCEL = Microsoft XML format \n");
 		$this->cli_options[] = array('--config', 'Localization Manager configurations', "UIDs of the localization manager configurations to be used for export. Comma seperated values, no spaces.\nDefault is EXTCONF which means values are taken from extension configuration.\n");
 		$this->cli_options[] = array('--target', 'Target languages', "UIDs for the target languages used during export. Comma seperated values, no spaces. Default is 0. In that case UIDs are taken from extension configuration.\n");
 		$this->cli_options[] = array('--workspace', 'Workspace ID', "UID of the workspace used during export. Default = 0\n");
 		$this->cli_options[] = array('--hidden', 'Do not export hidden contents', "The values can be: \n TRUE = Hidden content is skipped\n FALSE = Hidden content is exported. Default is FALSE.\n");
 		$this->cli_options[] = array('--updated', 'Export only new/updated contents', "The values can be: \n TRUE = Only new/updated content is exported\n FALSE = All content is exported (default)\n");
+		$this->cli_options[] = array('--check-exports', 'Check for already exported content', "The values can be: \n TRUE = Check if content has already been exported\n FALSE = Don't check, just create a new export (default)\n");
 		$this->cli_options[] = array('--help', 'Show help', "");
 		$this->cli_options[] = array('-h', 'Same as --help', "");
 
@@ -176,7 +177,8 @@ class tx_cliexport_cli extends t3lib_cli {
 
 		$time_end = microtime(true);
 		$time = $time_end - $time_start;
-		$this->cli_echo($msg . "\n" . $time . "\n");
+		$this->cli_echo($msg . LF);
+		$this->cli_echo(sprintf($lang->getLL('export.process.duration.message'), $time) . LF);
 	}
 
 	/**
@@ -221,41 +223,43 @@ class tx_cliexport_cli extends t3lib_cli {
 				$GLOBALS['BE_USER']->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden'] = TRUE;
 				$l10nmgrGetXML->setModeNoHidden();
 			}
-			//Check the export
-			//if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
-			//	$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
-			//	$info .= $viewClass->renderExports();
-			//} else {
-			//$viewClass->saveExportInformation();
-			//}
 
+				// If the check for already exported content is enabled, run the ckeck.
+			$checkExportsCli = isset($this->cli_args['--check-exports']) ? (bool)$this->cli_args['--check-exports'][0] : FALSE;
+			$checkExports = $l10nmgrGetXML->checkExports();
+			if (($checkExportsCli === TRUE) && ($checkExports === FALSE)) {
+				$this->cli_echo($lang->getLL('export.process.duplicate.title') . ' ' . $lang->getLL('export.process.duplicate.message') . LF);
+				$this->cli_echo($l10nmgrGetXML->renderExportsCli() . LF);
+			} else {
 				// Save export to XML file
-			$xmlFileName = PATH_site . $l10nmgrGetXML->render();
+				$xmlFileName = PATH_site . $l10nmgrGetXML->render();
+				$l10nmgrGetXML->saveExportInformation();
 
 				// If email notification is set send export files to responsible translator
-			if ($this->lConf['enable_notification'] == 1) {
-				if (empty($this->lConf['email_recipient'])) {
-					$this->cli_echo($lang->getLL('error.email.repient_missing.msg') . "\n");
+				if ($this->lConf['enable_notification'] == 1) {
+					if (empty($this->lConf['email_recipient'])) {
+						$this->cli_echo($lang->getLL('error.email.repient_missing.msg') . "\n");
+					} else {
+						$this->emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang);
+					}
 				} else {
-					$this->emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang);
+					$this->cli_echo($lang->getLL('error.email.notification_disabled.msg') . "\n");
 				}
-			} else {
-				$this->cli_echo($lang->getLL('error.email.notification_disabled.msg') . "\n");
-			}
 
-			// If FTP option is set upload files to remote server
-			if ($this->lConf['enable_ftp'] == 1) {
-				if (file_exists($xmlFileName)) {
-					$error .= $this->ftpUpload($xmlFileName, $l10nmgrGetXML->getFileName());
+				// If FTP option is set upload files to remote server
+				if ($this->lConf['enable_ftp'] == 1) {
+					if (file_exists($xmlFileName)) {
+						$error .= $this->ftpUpload($xmlFileName, $l10nmgrGetXML->getFileName());
+					} else {
+						$this->cli_echo($lang->getLL('error.ftp.file_not_found.msg') . "\n");
+					}
 				} else {
-					$this->cli_echo($lang->getLL('error.ftp.file_not_found.msg') . "\n");
+					$this->cli_echo($lang->getLL('error.ftp.disabled.msg') . "\n");
 				}
-			} else {
-				$this->cli_echo($lang->getLL('error.ftp.disabled.msg') . "\n");
-			}
 
-			if( $this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
-				$this->cli_echo(sprintf($lang->getLL('export.file_saved.msg'), $xmlFileName) . "\n");
+				if( $this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
+					$this->cli_echo(sprintf($lang->getLL('export.file_saved.msg'), $xmlFileName) . "\n");
+				}
 			}
 		} else {
 			$error .= $lang->getLL('error.l10nmgr.object_not_loaded.msg') . "\n";
@@ -306,41 +310,43 @@ class tx_cliexport_cli extends t3lib_cli {
 				$GLOBALS['BE_USER']->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden'] = TRUE;
 				$l10nmgrGetXML->setModeNoHidden();
 			}
-			//Check the export
-			//if ((t3lib_div::_POST('check_exports')=='1') && ($viewClass->checkExports() == FALSE)) {
-			//	$info .= '<br />'.$this->doc->icons(2).$LANG->getLL('export.process.duplicate.message');
-			//	$info .= $viewClass->renderExports();
-			//} else {
-			//$viewClass->saveExportInformation();
-			//}
 
+				// If the check for already exported content is enabled, run the ckeck.
+			$checkExportsCli = isset($this->cli_args['--check-exports']) ? (bool)$this->cli_args['--check-exports'][0] : FALSE;
+			$checkExports = $l10nmgrGetXML->checkExports();
+			if (($checkExportsCli === TRUE) && ($checkExports == FALSE)) {
+				$this->cli_echo($lang->getLL('export.process.duplicate.title') . ' ' . $lang->getLL('export.process.duplicate.message') . LF);
+				$this->cli_echo($l10nmgrGetXML->renderExportsCli() . LF);
+			} else {
 				// Save export to XML file
-			$xmlFileName = $l10nmgrGetXML->render();
+				$xmlFileName = $l10nmgrGetXML->render();
+				$l10nmgrGetXML->saveExportInformation();
 
 				// If email notification is set send export files to responsible translator
-			if ($this->lConf['enable_notification'] == 1) {
-				if (empty($this->lConf['email_recipient'])) {
-					$this->cli_echo($lang->getLL('error.email.repient_missing.msg') . "\n");
+				if ($this->lConf['enable_notification'] == 1) {
+					if (empty($this->lConf['email_recipient'])) {
+						$this->cli_echo($lang->getLL('error.email.repient_missing.msg') . "\n");
+					} else {
+						$this->emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang);
+					}
 				} else {
-					$this->emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang);
+					$this->cli_echo($lang->getLL('error.email.notification_disabled.msg') . "\n");
 				}
-			} else {
-				$this->cli_echo($lang->getLL('error.email.notification_disabled.msg') . "\n");
-			}
 
-			// If FTP option is set upload files to remote server
-			if ($this->lConf['enable_ftp'] == 1) {
-				if (file_exists($xmlFileName)) {
-					$error .= $this->ftpUpload($xmlFileName, $l10nmgrGetXML->getFileName());
+				// If FTP option is set upload files to remote server
+				if ($this->lConf['enable_ftp'] == 1) {
+					if (file_exists($xmlFileName)) {
+						$error .= $this->ftpUpload($xmlFileName, $l10nmgrGetXML->getFileName());
+					} else {
+						$this->cli_echo($lang->getLL('error.ftp.file_not_found.msg') . "\n");
+					}
 				} else {
-					$this->cli_echo($lang->getLL('error.ftp.file_not_found.msg') . "\n");
+					$this->cli_echo($lang->getLL('error.ftp.disabled.msg') . "\n");
 				}
-			} else {
-				$this->cli_echo($lang->getLL('error.ftp.disabled.msg') . "\n");
-			}
 
-			if( $this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
-				$this->cli_echo(sprintf($lang->getLL('export.file_saved.msg'), $xmlFileName) . "\n");
+				if( $this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
+					$this->cli_echo(sprintf($lang->getLL('export.file_saved.msg'), $xmlFileName) . "\n");
+				}
 			}
 		} else {
 			$error .= $lang->getLL('error.l10nmgr.object_not_loaded.msg') . "\n";

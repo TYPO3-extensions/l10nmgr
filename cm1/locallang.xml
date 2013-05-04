@@ -69,6 +69,8 @@
 			<label index="import.xml.headline.title">Import</label>
 			<label index="import.xml.old-format.title">Import old format (v2)</label>
 			<label index="import.xml.old-format.message">Import uses the old format without pageGrp element and checks!</label>
+			<label index="import.xml.asdefaultlanguage.title">Import as default language</label>
+			<label index="import.xml.asdefaultlanguage.message">If set this setting will overwrite the default language during the import.</label>
 			<label index="import.xml.delL10N.title">Delete localizations before import</label>
 			<label index="import.xml.make_preview_link.title">Generate preview links</label>
 			<label index="import.xml.preview_links.title">Preview links</label>

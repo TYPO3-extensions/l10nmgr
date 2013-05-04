@@ -63,7 +63,6 @@ $TCA["tx_l10nmgr_exportdata"] = Array (
 		'cruser_id' => 'cruser_id',
 		'source_lang' => 'source_lang',
 		'translation_lang' => 'translation_lang',
-		'source_lang' => 'source_lang',
 		"default_sortby" => "ORDER BY title",
 		"delete" => "deleted",
 		"dynamicConfigFile" => t3lib_extMgm::extPath($_EXTKEY)."tca.php",

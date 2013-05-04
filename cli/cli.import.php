@@ -99,6 +99,7 @@ class tx_cliimport_cli extends t3lib_cli {
 		$this->cli_options[] = array('--string', 'XML string', "XML string to import.\n");
 		$this->cli_options[] = array('--file', 'Import file', "Path to the file to import. Can be XML or ZIP archive. If both XML string and import file are not defined, will import from FTP server (if defined).\n");
 		$this->cli_options[] = array('--server', 'Server link', "Server link for the preview URL.\n");
+		$this->cli_options[] = array('--importAsDefaultLanguage', 'Import as default language', "If set this setting will overwrite the default language during the import.\nThe values can be: \n TRUE = Content will be imported as default language.\n FALSE = Content will be imported as translation (default).\n");
 
 			// Setting help texts
 		$this->cli_help['name'] = 'Localization Manager importer';
@@ -115,6 +116,7 @@ class tx_cliimport_cli extends t3lib_cli {
      * @return string
      */
 	public function cli_main($argv) {
+		global $LANG;
 			// Parse the command-line arguments
 		$this->initializeCallParameters();
 
@@ -163,10 +165,11 @@ class tx_cliimport_cli extends t3lib_cli {
 			// Calculate duration and output result message
 		$end = microtime(TRUE);
 		$time = $end - $start;
-		$ret = $msg . "\n" . $time . "\n";
-		$this->cli_echo($ret);
+		$this->cli_echo($msg . LF);
+		$this->cli_echo(sprintf($LANG->getLL('import.process.duration.message'), $time) . LF);
 
-			// Send reporting mail
+
+		// Send reporting mail
 		$this->sendMailNotification();
 
 			// Restore user's former admin state
@@ -238,6 +241,14 @@ class tx_cliimport_cli extends t3lib_cli {
 			$server = (string)$this->cli_args['_DEFAULT'][5];
 		}
 		$this->callParameters['server'] = $server;
+		// Import as default language
+		$importAsDefaultLanguage = FALSE;
+		if (isset($this->cli_args['--importAsDefaultLanguage'])) {
+			$importAsDefaultLanguage = (bool)$this->cli_args['--importAsDefaultLanguage'][0];
+		} elseif (isset($this->cli_args['_DEFAULT'][6])) {
+			$importAsDefaultLanguage = (bool)$this->cli_args['_DEFAULT'][6];
+		}
+		$this->callParameters['importAsDefaultLanguage'] = $importAsDefaultLanguage;
 	}
 
 	/**
@@ -253,6 +264,9 @@ class tx_cliimport_cli extends t3lib_cli {
 
 			/** @var $service tx_l10nmgr_l10nBaseService */
 		$service = t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
+		if($this->callParameters['importAsDefaultLanguage']){
+			$service->setImportAsDefaultLanguage(TRUE);
+		}
 			/** @var $factory tx_l10nmgr_translationDataFactory */
 		$factory = t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 
@@ -387,7 +401,10 @@ class tx_cliimport_cli extends t3lib_cli {
 					$this->sysLanguage = $xmlFileHead['t3_sysLang'][0]['XMLvalue'];
 
 						/** @var $service tx_l10nmgr_l10nBaseService */
-					$service  =t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
+					$service  = t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
+					if($this->callParameters['importAsDefaultLanguage']){
+						$service->setImportAsDefaultLanguage(TRUE);
+					}
 						/** @var $factory tx_l10nmgr_translationDataFactory */
 					$factory = t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 

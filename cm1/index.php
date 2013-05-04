@@ -303,9 +303,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		//$info .= '<div id="sc1" class="tabcontent">';
 		$_selectOptions=array('0'=>'-default-');
 		$_selectOptions=$_selectOptions+$this->MOD_MENU["lang"];
-		$info .= '<input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" checked="checked" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
 		$info .= '<input type="checkbox" value="1" name="no_check_xml" /> ' . $LANG->getLL('export.xml.no_check_xml.title') . '<br />';
-		$info .= '<input type="checkbox" value="1" name="check_utf8" /> ' . $LANG->getLL('export.xml.checkUtf8.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" checked="checked" name="check_utf8" /> ' . $LANG->getLL('export.xml.checkUtf8.title') . '<br />';
 		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions) . '<br />';
 			// Add the option to send to FTP server, if FTP information is defined
 		if (!empty($this->lConf['ftp_server']) && !empty($this->lConf['ftp_server_username']) && !empty($this->lConf['ftp_server_password'])) {
@@ -317,6 +317,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		$info .= '<div id="sc2" class="tabcontent">';
 		$info .= '<input type="checkbox" value="1" name="make_preview_link" /> ' . $LANG->getLL('import.xml.make_preview_link.title') . '<br />';
 		$info .= '<input type="checkbox" value="1" name="import_delL10N" /> ' . $LANG->getLL('import.xml.delL10N.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $LANG->getLL('import.xml.asdefaultlanguage.title') . '<br />';
 		$info .= '<input type="checkbox" value="1" name="import_oldformat" /> ' . $LANG->getLL('import.xml.old-format.title') . '<br /><br />';
 		$info .= '<input type="file" size="60" name="uploaded_import_file" /><br /><br /><input type="submit" value="Import" name="import_xml" /><br /><br /> ';
 		$info .= '</div>';
@@ -350,6 +351,9 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 		//print "<pre>";
 		//var_dump($GLOBALS['BE_USER']->user);
 		//print "</pre>";
+			if(t3lib_div::_POST('import_asdefaultlanguage')=='1') {
+				$service->setImportAsDefaultLanguage(TRUE);
+			}
 			if (t3lib_div::_POST('import_oldformat')=='1') {
 				//Support for the old Format of XML Import (without pageGrp element)
 				$actionInfo .= $LANG->getLL('import.xml.old-format.message');
@@ -357,15 +361,13 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$translationData->setLanguage($this->sysLanguage);
 				$service->saveTranslation($l10ncfgObj,$translationData);
 				$actionInfo .= '<br/><br/>'.$this->doc->icons(1).'Import done<br/><br/>(Command count:'.$service->lastTCEMAINCommandsCount.')';
-			}
-			else {
+			} else {
 					// Relevant processing of XML Import with the help of the Importmanager
 					/** @var $importManager tx_l10nmgr_CATXMLImportManager */
 				$importManager=t3lib_div::makeInstance('tx_l10nmgr_CATXMLImportManager', $uploadedTempFile, $this->sysLanguage, $xmlString="");
 				if ($importManager->parseAndCheckXMLFile()===false) {
 					$actionInfo .= '<br/><br/>'.$this->doc->header($LANG->getLL('import.error.title')).$importManager->getErrorMessages();
-				}
-				else {
+				} else {
 					if (t3lib_div::_POST('import_delL10N')=='1') {
 						$actionInfo .= $LANG->getLL('import.xml.delL10N.message').'<br/>';
 						$delCount = $importManager->delL10N($importManager->getDelL10NDataFromCATXMLNodes($importManager->xmlNodes));
@@ -451,11 +453,14 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 						$message = $e->getMessage() . ' (' . $e->getCode() . ')';
 						$status = t3lib_FlashMessage::ERROR;
 					}
+
 						/** @var $flashMessage t3lib_FlashMessage */
 					$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage', $message, $title, $status);
 					$actionInfo .= $flashMessage->render();
 					$actionInfo .= $viewClass->renderInternalMessagesAsFlashMessage($status);
 				}
+
+				$viewClass->saveExportInformation();
 			}
 		}
 		if (!empty($actionInfo)) {
@@ -471,20 +476,28 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 	function excelExportImportAction($l10ncfgObj) {
 		global $LANG, $BACK_PATH;
 
+		/** @var $service tx_l10nmgr_l10nBaseService */
 		$service=t3lib_div::makeInstance('tx_l10nmgr_l10nBaseService');
-		// Buttons:
+		if(t3lib_div::_POST('import_asdefaultlanguage')=='1') {
+			$service->setImportAsDefaultLanguage(TRUE);
+		}
+			// Buttons:
 		$_selectOptions=array('0'=>'-default-');
 		$_selectOptions=$_selectOptions+$this->MOD_MENU["lang"];
-		$info = $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions).'<br/>';
-		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" />';
-		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.export.xml.button.title').'" name="export_excel" />';
-		$info.= '<input type="submit" value="'.$LANG->getLL('general.action.import.xml.button.title').'" name="import_excel" /><input type="file" size="60" name="uploaded_import_file" />';
-		$info .= '<br /><br /><input type="checkbox" value="1" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
+		$info = '<br /><br />';
+		$info .= '<input type="checkbox" value="1" checked="checked" name="check_exports" /> ' . $LANG->getLL('export.xml.check_exports.title') . '<br />';
+		$info .= '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $LANG->getLL('import.xml.asdefaultlanguage.title') . '<br />';
+		$info .= $LANG->getLL('export.xml.source-language.title') . $this->_getSelectField("export_xml_forcepreviewlanguage",'0',$_selectOptions).'<br /><br />';
+		$info .= '<input type="file" size="60" name="uploaded_import_file" /><br /><br />';
+		$info .= '<input type="submit" value="'.$LANG->getLL('general.action.refresh.button.title').'" name="_" />';
+		$info .= '<input type="submit" value="'.$LANG->getLL('general.action.export.xml.button.title').'" name="export_excel" />';
+		$info .= '<input type="submit" value="'.$LANG->getLL('general.action.import.xml.button.title').'" name="import_excel" />';
 
 			// Read uploaded file:
 		if (t3lib_div::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name'])) {
 			$uploadedTempFile = t3lib_div::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
 
+				/** @var  $factory tx_l10nmgr_translationDataFactory */
 			$factory=t3lib_div::makeInstance('tx_l10nmgr_translationDataFactory');
 			//TODO: catch exeption
 			$translationData=$factory->getTranslationDataFromExcelXMLFile($uploadedTempFile);
@@ -539,6 +552,8 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 				$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage', $message, $title, $status);
 				$info .= $flashMessage->render();
 				$info .= $viewClass->renderInternalMessagesAsFlashMessage($status);
+
+				$viewClass->saveExportInformation();
 			}
 		}
 
@@ -676,7 +691,7 @@ class tx_l10nmgr_cm1 extends t3lib_SCbase {
 			// If at least a recipient is indeed defined, proceed with sending the mail
 		$recipients = t3lib_div::trimExplode(',', $this->lConf['email_recipient']);
 		if (count($recipients) > 0) {
-			$fullFilename = PATH_site . 'uploads/tx_l10nmgr/saved_files/'. $xmlFileName;
+			$fullFilename = PATH_site . 'uploads/tx_l10nmgr/jobs/out/'. $xmlFileName;
 
 				// Get source & target language ISO codes
 			$sourceStaticLangArr = t3lib_BEfunc::getRecord('static_languages', $l10nmgrCfgObj->l10ncfg['sourceLangStaticId'], 'lg_iso_2');
