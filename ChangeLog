@@ -1,7 +1,7 @@
 2013-05-05 Andreas Otto <andreas@otto-hanika.de>
 	* [FEATURE] Allows importing translations into default language.
 	* [BUG] Various small bugfixes. _Check for already exported content_ works again and supports the CLI now.
-	* [RELEASE] Version 3.4.50
+	* [RELEASE] Version 3.4.1
 
 2012-07-07 Andreas Otto <andreas@otto-hanika.de>
 	* [BUG] Fixes #38702. CLI export doesn't work if source language is set to default language. Credits go to Jonas Renggli for investigating the issue and providing a patch.
