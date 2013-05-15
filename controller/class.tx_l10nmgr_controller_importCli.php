@@ -60,6 +60,11 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 				'Path to the file that should be imported',
 		),
 		array(
+			'--workspace',
+			'Workspace ID',
+			'Force workspace ID for import (overrides value in translation file)'
+		),
+		array(
 			'--help',
 			'Show help',
 		),
@@ -104,6 +109,11 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 		if (isset($this->arguments['--help']) || isset($this->arguments['-h']) || !isset($this->arguments['--file']) ) {
 			return $this->routeToAction('helpAction');
 		}
+
+				// Force target workspace for import
+			if (isset($this->arguments['--workspace']) && t3lib_utility_Math::canBeInterpretedAsInteger($this->arguments['--workspace'][0])) {
+				$GLOBALS['BE_USER']->setWorkspace((int) $this->arguments['--workspace'][0]);
+			}
 
 		$destinationFolder = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_domain_importer_importFile::getTableName(), 'filename'));
 
