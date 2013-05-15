@@ -97,6 +97,26 @@ class tx_l10nmgr_tools {
 	protected $sysLang;
 
 	/**
+	 * Threshold for printing status information to CLI (every PRINT_THRESHOLD percent)
+	 */
+	const PRINT_THRESHOLD = 10;
+
+	/**
+	 * @var int $itemCount
+	 */
+	protected static $itemCount = 0;
+
+	/**
+	 * @var bool $cliMode
+	 */
+	protected static $cliMode = FALSE;
+
+	/**
+	 * @var array $percentagesPrinted
+	 */
+	protected static $percentagesPrinted = array(0, 100);
+
+	/**
 	 * Constructor
 	 * Setting up internal variable ->t8Tools
 	 *
@@ -893,10 +913,62 @@ class tx_l10nmgr_tools {
 		$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_l10nmgr_index','workspace='.intval($ws));
 	}
 
+	/**
+	 * Check if l10nmgr action is performed in CLI mode
+	 *
+	 * @return bool
+	 */
+	public static function getCliMode() {
+		return self::$cliMode;
+	}
 
+	/**
+	 * Set CLI mode for l10nmgr actions
+	 *
+	 * @param bool $cliMode
+	 */
+	public static function setCliMode($cliMode) {
+		self::$cliMode = (bool) $cliMode;
+	}
+
+	/**
+	 * Increase number of processed items (used by hook in t3lib_TCEmain::processDatamap_preProcessFieldArray)
+	 *
+	 * @return void
+	 */
+	public static function increaseItemCount() {
+		self::$itemCount++;
+	}
+
+	/**
+	 * Reset progress counters (used by hook in t3lib_TCEmain::processDatamap_preProcessFieldArray)
+	 *
+	 * @return void
+	 */
+	public static function resetProgressCounters() {
+		self::$itemCount = 0;
+		self::$percentagesPrinted = array(0, 100);
+	}
+
+	/**
+	 * Print progress of l10nmgr action
+	 *
+	 * @param string $table
+	 * @param t3lib_TCEmain $tceMain
+	 */
+	public static function printProgress($table, t3lib_TCEmain $tceMain) {
+		$totalItems = count($tceMain->datamap[$table]);
+		$progressPercentage = (int) round(100 / $totalItems * self::$itemCount);
+
+		if ($progressPercentage % self::PRINT_THRESHOLD !== 0 || in_array($progressPercentage, self::$percentagesPrinted) || $progressPercentage > 100) {
+			return;
+		}
+
+		printf('Processed %s of %s items (%s%% done)' . PHP_EOL, self::$itemCount, $totalItems, $progressPercentage);
+		self::$percentagesPrinted[] = $progressPercentage;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/tools/class.tx_l10nmgr_tools.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/tools/class.tx_l10nmgr_tools.php']);
 }
-?>

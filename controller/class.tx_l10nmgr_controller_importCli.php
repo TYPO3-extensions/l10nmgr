@@ -25,6 +25,7 @@
  ***************************************************************/
 
 require_once(t3lib_extMgm::extPath('mvc') . 'mvc/controller/class.tx_mvc_controller_cli.php');
+require_once(t3lib_extMgm::extPath('l10nmgr') . 'domain/tools/class.tx_l10nmgr_tools.php');
 
 
 /**
@@ -157,8 +158,14 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 			$importData->extractAllZipContent();
 			$this->cli_echo(" done!\n");
 
+				// Enable detailed progress output
+			tx_l10nmgr_tools::setCliMode(TRUE);
+
 			do {
 				$this->cli_echo(sprintf('%s%% finished' . "\n", round($importData->getProgressPercentage())));
+
+					// Clear progress counters
+				tx_l10nmgr_tools::resetProgressCounters();
 			} while (!tx_l10nmgr_domain_importer_importer::performImportRun($importData));
 			$this->cli_echo(sprintf('%s%% finished' . "\n", round($importData->getProgressPercentage())));
 		}

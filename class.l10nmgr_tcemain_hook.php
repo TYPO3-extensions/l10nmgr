@@ -60,6 +60,23 @@ require_once (t3lib_extMgm::extPath('l10nmgr').'domain/tools/class.tx_l10nmgr_to
 class tx_l10nmgr_tcemain_hook {
 
 	/**
+	 * Print progress to CLI when processing multiple items in t3lib_TCEMain
+	 *
+	 * @param array $incomingFieldArray
+	 * @param string $table
+	 * @param int $id
+	 * @param t3lib_TCEmain $tceMain
+	 * @return void
+	 */
+	public function processDatamap_preProcessFieldArray(array $incomingFieldArray, $table, $id, t3lib_TCEmain $tceMain) {
+		if (!tx_l10nmgr_tools::getCliMode()) {
+			return;
+		}
+		tx_l10nmgr_tools::increaseItemCount();
+		tx_l10nmgr_tools::printProgress($table, $tceMain);
+	}
+
+	/**
 	 * Hook for updating translation index when records are edited (hooks into TCEmain)
 	 *
 	 * @param	[type]		$status: ...
