@@ -93,7 +93,7 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	source_lang blob NOT NULL,
 	translation_lang blob NOT NULL,
 	export_type tinytext NOT NULL,
-	progress blob NOT NULL,
+	progress mediumblob NOT NULL,
 	filename text NOT NULL,
 	exportfiles int(11) DEFAULT '0' NOT NULL,
 	checkforexistingexports tinyint(4) DEFAULT '0' NOT NULL,
@@ -155,7 +155,7 @@ CREATE TABLE tx_l10nmgr_importdata (
 	import_type tinytext NOT NULL,	
 	
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
-	progress blob NOT NULL,
+	progress mediumblob NOT NULL,
 	force_target_lang tinyint(4) NOT NULL,
 	importfiles int(11) DEFAULT '0' NOT NULL,
 	messages blob NOT NULL,
