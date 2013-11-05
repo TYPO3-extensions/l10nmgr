@@ -66,6 +66,11 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 			'Force workspace ID for import (overrides value in translation file)'
 		),
 		array(
+			'--language',
+			'Language ID',
+			'Force language ID for import (overrides value in translation file)'
+		),
+		array(
 			'--help',
 			'Show help',
 		),
@@ -127,6 +132,11 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 			$importData['exportdata_id'] = 0; // will be updated later
 			$importData['configuration_id'] = 0; // will be updated later
 			$importData['import_type'] = 'xml';
+			$importData['force_target_lang'] =
+				isset($this->arguments['--language']) && $this->arguments['--language'][0] > 0 ?
+				intval($this->arguments['--language'][0]) :
+				0
+			;
 
 			$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
 			$importDataRepository->add($importData);
