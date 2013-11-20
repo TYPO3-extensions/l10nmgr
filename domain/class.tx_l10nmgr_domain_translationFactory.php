@@ -70,7 +70,11 @@ class tx_l10nmgr_domain_translationFactory {
 		$this->TranslationData->setForceTargetLanguageUid($forceTargetLanguageUid);
 
 		$this->extractXMLMetaData($TranslationXML->head);
+		if(tx_l10nmgr_tools::getCliMode() && $this->TranslationData->getBaseUrl()) {
+			tx_l10nmgr_tools::mockBrowserRequest($this->TranslationData->getBaseUrl());
+		}
 		$this->extractXMLTranslation($TranslationXML->pageGrp);
+		tx_l10nmgr_tools::restoreEnvironmentVariables();
 		unset($TranslationXML);
 		return $this->TranslationData;
 	}

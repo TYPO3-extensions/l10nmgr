@@ -117,6 +117,12 @@ class tx_l10nmgr_tools {
 	protected static $percentagesPrinted = array(0, 100);
 
 	/**
+	 * backup of $_SERVER globals before it is overridden by $this->mockBrowserRequest()
+	 * @var null|array
+	 */
+	protected static $originalServerGlobal = NULL;
+
+	/**
 	 * Constructor
 	 * Setting up internal variable ->t8Tools
 	 *
@@ -966,6 +972,59 @@ class tx_l10nmgr_tools {
 
 		printf('Processed %s of %s items (%s%% done)' . PHP_EOL, self::$itemCount, $totalItems, $progressPercentage);
 		self::$percentagesPrinted[] = $progressPercentage;
+	}
+
+	/**
+	 * set some $_SERVER variables to make TYPO3 believe this is a browser request
+	 *
+	 * This is needed so that htmlarea can distinguish internal and external links by domain.
+	 *
+	 * @param $baseUrl
+	 * @throws InvalidArgumentException
+	 */
+	public static function mockBrowserRequest($baseUrl) {
+		if(array_key_exists('HTTP_HOST', $_SERVER)) {
+			// if: we are either in a browser request or the host was set as environment variable from shell
+			// either way: we don't want to mess up the environment
+			return;
+		}
+		$urlParts = parse_url($baseUrl);
+		if($urlParts === FALSE) {
+			throw new \InvalidArgumentException(sprintf('"%s" can not be parsed as url.', $baseUrl));
+		}
+
+		self::$originalServerGlobal = $_SERVER;
+
+		// set HTTP_HOST
+		if(!array_key_exists('host', $urlParts)) {
+			throw new \InvalidArgumentException(sprintf('The url "%s" seems not to contain a host.', $baseUrl));
+		}
+		$host = $urlParts['host'];
+		if(array_key_exists('port', $urlParts) && !empty($urlParts['port'])) {
+			$host .= ':' . $urlParts['port'];
+		}
+		$_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'] = $host;
+
+		// set protocol
+		if(!array_key_exists('scheme', $urlParts)) {
+			throw new \InvalidArgumentException(sprintf('The url "%s" seems not to contain a valid scheme.', $baseUrl));
+		}
+		if($urlParts['scheme'] === 'https') {
+			$_SERVER['SSL_SESSION_ID'] = 'fake-it';
+		}
+
+		/* t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') should return a valid url */
+		$_SERVER['ORIG_SCRIPT_NAME'] = 'typo3/backend.php';
+	}
+
+	/**
+	 * restore $_SERVER variables after calling $this->mockBrowserEnvironmentVariables()
+	 */
+	public static function restoreEnvironmentVariables() {
+		if(self::$originalServerGlobal !== NULL) {
+			$_SERVER = self::$originalServerGlobal;
+			self::$originalServerGlobal = NULL;
+		}
 	}
 }
 

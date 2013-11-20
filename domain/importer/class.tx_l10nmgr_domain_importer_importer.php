@@ -130,6 +130,10 @@ class tx_l10nmgr_domain_importer_importer {
 			try {
 				$exportData = $this->getExportDataFromTranslationData($TranslationData);
 
+				if(tx_l10nmgr_tools::getCliMode() && $TranslationData->getBaseUrl()) {
+					tx_l10nmgr_tools::mockBrowserRequest($TranslationData->getBaseUrl());
+				}
+
 					// check pre requirements
 				$this->checkImportConditions($this->importData, $exportData,$TranslationData);
 
@@ -152,6 +156,8 @@ class tx_l10nmgr_domain_importer_importer {
 				$TranslationService = new tx_l10nmgr_service_importTranslation();
 				$TranslationService->save($TranlateableInformation, $TranslationData);
 				unset($TranslationService);
+
+				tx_l10nmgr_tools::restoreEnvironmentVariables();
 
 			} catch (tx_l10nmgr_exception_applicationError $e) {
 				trigger_error($e->getMessage() . ' That occurs on the file: "' . $currentFile . '"', E_USER_WARNING);
