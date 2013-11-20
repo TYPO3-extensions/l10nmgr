@@ -118,7 +118,9 @@ class tx_l10nmgr_domain_exporter_exporter {
 					$tranlateableInformation = $factory->createFromIncludeList($this->exportData, $includeArray);
 
 					if (tx_l10nmgr_tools::getCliMode()) {
-						$tranlateableInformation->setSiteUrl(tx_l10nmgr_domain_tools_div::getBaseUrlForPageUid($this->exportData->getL10nConfigurationObject()->getPid()));
+						$baseUrl = tx_l10nmgr_domain_tools_div::getBaseUrlForPageUid($this->exportData->getL10nConfigurationObject()->getPid());
+						$tranlateableInformation->setSiteUrl($baseUrl);
+						tx_l10nmgr_tools::mockBrowserRequest($baseUrl);
 					}
 
 					$this->processExport($tranlateableInformation);
@@ -144,7 +146,9 @@ class tx_l10nmgr_domain_exporter_exporter {
 			$tranlateableInformation 	 = $factory->createFromExportDataAndPageIdCollection($this->exportData,$pagesForChunk);
 
 			if (tx_l10nmgr_tools::getCliMode()) {
-				$tranlateableInformation->setSiteUrl(tx_l10nmgr_domain_tools_div::getBaseUrlForPageUid($this->exportData->getL10nConfigurationObject()->getPid()));
+				$baseUrl = tx_l10nmgr_domain_tools_div::getBaseUrlForPageUid($this->exportData->getL10nConfigurationObject()->getPid());
+				$tranlateableInformation->setSiteUrl($baseUrl);
+				tx_l10nmgr_tools::mockBrowserRequest($baseUrl);
 			}
 
 			$this->currentNumberOfFields = $tranlateableInformation->countFields();
