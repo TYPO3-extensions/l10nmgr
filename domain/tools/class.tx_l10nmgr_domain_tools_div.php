@@ -24,6 +24,9 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+require_once(PATH_t3lib . 'class.t3lib_page.php');
+require_once(PATH_t3lib . 'class.t3lib_tsparser_ext.php');
+
 /**
  * Collection of static methods
  *
@@ -42,12 +45,12 @@ class tx_l10nmgr_domain_tools_div {
 	 *
 	 * @param string inputfile
 	 * @param string outputfile
-	 * @param callback callback function that does the "dummy translation"
+	 * @param array|callable callback callback function that does the "dummy translation"
 	 * @return void
 	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
 	 */
 	public static function translate($inputFile, $outputFile, $callback = array('tx_l10nmgr_domain_tools_div', 'dummyTranslate')) {
-		tx_mvc_validator_factory::getFileValidator()->isValid($inputFile, true);
+		tx_mvc_validator_factory::getFileValidator()->isValid($inputFile, TRUE);
 
 		$inputFileContent = file_get_contents($inputFile);
 
@@ -70,19 +73,46 @@ class tx_l10nmgr_domain_tools_div {
 	public static function dummyTranslate($input) {
 
 		$content = $input[2];
-		$translation = "金";
+		$translation = '金';
 
-		if (strpos($content, ']]>') !== false) {
-			$content = str_replace(']]>', ' '.$translation.']]>', $content);
+		if (strpos($content, ']]>') !== FALSE) {
+			$content = str_replace(']]>', ' ' . $translation . ']]>', $content);
 		} elseif ($content == strip_tags($content)) {
-				$content .= ' '.$translation;
+				$content .= ' ' . $translation;
 		} else {
-			$content .= '<p>'.$translation.'</p>';
+			$content .= '<p>' . $translation . '</p>';
 		}
 
 		return sprintf('<data%s>%s</data>', $input[1], $content);
 	}
 
-}
+	/**
+	 * Get BaseURL from TypoScript Setup for a given page UID
+	 *
+	 * @param int $pageUid
+	 * @return string
+	 */
+	public static function getBaseUrlForPageUid($pageUid) {
+		$typoScriptSetup = self::getTypoScriptSetupForPageUid($pageUid);
+		return $typoScriptSetup['config.']['baseURL'];
+	}
 
-?>
+	/**
+	 * Get TypoScript Setup for a given page UID
+	 *
+	 * @param int $pageUid
+	 * @return array
+	 * @access protected
+	 */
+	protected static function getTypoScriptSetupForPageUid($pageUid) {
+		$sysPageObj = t3lib_div::makeInstance('t3lib_pageSelect');
+		$rootLine = $sysPageObj->getRootLine($pageUid);
+		$tsObj = t3lib_div::makeInstance('t3lib_tsparser_ext');
+		$tsObj->tt_track = 0;
+		$tsObj->init();
+		$tsObj->runThroughTemplates($rootLine);
+		$tsObj->generateConfig();
+		return $tsObj->setup;
+	}
+
+}

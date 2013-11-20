@@ -73,6 +73,11 @@ class tx_l10nmgr_domain_exporter_exporter {
 	protected $currentNumberOfFields;
 
 	/**
+	 * @var bool check for TYPO3 cli mode
+	 */
+	protected $cliMode = FALSE;
+
+	/**
 	 * Constructor to create an instance of the exporter object
 	 *
 	 * @param tx_l10nmgr_domain_exporter_exportData $exportData
@@ -117,6 +122,10 @@ class tx_l10nmgr_domain_exporter_exporter {
 	//!FIXME verify the missing WS-ID this is probably needed if an export of an WS is processed
 					$tranlateableInformation = $factory->createFromIncludeList($this->exportData, $includeArray);
 
+					if ($this->cliMode) {
+						$tranlateableInformation->setSiteUrl(tx_l10nmgr_domain_tools_div::getBaseUrlForPageUid($this->exportData->getL10nConfigurationObject()->getPid()));
+					}
+
 					$this->processExport($tranlateableInformation);
 					$this->currentNumberOfFields = count($includeArray);
 					$this->exportData->setIncludeListProcessedState();
@@ -138,6 +147,11 @@ class tx_l10nmgr_domain_exporter_exporter {
 			$pagesForChunk               = $this->getNextPagesChunk();
 //!FIXME verify the missing WS-ID this is probably needed if an export of an WS is processed
 			$tranlateableInformation 	 = $factory->createFromExportDataAndPageIdCollection($this->exportData,$pagesForChunk);
+
+			if ($this->cliMode) {
+				$tranlateableInformation->setSiteUrl(tx_l10nmgr_domain_tools_div::getBaseUrlForPageUid($this->exportData->getL10nConfigurationObject()->getPid()));
+			}
+
 			$this->currentNumberOfFields = $tranlateableInformation->countFields();
 			$this->processExport($tranlateableInformation, $pagesForChunk);
 
@@ -279,14 +293,19 @@ class tx_l10nmgr_domain_exporter_exporter {
 	 * This method performs on run of an export. It is polled via ajax to perform a complete export.
 	 * It saves the export to a file an returns a boolean value if a nother run is needed.
 	 *
+	 * @param tx_l10nmgr_domain_exporter_exportData $exportData
+	 * @param int $numberOfPagesPerChunk
+	 * @param bool $cliMode
+	 * @throws tx_mvc_exception_skipped
 	 * @return boolean
 	 */
-	public static function performFileExportRun(tx_l10nmgr_domain_exporter_exportData $exportData, $numberOfPagesPerChunk = 5) {
-		$exportView				= $exportData->getInitializedExportView();
-		$exporter 				= new tx_l10nmgr_domain_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
+	public static function performFileExportRun(tx_l10nmgr_domain_exporter_exportData $exportData, $numberOfPagesPerChunk = 5, $cliMode = FALSE) {
+		$exportView = $exportData->getInitializedExportView();
+		$exporter = new tx_l10nmgr_domain_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
+		$exporter->cliMode = $cliMode;
 
-		$exporterWasRunning 	= $exporter->run();
-		$numberOfItemsInChunk	= $exporter->countItemsForChunk();
+		$exporterWasRunning = $exporter->run();
+		$numberOfItemsInChunk = $exporter->countItemsForChunk();
 		$exportFileRepository = new tx_l10nmgr_domain_exporter_exportFileRepository();
 
 		if ($exporterWasRunning && $numberOfItemsInChunk > 0) {

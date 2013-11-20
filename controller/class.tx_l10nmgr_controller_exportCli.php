@@ -256,9 +256,9 @@ class tx_l10nmgr_controller_exportCli extends tx_mvc_controller_cli {
 //				$exporter = new tx_l10nmgr_domain_exporter_exporter($exportData);
 
 				do {
-					$this->cli_echo(sprintf('%s%% finished'."\n", round($exportData->getProgressPercentage())));
-				} while (!tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData,$this->configuration->get('pagesPerChunk')));
-				$this->cli_echo(sprintf('%s%% finished'."\n", round($exportData->getProgressPercentage())));
+					$this->cli_echo(sprintf('%s%% finished' . "\n", round($exportData->getProgressPercentage())));
+				} while (!tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData, $this->configuration->get('pagesPerChunk'), TRUE));
+				$this->cli_echo(sprintf('%s%% finished' . "\n", round($exportData->getProgressPercentage())));
 
 			}
 		}
