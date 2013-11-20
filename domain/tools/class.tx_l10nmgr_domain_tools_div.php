@@ -41,6 +41,11 @@ require_once(PATH_t3lib . 'class.t3lib_tsparser_ext.php');
 class tx_l10nmgr_domain_tools_div {
 
 	/**
+	 * @var array
+	 */
+	protected static $l10nmgrConfigurationOverrides = array();
+
+	/**
 	 * Do a translation from a file using a callback function
 	 *
 	 * @param string inputfile
@@ -98,6 +103,27 @@ class tx_l10nmgr_domain_tools_div {
 	}
 
 	/**
+	 * Set overrides for l10nmg configuration
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @return void
+	 */
+	public static function setL10nmgrConfigurationOverrides($key, $value) {
+		self::$l10nmgrConfigurationOverrides[$key] = $value;
+	}
+
+	/**
+	 * Get overrides for l10nmg configuration
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public static function getL10nmgrConfigurationOverrides($key) {
+		return self::$l10nmgrConfigurationOverrides[$key];
+	}
+
+	/**
 	 * Get TypoScript Setup for a given page UID
 	 *
 	 * @param int $pageUid
@@ -114,5 +140,4 @@ class tx_l10nmgr_domain_tools_div {
 		$tsObj->generateConfig();
 		return $tsObj->setup;
 	}
-
 }

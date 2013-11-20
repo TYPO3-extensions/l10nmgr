@@ -35,12 +35,12 @@
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abstractTCAObject {
-	
+
 	/**
 	 * @var t3lib_pageTree
 	 */
 	protected $tree;
-	
+
 	/**
 	 * @var ArrayObject
 	 */
@@ -63,6 +63,9 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	* @return string	Value of the field
 	**/
 	protected function getData($key) {
+		if (tx_l10nmgr_domain_tools_div::getL10nmgrConfigurationOverrides($key)) {
+			return tx_l10nmgr_domain_tools_div::getL10nmgrConfigurationOverrides($key);
+		}
 		return $this->row[$key];
 	}
 
@@ -110,23 +113,23 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	public function getExcludeArray(){
 		$excludeArray = array_flip(array_unique(t3lib_div::trimExplode(',',$this->getData('exclude'),1)));
 		$allExcludes = array();
-		
+
 		foreach($excludeArray as $excludeElement => $value){
 			//is value a page?
 			if(substr($excludeElement,0,6) == 'pages:'){
 				$recursiveExcludes = $this->expandExcludeString(substr($excludeElement,6));
-				$allExcludes = array_merge($allExcludes,array_flip($recursiveExcludes));				
+				$allExcludes = array_merge($allExcludes,array_flip($recursiveExcludes));
 			}else{
 				$allExcludes[$excludeElement] = $value;
 			}
 		}
-				
+
 		return $allExcludes;
 	}
 
 	/**
 	 * Expands an exclude string (eg pages:4711+) to all pages in the tree recursiv.
-	 * 
+	 *
 	 * @param string
 	 * @return array
 	 */
@@ -148,16 +151,16 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 
 		$pidList[] = 'pages:'.$pid;
 
-		if ($depth > 0) {			
+		if ($depth > 0) {
 			$tree->getTree($pid, $depth);
 			foreach ($tree->tree as $data) {
 				$pidList[] = 'pages:'.$data['row']['uid'];
 			}
 		}
-		
+
 		return array_unique($pidList);
-	}	
-	
+	}
+
 	/**
 	 * Each l10nconfig can define an includeList this method returns the includeList as array.
 	 *
@@ -176,7 +179,7 @@ class tx_l10nmgr_domain_configuration_configuration extends tx_mvc_ddd_typo3_abs
 	public function getExportPageIdCollection() {
 		$this->exportPageIdCollection = new ArrayObject();
 		$tree 			= $this->getExportTree();
-		$excludeArray	= $this->getExcludeArray();		
+		$excludeArray	= $this->getExcludeArray();
 
 		//$tree->tree contains pages of the tree
 		foreach($tree->tree as $treeitem){
