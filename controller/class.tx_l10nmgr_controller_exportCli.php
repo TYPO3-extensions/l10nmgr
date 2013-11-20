@@ -278,9 +278,11 @@ class tx_l10nmgr_controller_exportCli extends tx_mvc_controller_cli {
 				/** @todo incomplete */
 //				$exporter = new tx_l10nmgr_domain_exporter_exporter($exportData);
 
+				tx_l10nmgr_tools::setCliMode(TRUE);
+
 				do {
 					$this->cli_echo(sprintf('%s%% finished' . "\n", round($exportData->getProgressPercentage())));
-				} while (!tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData, $this->configuration->get('pagesPerChunk'), TRUE));
+				} while (!tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData, $this->configuration->get('pagesPerChunk')));
 				$this->cli_echo(sprintf('%s%% finished' . "\n", round($exportData->getProgressPercentage())));
 			}
 		}

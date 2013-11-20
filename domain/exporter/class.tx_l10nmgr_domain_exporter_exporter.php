@@ -73,11 +73,6 @@ class tx_l10nmgr_domain_exporter_exporter {
 	protected $currentNumberOfFields;
 
 	/**
-	 * @var bool check for TYPO3 cli mode
-	 */
-	protected $cliMode = FALSE;
-
-	/**
 	 * Constructor to create an instance of the exporter object
 	 *
 	 * @param tx_l10nmgr_domain_exporter_exportData $exportData
@@ -122,7 +117,7 @@ class tx_l10nmgr_domain_exporter_exporter {
 	//!FIXME verify the missing WS-ID this is probably needed if an export of an WS is processed
 					$tranlateableInformation = $factory->createFromIncludeList($this->exportData, $includeArray);
 
-					if ($this->cliMode) {
+					if (tx_l10nmgr_tools::getCliMode()) {
 						$tranlateableInformation->setSiteUrl(tx_l10nmgr_domain_tools_div::getBaseUrlForPageUid($this->exportData->getL10nConfigurationObject()->getPid()));
 					}
 
@@ -148,7 +143,7 @@ class tx_l10nmgr_domain_exporter_exporter {
 //!FIXME verify the missing WS-ID this is probably needed if an export of an WS is processed
 			$tranlateableInformation 	 = $factory->createFromExportDataAndPageIdCollection($this->exportData,$pagesForChunk);
 
-			if ($this->cliMode) {
+			if (tx_l10nmgr_tools::getCliMode()) {
 				$tranlateableInformation->setSiteUrl(tx_l10nmgr_domain_tools_div::getBaseUrlForPageUid($this->exportData->getL10nConfigurationObject()->getPid()));
 			}
 
@@ -295,14 +290,12 @@ class tx_l10nmgr_domain_exporter_exporter {
 	 *
 	 * @param tx_l10nmgr_domain_exporter_exportData $exportData
 	 * @param int $numberOfPagesPerChunk
-	 * @param bool $cliMode
 	 * @throws tx_mvc_exception_skipped
 	 * @return boolean
 	 */
-	public static function performFileExportRun(tx_l10nmgr_domain_exporter_exportData $exportData, $numberOfPagesPerChunk = 5, $cliMode = FALSE) {
+	public static function performFileExportRun(tx_l10nmgr_domain_exporter_exportData $exportData, $numberOfPagesPerChunk = 5) {
 		$exportView = $exportData->getInitializedExportView();
 		$exporter = new tx_l10nmgr_domain_exporter_exporter($exportData, $numberOfPagesPerChunk, $exportView);
-		$exporter->cliMode = $cliMode;
 
 		$exporterWasRunning = $exporter->run();
 		$numberOfItemsInChunk = $exporter->countItemsForChunk();
