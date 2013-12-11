@@ -118,7 +118,7 @@ class tx_l10nmgr_domain_exporter_exporter {
 					$tranlateableInformation = $factory->createFromIncludeList($this->exportData, $includeArray);
 
 					if (tx_l10nmgr_tools::getCliMode()) {
-						$baseUrl = tx_l10nmgr_domain_tools_div::getBaseUrlForPageUid($this->exportData->getL10nConfigurationObject()->getPid());
+						$baseUrl = t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST') . '/';
 						$tranlateableInformation->setSiteUrl($baseUrl);
 						tx_l10nmgr_tools::mockBrowserRequest($baseUrl);
 					}
@@ -146,7 +146,7 @@ class tx_l10nmgr_domain_exporter_exporter {
 			$tranlateableInformation 	 = $factory->createFromExportDataAndPageIdCollection($this->exportData,$pagesForChunk);
 
 			if (tx_l10nmgr_tools::getCliMode()) {
-				$baseUrl = tx_l10nmgr_domain_tools_div::getBaseUrlForPageUid($this->exportData->getL10nConfigurationObject()->getPid());
+				$baseUrl = t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST') . '/';
 				$tranlateableInformation->setSiteUrl($baseUrl);
 				tx_l10nmgr_tools::mockBrowserRequest($baseUrl);
 			}
