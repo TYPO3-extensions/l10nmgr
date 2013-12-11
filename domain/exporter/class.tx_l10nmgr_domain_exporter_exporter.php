@@ -239,10 +239,12 @@ class tx_l10nmgr_domain_exporter_exporter {
 	 * Retuns the internal exportDataObject
 	 *
 	 * @author Timo Schmidt
+	 * @param bool $ignoreUnprocessed do not throw exception if the data is not processed yet
+	 * @throws LogicException
 	 * @return tx_l10nmgr_domain_exporter_exportData
 	 */
-	public function getExportData() {
-		if (!$this->getIsChunkProcessed()) {
+	public function getExportData($ignoreUnprocessed = FALSE) {
+		if (!$ignoreUnprocessed && !$this->getIsChunkProcessed()) {
 			throw new LogicException('it makes no sence to read the export data from an unprocessed run');
 		} else {
 			return $this->exportData;

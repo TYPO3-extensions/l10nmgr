@@ -30,13 +30,13 @@ class tx_l10nmgr_domain_hooks_ftpUploader {
 
 		if ($emConf['enable_ftp'] == 1 && defined('TYPO3_cliMode')) {
 
-			$fileName = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_domain_exporter_exportData::getTableName(), 'filename')) . '/' . $exporter->getExportData()->getFilename();
+			$fileName = t3lib_div::getFileAbsFileName(tx_mvc_common_typo3::getTCAConfigValue('uploadfolder', tx_l10nmgr_domain_exporter_exportData::getTableName(), 'filename')) . '/' . $exporter->getExportData(TRUE)->getFilename();
 
 			$connection = ftp_connect($emConf['ftp_server']);
 				if ($connection === false) throw new Exception('Connection failed!');
 			$res = ftp_login($connection, $emConf['ftp_server_username'], $emConf['ftp_server_password']);
 				if ($res === false) throw new Exception('Could not login!');
-			$res = ftp_put($connection, $emConf['ftp_server_path'] . $exporter->getExportData()->getFilename(), $fileName, FTP_BINARY);
+			$res = ftp_put($connection, $emConf['ftp_server_path'] . $exporter->getExportData(TRUE)->getFilename(), $fileName, FTP_BINARY);
 				if ($res === false) throw new Exception('Transfer failed!');
 			$res = ftp_close($connection);
 				if ($res === false) throw new Exception('Could not close the connection');
