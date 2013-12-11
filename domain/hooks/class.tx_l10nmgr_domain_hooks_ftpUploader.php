@@ -36,8 +36,18 @@ class tx_l10nmgr_domain_hooks_ftpUploader {
 				if ($connection === false) throw new Exception('Connection failed!');
 			$res = ftp_login($connection, $emConf['ftp_server_username'], $emConf['ftp_server_password']);
 				if ($res === false) throw new Exception('Could not login!');
+			if($emConf['ftp_passive_mode']) {
+				$res = ftp_pasv($connection, TRUE);
+				if ($res === false) throw new Exception('Could not switch to passive mode.');
+			}
 			$res = ftp_put($connection, $emConf['ftp_server_path'] . $exporter->getExportData(TRUE)->getFilename(), $fileName, FTP_BINARY);
-				if ($res === false) throw new Exception('Transfer failed!');
+				if ($res === false) {
+					$msg = 'Transfer failed!';
+					if(!$emConf['ftp_passive_mode']) {
+						$msg .= ' See if enabling ftp_passive_mode in the extension settings helps.';
+					}
+					throw new Exception($msg);
+				}
 			$res = ftp_close($connection);
 				if ($res === false) throw new Exception('Could not close the connection');
 
