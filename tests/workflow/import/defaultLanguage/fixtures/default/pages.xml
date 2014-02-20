@@ -1,0 +1,30 @@
+<testcase>
+	<pages>
+		<uid>150</uid>
+		<pid>148</pid>
+		<tstamp>1232534830</tstamp>
+		<sorting>512</sorting>
+		<deleted>0</deleted>
+		<crdate>1232534705</crdate>
+		<cruser_id>20</cruser_id>
+		<title>A page title</title>
+		<doktype>1</doktype>
+		<hidden>0</hidden>
+		<starttime>0</starttime>
+		<endtime>0</endtime>
+	</pages>
+	<pages>
+		<uid>24596</uid>
+		<pid>224</pid>
+		<tstamp>1252502437</tstamp>
+		<sorting>8</sorting>
+		<deleted>0</deleted>
+		<crdate>1248698147</crdate>
+		<cruser_id>303</cruser_id>
+		<title>A second page title</title>
+		<doktype>1</doktype>
+		<hidden>1</hidden>
+		<starttime>0</starttime>
+		<endtime>0</endtime>
+	</pages>
+</testcase>

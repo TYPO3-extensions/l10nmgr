@@ -108,7 +108,6 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_l10nmgr_t
 		);
 	}
 
-
 	/**
 	 * Verify that the page collection with the UID 175 contains the right amount elements within the elements collection.
 	 *
@@ -295,7 +294,12 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_l10nmgr_t
 				'tt_content:NEW/1/1693:bodytext'
 			),
 			array (
-				"\n" . '<h1>Your message has been sent</h1>' . "\n\n" . 'Thank you for your message.  We have forwarded your communication to the appropriate department.  If this is a technical support matter, please call our customer care line at<b> 866-229-3239</b> for immediate attention.  To speak with a sales representative, please call <b>877-509-3239</b>.',
+//				'<h1>Your message has been sent</h1>Thank you for your message.  We have forwarded your communication to the appropriate department.  If this is a technical support matter, please call our customer care line at<b> 866-229-3239</b> for immediate attention.  To speak with a sales representative, please call <b>877-509-3239</b>.</p>',
+//				'Test123',
+				chr(10) . '<h1>Your message has been sent</h1>
+
+Thank you for your message.  We have forwarded your communication to the appropriate department.  If this is a technical support matter, please call our customer care line at<b> 866-229-3239</b> for immediate attention.  To speak with a sales representative, please call <b>877-509-3239</b>.
+',
 				19761,
 				'tt_content:' . 523511,
 				'tt_content:523531:bodytext'
@@ -319,8 +323,8 @@ class tx_l10nmgr_domain_translationFactory_xmlData_testcase extends tx_l10nmgr_t
 		$fixtureFieldContent = $this->TranslationData->getPageCollection()->offsetGet($fixturePageId)->getElementCollection()->offsetGet($fixtureElementId)->getFieldCollection()->offsetGet($fixtureFieldPath)->getContent();
 
 		$this->assertEquals (
-			$expectedValue,
-			$fixtureFieldContent,
+			str_replace(array("\r\n", "\r", "\n"), '', $expectedValue),
+			str_replace(array("\r\n", "\r", "\n"), '', $fixtureFieldContent),
 			'Wrong content found in field of element. Expected content "' . htmlspecialchars($expectedValue) . '" the following content is given "' . htmlspecialchars($fixtureFieldContent) . '"'
 		);
 	}

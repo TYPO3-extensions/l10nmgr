@@ -45,28 +45,26 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_l10nmgr_tests_b
 	/**
 	 * @var tx_l10nmgr_service_textConverter
 	 */
-	protected $TextConverter = null;
+	protected $textConverter = NULL;
 
 	/**
 	 * Initialize a fresh instance of the tx_l10nmgr_service_textConverter
 	 *
 	 * @access public
-	 * @author Tolleiv Nietsch <nietsch@aoemedia.de>
 	 * @return void
 	 */
 	public function setUp() {
-		$this->TextConverter = new tx_l10nmgr_service_textConverter();
+		$this->textConverter = new tx_l10nmgr_service_textConverter();
 	}
 
 	/**
 	 * Reset the tx_l10nmgr_service_textConverter
 	 *
 	 * @access public
-	 * @author Tolleiv Nietsch <nietsch@aoemedia.de>
 	 * @return void
 	 */
 	public function tearDown() {
-		$this->TextConverter = null;
+		$this->textConverter = NULL;
 	}
 
 	/**
@@ -74,7 +72,6 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_l10nmgr_tests_b
 	 *
 	 * @access public
 	 * @test
-	 * @author Tolleiv Nietsch <nietsch@aoemedia.de>
 	 * @return void
 	 */
 	public function newlineReplacementTowardsUnixFormatWork() {
@@ -82,19 +79,19 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_l10nmgr_tests_b
 		$fixtureText = array("line1\nline2","line1\n\rline2","line1\r\nline2");
 		$expectedText = "line1\nline2";
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toRaw($fixtureText[0]),
+			$this->textConverter->toRaw($fixtureText[0]),
 			'Regular newline is lost during transformation'
 		);
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toRaw($fixtureText[1]),
+			$this->textConverter->toRaw($fixtureText[1]),
 			'Windows newline is lost during transformation'
 		);
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toRaw($fixtureText[2]),
+			$this->textConverter->toRaw($fixtureText[2]),
 			'Mac Newline is lost during transformation'
 		);
 	}
@@ -107,13 +104,11 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_l10nmgr_tests_b
 	 * @test
 	 * @expectedException tx_mvc_exception_converter
 	 * @see http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
-	 * @author Tolleiv Nietsch <nietsch@aoemedia.de>
 	 * @return void
 	 */
 	public function invalidXMLthrowsException() {
-		//$fixtureText = '<xml><[CDATA[</xml>';
-		$fixtureText = chr(7);		// Bell-Character ASCII 7 is no valid XML
-		$this->TextConverter->toRaw($fixtureText);
+		$fixtureText = chr(7); // Bell-Character ASCII 7 is no valid XML
+		$this->textConverter->toRaw($fixtureText);
 	}
 
 	/**
@@ -121,15 +116,14 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_l10nmgr_tests_b
 	 *
 	 * @access public
 	 * @test
-	 * @author Tolleiv Nietsch <nietsch@aoemedia.de>
 	 * @return void
 	 */
 	public function entitiesArenTConvertedByDefault() {
 		$fixtureText = '<xml attr="blub">&amp;</xml>';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$fixtureText,
-			$this->TextConverter->toRaw($fixtureText),
+			$this->textConverter->toRaw($fixtureText),
 			''
 		);
 	}
@@ -139,16 +133,15 @@ class tx_l10nmgr_service_textConverter_toRaw_testcase extends tx_l10nmgr_tests_b
 	 * @access public
 	 * @test
 	 * @see http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
-	 * @author Tolleiv Nietsch <nietsch@aoemedia.de>
 	 * @return void
 	 */
 	public function entitiesAreConvertedOptional() {
 		$fixtureText = '<xml attr="blub">&amp;<[CDATA[</xml>';
 		$expectedText = '&lt;xml attr=&quot;blub&quot;&gt;&amp;amp;&lt;[CDATA[&lt;/xml&gt;';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toRaw($fixtureText, null, null, true),
+			$this->textConverter->toRaw($fixtureText, NULL, NULL, TRUE),
 			''
 		);
 	}

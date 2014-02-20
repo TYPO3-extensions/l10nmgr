@@ -78,10 +78,15 @@ class tx_l10nmgr_service_importTranslation {
 	protected $flexToolObj = null;
 
 	/**
+	 * Force import as default language
+	 *
+	 * @var bool
+	 */
+	protected $importAsDefaultLanguage = FALSE;
+
+	/**
 	 * Initialize the service
 	 *
-	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function __construct() {
@@ -89,53 +94,68 @@ class tx_l10nmgr_service_importTranslation {
 	}
 
 	/**
+	 * Set importAsDefaultLanguage
+	 *
+	 * @param bool $importAsDefaultLanguage
+	 * @return void
+	 */
+	public function setImportAsDefaultLanguage($importAsDefaultLanguage) {
+		$this->importAsDefaultLanguage = (bool) $importAsDefaultLanguage;
+	}
+
+	/**
 	 * Save the incoming translationData object into the database
 	 * if the available translatableObject are match the configuration.
 	 *
-	 * @param tx_l10nmgr_domain_translateable_translateableInformation $TranslatableInformation
-	 * @param tx_l10nmgr_domain_translation_data $TranslationData
-	 *
-	 * @access public
+	 * @param tx_l10nmgr_domain_translateable_translateableInformation $translatableInformation
+	 * @param tx_l10nmgr_domain_translation_data $translationData
 	 * @return void
-	 *
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
-	public function save(tx_l10nmgr_domain_translateable_translateableInformation $TranslatableInformation, tx_l10nmgr_domain_translation_data $TranslationData) {
-		$TranslatablePageGroupCollection = $TranslatableInformation->getPageGroups();
+	public function save(tx_l10nmgr_domain_translateable_translateableInformation $translatableInformation, tx_l10nmgr_domain_translation_data $translationData) {
+		$translatablePageGroupCollection = $translatableInformation->getPageGroups();
 
-		foreach ( $TranslatablePageGroupCollection as $Page) {
-			$TranslatableElementsCollection = $Page->getTranslateableElements();
+		foreach ($translatablePageGroupCollection as $page) {
+			$translatableElementsCollection = $page->getTranslateableElements();
 
-			foreach ($TranslatableElementsCollection as $Element) {
+			foreach ($translatableElementsCollection as $element) { /* @var $element tx_l10nmgr_domain_translation_element */
 
-				$TranslatableFieldsCollection = $Element->getTranslateableFields();
-				$DetectRecordService          = t3lib_div::makeInstance('tx_l10nmgr_service_detectRecord'); /* @var $DetectRecordService tx_l10nmgr_service_detectRecord */
-				$DetectRecordService->flushRecordCache();
-				$DetectRecordService->setWorkspaceId($TranslatableInformation->getWorkspaceId());
+				$translatableFieldsCollection = $element->getTranslateableFields();
+				$detectRecordService = t3lib_div::makeInstance('tx_l10nmgr_service_detectRecord'); /* @var $detectRecordService tx_l10nmgr_service_detectRecord */
+				$detectRecordService->flushRecordCache();
+				$detectRecordService->setWorkspaceId($translatableInformation->getWorkspaceId());
 
-				foreach ($TranslatableFieldsCollection as $Field) { /* @var $Field tx_l10nmgr_domain_translateable_translateableField */
+				foreach ($translatableFieldsCollection as $field) { /* @var $field tx_l10nmgr_domain_translateable_translateableField */
 					try {
-						$TranslationField = $TranslationData->findByTableUidAndKey($Page->getUid(), $Element->getTableName(), $Element->getUid(), $Field->getIdentityKey());
+						$translationField = $translationData->findByTableUidAndKey($page->getUid(), $element->getTableName(), $element->getUid(), $field->getIdentityKey());
 
 						try {
-							$oldKey = $Field->getIdentityKey();
-							$newKey = $DetectRecordService->verifyIdentityKey (
+							$oldKey = $field->getIdentityKey();
+							$newKey = $detectRecordService->verifyIdentityKey (
 								$oldKey,
-								$TranslationData->getSysLanguageUid(),
-								$Element->getUid(),
-								$TranslationData->getWorkspaceId()
+								$translationData->getSysLanguageUid(),
+								$element->getUid(),
+								$translationData->getWorkspaceId()
 							);
-							$Field->setIdentityKey ($newKey);
 
-							if(($oldKey != $newKey) && !$TranslationData->isTargetLanguageForced()){
-								$TranslationField->addChange('Generated new key without forced target language: '.$oldKey.' new: '.$newKey);
+							// Update identity key if records should be imported as default language
+							if ($this->importAsDefaultLanguage) {
+								list ($cmdTableName, $cmdProcessString, $cmdFieldName, $cmdFieldFlexformPath) = explode(':', $newKey);
+								$cmdTableName = $element->getTableName();
+								$cmdProcessString = $element->getUid();
+								$newKey = implode(':', array($cmdTableName, $cmdProcessString, $cmdFieldName, $cmdFieldFlexformPath));
+							}
+
+							$field->setIdentityKey($newKey);
+
+							if (($oldKey != $newKey) && !$translationData->isTargetLanguageForced() && !$this->importAsDefaultLanguage) {
+								$translationField->addChange('Generated new key without forced target language: ' . $oldKey . ' new: ' . $newKey);
 							}
 
 						} catch (tx_mvc_exception_skipped $e) {
-							$TranslationField->markSkipped($e->getMessage());
+							$translationField->markSkipped($e->getMessage());
 						}
 
-						$this->buildDataCommandArray($Element, $Field, $TranslationField);
+						$this->buildDataCommandArray($element, $field, $translationField);
 					}catch (tx_mvc_exception_argumentOutOfRange $e ) {
 						tx_mvc_common_debug::debug($e->getMessage(), 'Exception out of range - Thrown because a element from the database is not in the import avaliable.', self::SHOW_DEBUG_INFORMATION);
 					} catch (tx_mvc_exception_skipped $e) {
@@ -150,8 +170,8 @@ class tx_l10nmgr_service_importTranslation {
 		$this->blackBoxDoNotModifyIt();
 		$this->processDataMapCommands();
 
-		if ( $TranslationData->isImported()) {
-			$TranslationData->writeProcessingLog();
+		if ($translationData->isImported()) {
+			$translationData->writeProcessingLog();
 		}
 	}
 
@@ -167,24 +187,24 @@ class tx_l10nmgr_service_importTranslation {
 	 * @return void
 	 */
 	protected function blackBoxDoNotModifyIt() {
-		$TCEmain = t3lib_div::makeInstance('t3lib_TCEmain'); /* @var $TCEmain t3lib_TCEmain */
-		$TCEmain->stripslashes_values = false;
+		$dataHandler = t3lib_div::makeInstance('t3lib_TCEmain'); /* @var $dataHandler t3lib_TCEmain */
+		$dataHandler->stripslashes_values = FALSE;
 		$errorMessages = '';
 
-		if (count($this->TCEmain_cmd))	{
-			$TCEmain->start(array(), $this->TCEmain_cmd);
-			$TCEmain->process_cmdmap();
+		if (count($this->TCEmain_cmd)) {
+			$dataHandler->start(array(), $this->TCEmain_cmd);
+			$dataHandler->process_cmdmap();
 
 				//!TODO add the errorLog to the import record for better handling
-			tx_mvc_common_debug::debug($TCEmain->errorLog, 'TCEmain localization errors:', (bool)count($TCEmain->errorLog));
+			tx_mvc_common_debug::debug($dataHandler->errorLog, 'TCEmain localization errors:', (bool)count($dataHandler->errorLog));
 		}
 
-		tx_mvc_common_debug::debug($TCEmain->copyMappingArray_merged, '$TCEmain->copyMappingArray_merged', self::SHOW_DEBUG_INFORMATION);
+		tx_mvc_common_debug::debug($dataHandler->copyMappingArray_merged, '$dataHandler->copyMappingArray_merged', self::SHOW_DEBUG_INFORMATION);
 		tx_mvc_common_debug::debug($this->TCEmain_data, '$TCEmain_data', self::SHOW_DEBUG_INFORMATION);
 		tx_mvc_common_debug::debug($this->TCEmain_cmd, '$this->TCEmain_cmd', self::SHOW_DEBUG_INFORMATION);
 
 			// Remap new translated elements to their l18n_parent records
-		foreach (array_keys($this->TCEmain_data) as $tableName)	{
+		foreach (array_keys($this->TCEmain_data) as $tableName) {
 
 			foreach ($this->TCEmain_data[$tableName] as $cmdProcessString => $fields) {
 
@@ -193,13 +213,13 @@ class tx_l10nmgr_service_importTranslation {
 				if ($cmdForceCreateNew === 'NEW') {
 					tx_mvc_common_debug::debug($this->TCEmain_data, '$this->TCEmain_data', self::SHOW_DEBUG_INFORMATION);
 
-					if ($TCEmain->copyMappingArray_merged[$tableName][$cmdl18nParentRecordUid])	{
+					if ($dataHandler->copyMappingArray_merged[$tableName][$cmdl18nParentRecordUid]) {
 
-						$this->TCEmain_data[$tableName][t3lib_BEfunc::wsMapId($tableName, $TCEmain->copyMappingArray_merged[$tableName][$cmdl18nParentRecordUid])] = $fields;
+						$this->TCEmain_data[$tableName][t3lib_BEfunc::wsMapId($tableName, $dataHandler->copyMappingArray_merged[$tableName][$cmdl18nParentRecordUid])] = $fields;
 					} else {
 
 							//!FIXME add logging to the error handling
-						$errorMessages .= "\n" . 'Record "'.$tableName.':'.$cmdl18nParentRecordUid.'" was NOT localized as it should have been!';
+						$errorMessages .= "\n" . 'Record "' . $tableName . ':' . $cmdl18nParentRecordUid . '" was NOT localized as it should have been!';
 					}
 
 					tx_mvc_common_debug::debug($this->TCEmain_data, '$this->TCEmain_data', self::SHOW_DEBUG_INFORMATION);
@@ -208,7 +228,7 @@ class tx_l10nmgr_service_importTranslation {
 			}
 
 			if (count($errorMessages) > 1) {
-				trigger_error('HERE NOT LOCALIZED!!!' . "\n" . $errorMessages,E_USER_WARNING);
+				trigger_error('HERE NOT LOCALIZED!!!' . "\n" . $errorMessages, E_USER_WARNING);
 			}
 		}
 	}

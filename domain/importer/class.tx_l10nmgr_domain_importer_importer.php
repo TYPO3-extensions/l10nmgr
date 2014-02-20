@@ -154,6 +154,7 @@ class tx_l10nmgr_domain_importer_importer {
 
 					// Save the translation into the database
 				$TranslationService = new tx_l10nmgr_service_importTranslation();
+				$TranslationService->setImportAsDefaultLanguage($this->importData->getImportAsDefaultLanguage());
 				$TranslationService->save($TranlateableInformation, $TranslationData);
 				unset($TranslationService);
 

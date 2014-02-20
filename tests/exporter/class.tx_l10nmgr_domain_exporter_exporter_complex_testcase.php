@@ -42,40 +42,40 @@
  */
 class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
-
 	/**
 	 * @var tx_l10nmgr_domain_translationFactory
 	 */
-	protected $TranslationFactory  = null;
+	protected $TranslationFactory  = NULL;
 
 	/**
 	 * @var tx_l10nmgr_domain_translateable_translateableInformationFactory
 	 */
-	protected $TranslatableFactory = null;
+	protected $TranslatableFactory = NULL;
 
 	/**
 	 * @var tx_l10nmgr_service_importTranslation
 	 */
-	protected $TranslationService  = null;
+	protected $TranslationService  = NULL;
 
 	/**
 	 * Creates the test environment.
 	 *
+	 * @return void
 	 */
-	function setUp() {
+	public function setUp() {
 		$this->skipInWrongWorkspaceContext();
 		$this->unregisterIndexedSearchHooks();
 
 		$this->createDatabase();
-		$db = $this->useTestDatabase();
+		$this->useTestDatabase();
 		$this->importStdDB();
 
 		$GLOBALS['TYPO3_DB']->debugOutput = 1;
 
 			// order of extension-loading is important !!!!
-		$import = array ('cms','l10nmgr');
-		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','aoe_xml2array', 'cc_devlog');
-		foreach($optional as $ext) {
+		$import = array ('cms', 'l10nmgr', 'aoe_dbsequenzer');
+		$optional = array('static_info_tables', 'templavoila', 'realurl', 'aoe_realurlpath', 'languagevisibility', 'aoe_xml2array', 'cc_devlog');
+		foreach ($optional as $ext) {
 			if (t3lib_extMgm::isLoaded($ext)) {
 				$import[] = $ext;
 			}
@@ -88,11 +88,12 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_l10nmgr_te
 	}
 
 	/**
-	 * Resets the test enviroment after the test.
+	 * Resets the test environment after the test.
+	 *
+	 * @return void
 	 */
-	function tearDown() {
+	public function tearDown() {
 		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
-
 		$this->restoreIndexedSearchHooks();
 	}
 
@@ -103,49 +104,42 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_l10nmgr_te
 	* @todo we need to ensure that the result in tests/exporter/fixtures/complex/test__to_pt_BR_300409-113504_export.xml is really the result when "noxmlcheck" in exportData has the value 1, i think it should be the result when "noxmlcheck" has the value 0
 	*
 	* @test
-	*
 	* @return void
-	*
-	* @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	*/
-	public function canExporterCreateCorrectFileFromGivenStructure(){
+	public function canExporterCreateCorrectFileFromGivenStructure() {
 		//created without option "do not check xml"
-
 		$this->importDataset('/exporter/fixtures/complex/pages.xml');
 		$this->importDataset('/exporter/fixtures/complex/ttcontent.xml');
 		$this->importDataset('/exporter/fixtures/complex/language.xml');
 		$this->importDataset('/exporter/fixtures/complex/l10nconfiguration.xml');
 		$this->importDataset('/exporter/fixtures/complex/exportdata.xml');
 
-		$exportdataRepository 	= new tx_l10nmgr_domain_exporter_exportDataRepository();
-		$exportData				= $exportdataRepository->findById(67);
+		$exportdataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
+		$exportData = $exportdataRepository->findById(67);
 
-		$exporter 				= new tx_l10nmgr_domain_exporter_exporter($exportData,2,$exportData->getInitializedExportView());
+		$exporter = new tx_l10nmgr_domain_exporter_exporter($exportData, 2, $exportData->getInitializedExportView());
 
-		if($exporter->run()){
-			$result	= $exporter->getResultForChunk();
+		if ($exporter->run()) {
+			$result = $exporter->getResultForChunk();
 		}
 
-		##
-		# Check test results
-		##
 		//now we analyse the result of the exporter, it should be valid xml therefore we use simplexml to parse it
-        $exporterResult = simplexml_load_string  ($result, 'SimpleXMLElement', LIBXML_NOCDATA );
+		$exporterResult = simplexml_load_string($result, 'SimpleXMLElement', LIBXML_NOCDATA );
 
-        //check the iso code of the target language
-        $this->assertEquals('PT',(string)$exporterResult->head->t3_targetLang,'Invalid ISO-Code of target language');
+		//check the iso code of the target language
+		$this->assertEquals('PT', (string) $exporterResult->head->t3_targetLang, 'Invalid ISO-Code of target language');
 
-        //check the uid of the target language, in the current format this is sysLang
-        $this->assertEquals(2,(int) $exporterResult->head->t3_sysLang,'Invalid uid of target language !');
+		//check the uid of the target language, in the current format this is sysLang
+		$this->assertEquals(2, (int) $exporterResult->head->t3_sysLang, 'Invalid uid of target language !');
 
-        //check if old an new version determine the same wordCount
-        $this->assertEquals(11, (int) $exporterResult->head->t3_wordCount,'Invalid word count in export');
+		//check if old an new version determine the same wordCount
+		$this->assertEquals(11, (int) $exporterResult->head->t3_wordCount, 'Invalid word count in export');
 
-        //this should come from a normal, non cdata tag
-		$this->assertEquals((string)$exporterResult->pageGrp->data[0],'headertest');
+		//this should come from a normal, non cdata tag
+		$this->assertEquals((string) $exporterResult->pageGrp->data[0], 'headertest');
 
 		//this comes from a cdata tag
-		$this->assertEquals((string)$exporterResult->pageGrp->data[1],'This is a <br /> dirty header element & uses an ampersand');
+		$this->assertEquals((string)$exporterResult->pageGrp->data[1], 'This is a <br /> dirty header element & uses an ampersand');
 	}
 
 	/**
@@ -154,11 +148,8 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_l10nmgr_te
 	 * This testcase should simulate this situation.
 	 *
 	 * @test
-	 *
 	 * @access public
 	 * @return void
-	 *
-	 * @author Timo Schmidt
 	 */
 	public function isExportEmptyAfterReimpoertingExportAndExportingOnlyNewAndChangedElements(){
 		$this->importDataset('/exporter/fixtures/complex/pages.xml');
@@ -167,7 +158,7 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_l10nmgr_te
 		$this->importDataset('/exporter/fixtures/complex/l10nconfiguration.xml');
 		$this->importDataset('/exporter/fixtures/complex/exportdata.xml');
 
-		$import = t3lib_extMgm::extPath('l10nmgr').'tests/exporter/fixtures/complex/fixture-import.xml';
+		$import = t3lib_extMgm::extPath('l10nmgr') . 'tests/exporter/fixtures/complex/fixture-import.xml';
 
 		$TranslationData = $this->TranslationFactory->createFromXMLFile($import);
 
@@ -181,21 +172,33 @@ class tx_l10nmgr_domain_exporter_exporter_complex_testcase extends tx_l10nmgr_te
 
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 
-		$exportdataRepository 	= new tx_l10nmgr_domain_exporter_exportDataRepository();
-		$exportData				= $exportdataRepository->findById(67);
+		$exportdataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
+		$exportData = $exportdataRepository->findById(67);
 
 		//now the export should be empty because we imported content for all new and changed elements and there are no new and changed elements left in the database
-		$exporter 				= new tx_l10nmgr_domain_exporter_exporter($exportData,2,$exportData->getInitializedExportView());
+		$exporter = new tx_l10nmgr_domain_exporter_exporter($exportData, 2, $exportData->getInitializedExportView());
 
-		if($exporter->run()){
+		if ($exporter->run()) {
 			$result	= $exporter->getResultForChunk();
 		}
 
-		$exporterResult = simplexml_load_string  ($result, 'SimpleXMLElement', LIBXML_NOCDATA );
+		$exporterResult = simplexml_load_string($result, 'SimpleXMLElement', LIBXML_NOCDATA);
 
-		$this->assertEquals((int)$exporterResult->head->t3_wordCount,0,'There should not be any word in the export because there no new and changed elements left.');
-		$this->assertEquals(count($exporterResult->children()),2,'Unexpected number of childnotes in export, there should only be a header in the export');
-		$this->assertEquals(count($exporterResult->pageGrp->children()),0,'There should only be one pageGroup without children because there is nothing to translate');
+		$this->assertEquals(
+			(int) $exporterResult->head->t3_wordCount,
+			0,
+			'There should not be any word in the export because there no new and changed elements left.'
+		);
+		$this->assertEquals(
+			count($exporterResult->children()),
+			2,
+			'Unexpected number of childnotes in export, there should only be a header in the export'
+		);
+		$this->assertEquals(
+			count($exporterResult->pageGrp->children()),
+			0,
+			'There should only be one pageGroup without children because there is nothing to translate'
+		);
 	}
 }
 ?>

@@ -400,6 +400,16 @@ class tx_l10nmgr_domain_importer_importData extends tx_mvc_ddd_typo3_abstractTCA
 
 		return $forceLangUid;
 	}
+
+	public function getImportAsDefaultLanguage() {
+		$importAsDefaultLanguage = FALSE;
+
+		if (is_array($this->row) && array_key_exists('import_as_default_language', $this->row)) {
+			$importAsDefaultLanguage = (bool) $this->row['import_as_default_language'];
+		}
+
+		return $importAsDefaultLanguage;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/domain/importer/class.tx_l10nmgr_domain_importer_importData.php']) {

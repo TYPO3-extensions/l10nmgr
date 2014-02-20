@@ -45,35 +45,32 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	/**
 	 * @var tx_l10nmgr_service_textConverter
 	 */
-	protected $TextConverter = null;
+	protected $textConverter = NULL;
 
 	/**
 	 * Initialize a fresh instance of the tx_l10nmgr_service_textConverter
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function setUp() {
 		$this->skipInWrongWorkspaceContext();
-
-		$this->TextConverter = new tx_l10nmgr_service_textConverter();
+		$this->textConverter = new tx_l10nmgr_service_textConverter();
 	}
 
 	/**
 	 * Reset the tx_l10nmgr_service_textConverter
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function tearDown() {
-		$this->TextConverter = null;
+		$this->textConverter = NULL;
 	}
 
 	/**
 	 * Verify that the Text from the database which are can be called as
-	 * RTE text valid conveted to XML based text struckter.
+	 * RTE text valid converted to XML based text struckter.
 	 *
 	 * This includes the valid convert of each enttiy that it is valid XML.
 	 *
@@ -87,18 +84,17 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function convertTextToXML() {
 		$fixtureRTE  = '& &amp; &nbsp; =< &auml;';
 		$expectedXML = '<p>&amp; &amp; &nbsp; =&lt; ä</p>';
 
-        $this->assertEquals (
-        	$expectedXML,
-        	$this->TextConverter->toXML($fixtureRTE),
-        	'Transfomation of the text failes.'
-        );
+		$this->assertEquals(
+			$expectedXML,
+			$this->textConverter->toXML($fixtureRTE),
+			'Transformation of the text failed.'
+		);
 	}
 
 	/**
@@ -108,17 +104,16 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function roundTransformationOfTypoLinkInlcudingNewlineCharacter() {
-		$fixtureText  = '<link 3>my link</link><b>strong text</b>'. CRLF . 'test';
+		$fixtureText  = '<link 3>my link</link><b>strong text</b>' . CRLF . 'test';
 		$expectedText = $fixtureText;
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText (
-				$this->TextConverter->toXml($fixtureText)
+			$this->textConverter->toText(
+				$this->textConverter->toXml($fixtureText)
 			),
 			'Transformation result is not equal to source.'
 		);
@@ -131,24 +126,23 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function roundTransformationOfTypoLinkWithFurtherParameterIncludingNewlineCharacter() {
-		$fixtureText  = '<link 3 target class "title text">>my link</link><b>strong text</b>'. CRLF . 'test';
+		$fixtureText  = '<link 3 target class "title text">>my link</link><b>strong text</b>' . CRLF . 'test';
 		$expectedText = $fixtureText;
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText (
-				$this->TextConverter->toXml($fixtureText)
+			$this->textConverter->toText(
+				$this->textConverter->toXml($fixtureText)
 			),
 			'Transformation result is not equal to source.'
 		);
 	}
 
 	/**
-	 * This test verify that entitys are handled correct both ways.
+	 * This test verify that entities are handled correct both ways.
 	 *
 	 * Tested entities are:
 	 * - &amp;
@@ -157,7 +151,6 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function roundTransformationOfBasicEntities() {
@@ -165,16 +158,16 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 		$expectedXML           = '<p>&amp; &amp; &nbsp; ich&amp;du ä</p>';
 		$roundTripExpectedText = '& & &nbsp; ich&du ä';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedXML,
-			$this->TextConverter->toXML($fixtureText),
+			$this->textConverter->toXML($fixtureText),
 			'Convertion to XML produces unexpected text'
 		);
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$roundTripExpectedText,
-			$this->TextConverter->toText (
-				$this->TextConverter->toXML($fixtureText)
+			$this->textConverter->toText(
+				$this->textConverter->toXML($fixtureText)
 			),
 			'Entities not round trip converted as expected.'
 		);
@@ -185,16 +178,15 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function roundTransformationDontSetParagraphIntoDivElements() {
 		$fixtureText  = '<div id="lipsum"> Lorem ipsum dolor sit amet, consectetur </div>';
 		$expectedText = $fixtureText;
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText($this->TextConverter->toXML($fixtureText)),
+			$this->textConverter->toText($this->textConverter->toXML($fixtureText)),
 			'The transormation toXML work not as expected.'
 		);
 	}
@@ -204,17 +196,16 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function roundTransformationKeepDeadLink() {
 		$fixtureRTE  = 'here comes some ... <link 92783928>this is my link</link>';
 
-		$transformed = $this->TextConverter->toText (
-			$this->TextConverter->toXML($fixtureRTE)
+		$transformed = $this->textConverter->toText(
+			$this->textConverter->toXML($fixtureRTE)
 		);
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$transformed,
 			$fixtureRTE,
 			'transformation result is not as expected'
@@ -226,17 +217,16 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function roundTransformationOfHighLevelSign() {
-		$fixtureRTE  = chr(0xe2).chr(0x80).chr(0x94); /* "\xe2\x80\x94" */
+		$fixtureRTE  = chr(0xe2) . chr(0x80) . chr(0x94);
 
-		$transformed = $this->TextConverter->toText (
-			$this->TextConverter->toXML($fixtureRTE)
+		$transformed = $this->textConverter->toText(
+			$this->textConverter->toXML($fixtureRTE)
 		);
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$transformed,
 			$fixtureRTE,
 			'transformation result is not as expected'
@@ -248,18 +238,17 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 *
 	 * @access public
 	 * @test
-	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return void
 	 */
-	public function transformBulletlistWithTypolinksAndEntity(){
-		$fixtureRTE 	= '<ul><li><link 25771>WebEx Meeting Center</link></li><li><link 25611>Who uses WebEx &amp; why?</link></li><li><link 24961>Buy WebEx</link></li><li><link http://www.webex.com/go/live_demo>Live online demo</link></li><li><link http://www.webex.com/go/quick_tour 1050x700:resizable=0>Quick tour</link></li></ul>';
-		$expected		= '<ul><li><link 25771>WebEx Meeting Center</link></li><li><link 25611>Who uses WebEx & why?</link></li><li><link 24961>Buy WebEx</link></li><li><link http://www.webex.com/go/live_demo>Live online demo</link></li><li><link http://www.webex.com/go/quick_tour 1050x700:resizable=0>Quick tour</link></li></ul>';
+	public function transformBulletlistWithTypolinksAndEntity() {
+		$fixtureRTE = '<ul><li><link 25771>WebEx Meeting Center</link></li><li><link 25611>Who uses WebEx &amp; why?</link></li><li><link 24961>Buy WebEx</link></li><li><link http://www.webex.com/go/live_demo>Live online demo</link></li><li><link http://www.webex.com/go/quick_tour 1050x700:resizable=0>Quick tour</link></li></ul>';
+		$expected = '<ul><li><link 25771>WebEx Meeting Center</link></li><li><link 25611>Who uses WebEx & why?</link></li><li><link 24961>Buy WebEx</link></li><li><link http://www.webex.com/go/live_demo>Live online demo</link></li><li><link http://www.webex.com/go/quick_tour 1050x700:resizable=0>Quick tour</link></li></ul>';
 
-		$transformed = $this->TextConverter->toText (
-			$this->TextConverter->toXML($fixtureRTE)
+		$transformed = $this->textConverter->toText(
+			$this->textConverter->toXML($fixtureRTE)
 		);
 
-		$this->assertEquals($transformed,$expected,'translation result is not as expected');
+		$this->assertEquals($transformed, $expected, 'translation result is not as expected');
 	}
 
 	/**
@@ -267,40 +256,33 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 * has beens converted to XML and back to Text.
 	 *
 	 * @access public
-	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return void
 	 */
 	public function test_roundTransformationRTEWithHeadingsAndLinebreaksAfter(){
-		$fixtureRTE 	= 	'<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'."\n".
-							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/ >Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'."\n".
-							'<link http://customer.com/ >Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
+		$fixtureRTE = '<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>' . "\n" .
+			'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/ >Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.' . "\n" .
+			'<link http://customer.com/ >Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
 
-		$expectedResult =   '<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>'.CRLF.
-							'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/>Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.'.CRLF.
-							'<link http://customer.com/>Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
+		$expectedResult = '<h2>WebEx is an easy way to exchange ideas and information with anyone, anywhere.</h2>' . CRLF .
+			'It combines real-time desktop sharing with phone conferencing so everyone sees the same thing as you talk. It\'s far more productive than emailing files then struggling to get everyone on the same page in a phone conference. And, many times it eliminates the need for people to travel and meet on site.<br /><br /><link http://customer.com/>Buy WebEx now</link>. WebEx is available for as low as<br />$59/mo for unlimited online meetings.' . CRLF .
+						'<link http://customer.com/>Take a free trial</link>. Get started now with a risk free 14-day<br />trial of WebEx.';
 
+		$xmlResult = $this->textConverter->toXML($fixtureRTE);
 
-
-		$xmlResult		= $this->TextConverter->toXML($fixtureRTE);
-
-		$transformed = $this->TextConverter->toText (
+		$transformed = $this->textConverter->toText(
 			$xmlResult
 		);
 
-
-
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedResult,
 			$transformed,
 			'translation result is not expected'
 		);
 
-		try{
-			$this->TextConverter->isValidXML($xmlResult);
-
-			$isValidXML = true;
-		}catch(Exception $e){
-
+		try {
+			$this->textConverter->isValidXML($xmlResult);
+			$isValidXML = TRUE;
+		} catch (Exception $e) {
 		}
 		$this->assertTrue($isValidXML);
 	}
@@ -312,18 +294,16 @@ class tx_l10nmgr_service_textConverter_testcase extends tx_l10nmgr_tests_baseTes
 	 *
 	 * @access public
 	 * @return void
-	 *
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function keepEmptyDivTagWhileRoundTripTransformation() {
 
 		$fixtureElement   = '<div style="width: 233px; height: 11px; background: url(http://example.com/bg-box-b.gif) 0 0 no-repeat;"></div>';
 		$expectedElement  = $fixtureElement;
-		$roundTripElement = $this->TextConverter->toText (
-			$this->TextConverter->toXML($fixtureElement)
+		$roundTripElement = $this->textConverter->toText(
+			$this->textConverter->toXML($fixtureElement)
 		);
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedElement,
 			$roundTripElement,
 			'The empty DIV-Tag is broken in some way.'

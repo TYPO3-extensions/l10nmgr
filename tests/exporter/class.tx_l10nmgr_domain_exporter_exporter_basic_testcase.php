@@ -1,7 +1,7 @@
 <?php
 	// autoload the mvc
 if (t3lib_extMgm::isLoaded('mvc')) {
-	require_once(t3lib_extMgm::extPath('mvc').'common/class.tx_mvc_common_classloader.php');
+	require_once(t3lib_extMgm::extPath('mvc') . 'common/class.tx_mvc_common_classloader.php');
 	tx_mvc_common_classloader::loadAll();
 } else {
 	exit('Framework "mvc" not loaded!');
@@ -47,23 +47,24 @@ if (t3lib_extMgm::isLoaded('mvc')) {
  * @subpackage	l10nmgr
  * @access public
  */
-
 class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_l10nmgr_tests_databaseTestcase {
+
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
 	 *
+	 * @return void
 	 */
-	public function setUp(){
+	public function setUp() {
 		$this->skipInWrongWorkspaceContext();
 
 		$this->createDatabase();
-		$db = $this->useTestDatabase();
+		$this->useTestDatabase();
 		$this->importStdDB();
 
 			// order of extension-loading is important !!!!
-		$import = array ('cms','l10nmgr');
-		$optional = array('static_info_tables','templavoila');
-		foreach($optional as $ext) {
+		$import = array ('cms', 'l10nmgr');
+		$optional = array('static_info_tables', 'templavoila');
+		foreach ($optional as $ext) {
 			if (t3lib_extMgm::isLoaded($ext)) {
 				$import[] = $ext;
 			}
@@ -77,7 +78,10 @@ class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_l10nmgr_test
 		}
 	}
 
-	public function tearDown(){
+	/**
+	 * @return void
+	 */
+	public function tearDown() {
 		$this->cleanDatabase();
 		$this->dropDatabase();
 		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
@@ -86,73 +90,68 @@ class tx_l10nmgr_domain_exporter_exporter_basic_testcase extends tx_l10nmgr_test
 	/**
 	 * This testcase is used to check that the exporter stops after an expected number of runs
 	 *
-	 * @param void
 	 * @return void
-	 * @author Timo Schmidt
 	 */
-	public function test_exporterTerminatesAfterExpectedNumberOfRuns(){
+	public function test_exporterTerminatesAfterExpectedNumberOfRuns() {
 		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
 		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportData.xml');
 		$this->importDataSet('/exporter/fixtures/basic/exporterTerminatesAfterExpectedNumberOfRuns.xml');
 
 		$exportData = $this->getFixtureExportData();
 
-		$view 		= new tx_l10nmgr_view_export_exporttypes_CATXML();
+		$view = new tx_l10nmgr_view_export_exporttypes_CATXML();
 		$view->setL10NConfiguration($exportData->getL10nConfigurationObject());
 
-		$exporter 	= new tx_l10nmgr_domain_exporter_exporter($exportData,1,$view);
+		$exporter = new tx_l10nmgr_domain_exporter_exporter($exportData, 1, $view);
 
 		$runCount = 0;
-		while($exporter->run()){
+		while ($exporter->run()) {
 			$exportData = $exporter->getExportData();
-			$exporter 	= new tx_l10nmgr_domain_exporter_exporter($exportData,1,$view);
+			$exporter = new tx_l10nmgr_domain_exporter_exporter($exportData, 1, $view);
 			$runCount++;
-
 		}
 
-		$this->assertEquals(3, $runCount,'unexpected number of run counts in export');
+		$this->assertEquals(3, $runCount, 'unexpected number of run counts in export');
 	}
 
 	/**
 	 * We only load the export configuration and exportdata, no content is in the database therefore the export should be empty.
 	 *
 	 * @expectedException tx_mvc_exception_skipped
-	 * @author Timo Schmidt
 	 * @test
 	 */
-	public function exporterThrowsExceptionOnEmptyExport(){
+	public function exporterThrowsExceptionOnEmptyExport() {
 		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
 		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportData.xml');
 
 		$exportData = $this->getFixtureExportData();
 
-		 while (true)
-		 	tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData, 1);
+		while (TRUE) {
+			tx_l10nmgr_domain_exporter_exporter::performFileExportRun($exportData, 1);
+		}
 	}
 
 	/**
 	 * Method to check that the fixtureExportData can be loaded
 	 *
-	 * @param void
 	 * @return void
-	 * @author Timo Schmidt
 	 */
-	public function test_canGetFixtureExportData(){
+	public function test_canGetFixtureExportData() {
 		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportConfiguration.xml');
 		$this->importDataSet('/exporter/fixtures/basic/canLoadFixtureExportData.xml');
 
 		$exportData = $this->getFixtureExportData();
 
-		$this->assertEquals($exportData->getUid(),1111, 'The fixture exportData can not be loaded from the database');
-		$this->assertEquals($exportData->getL10nConfigurationObject()->getUid(),999,'Can not determine configuration from exportData');
+		$this->assertEquals($exportData->getUid(), 1111, 'The fixture exportData can not be loaded from the database');
+		$this->assertEquals($exportData->getL10nConfigurationObject()->getUid(), 999, 'Can not determine configuration from exportData');
 	}
 
 	/**
-	 * Helpermethod to load the fixture exportData from the test database
+	 * Helper method to load the fixture exportData from the test database
 	 *
 	 * @return tx_l10nmgr_domain_exporter_exportData
 	 */
-	protected function getFixtureExportData(){
+	protected function getFixtureExportData() {
 		$exportDataRepository = new tx_l10nmgr_domain_exporter_exportDataRepository();
 		$exportData = $exportDataRepository->findById(1111);
 

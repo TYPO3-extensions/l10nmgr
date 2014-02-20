@@ -23,7 +23,6 @@
  ***************************************************************/
 
 /**
- *
  * {@inheritdoc}
  *
  * class.tx_l10nmgr_workflow_import_forcedLanguage_default_testcase.php
@@ -44,39 +43,44 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 	/**
 	 * @var tx_l10nmgr_domain_translationFactory
 	 */
-	protected $TranslationFactory  = null;
+	protected $TranslationFactory  = NULL;
 
 	/**
 	 * @var tx_l10nmgr_domain_translateable_translateableInformationFactory
 	 */
-	protected $TranslatableFactory = null;
+	protected $TranslatableFactory = NULL;
 
 	/**
 	 * @var tx_l10nmgr_service_importTranslation
 	 */
-	protected $TranslationService  = null;
+	protected $TranslationService  = NULL;
 
 	/**
 	 * Creates the test environment.
 	 *
 	 * @access public
 	 * @return void
-	 *
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function setUp() {
 		$this->skipInWrongWorkspaceContext();
 		$this->unregisterIndexedSearchHooks();
 
 		$this->createDatabase();
-		$db = $this->useTestDatabase();
+		$this->useTestDatabase();
 
 		$this->importStdDB();
 
 			// order of extension-loading is important !!!!
-		$import = array ('cms','l10nmgr');
-		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog');
-		foreach($optional as $ext) {
+		$import = array (
+			'cms',
+			'l10nmgr',
+		);
+		$optional = array(
+			'aoe_dbsequenzer',
+			'languagevisibility',
+			'templavoila',
+		);
+		foreach ($optional as $ext) {
 			if (t3lib_extMgm::isLoaded($ext)) {
 				$import[] = $ext;
 			}
@@ -89,19 +93,17 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 	}
 
 	/**
-	 * Resets the test enviroment after the test.
+	 * Resets the test environment after the test.
 	 *
 	 * @access public
 	 * @return void
-	 *
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function tearDown() {
 		restore_error_handler();
 
 		$this->cleanDatabase();
-   		$this->dropDatabase();
-   		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
+		$this->dropDatabase();
+		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 
 		$this->restoreIndexedSearchHooks();
 	}
@@ -141,7 +143,8 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 
 		$TranslatableInformation = $this->TranslatableFactory->_call('createFromDataProvider', $translateableFactoryDataProvider);
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
-		$translationRecordArray = t3lib_BEfunc::getRecord('tt_content', 540807);
+
+		$translationRecordArray = array_shift(t3lib_BEfunc::getRecordLocalization('tt_content', 540806, $expectedSysLanguageUid));
 		$this->assertEquals (
 			$expectedSysLanguageUid,
 			$translationRecordArray['sys_language_uid'],
@@ -186,10 +189,10 @@ class tx_l10nmgr_workflow_import_forcedLanguage_default_testcase extends tx_l10n
 		$translateableFactoryDataProvider->addPageIdCollectionToRelevantPageIds($TranslationData->getPageIdCollection());
 
 		$TranslatableInformation = $this->TranslatableFactory->_call('createFromDataProvider', $translateableFactoryDataProvider);
-
 		$this->TranslationService->save($TranslatableInformation, $TranslationData);
 
-		$translationRecordArray = t3lib_BEfunc::getRecord('tt_content', 540807);
+		$translationRecordArray = array_shift(t3lib_BEfunc::getRecordLocalization('tt_content', 540806, $expectedSysLanguageUid));
+
 		$this->assertEquals (
 			$expectedSysLanguageUid,
 			$translationRecordArray['sys_language_uid'],

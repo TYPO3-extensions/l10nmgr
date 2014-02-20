@@ -50,17 +50,17 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_l10nmgr_tes
 	/**
 	 * @var tx_l10nmgr_domain_translationFactory
 	 */
-	private $TranslationFactory = null;
+	private $TranslationFactory = NULL;
 
 	/**
 	 * @var tx_l10nmgr_domain_translateable_translateableInformationFactory
 	 */
-	private $TranslatableFactory = null;
+	private $TranslatableFactory = NULL;
 
 	/**
 	 * @var tx_l10nmgr_service_importTranslation
 	 */
-	private $TranslationService = null;
+	private $TranslationService = NULL;
 
 	/**
 	 * The setup method create the test database and
@@ -78,9 +78,16 @@ class tx_l10nmgr_service_importTranslation_basic_testcase extends tx_l10nmgr_tes
 
 		$GLOBALS['TYPO3_DB']->debugOutput = TRUE;
 		$this->importStdDB();
-		$import = array ('cms','l10nmgr');
-		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog', 'aoe_xml2array');
-		foreach($optional as $ext) {
+		$import = array (
+			'cms',
+			'l10nmgr',
+		);
+		$optional = array(
+			'aoe_dbsequenzer',
+			'languagevisibility',
+			'templavoila',
+		);
+		foreach ($optional as $ext) {
 			if (t3lib_extMgm::isLoaded($ext)) {
 				$import[] = $ext;
 			}

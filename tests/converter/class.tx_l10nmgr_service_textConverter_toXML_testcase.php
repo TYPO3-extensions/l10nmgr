@@ -45,28 +45,26 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 	/**
 	 * @var tx_l10nmgr_service_textConverter
 	 */
-	protected $TextConverter = null;
+	protected $textConverter = NULL;
 
 	/**
 	 * Initialize a fresh instance of the tx_l10nmgr_service_textConverter
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function setUp() {
-		$this->TextConverter = new tx_l10nmgr_service_textConverter();
+		$this->textConverter = new tx_l10nmgr_service_textConverter();
 	}
 
 	/**
 	 * Reset the tx_l10nmgr_service_textConverter
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function tearDown() {
-		$this->TextConverter = null;
+		$this->textConverter = NULL;
 	}
 
 	/**
@@ -85,18 +83,17 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function convertTextToXML() {
 		$fixtureRTE  = '& &amp; &nbsp; =< &auml;';
 		$expectedXML = '<p>&amp; &amp; &nbsp; =&lt; ä</p>';
 
-        $this->assertEquals (
-        	$expectedXML,
-        	$this->TextConverter->toXML($fixtureRTE),
-        	'Transfomation of the text failes.'
-        );
+		$this->assertEquals(
+			$expectedXML,
+			$this->textConverter->toXML($fixtureRTE),
+			'Transfomation of the text failed.'
+		);
 	}
 
 	/**
@@ -104,16 +101,15 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function keepValidBreakAndMaskTheLowerThanSign() {
 		$fixtureText     = 'here coms some .. 8747()/=<="($<br />';
 		$expectedText    = '<p>here coms some .. 8747()/=&lt;=&quot;($<br /></p>';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
+			$this->textConverter->toXML($fixtureText),
 			'The transormation toXML work not as expected.'
 		);
 	}
@@ -123,7 +119,6 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function thatNoneEmptyElementStyledBreakTagsNotRemoved() {
@@ -131,9 +126,9 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 		//!TODO @dazi001 please clairify what should happend if there is a "<br></br>"
 		$expectedText = '<p>here coms some .. 8747()/=&lt;=&quot;($<br></br></p>';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
+			$this->textConverter->toXML($fixtureText),
 			'The transormation toXML work not as expected.'
 		);
 	}
@@ -144,13 +139,12 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 	 *
 	 * @expectedException tx_mvc_exception_converter
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function throwExceptionOnInvalidClosedHTMLLineBreak() {
 		$fixtureText  = 'here coms some .. 8747()/=<="($<br>';
 
-		$this->TextConverter->toXML($fixtureText);
+		$this->textConverter->toXML($fixtureText);
 	}
 
 	/**
@@ -158,17 +152,16 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 	 *
 	 * @access publc
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function escapeTheLowerSignCorrect() {
 		$fixtureText  = '&lt;&gt;&quot;<br />';
 		$expectedText = '<p>&lt;&gt;&quot;<br /></p>';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
-			'The transormation toXML work not as expected.'
+			$this->textConverter->toXML($fixtureText),
+			'The transformation to XML did not work as expected.'
 		);
 	}
 
@@ -178,17 +171,16 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function convertEntiesToUTF8ButKeepTheHtmlSpecialCharAmp() {
 		$fixtureText  = '&auml;<br />&amp;';
 		$expectedText = '<p>ä<br />&amp;</p>';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
-			'The transormation toXML work not as expected.'
+			$this->textConverter->toXML($fixtureText),
+			'The transformation to XML did not work as expected.'
 		);
 	}
 
@@ -197,17 +189,16 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function convertUnicodeCharacterToUTF8() {
 		$fixtureText  = '&auml;<br />&amp;&#x20AC;';
 		$expectedText = '<p>ä<br />&amp;€</p>';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
-			'The transormation toXML work not as expected.'
+			$this->textConverter->toXML($fixtureText),
+			'The transformation to XML did not work as expected.'
 		);
 	}
 
@@ -216,17 +207,16 @@ class tx_l10nmgr_service_textConverter_toXML_testcase extends tx_l10nmgr_tests_b
 	 *
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function dontSetParagraphAroundDivElements() {
 		$fixtureText  = '<div id="lipsum"> Lorem ipsum dolor sit amet, consectetur </div>';
 		$expectedText = '<div id="lipsum"><p> Lorem ipsum dolor sit amet, consectetur </p></div>';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toXML($fixtureText),
-			'The transormation toXML work not as expected.'
+			$this->textConverter->toXML($fixtureText),
+			'The transformation to XML did not work as expected.'
 		);
 	}
 }

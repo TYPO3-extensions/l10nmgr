@@ -217,6 +217,9 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 		$RTEsetup = $beUser->getTSConfig('RTE', t3lib_BEfunc::getPagesTSconfig($pageUid));
 		$fieldPathSegments = t3lib_div::trimExplode(':', $fieldPath, false, 4);
 		$thisConfig = t3lib_BEfunc::RTEsetup($RTEsetup['properties'], $table, $fieldPathSegments[2], $fieldType);
+//		$thisConfig['FE.']['proc.']['overruleMode'] = '';
+//		$thisConfig['proc.']['overruleMode'] = '';
+//error_log(print_r($thisConfig,TRUE));
 			// TODO: switch to use the RTE parameters from field configuration
 			// NOTE: this will pass for practically all RTE fields
 		$specConf = array(

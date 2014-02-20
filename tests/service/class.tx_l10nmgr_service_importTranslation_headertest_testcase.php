@@ -41,16 +41,14 @@
  * @subpackage l10nmgr
  * @access public
  */
-
 class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_l10nmgr_tests_databaseTestcase {
-
 
 	/**
 	 * This method overwrites the method of the baseclass to ensure that no live database will be used.
 	 *
 	 */
 	protected function useTestDatabase($databaseName = null) {
-		$db = $GLOBALS ['TYPO3_DB'];
+		$db = $GLOBALS['TYPO3_DB'];
 		if ($databaseName) {
 			$database = $databaseName;
 		} else {
@@ -64,22 +62,30 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_l10nmg
 	}
 
 	/**
-	* Creates the test environment.
-	*
-	*/
-	function setUp() {
+	 * Creates the test environment
+	 *
+	 * @return void
+	 */
+	public function setUp() {
 		$this->skipInWrongWorkspaceContext();
 		$this->unregisterIndexedSearchHooks();
 
 		$this->createDatabase();
-		$db = $this->useTestDatabase();
+		$this->useTestDatabase();
 
 		$this->importStdDB();
 
 			// order of extension-loading is important !!!!
-		$import = array ('cms','l10nmgr');
-		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog');
-		foreach($optional as $ext) {
+		$import = array (
+			'cms',
+			'l10nmgr',
+		);
+		$optional = array(
+			'aoe_dbsequenzer',
+			'languagevisibility',
+			'templavoila',
+		);
+		foreach ($optional as $ext) {
 			if (t3lib_extMgm::isLoaded($ext)) {
 				$import[] = $ext;
 			}
@@ -92,14 +98,16 @@ class tx_l10nmgr_service_importTranslation_headertest_testcase extends tx_l10nmg
 	}
 
 	/**
-	 * Resets the test enviroment after the test.
+	 * Resets the test environment after the test
+	 *
+	 * @return void
 	 */
-	function tearDown() {
+	public function tearDown() {
 		$this->cleanDatabase();
-   		$this->dropDatabase();
-   		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
+		$this->dropDatabase();
+		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 
-   		$this->restoreIndexedSearchHooks();
+		$this->restoreIndexedSearchHooks();
 	}
 
 	/**

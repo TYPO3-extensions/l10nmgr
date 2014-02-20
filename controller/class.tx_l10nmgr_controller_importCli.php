@@ -58,17 +58,22 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 	protected $cli_options = array(
 		array(
 			'--file',
-				'Path to the file that should be imported',
+			'<filename>',
+			'Path to the file that should be imported',
 		),
 		array(
 			'--workspace',
-			'Workspace ID',
+			'<workspaceId>',
 			'Force workspace ID for import (overrides value in translation file)'
 		),
 		array(
 			'--language',
-			'Language ID',
+			'<languageId>',
 			'Force language ID for import (overrides value in translation file)'
+		),
+		array(
+			'--default',
+			'Import as default language (overrides language setting in translation file)',
 		),
 		array(
 			'--help',
@@ -137,6 +142,7 @@ class tx_l10nmgr_controller_importCli extends tx_mvc_controller_cli {
 				intval($this->arguments['--language'][0]) :
 				0
 			;
+			$importData['import_as_default_language'] = isset($this->arguments['--default']);
 
 			$importDataRepository = new tx_l10nmgr_domain_importer_importDataRepository();
 			$importDataRepository->add($importData);

@@ -39,29 +39,37 @@
  * @subpackage l10nmgr
  * @access public
  */
-
 class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
 	/**
 	 * Creates the test environment.
 	 *
+	 * @return void
 	 */
-	function setUp() {
+	public function setUp() {
 		$this->skipInWrongWorkspaceContext();
 
 
 		$this->unregisterIndexedSearchHooks();
 
 		$this->createDatabase();
-		$db = $this->useTestDatabase();
+		$this->useTestDatabase();
 
 		$GLOBALS['TYPO3_DB']->debugOutput = TRUE;
 		$this->importStdDB();
 
 			// order of extension-loading is important !!!!
-		$import = array ('cms','l10nmgr');
-		$optional = array('static_info_tables','templavoila','realurl','aoe_realurlpath','languagevisibility','cc_devlog', 'aoe_xml2array');
-		foreach($optional as $ext) {
+		$import = array (
+			'cms',
+			'l10nmgr',
+		);
+		$optional = array(
+			'aoe_dbsequenzer',
+			'languagevisibility',
+			'static_info_tables',
+			'templavoila',
+		);
+		foreach ($optional as $ext) {
 			if (t3lib_extMgm::isLoaded($ext)) {
 				$import[] = $ext;
 			}
@@ -72,15 +80,17 @@ class tx_l10nmgr_mixed_completeWorkflow_testcase extends tx_l10nmgr_tests_databa
 	}
 
 	/**
-	 * Resets the test enviroment after the test.
+	 * Resets the test environment after the test.
+	 *
+	 * @return void
 	 */
-	function tearDown() {
+	public function tearDown() {
 		$this->cleanDatabase();
-   		$this->dropDatabase();
-   		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
+		$this->dropDatabase();
+		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 		sleep(2);
 
-   		$this->restoreIndexedSearchHooks();
+		$this->restoreIndexedSearchHooks();
 	}
 
 	/**

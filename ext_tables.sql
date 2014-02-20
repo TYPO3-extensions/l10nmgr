@@ -87,7 +87,7 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	t3ver_count int(11) DEFAULT '0' NOT NULL,
 	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,
 	t3_origuid int(11) DEFAULT '0' NOT NULL,
-	
+
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	title tinytext NOT NULL,
 	source_lang blob NOT NULL,
@@ -123,9 +123,9 @@ CREATE TABLE tx_l10nmgr_exportfiles (
 	t3ver_state tinyint(4) DEFAULT '0' NOT NULL,
 	t3ver_stage tinyint(4) DEFAULT '0' NOT NULL,
 	t3ver_count int(11) DEFAULT '0' NOT NULL,
-	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,	
+	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,
 	t3_origuid int(11) DEFAULT '0' NOT NULL,
-	
+
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	filename text NOT NULL,
 
@@ -150,13 +150,14 @@ CREATE TABLE tx_l10nmgr_importdata (
 	t3ver_state tinyint(4) DEFAULT '0' NOT NULL,
 	t3ver_stage tinyint(4) DEFAULT '0' NOT NULL,
 	t3ver_count int(11) DEFAULT '0' NOT NULL,
-	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,	
+	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,
 	t3_origuid int(11) DEFAULT '0' NOT NULL,
-	import_type tinytext NOT NULL,	
-	
+	import_type tinytext NOT NULL,
+
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	progress mediumblob NOT NULL,
 	force_target_lang tinyint(4) NOT NULL,
+	import_as_default_language tinyint(4) NOT NULL,
 	importfiles int(11) DEFAULT '0' NOT NULL,
 	messages blob NOT NULL,
 	PRIMARY KEY (uid),
@@ -179,9 +180,9 @@ CREATE TABLE tx_l10nmgr_importfiles (
 	t3ver_state tinyint(4) DEFAULT '0' NOT NULL,
 	t3ver_stage tinyint(4) DEFAULT '0' NOT NULL,
 	t3ver_count int(11) DEFAULT '0' NOT NULL,
-	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,	
+	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,
 	t3_origuid int(11) DEFAULT '0' NOT NULL,
-	
+
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	filename text NOT NULL
 
@@ -205,9 +206,9 @@ CREATE TABLE tx_l10nmgr_workflowstates (
 	t3ver_state tinyint(4) DEFAULT '0' NOT NULL,
 	t3ver_stage tinyint(4) DEFAULT '0' NOT NULL,
 	t3ver_count int(11) DEFAULT '0' NOT NULL,
-	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,	
+	t3ver_tstamp int(11) DEFAULT '0' NOT NULL,
 	t3_origuid int(11) DEFAULT '0' NOT NULL,
-	
+
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	state tinytext NOT NULL,
 

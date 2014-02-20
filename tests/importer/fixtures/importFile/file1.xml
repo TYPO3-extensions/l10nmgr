@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp " ">]>
+<TYPO3L10N>
+  <head>
+    <t3_l10ncfg>331</t3_l10ncfg>
+    <t3_sysLang>1</t3_sysLang>
+    <t3_sourceLang></t3_sourceLang>
+    <t3_targetLang>_3</t3_targetLang>
+    <t3_baseURL>http://testserver.de/</t3_baseURL>
+    <t3_workspaceId>0</t3_workspaceId>
+    <t3_count>21</t3_count>
+    <t3_wordCount>121</t3_wordCount>
+    <t3_internal></t3_internal>
+    <t3_exportDataId>45</t3_exportDataId>
+    <t3_formatVersion>1.1</t3_formatVersion>
+  </head>
+  <pageGrp id="1530">
+    <data table="pages" elementUid="1530" key="pages_language_overlay:28901:title">AAA</data>
+    <data table="pages" elementUid="1530" key="pages_language_overlay:28901:subtitle">BBB</data>
+    <data table="pages" elementUid="1530" key="pages_language_overlay:28901:keywords">CCC, DDD</data>
+    <data table="pages" elementUid="1530" key="pages_language_overlay:28901:abstract"></data>
+    <data table="pages" elementUid="1530" key="pages_language_overlay:28901:tx_aoerealurlpath_overridesegment"></data>
+    <data table="tt_content" elementUid="11612" key="tt_content:540788:header"></data>
+    <data table="tt_content" elementUid="11612" key="tt_content:540788:bodytext" transformations="1"></data>
+  </pageGrp>
+</TYPO3L10N>

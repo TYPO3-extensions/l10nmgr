@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp " "> ]>
+<TYPO3L10N>
+	<head>
+		<t3_l10ncfg>384</t3_l10ncfg>
+		<t3_sysLang>1</t3_sysLang>
+		<t3_sourceLang></t3_sourceLang>
+		<t3_targetLang>PT</t3_targetLang>
+		<t3_baseURL>http://example.com/</t3_baseURL>
+		<t3_workspaceId>0</t3_workspaceId>
+		<t3_count>2</t3_count>
+		<t3_wordCount>11</t3_wordCount>
+		<t3_internal></t3_internal>
+		<t3_formatVersion>1.1</t3_formatVersion>
+	</head>
+	<pageGrp id="150">
+		<data table="pages" elementUid="150" key="pages_language_overlay:NEW/1/150:title">A translated page title</data>
+		<data table="tt_content" elementUid="839" key="tt_content:NEW/1/839:header">A translated headline</data>
+		<data table="tt_content" elementUid="839" key="tt_content:NEW/1/839:bodytext">A translated simple text.</data>
+	</pageGrp>
+
+	<pageGrp id="24596">
+		<data table="pages" elementUid="24596" cType="default" fieldType="input" transformationType="plain" key="pages_language_overlay:46384:title">A second translated page title</data>
+		<data table="tt_content" elementUid="540806" cType="html" fieldType="text" transformationType="html" key="tt_content:540859:bodytext">&lt;div style="width: 233px; height: 11px; background: url(bg-box-b.gif) 0 0 no-repeat;"&gt;&lt;div&gt;&lt;img src="moc.gif" alt="" /&gt;&lt;/div&gt;&lt;br /&gt;&lt;p&gt;A translated paragraph inside some random HTML tags.&lt;/p&gt;&lt;/div&gt;</data>
+	</pageGrp>
+</TYPO3L10N>

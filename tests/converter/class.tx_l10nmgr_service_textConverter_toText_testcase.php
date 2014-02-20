@@ -45,49 +45,46 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	/**
 	 * @var tx_l10nmgr_service_textConverter
 	 */
-	protected $TextConverter = null;
+	protected $textConverter = NULL;
 
 	/**
 	 * Initialize a fresh instance of the tx_l10nmgr_service_textConverter
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function setUp() {
 		$this->skipInWrongWorkspaceContext();
-		$this->TextConverter = new tx_l10nmgr_service_textConverter();
+		$this->textConverter = new tx_l10nmgr_service_textConverter();
 	}
 
 	/**
 	 * Reset the tx_l10nmgr_service_textConverter
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function tearDown() {
-		$this->TextConverter = null;
+		$this->textConverter = NULL;
 	}
 
 	/**
 	 * Verify that the transformation of the a-tag incl. further parameter are made as expected into typolink tag.
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_transformationOfLinkWithFurtherParameterToTypolink() {
 
-		$fixtureText  = '<p><a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'?id=3" target="target" class="class" title="title text">&gt;my link</a><strong>strong text</strong></p><p>test</p>';
-		$expectedText = '<link 3 target class "title text">>my link</link><b>strong text</b>'.CRLF. 'test';
+		$fixtureText  = '<p><a href="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . '?id=3" target="target" class="class" title="title text">&gt;my link</a><strong>strong text</strong></p><p>test</p>';
+		$expectedText = '<link 3 target class "title text">>my link</link><b>strong text</b>' . CRLF . 'test';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText (
+			$this->textConverter->toText(
 				$fixtureText
 			),
-			'Problem with the comvertion from HTML content (RTE) to the database.'
+			'Problem with the conversion from HTML content (RTE) to the database.'
 		);
 	}
 
@@ -101,16 +98,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	 * - &quot;
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_transformBasicEntitiesToUTF8() {
 		$fixtureText  = '<p>&amp; &amp; &nbsp; ich&amp;du �&quot;</p>';
 		$expectedText = '& & &nbsp; ich&du �"';
 
-		$this->assertSame (
+		$this->assertSame(
 			$expectedText,
-			$this->TextConverter->toText (
+			$this->textConverter->toText(
 				$fixtureText
 			),
 			'Entities not round trip converted as expected.'
@@ -121,16 +117,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	 * Test that the entities "&lt;", "&quot;" are conveted to "<" and """
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_verifyThatDoubleQuoteAndLowerSignAreTransformedToUTF8() {
 		$fixtureText  = '<p>here coms some .. 8747()/=&lt;=&quot;($<br /></p>';
 		$expectedText = 'here coms some .. 8747()/=<="($<br />';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText($fixtureText),
+			$this->textConverter->toText($fixtureText),
 			'The transormation toText work not as expected.'
 		);
 	}
@@ -140,16 +135,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	 * to the XHTML valid empty tag like "<br />"
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_thatNoneClosedBrTagsAreClosed() {
 		$fixtureText  = '<p>here coms some .. 8747()/=&lt;=&quot;($<br></p>';
 		$expectedText = 'here coms some .. 8747()/=<="($<br />';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText($fixtureText),
+			$this->textConverter->toText($fixtureText),
 			'The transormation toText work not as expected.'
 		);
 	}
@@ -159,16 +153,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	 * to the XHTML valid empty tag like "<br />"
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_thatClosedBrTagsWithoutWhitespaceAreClosedCorrectly() {
 		$fixtureText  = '<p>here coms some .. 8747()/=&lt;=&quot;($<br/></p>';
 		$expectedText = 'here coms some .. 8747()/=<="($<br />';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText($fixtureText),
+			$this->textConverter->toText($fixtureText),
 			'The transormation toText work not as expected.'
 		);
 	}
@@ -177,16 +170,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	 * Test that the htmlspecialchar "<", ">" and """ escaped with "&lt;","&gt;","&quot;"
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_transformBasicHtmlspecialCharToUTF8() {
 		$fixtureText  = '<p>&lt;&gt;&quot;<br /></p>';
 		$expectedText = '<>"<br />';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText($fixtureText),
+			$this->textConverter->toText($fixtureText),
 			'The transormation toText work not as expected.'
 		);
 	}
@@ -194,16 +186,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	/**
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_transformBasicHtmlspecialBetweenParagraph() {
 		$fixtureText  = '<p>&lt;&gt;&quot;&lt;br /&gt;</p>';
 		$expectedText = '<>"<br />';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText($fixtureText),
+			$this->textConverter->toText($fixtureText),
 			'The transormation toText work not as expected.'
 		);
 	}
@@ -212,16 +203,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	 * Test that the htmlspecialchar are escaped while we import the text into flexform XML structure.
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_transformKeepBasicHtmlSpecialCharWhileWeImportForFlexForms() {
 		$fixtureText  = '<p>&lt;&gt;&quot;<br />&nbsp;</p>';
 		$expectedText = '&lt;&gt;&quot;&lt;br /&gt;&nbsp;';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText($fixtureText, true),
+			$this->textConverter->toText($fixtureText, TRUE),
 			'The transormation toText for flexform fields work not as expected.'
 		);
 	}
@@ -229,16 +219,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	/**
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_transformAmpToUTF8WithoutParagraph() {
 		$fixtureText  = '&amp;';
 		$expectedText = '&';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText($fixtureText),
+			$this->textConverter->toText($fixtureText),
 			'The transormation &amp to & also when no paragraph is wrapped around.'
 		);
 	}
@@ -246,16 +235,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	/**
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_transformNbspToUTF8WithoutParagraph() {
 		$fixtureText  = '&nbsp;';
 		$expectedText = '&nbsp;';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText($fixtureText),
+			$this->textConverter->toText($fixtureText),
 			'The transormation &amp to & also when no paragraph is wrapped around.'
 		);
 	}
@@ -263,16 +251,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	/**
 	 *
 	 * @access public
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function test_transformNbspToUTF8WithParagraph() {
 		$fixtureText  = '<p>&nbsp;</p>';
 		$expectedText = '';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expectedText,
-			$this->TextConverter->toText($fixtureText),
+			$this->textConverter->toText($fixtureText),
 			''
 		);
 	}
@@ -280,16 +267,15 @@ class tx_l10nmgr_service_textConverter_toText_testcase extends tx_l10nmgr_tests_
 	/**
 	 * @access public
 	 * @test
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 * @return void
 	 */
 	public function convertDirtyHeaderValue() {
 		$fixture  = '<p>This is a dirty header element &amp; uses an <br> ampersand translated </p>';
 		$expected = 'This is a dirty header element & uses an <br /> ampersand translated ';
 
-		$this->assertEquals (
+		$this->assertEquals(
 			$expected,
-			$this->TextConverter->toText($fixture),
+			$this->textConverter->toText($fixture),
 			''
 		);
 	}

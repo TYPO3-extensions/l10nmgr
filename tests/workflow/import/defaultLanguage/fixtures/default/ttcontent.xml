@@ -1,0 +1,38 @@
+<testcase>
+	<tt_content>
+		<uid>839</uid>
+		<pid>150</pid>
+		<tstamp>1235127775</tstamp>
+		<crdate>1232534827</crdate>
+		<hidden>0</hidden>
+		<CType>table</CType>
+		<header>The headline</header>
+		<bodytext>A simple text.</bodytext>
+		<deleted>0</deleted>
+		<starttime>0</starttime>
+		<endtime>0</endtime>
+		<sys_language_uid>0</sys_language_uid>
+		<pi_flexform></pi_flexform>
+		<l18n_parent>0</l18n_parent>
+		<l18n_diffsource>a:25:{s:5:&quot;CType&quot;;N;s:16:&quot;sys_language_uid&quot;;N;s:6:&quot;colPos&quot;;N;s:11:&quot;spaceBefore&quot;;N;s:10:&quot;spaceAfter&quot;;N;s:13:&quot;section_frame&quot;;N;s:12:&quot;sectionIndex&quot;;N;s:6:&quot;hidden&quot;;N;s:6:&quot;header&quot;;N;s:15:&quot;header_position&quot;;N;s:13:&quot;header_layout&quot;;N;s:11:&quot;header_link&quot;;N;s:4:&quot;date&quot;;N;s:9:&quot;linkToTop&quot;;N;s:6:&quot;layout&quot;;N;s:13:&quot;table_bgColor&quot;;N;s:12:&quot;table_border&quot;;N;s:17:&quot;table_cellspacing&quot;;N;s:17:&quot;table_cellpadding&quot;;N;s:4:&quot;cols&quot;;N;s:8:&quot;bodytext&quot;;N;s:11:&quot;pi_flexform&quot;;N;s:9:&quot;starttime&quot;;N;s:7:&quot;endtime&quot;;N;s:8:&quot;fe_group&quot;;N;}</l18n_diffsource>
+	</tt_content>
+	<tt_content>
+		<uid>540806</uid>
+		<pid>24596</pid>
+		<t3ver_oid>0</t3ver_oid>
+		<t3ver_id>0</t3ver_id>
+		<t3ver_wsid>0</t3ver_wsid>
+		<t3ver_label></t3ver_label>
+		<t3ver_state>0</t3ver_state>
+		<t3ver_stage>0</t3ver_stage>
+		<t3ver_count>0</t3ver_count>
+		<t3ver_tstamp>0</t3ver_tstamp>
+		<t3_origuid>0</t3_origuid>
+		<tstamp>1248698177</tstamp>
+		<hidden>0</hidden>
+		<sorting>512</sorting>
+		<CType>html</CType>
+		<header>h1</header>
+		<bodytext>&lt;div style="width: 233px; height: 11px; background: url(bg-box-b.gif) 0 0 no-repeat;"&gt;&lt;div&gt;&lt;img src="moc.gif" alt="" /&gt;&lt;/div&gt;&lt;br /&gt;&lt;p&gt;A paragraph inside some random HTML tags.&lt;/p&gt;&lt;/div&gt;</bodytext>
+	</tt_content>
+</testcase>

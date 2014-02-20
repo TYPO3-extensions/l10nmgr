@@ -70,11 +70,7 @@ class tx_l10nmgr_domain_translationFactory {
 		$this->TranslationData->setForceTargetLanguageUid($forceTargetLanguageUid);
 
 		$this->extractXMLMetaData($TranslationXML->head);
-		if(tx_l10nmgr_tools::getCliMode() && $this->TranslationData->getBaseUrl()) {
-			tx_l10nmgr_tools::mockBrowserRequest($this->TranslationData->getBaseUrl());
-		}
 		$this->extractXMLTranslation($TranslationXML->pageGrp);
-		tx_l10nmgr_tools::restoreEnvironmentVariables();
 		unset($TranslationXML);
 		return $this->TranslationData;
 	}
@@ -108,7 +104,7 @@ class tx_l10nmgr_domain_translationFactory {
 
 				switch($Field->getTransformationType($uid,$needsAutoDetection)) {
 					case 'html':
-							$Field->setContent($TextConverter->toHtml($TextConverter->getXMLContent($field)));
+						$Field->setContent($TextConverter->toHtml($TextConverter->getXMLContent($field)));
 						break;
 					case 'text':
 							$Field->setTransformation(true);
@@ -127,11 +123,11 @@ class tx_l10nmgr_domain_translationFactory {
 					default:
 							$Field->setContent(
 									$TextConverter->toText(
-										$TextConverter->getXMLContent($field), 
-										false, 
+										$TextConverter->getXMLContent($field),
+										false,
 										false,
 										$Page->getUid(),
-										$table,								
+										$table,
 										$fieldType,
 										$Field->getFieldPath()
 									)

@@ -63,7 +63,7 @@
 						<!-- Import XML -->
 						<?php
 							$editOnClickParams  = '&edit[tx_l10nmgr_importdata][' . $configuration->getPid() . ']=new';
-							$editOnClickParams .= '&columnsOnly=configuration_id,force_target_lang,importfiles,import_type';
+							$editOnClickParams .= '&columnsOnly=configuration_id,force_target_lang,import_as_default_language,importfiles,import_type';
 							$editOnClickParams .= '&returnEditConf=1';
 							$editOnClickParams .= '&noView=1';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();
@@ -94,7 +94,7 @@
 						<!-- Import XLS -->
 						<?php
 							$editOnClickParams  = '&edit[tx_l10nmgr_importdata][' . $configuration->getPid() . ']=new';
-							$editOnClickParams .= '&columnsOnly=configuration_id,force_target_lang,importfiles,import_type';
+							$editOnClickParams .= '&columnsOnly=configuration_id,force_target_lang,import_as_default_language,importfiles,import_type';
 							$editOnClickParams .= '&returnEditConf=1';
 							$editOnClickParams .= '&noView=1';
 							$editOnClickParams .= '&defVals[tx_l10nmgr_importdata][configuration_id]='.$configuration->getUid();
