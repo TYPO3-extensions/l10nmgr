@@ -370,8 +370,8 @@ class tx_l10nmgr_service_textConverter extends t3lib_cs {
 			$trans_tbl = $this->getTranslationTable(true); // Getting them in iso-8859-1 - but thats ok since this is observed below.
 		}
 
-		$token = md5(microtime());
-		$parts = explode($token,ereg_replace('(&([#[:alnum:]]*);)',$token.'\2'.$token,$str));
+		$token = md5(rand(0,microtime()));
+		$parts = explode($token,preg_replace('/(&([#[:alnum:]]*);)/',$token.'\2'.$token,$str));
 		foreach($parts as $k => $v)	{
 			if ($k%2)	{
 				if (substr($v,0,1)=='#')	{	// Dec or hex entities:

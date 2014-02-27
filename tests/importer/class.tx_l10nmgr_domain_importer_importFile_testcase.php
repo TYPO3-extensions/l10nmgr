@@ -44,10 +44,27 @@
 class tx_l10nmgr_domain_importer_importFile_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
 	/**
+	 * @var string Temporary import folder
+	 */
+	protected $tempImportFolder;
+
+	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
 	 *
 	 */
 	public function setUp(){
+
+		// Create temporary folder.
+		$this->tempImportFolder = PATH_site.'typo3temp/l10nmr/unittest/';
+		if(!file_exists($this->tempImportFolder)){
+			if(!mkdir($this->tempImportFolder, 0775, true)) {
+				$this->markTestIncomplete('Could not create ' . $this->tempImportFolder);
+			};
+		}
+
+		// Moving the files to typo3temp dir, as we know we have permissions here. Tried to do it with the t3lib_extFileFunctions but didn't succeed.
+		shell_exec("cp -r " . t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/ ' . $this->tempImportFolder);
+
 		$this->skipInWrongWorkspaceContext();
 
 		$this->createDatabase();
@@ -81,19 +98,21 @@ class tx_l10nmgr_domain_importer_importFile_testcase extends tx_l10nmgr_tests_da
 
 		$importFile = new tx_l10nmgr_domain_importer_importFile($row);
 
-		$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
+		$importFile->setImportFilePath($this->tempImportFolder .'importFile');
 
 		$this->assertTrue($importFile->isZip(),'Testfile should be an zip file!');
 
 		$importFile->extractZIPAndCreateImportFileForEach();
 
-		$fileHasBeenWritten = tx_mvc_validator_factory::getFileValidator()->isValid(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
+		$fileHasBeenWritten = tx_mvc_validator_factory::getFileValidator()->isValid($this->tempImportFolder .'importFile/test__to_pt_BR_300409-113504_export.xml');
 
 		$this->assertTrue($fileHasBeenWritten);
 
-		unlink(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
+		if(file_exists($this->tempImportFolder . 'importFile/test__to_pt_BR_300409-113504_export.xml')){
+			unlink($this->tempImportFolder .'importFile/test__to_pt_BR_300409-113504_export.xml');
+		}
 
-		$fileHasBeeRemoved = !tx_mvc_validator_factory::getFileValidator()->isValid(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
+		$fileHasBeeRemoved = !tx_mvc_validator_factory::getFileValidator()->isValid($this->tempImportFolder .'importFile/test__to_pt_BR_300409-113504_export.xml');
 
 		$this->assertTrue($fileHasBeeRemoved);
 	}

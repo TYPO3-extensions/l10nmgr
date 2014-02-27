@@ -21,10 +21,10 @@ enable_ftp = 0
 # Load L10N manager configration
 #
 # cat=basic/l10nmgr/10; type=string; label=L10N Manager configurations: The uids of L10N Manager configurations (CSV).
-l10nmgr_cfg = 
+l10nmgr_cfg =
 
 # cat=basic/l10nmgr/20; type=string; label=L10N Manager target languages: The uids of target languages for the export (CSV).
-l10nmgr_tlangs = 
+l10nmgr_tlangs =
 
 # Define email notification
 #
@@ -36,7 +36,7 @@ email_sender =
 email_sender_name =
 # cat=basic/email/40; type=string; label=Organisation: The name of the sender's organisation.
 email_sender_organisation =
-# cat=basic/email/50; type=boolean[1]; label=Attachment: Attach exported files to notification email. 
+# cat=basic/email/50; type=boolean[1]; label=Attachment: Attach exported files to notification email.
 email_attachment = 0
 
 # Define FTP server details
@@ -56,3 +56,6 @@ ftp_passive_mode = 0
 #
 # cat=basic/debugging/10; type=boolean[0]; label=Show debugging information during export
 show_debugging_information = 0
+
+# cat=basic/dependencies/40; type=string; label=Add extensions that your system depends on. Comma seperated list.
+ext_dependencies =

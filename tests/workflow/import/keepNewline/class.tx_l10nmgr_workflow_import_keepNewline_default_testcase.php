@@ -83,6 +83,15 @@ class tx_l10nmgr_workflow_import_keepNewline_default_testcase extends tx_l10nmgr
 			'languagevisibility',
 			'templavoila',
 		);
+
+		// Read extension dependencies from extension configuration
+		$extConfigurationArray = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr']);
+		if(isset($extConfigurationArray['ext_dependencies'])){
+			$dependencyArray = explode(',', $extConfigurationArray['ext_dependencies']);
+			$optional = array_merge($optional, $dependencyArray);
+			$optional = array_unique($optional);
+		}
+
 		foreach ($optional as $ext) {
 			if (t3lib_extMgm::isLoaded($ext)) {
 				$import[] = $ext;

@@ -42,12 +42,28 @@
 
 class tx_l10nmgr_domain_importer_importData_testcase extends tx_l10nmgr_tests_databaseTestcase {
 
+	/**
+	 * @var string Temporary import folder
+	 */
+	protected $tempImportFolder;
 
 	/**
 	 * The setup method create the testdatabase and loads the basic tables into the testdatabase
 	 *
 	 */
 	public function setUp(){
+
+		// Create temporary folder.
+		$this->tempImportFolder = PATH_site.'typo3temp/l10nmr/unittest/';
+		if(!file_exists($this->tempImportFolder)){
+			if(!mkdir($this->tempImportFolder, 0775, true)) {
+				$this->markTestIncomplete('Could not create ' . $this->tempImportFolder);
+			};
+		}
+
+		// Moving the files to typo3temp dir, as we know we have permissions here. Tried to do it with the t3lib_extFileFunctions but didn't succeed.
+		shell_exec("cp -r " . t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/ ' . $this->tempImportFolder);
+
 		$this->skipInWrongWorkspaceContext();
 
 		$this->createDatabase();
@@ -81,7 +97,9 @@ class tx_l10nmgr_domain_importer_importData_testcase extends tx_l10nmgr_tests_da
 		$row['filename']      = 'canExtractZip.zip';
 
 		$ImporterFile = new tx_l10nmgr_domain_importer_importFile($row);
-		$ImporterFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
+
+		// set importerFile->setImportFilePath to TYPO3temp
+		$ImporterFile->setImportFilePath($this->tempImportFolder . 'importFile');
 
 		$this->assertTrue (
 			$ImporterFile->isZip(),
@@ -91,14 +109,16 @@ class tx_l10nmgr_domain_importer_importData_testcase extends tx_l10nmgr_tests_da
 		$ImporterFile->extractZIPAndCreateImportFileForEach();
 
 		$this->assertFileExists (
-			t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml'
+			$this->tempImportFolder . 'importFile/test__to_pt_BR_300409-113504_export.xml'
 		);
 
 		//remove test file
-		unlink(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml');
+		if(file_exists($this->tempImportFolder .'importFile/test__to_pt_BR_300409-113504_export.xml')) {
+			unlink($this->tempImportFolder . 'importFile/test__to_pt_BR_300409-113504_export.xml');
+		}
 
 		$this->assertFileNotExists(
-			t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/test__to_pt_BR_300409-113504_export.xml'
+			$this->tempImportFolder . 'importFile/test__to_pt_BR_300409-113504_export.xml'
 		);
 	}
 
@@ -115,12 +135,12 @@ class tx_l10nmgr_domain_importer_importData_testcase extends tx_l10nmgr_tests_da
 		$remainingFilenames = $importData->getImportRemainingFilenames();
 
 		$this->assertEquals (
-			t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/fixtures/importFile/file1.xml',
+			$this->tempImportFolder . 'importFile/file1.xml',
 			$remainingFilenames->offsetGet(0),
 			'Wrong filename in remaining files of importData'
 		);
 		$this->assertEquals (
-			t3lib_extMgm::extPath('l10nmgr') . 'tests/importer/fixtures/importFile/file2.xml',
+			$this->tempImportFolder . 'importFile/file2.xml',
 			$remainingFilenames->offsetGet(1),
 			'Wrong filename in remaining files of importData'
 		);
@@ -135,11 +155,11 @@ class tx_l10nmgr_domain_importer_importData_testcase extends tx_l10nmgr_tests_da
 	 */
 	public function test_canRemoveFilenamesFromRemainingFilenames(){
 		$importData		= $this->getFixtureImportDataWithTwoFiles();
-		$importData->removeFilenamesFromRemainingFilenames(new ArrayObject(array(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/file1.xml')));
+		$importData->removeFilenamesFromRemainingFilenames(new ArrayObject(array($this->tempImportFolder . 'importFile/file1.xml')));
 
 		$remainingFilenames = $importData->getImportRemainingFilenames();
 
-		$this->assertEquals(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile/file2.xml',$remainingFilenames->getIterator()->current(),'Wrong filenames in remaining files of importData');
+		$this->assertEquals($this->tempImportFolder . 'importFile/file2.xml',$remainingFilenames->getIterator()->current(),'Wrong filenames in remaining files of importData');
 	}
 
 	/**
@@ -153,7 +173,7 @@ class tx_l10nmgr_domain_importer_importData_testcase extends tx_l10nmgr_tests_da
 		$importFileRow['filename'] 		= 'fixtureZIPWithTwoFiles.zip';
 
 		$importFile = new tx_l10nmgr_domain_importer_importFile($importFileRow);
-		$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
+		$importFile->setImportFilePath( $this->tempImportFolder . 'importFile');
 		$importFile->extractZIPAndCreateImportFileForEach();
 
 		//create a fixture importData
@@ -162,7 +182,7 @@ class tx_l10nmgr_domain_importer_importData_testcase extends tx_l10nmgr_tests_da
 
 		//overwrite importfilepath for each related import file
 		foreach($importData->getImportFiles() as $importFile){
-			$importFile->setImportFilePath(t3lib_extMgm::extPath('l10nmgr').'tests/importer/fixtures/importFile');
+			$importFile->setImportFilePath($this->tempImportFolder . 'importFile');
 		}
 
 		return $importData;
