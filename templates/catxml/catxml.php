@@ -7,7 +7,12 @@ echo'<?xml version="1.0" encoding="UTF-8"?>'; ?>
 	<head>
 		<t3_l10ncfg><?php echo $this->l10ncfgObj->getUid(); ?></t3_l10ncfg>
 		<t3_sysLang><?php echo $this->getTranslateableInformation()->getTargetLanguage()->getUid(); ?></t3_sysLang>
-		<t3_sourceLang><?php if($staticSourceLanguage instanceof tx_l10nmgr_domain_language_staticLanguage ){?><?php echo $staticSourceLanguage->getLg_iso_2(); ?><?php } ?></t3_sourceLang>
+		<t3_sourceLang><?php
+			if ($this->getTranslateableInformation()->getSourceLanguage()){
+				echo $this->getTranslateableInformation()->getSourceLanguage()->getStaticLanguage()->getLg_iso_2();
+			}elseif($staticSourceLanguage instanceof tx_l10nmgr_domain_language_staticLanguage ){
+				echo $staticSourceLanguage->getLg_iso_2();
+			} ?></t3_sourceLang>
 		<t3_targetLang><?php echo $this->getTranslateableInformation()->getTargetLanguage()->getStaticLanguage()->getLg_iso_2(); ?></t3_targetLang>
 		<t3_baseURL><?php echo $this->getTranslateableInformation()->getSiteUrl(); ?></t3_baseURL>
 		<t3_workspaceId><?php echo $this->getTranslateableInformation()->getWorkspaceId(); ?></t3_workspaceId>
