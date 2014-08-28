@@ -37,7 +37,7 @@
 					}
 					#tabcontentcontainer{
 					width:100%; /*width of 2nd level content*/
-					height:150px; /*height of 2nd level content. Set to largests content height to avoid jittering.*/
+					height:190px; /*height of 2nd level content. Set to largests content height to avoid jittering.*/
 					border-bottom: 1px solid grey;
 					border-right: 1px solid grey;
 					border-left: 1px solid grey;

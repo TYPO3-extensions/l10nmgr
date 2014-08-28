@@ -22,9 +22,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('l10nmgr').'models/tools/class.tx_l10nmgr_xmltools.php');
-require_once (PATH_t3lib.'class.t3lib_tcemain.php');
-
+require_once(t3lib_extMgm::extPath('l10nmgr') . 'models/tools/class.tx_l10nmgr_xmltools.php');
 
 /**
  * Test case for checking the xmltools class
@@ -35,15 +33,14 @@ require_once (PATH_t3lib.'class.t3lib_tcemain.php');
 class tx_xmltools_testcase extends tx_phpunit_testcase {
 
 	/**
-	 * @var 	tx_l10nmgr_xmltools 		$XMLtools
+	 * @var  tx_l10nmgr_xmltools $XMLtools
 	 */
-	protected $XMLtools = null;
-
+	protected $XMLtools = NULL;
 
 	/**
 	 * setUp
-	 * Create the XMLtools object 
-	 * 
+	 * Create the XMLtools object
+	 *
 	 * @return void
 	 */
 	public function setUp() {
@@ -59,8 +56,8 @@ class tx_xmltools_testcase extends tx_phpunit_testcase {
 	public function test_isXMLString() {
 
 		//prepare testdatas
-		$_fixture_noXML    = '<a>my test<p>test</p>';
-		$_fixture_noXML2   = 'my test & du';
+		$_fixture_noXML = '<a>my test<p>test</p>';
+		$_fixture_noXML2 = 'my test & du';
 		$_fixture_validXML = '<a>my test</a><p>test</p><strong>&amp;<i></i><br /></strong>';
 
 		//do the tests
@@ -76,12 +73,12 @@ class tx_xmltools_testcase extends tx_phpunit_testcase {
 	 */
 	public function test_simpleTransformationTest() {
 		//prepare testdata
-		$fixtureRTE='<link 3>my link</link><strong>strong text</strong>'."\n";
-		$fixtureRTE.='test';
+		$fixtureRTE = '<link 3>my link</link><strong>strong text</strong>' . "\n";
+		$fixtureRTE .= 'test';
 
 		//do the test:
-		$transformed=$this->XMLtools->XML2RTE($this->XMLtools->RTE2XML($fixtureRTE));
-		$this->assertEquals($transformed, $fixtureRTE, "transformationresult:".$transformed." is not equal to source.");
+		$transformed = $this->XMLtools->XML2RTE($this->XMLtools->RTE2XML($fixtureRTE));
+		$this->assertEquals($transformed, $fixtureRTE, "transformationresult:" . $transformed . " is not equal to source.");
 	}
 
 	/**
@@ -91,36 +88,34 @@ class tx_xmltools_testcase extends tx_phpunit_testcase {
 	 */
 	public function test_transformationLinkTagTest() {
 		//prepare testdata
-		$fixtureRTE='<link 3 target class "name">my link</link><strong>strong text</strong>'."\n";
-		$fixtureRTE.='test';
+		$fixtureRTE = '<link 3 target class "name">my link</link><strong>strong text</strong>' . "\n";
+		$fixtureRTE .= 'test';
 
 		//do the test:
-		$transformed=$this->XMLtools->XML2RTE($this->XMLtools->RTE2XML($fixtureRTE));
+		$transformed = $this->XMLtools->XML2RTE($this->XMLtools->RTE2XML($fixtureRTE));
 
-		$this->assertEquals($transformed, $fixtureRTE, "transformationresult:".$transformed." is not equal to source.");
+		$this->assertEquals($transformed, $fixtureRTE, "transformationresult:" . $transformed . " is not equal to source.");
 	}
-
 
 	/**
 	 * test_transformationEntityTest
 	 *
 	 * @return void
 	 */
-	public function test_transformationEntityTest()	{
+	public function test_transformationEntityTest() {
 		//prepare testdata
-		$fixtureRTE='& &amp; &nbsp; ich&du';
+		$fixtureRTE = '& &amp; &nbsp; ich&du';
 
-		$transfxml=$this->XMLtools->RTE2XML($fixtureRTE);
+		$transfxml = $this->XMLtools->RTE2XML($fixtureRTE);
 
 		//test if entities and & were transformed correct
 		$this->assertEquals($transfxml, '<p>&amp; &amp;amp; &nbsp; ich&amp;du</p>', "entities transformed incorrect");
 
 		//do the test:
-		$transformed=$this->XMLtools->XML2RTE($transfxml);
+		$transformed = $this->XMLtools->XML2RTE($transfxml);
 
 		$this->assertEquals($transformed, $fixtureRTE, "transformationresult is not equal to source.");
 	}
-
 
 	/**
 	 * test_keepXHTMLValidBRTest
@@ -132,16 +127,15 @@ class tx_xmltools_testcase extends tx_phpunit_testcase {
 		// prepare the test data
 		$fixtureRTE = 'here coms some .. 8747()/=<="($<br />';
 
-		$fixtureXML  = $this->XMLtools->RTE2XML($fixtureRTE);
+		$fixtureXML = $this->XMLtools->RTE2XML($fixtureRTE);
 		$transformed = $this->XMLtools->XML2RTE($fixtureXML);
-		
+
 		$this->assertEquals($transformed, $fixtureRTE, 'transformation result is not as expected ');
 	}
 
-
 	/**
-	 * testr_keepXHMLValidBRInnerList 
-	 * 
+	 * testr_keepXHMLValidBRInnerList
+	 *
 	 * @return void
 	 */
 	public function testr_keepXHMLValidBRInnerList() {
@@ -149,8 +143,8 @@ class tx_xmltools_testcase extends tx_phpunit_testcase {
 		//prepare the test data
 		$fixtureRTE = '<ul><li>    Sign on with a single user name and password to simplify user management and support    </li><li> Easily share individual applications and documents with the click of a mouse    </li><li> Simplify meeting participation with callbacks and 800 numbers through our integrated telephony and audio<br /><br /> </li></ul>';
 
-		$fixtureXML   = $this->XMLtools->RTE2XML($fixtureRTE);
-		$transformed  = $this->XMLtools->XML2RTE($fixtureXML);
+		$fixtureXML = $this->XMLtools->RTE2XML($fixtureRTE);
+		$transformed = $this->XMLtools->XML2RTE($fixtureXML);
 
 		$this->assertEquals($transformed, $fixtureRTE, 'transformation result is not as expected ');
 	}
@@ -163,11 +157,12 @@ class tx_xmltools_testcase extends tx_phpunit_testcase {
 	public function test_removeDeadLinkHandlingTest() {
 
 		// prepare testdata
-		$fixtureRTE  = 'here comes some ... <link 92783928>this is my link</link>';
+		$fixtureRTE = 'here comes some ... <link 92783928>this is my link</link>';
 
 		$transformed = $this->XMLtools->XML2RTE($this->XMLtools->RTE2XML($fixtureRTE));
-		
+
 		$this->assertEquals($transformed, $fixtureRTE, 'transformation result is not as expected ');
 	}
 }
+
 ?>

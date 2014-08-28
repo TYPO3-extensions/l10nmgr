@@ -1,68 +1,69 @@
 <?php
 /***************************************************************
-*  Copyright notice
-*
-*  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
-*
-*  @author	Fabian Seltmann <fs@marketing-factory.de>
-*
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
-
+ *  Copyright notice
+ *
+ *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
+ *
+ * @author  Fabian Seltmann <fs@marketing-factory.de>
+ *
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
 
 /**
  * Abstract class for all export views
  *
- * @author	Fabian Seltmann <fs@marketing-factory.de>
+ * @author  Fabian Seltmann <fs@marketing-factory.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  **/
 abstract class tx_l10nmgr_abstractExportView {
 
 	/**
- 	 * @var	array List of messages issued during rendering
- 	 */
- 	protected $internalMessages = array();
+	 * @var  array List of messages issued during rendering
+	 */
+	protected $internalMessages = array();
 
 	/**
-	 * @var	tx_l10nmgr_l10nConfiguration The language configuration object
+	 * @var  tx_l10nmgr_l10nConfiguration The language configuration object
 	 */
 	var $l10ncfgObj;
 
 	/**
-	 * @var	integer The sys_language_uid of language to export
+	 * @var  integer The sys_language_uid of language to export
 	 */
 	var $sysLang;
 
 	/**
-	 *	 flags for controlling the fields which should render in the output:
+	 *   flags for controlling the fields which should render in the output:
 	 */
 	var $modeOnlyChanged = FALSE;
+
 	var $modeNoHidden = FALSE;
+
 	var $modeOnlyNew = FALSE;
+
 	var $exportType;
 
 	/**
 	 * @var string
 	 */
 	var $filename = '';
-
 
 	function __construct($l10ncfgObj, $sysLang) {
 		$this->sysLang = $sysLang;
@@ -76,45 +77,47 @@ abstract class tx_l10nmgr_abstractExportView {
 	function setModeNoHidden() {
 		$this->modeNoHidden = TRUE;
 	}
+
 	function setModeOnlyChanged() {
 		$this->modeOnlyChanged = TRUE;
 	}
+
 	function setModeOnlyNew() {
 		$this->modeOnlyNew = TRUE;
 	}
 
 	/**
- 	 * Store a message in the internal queue
- 	 *
- 	 * Note: this method is protected. Messages should not be set from the outside.
- 	 *
- 	 * @param string $message Text of the message
- 	 * @param string $key Key identifying the element where the problem happened
- 	 * @return void
- 	 */
- 	protected function setInternalMessage($message, $key) {
- 		$this->internalMessages[] = array(
- 			'message' => $message,
- 			'key' => $key
- 		);
- 	}
+	 * Store a message in the internal queue
+	 *
+	 * Note: this method is protected. Messages should not be set from the outside.
+	 *
+	 * @param string $message Text of the message
+	 * @param string $key Key identifying the element where the problem happened
+	 * @return void
+	 */
+	protected function setInternalMessage($message, $key) {
+		$this->internalMessages[] = array(
+			'message' => $message,
+			'key' => $key
+		);
+	}
 
- 	/**
- 	 * Returns the list of internal messages
- 	 *
- 	 * @return array List of messages
- 	 */
- 	public function getMessages() {
- 		return $this->internalMessages;
- 	}
+	/**
+	 * Returns the list of internal messages
+	 *
+	 * @return array List of messages
+	 */
+	public function getMessages() {
+		return $this->internalMessages;
+	}
 
 	/**
 	 * Get filename
 	 *
 	 * @return string File name
 	 */
-	function getFilename(){
-		if(empty($this->filename)) {
+	function getFilename() {
+		if (empty($this->filename)) {
 			$this->setFilename();
 		}
 		return $this->filename;
@@ -137,7 +140,7 @@ abstract class tx_l10nmgr_abstractExportView {
 
 		if ($this->l10ncfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables')) {
 			$sourceIso2L = '';
-			$staticLangArr = t3lib_BEfunc::getRecord('static_languages',$this->l10ncfgObj->getData('sourceLangStaticId'), 'lg_iso_2');
+			$staticLangArr = t3lib_BEfunc::getRecord('static_languages', $this->l10ncfgObj->getData('sourceLangStaticId'), 'lg_iso_2');
 			$sourceIso2L = ' sourceLang = "' . $staticLangArr['lg_iso_2'] . '"';
 		}
 
@@ -146,12 +149,12 @@ abstract class tx_l10nmgr_abstractExportView {
 			$targetLangArr = t3lib_BEfunc::getRecord('static_languages', $targetLangSysLangArr['static_lang_isocode']);
 		}
 
-			// Set sourceLang for filename
-		if (isset( $staticLangArr['lg_iso_2'] ) && !empty( $staticLangArr['lg_iso_2'] )) {
+		// Set sourceLang for filename
+		if (isset($staticLangArr['lg_iso_2']) && !empty($staticLangArr['lg_iso_2'])) {
 			$sourceLang = $staticLangArr['lg_iso_2'];
 		}
 
-			// Use locale for targetLang in filename if available
+		// Use locale for targetLang in filename if available
 		if (isset($targetLangArr['lg_collate_locale']) && !empty($targetLangArr['lg_collate_locale'])) {
 			$targetLang = $targetLangArr['lg_collate_locale'];
 			// Use two letter ISO code if locale is not available
@@ -159,10 +162,10 @@ abstract class tx_l10nmgr_abstractExportView {
 			$targetLang = $targetLangArr['lg_iso_2'];
 		}
 
-		$fileNamePrefix = (trim($this->l10ncfgObj->getData('filenameprefix'))) ? $this->l10ncfgObj->getData('filenameprefix').'_'.$fileType : $fileType ;
+		$fileNamePrefix = (trim($this->l10ncfgObj->getData('filenameprefix'))) ? $this->l10ncfgObj->getData('filenameprefix') . '_' . $fileType : $fileType;
 
-			// Setting filename:
-		$filename =  $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His').'.xml';
+		// Setting filename:
+		$filename = $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His') . '.xml';
 		$this->filename = $filename;
 	}
 
@@ -177,7 +180,7 @@ abstract class tx_l10nmgr_abstractExportView {
 		$date = time();
 
 		//To-Do get source language if another than default is selected
-		$sourceLanguageId=0;
+		$sourceLanguageId = 0;
 
 		// query to insert the data in the database
 		$field_values = array(
@@ -240,7 +243,7 @@ abstract class tx_l10nmgr_abstractExportView {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'crdate,l10ncfg_id,exportType,translation_lang,filename',
 			'tx_l10nmgr_exportdata',
-				'l10ncfg_id = ' . $this->l10ncfgObj->getData('uid') . ' AND exportType = ' . $this->exportType . ' AND translation_lang = ' . $this->sysLang,
+			'l10ncfg_id = ' . $this->l10ncfgObj->getData('uid') . ' AND exportType = ' . $this->exportType . ' AND translation_lang = ' . $this->sysLang,
 			'',
 			'crdate DESC'
 		);
@@ -263,7 +266,7 @@ abstract class tx_l10nmgr_abstractExportView {
 		$content = array();
 		$exports = $this->fetchExports();
 
-		foreach( $exports AS $export => $exportData ) {
+		foreach ($exports AS $export => $exportData) {
 			$content[$export] = sprintf('
 <tr class="db_list_normal">
 	<td>%s</td>
@@ -321,7 +324,7 @@ abstract class tx_l10nmgr_abstractExportView {
 		$content = array();
 		$exports = $this->fetchExports();
 
-		foreach( $exports AS $export => $exportData ) {
+		foreach ($exports AS $export => $exportData) {
 			$content[$export] = sprintf('%-15s%-15s%-15s%-15s%s',
 				t3lib_BEfunc::datetime($exportData['crdate']),
 				$exportData['l10ncfg_id'],
@@ -368,10 +371,10 @@ abstract class tx_l10nmgr_abstractExportView {
 	 * @return string Marked up string.
 	 */
 	function diffCMP($old, $new) {
-			// Creates diff-result
-			/** @var $t3lib_diff_Obj t3lib_diff */
+		// Creates diff-result
+		/** @var $t3lib_diff_Obj t3lib_diff */
 		$t3lib_diff_Obj = t3lib_div::makeInstance('t3lib_diff');
-		return $t3lib_diff_Obj->makeDiffDisplay($old,$new);
+		return $t3lib_diff_Obj->makeDiffDisplay($old, $new);
 	}
 
 	/**
@@ -391,7 +394,7 @@ abstract class tx_l10nmgr_abstractExportView {
 				foreach ($internalMessages as $messageInformation) {
 					$messageBody .= $messageInformation['message'] . ' (' . $messageInformation['key'] . ')<br />';
 				}
-					/** @var $flashMessage t3lib_FlashMessage */
+				/** @var $flashMessage t3lib_FlashMessage */
 				$flashMessage = t3lib_div::makeInstance(
 					't3lib_FlashMessage',
 					$messageBody,
@@ -404,10 +407,9 @@ abstract class tx_l10nmgr_abstractExportView {
 
 		return $ret;
 	}
-
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_abstractExportView.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_abstractExportView.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/views/class.tx_l10nmgr_abstractExportView.php']);
 }
 ?>

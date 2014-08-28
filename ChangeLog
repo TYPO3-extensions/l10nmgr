@@ -1,3 +1,20 @@
+2014-08-28 Markus Friedrich <markus.friedrich@dkd.de>
+	* [FEATURE] TYPO3 6.2 support
+	* [RELEASE] Version 3.6.0
+
+2014-01-23 Hans Höchtl <hans.hoechtl@typovision.de>
+	* [BUGFIX] Added missing require of BaseService in TCEMain-hook
+
+2014-01-22 Lars Trebing <lars@trebing.name>
+	* [BUGFIX] Provide the user with helpful information when the CLI import cannot read a file
+
+2014-01-15 Lars Trebing <lars@trebing.name>
+	* [FEATURE] Skip unaffected languages during import (performance improvement)
+	* [FEATURE] Cache language array in tx_l10nmgr_tools (performance improvement)
+
+2014-01-10 Lars Trebing <lars@trebing.name>
+	* [BUGFIX] Remove redundant workspace constraint
+
 2013-05-05 Andreas Otto <andreas@otto-hanika.de>
 	* [FEATURE] Allows importing translations into default language.
 	* [BUG] Various small bugfixes. _Check for already exported content_ works again and supports the CLI now.

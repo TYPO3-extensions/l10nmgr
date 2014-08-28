@@ -1,26 +1,26 @@
 <?php
 /***************************************************************
-*  Copyright notice
-*
-*  (c) 2011 Francois Suter <typo3@cobweb.ch>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+ *  Copyright notice
+ *
+ *  (c) 2011 Francois Suter <typo3@cobweb.ch>
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
 
 /**
  * L10N Manager file garbage collection task
@@ -40,6 +40,7 @@ class tx_l10nmgr_FileGarbageCollection extends tx_scheduler_Task {
 	 * @var int Age of files to delete
 	 */
 	public $age = 30;
+
 	/**
 	 * @var string Pattern for files to exclude from clean up
 	 */
@@ -60,7 +61,7 @@ class tx_l10nmgr_FileGarbageCollection extends tx_scheduler_Task {
 	 * @return boolean TRUE if task run was successful
 	 */
 	public function execute() {
-			// There is no file ctime on windows, so this task disables itself if OS = win
+		// There is no file ctime on windows, so this task disables itself if OS = win
 		if (TYPO3_OS == 'WIN') {
 			throw new Exception(
 				'This task is not reliable on Windows OS',
@@ -68,17 +69,17 @@ class tx_l10nmgr_FileGarbageCollection extends tx_scheduler_Task {
 			);
 		}
 
-			// Calculate a reference timestamp, based on age of files to delete
-		$seconds = (60 * 60 * 24 * (int)$this->age);
+		// Calculate a reference timestamp, based on age of files to delete
+		$seconds = (60 * 60 * 24 * (int) $this->age);
 		$timestamp = ($GLOBALS['EXEC_TIME'] - $seconds);
 
-			// Loop on all target directories
+		// Loop on all target directories
 		$globalResult = TRUE;
 		foreach (self::$targetDirectories as $directory) {
 			$result = $this->cleanUpDirectory($directory, $timestamp);
 			$globalResult &= $result;
 		}
-			// Return the global result, which is a success only if all directories could be cleaned up without problem
+		// Return the global result, which is a success only if all directories could be cleaned up without problem
 		return $globalResult;
 	}
 
@@ -94,7 +95,7 @@ class tx_l10nmgr_FileGarbageCollection extends tx_scheduler_Task {
 	protected function cleanUpDirectory($directory, $timestamp) {
 		$fullPathToDirectory = t3lib_div::getFileAbsFileName($directory);
 
-			// Check if given directory exists
+		// Check if given directory exists
 		if (!(@is_dir($fullPathToDirectory))) {
 			throw new RuntimeException(
 				'Given directory "' . $fullPathToDirectory . '" does not exist',
@@ -102,13 +103,13 @@ class tx_l10nmgr_FileGarbageCollection extends tx_scheduler_Task {
 			);
 		}
 
-			// Find all files in the directory
+		// Find all files in the directory
 		$directoryContent = new DirectoryIterator($fullPathToDirectory);
-			/** @var $fileObject SplFileInfo */
+		/** @var $fileObject SplFileInfo */
 		$fileObject = NULL;
 		foreach ($directoryContent as $fileObject) {
 
-				// Remove files that are older than given timestamp and don't match the exclude pattern
+			// Remove files that are older than given timestamp and don't match the exclude pattern
 			if ($fileObject->isFile() && !preg_match('/' . $this->excludePattern . '/i', $fileObject->getFilename()) && $fileObject->getCTime() < $timestamp) {
 				if (!(@unlink($fileObject->getRealPath()))) {
 					throw new RuntimeException(

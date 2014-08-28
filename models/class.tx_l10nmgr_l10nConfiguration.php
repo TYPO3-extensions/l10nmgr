@@ -24,9 +24,9 @@ require_once(t3lib_extMgm::extPath('l10nmgr') . 'models/class.tx_l10nmgr_l10nAcc
  * Capsulate a 10ncfg record.
  * Has factory method to get a relevant AccumulatedInformationsObject
  *
- * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @author	Daniel Pötzinger <ext@aoemedia.de>
- * @package TYPO3
+ * @author     Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author     Daniel Pötzinger <ext@aoemedia.de>
+ * @package    TYPO3
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_l10nConfiguration {
@@ -36,7 +36,7 @@ class tx_l10nmgr_l10nConfiguration {
 	/**
 	 * loads internal array with l10nmgrcfg record
 	 *
-	 * @param int	$id		Id of the cfg record
+	 * @param int $id Id of the cfg record
 	 * @return void
 	 **/
 	function load($id) {
@@ -51,18 +51,17 @@ class tx_l10nmgr_l10nConfiguration {
 	function isLoaded() {
 		// array must have values also!
 		if (is_array($this->l10ncfg) && (!empty($this->l10ncfg))) {
-			return true;
-		}
-		else {
-			return false;
+			return TRUE;
+		} else {
+			return FALSE;
 		}
 	}
 
 	/**
 	 * get a field of the current cfgr record
 	 *
-	 * @param string	$key		Key of the field. E.g. title,uid...
-	 * @return string	Value of the field
+	 * @param string $key Key of the field. E.g. title,uid...
+	 * @return string Value of the field
 	 **/
 	function getData($key) {
 		return $this->l10ncfg[$key];
@@ -71,7 +70,7 @@ class tx_l10nmgr_l10nConfiguration {
 	/**
 	 * get uid field
 	 *
-	 * @return Int
+	 * @return int
 	 **/
 	function getId() {
 		return $this->getData('uid');
@@ -81,7 +80,7 @@ class tx_l10nmgr_l10nConfiguration {
 	 * Factory method to create AccumulatedInformations Object (e.g. build tree etc...) (Factorys should have all dependencies passed as parameter)
 	 *
 	 * @param int $sysLang sys_language_uid
-	 * @param mixed	$overrideStartingPoint		optional override startingpoint  TODO!
+	 * @param mixed $overrideStartingPoint optional override startingpoint  TODO!
 	 * @return tx_l10nmgr_l10nAccumulatedInformations
 	 **/
 	function getL10nAccumulatedInformationsObjectForLanguage($sysLang, $overrideStartingPoint = '') {
@@ -100,7 +99,7 @@ class tx_l10nmgr_l10nConfiguration {
 		$tree->addField('l18n_cfg');
 
 		// Creating top icon; the current page
-		$HTML = t3lib_iconWorks::getIconImage('pages', $treeStartingRecord, $GLOBALS['BACK_PATH'], 'align="top"');
+		$HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $treeStartingRecord);
 		$tree->tree[] = array(
 			'row' => $treeStartingRecord,
 			'HTML' => $HTML
@@ -127,7 +126,7 @@ class tx_l10nmgr_l10nConfiguration {
 		}
 
 		// Set the data (
-		$flexFormDiffForAllLanguages[$sysLang] = array_merge((array)$flexFormDiffForAllLanguages[$sysLang], $flexFormDiffArray);
+		$flexFormDiffForAllLanguages[$sysLang] = array_merge((array) $flexFormDiffForAllLanguages[$sysLang], $flexFormDiffArray);
 
 		// Serialize back and save it to record:
 		$l10ncfg['flexformdiff'] = serialize($flexFormDiffForAllLanguages);

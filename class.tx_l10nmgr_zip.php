@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zip file creation class.
  * Makes zip files.
@@ -19,6 +20,7 @@
  * @access  public
  */
 class tx_l10nmgr_zip {
+
 	/**
 	 * Array to store compressed data
 	 *
@@ -188,7 +190,7 @@ class tx_l10nmgr_zip {
 	 * This takes the ZIP file, unzips it, reads all documents, store them in database for next retrieval.
 	 * The file is libunzipped in PATH_site.'typo3temp/' + a randomly named folder.
 	 *
-	 * @param $file
+	 * @param  $file
 	 * @return mixed
 	 * @access private
 	 */
@@ -283,7 +285,6 @@ class tx_l10nmgr_zip {
 		}
 		return $fileArr;
 	}
-
 } // end of the 'zipfile' class
 
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/l10nmgr/class.tx_l10nmgr_zip.php"]) {

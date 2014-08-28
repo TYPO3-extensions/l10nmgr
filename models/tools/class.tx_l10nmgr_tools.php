@@ -26,7 +26,7 @@
  *
  * $Id: class.t3lib_loaddbgroup.php 1816 2006-11-26 00:43:24Z mundaun $
  *
- * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author  Kasper Skaarhoj <kasperYYYY@typo3.com>
  */
 /**
  * [CLASS/FUNCTION INDEX of SCRIPT]
@@ -34,19 +34,19 @@
  *
  *
  *   69: class tx_l10nmgr_tools
- *   95:	 function tx_l10nmgr_tools()
- *  113:	 function getRecordsToTranslateFromTable($table,$pageId)
- *  140:	 function getSingleRecordToTranslate($table,$uid)
- *  169:	 function translationDetails($table,$row,$sysLang,$flexFormDiff=array())
- *  282:	 function translationDetails_flexFormCallBack($dsArr, $dataValue, $PA, $structurePath, &$pObj)
- *  329:	 function translationDetails_addField($key, $TCEformsCfg, $dataValue, $translationValue, $diffDefaultValue='', $previewLanguageValues=array())
- *  372:	 function indexDetailsRecord($table,$uid)
- *  393:	 function indexDetailsPage($pageId)
- *  429:	 function diffCMP($old, $new)
- *  444:	 function compileIndexRecord($table,$fullDetails,$sys_lang,$pid)
- *  501:	 function updateIndexTable($record)
- *  513:	 function updateIndexTableFromDetailsArray($rDetails,$echo=FALSE)
- *  528:	 function flushIndexOfWorkspace($ws)
+ *   95:   function tx_l10nmgr_tools()
+ *  113:   function getRecordsToTranslateFromTable($table,$pageId)
+ *  140:   function getSingleRecordToTranslate($table,$uid)
+ *  169:   function translationDetails($table,$row,$sysLang,$flexFormDiff=array())
+ *  282:   function translationDetails_flexFormCallBack($dsArr, $dataValue, $PA, $structurePath, &$pObj)
+ *  329:   function translationDetails_addField($key, $TCEformsCfg, $dataValue, $translationValue, $diffDefaultValue='', $previewLanguageValues=array())
+ *  372:   function indexDetailsRecord($table,$uid)
+ *  393:   function indexDetailsPage($pageId)
+ *  429:   function diffCMP($old, $new)
+ *  444:   function compileIndexRecord($table,$fullDetails,$sys_lang,$pid)
+ *  501:   function updateIndexTable($record)
+ *  513:   function updateIndexTableFromDetailsArray($rDetails,$echo=FALSE)
+ *  528:   function flushIndexOfWorkspace($ws)
  *
  * TOTAL FUNCTIONS: 13
  * (This index is automatically created/updated by the extension "extdeveval")
@@ -56,8 +56,8 @@
 /**
  * Contains translation tools
  *
- * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @package TYPO3
+ * @author     Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @package    TYPO3
  * @subpackage tx_l10nmgr
  */
 class tx_l10nmgr_tools {
@@ -83,14 +83,16 @@ class tx_l10nmgr_tools {
 	var $sys_languages = array(); // System languages records, loaded by constructor
 	var $indexFilterObjects = array();
 
+	static $systemLanguages;
+
 	/**
 	 * Constructor
 	 * Setting up internal variable ->t8Tools
 	 *
-	 * @return	void
+	 * @return  void
 	 */
 	function tx_l10nmgr_tools() {
-		/** @var $this->t8tools t3lib_transl8tool */
+		/** @var $this ->t8tools t3lib_transl8tool */
 		$this->t8Tools = t3lib_div::makeInstance('t3lib_transl8tools');
 
 		// Find all system languages:
@@ -111,7 +113,7 @@ class tx_l10nmgr_tools {
 			$this->indexFilterObjects[$pageId] = array();
 			$c = 0;
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['indexFilter'] as $objArray) {
-				$this->indexFilterObjects[$pageId][$c] = &t3lib_div::getUserObj($objArray[0]);
+				$this->indexFilterObjects[$pageId][$c] = & t3lib_div::getUserObj($objArray[0]);
 				$this->indexFilterObjects[$pageId][$c]->init($pageId);
 				$c++;
 			}
@@ -132,9 +134,9 @@ class tx_l10nmgr_tools {
 	/**
 	 * Selecting records from a table from a page which are candidates to be translated.
 	 *
-	 * @param	string		$table	Table name
-	 * @param	integer		$pageId	Page id
-	 * @return	array		Array of records from table (with all fields selected)
+	 * @param   string   $table Table name
+	 * @param   integer  $pageId Page id
+	 * @return  array    Array of records from table (with all fields selected)
 	 */
 	function getRecordsToTranslateFromTable($table, $pageId) {
 		global $TCA;
@@ -154,11 +156,10 @@ class tx_l10nmgr_tools {
 				'*',
 				$table,
 				'pid=' . intval($pageId) .
-					' AND ' . $TCA[$table]['ctrl']['languageField'] . '<=0' .
-					($GLOBALS['TCA'][$table]['ctrl']['versioningWS'] ? ' AND ' . $table . '.t3ver_state<=0' : '') .
-					$hiddenClause .
-					t3lib_BEfunc::deleteClause($table) .
-					t3lib_BEfunc::versioningPlaceholderClause($table)
+				' AND ' . $TCA[$table]['ctrl']['languageField'] . '<=0' .
+				$hiddenClause .
+				t3lib_BEfunc::deleteClause($table) .
+				t3lib_BEfunc::versioningPlaceholderClause($table)
 			);
 
 			return $allRows;
@@ -168,9 +169,9 @@ class tx_l10nmgr_tools {
 	/**
 	 * Selecting single record from a table filtering whether it is a default language / international element.
 	 *
-	 * @param	string		$table	Table name
-	 * @param	integer		$uid	Record uid
-	 * @return	array		Record array if found, otherwise FALSE
+	 * @param   string   $table Table name
+	 * @param   integer  $uid   Record uid
+	 * @return  array    Record array if found, otherwise FALSE
 	 */
 	function getSingleRecordToTranslate($table, $uid) {
 		global $TCA;
@@ -182,10 +183,9 @@ class tx_l10nmgr_tools {
 				'*',
 				$table,
 				'uid=' . intval($uid) .
-					' AND ' . $TCA[$table]['ctrl']['languageField'] . '<=0' .
-					($GLOBALS['TCA'][$table]['ctrl']['versioningWS'] ? ' AND ' . $table . '.t3ver_state<=0' : '') .
-					t3lib_BEfunc::deleteClause($table) .
-					t3lib_BEfunc::versioningPlaceholderClause($table)
+				' AND ' . $TCA[$table]['ctrl']['languageField'] . '<=0' .
+				t3lib_BEfunc::deleteClause($table) .
+				t3lib_BEfunc::versioningPlaceholderClause($table)
 			);
 
 			return is_array($allRows) && count($allRows) ? $allRows[0] : FALSE;
@@ -193,13 +193,23 @@ class tx_l10nmgr_tools {
 	}
 
 	/**
+	 * @return array
+	 */
+	protected function getSystemLanguages() {
+		if (is_null(self::$systemLanguages)) {
+			self::$systemLanguages = $this->t8Tools->getSystemLanguages();
+		}
+		return self::$systemLanguages;
+	}
+
+	/**
 	 * Generate details about translation
 	 *
-	 * @param	string		Table name
-	 * @param	array		Row (one from getRecordsToTranslateFromTable())
-	 * @param	integer		sys_language uid
-	 * @param	array		FlexForm diff data
-	 * @return	array		Returns details array
+	 * @param   string   Table name
+	 * @param   array    Row (one from getRecordsToTranslateFromTable())
+	 * @param   integer  sys_language uid
+	 * @param   array    FlexForm diff data
+	 * @return  array    Returns details array
 	 */
 	function translationDetails($table, $row, $sysLang, $flexFormDiff = array()) {
 		global $TCA;
@@ -212,8 +222,7 @@ class tx_l10nmgr_tools {
 		if (is_array($tInfo)) {
 			// Initialize some more:
 			$this->detailsOutput['translationInfo'] = $tInfo;
-			t3lib_div::loadTCA($table);
-			$this->sysLanguages = $this->t8Tools->getSystemLanguages();
+			$this->sysLanguages = $this->getSystemLanguages();
 			$this->detailsOutput['ISOcode'] = $this->sysLanguages[$sysLang]['ISOcode'];
 
 			//decide how translations are stored:
@@ -277,8 +286,7 @@ class tx_l10nmgr_tools {
 										$flexObj->traverseFlexFormXMLData($table, $field, $row, $this, 'translationDetails_flexFormCallBackForOverlay');
 									}
 									$this->detailsOutput['log'][] = 'Mode: useOverlay looking for flexform fields!';
-								}
-								else {
+								} else {
 									//handle normal fields:
 									$diffDefaultValue = $diffArray[$field];
 									$previewLanguageValues = array();
@@ -305,9 +313,9 @@ class tx_l10nmgr_tools {
 	/**
 	 * Function checks which translationMode is used. Mainly it checks the FlexForm (FCE) logic and language returns a array with useOverlay | flexformInternalTranslation
 	 *
-	 * @param array		$tInfo	Translation info
-	 * @param string	$table	Table name
-	 * @param array		$row	Table row
+	 * @param array  $tInfo Translation info
+	 * @param string $table Table name
+	 * @param array  $row   Table row
 	 * @return array
 	 */
 	function _detectTranslationModes($tInfo, $table, $row) {
@@ -326,30 +334,25 @@ class tx_l10nmgr_tools {
 			if (($this->includeFceWithDefaultLanguage && $tInfo['sys_language_uid'] == 0) || $tInfo['sys_language_uid'] == -1) {
 				$dataStructArray = $this->_getFlexFormMetaDataForContentElement($table, 'tx_templavoila_flex', $row);
 
-				if (is_array($dataStructArray) && $dataStructArray !== false) {
+				if (is_array($dataStructArray) && $dataStructArray !== FALSE) {
 					if ($dataStructArray['meta']['langDisable']) {
 						if ($dataStructArray['meta']['langDatabaseOverlay'] == 1) {
 							$translationModes[] = 'useOverlay';
 							$this->detailsOutput['log'][] = 'Mode: "useOverlay" detected because we have FCE with langDatabaseOverlay configured';
-						}
-						else {
+						} else {
 							$this->detailsOutput['log'][] = 'Mode: "noTranslation" detected because we have FCE with langDisable';
 						}
-					}
-					elseif ($dataStructArray['meta']['langChildren']) {
+					} elseif ($dataStructArray['meta']['langChildren']) {
 						$translationModes[] = 'flexformInternalTranslation';
 						$this->detailsOutput['log'][] = 'Mode: "flexformInternalTranslation" detected because we have FCE with langChildren';
 					}
-				}
-				else {
+				} else {
 					$this->detailsOutput['log'][] = 'Mode: "noTranslation" detected because we have corrupt Datastructure!';
 				}
-			}
-			else {
+			} else {
 				$this->detailsOutput['log'][] = 'Mode: "noTranslation" detected because we FCE in Default Language and its not cofigured to include FCE in Default language';
 			}
-		}
-		elseif ($tInfo['sys_language_uid'] == 0 && $tInfo['translation_table']) {
+		} elseif ($tInfo['sys_language_uid'] == 0 && $tInfo['translation_table']) {
 			//no FCE
 			$translationModes[] = 'useOverlay';
 			$this->detailsOutput['log'][] = 'Mode: "useOverlay" detected because we have a normal record (no FCE) in default language';
@@ -357,12 +360,12 @@ class tx_l10nmgr_tools {
 		return array_unique($translationModes);
 	}
 
-	/*
+	/**
 	 * Return meta data of flexform field, or false if no flexform is found
 	 *
 	 * @param string $table Name of the table
 	 * @param string $field Name of the field
-	 * @param array $row Current row of data
+	 * @param array  $row   Current row of data
 	 * @return array|boolean Flexform structure (or false, if not found)
 	 */
 	protected function _getFlexFormMetaDataForContentElement($table, $field, $row) {
@@ -378,8 +381,8 @@ class tx_l10nmgr_tools {
 	/**
 	 * Look for flexform field and add to internal translation details
 	 *
-	 * @param string	$table	Table name
-	 * @param array		$row	Table row
+	 * @param string $table Table name
+	 * @param array  $row   Table row
 	 * @return void
 	 */
 	function _lookForFlexFormFieldAndAddToInternalTranslationDetails($table, $row) {
@@ -420,12 +423,12 @@ class tx_l10nmgr_tools {
 	/**
 	 * FlexForm call back function, see translationDetails
 	 *
-	 * @param	array		$dsArr			Data Structure
-	 * @param	string		$dataValue		Data value
-	 * @param	array		$PA				Various stuff in an array
-	 * @param	string		$structurePath	Path to location in flexform
-	 * @param	object		$pObj			Reference to parent object
-	 * @return	void
+	 * @param   array   $dsArr          Data Structure
+	 * @param   string  $dataValue      Data value
+	 * @param   array   $PA             Various stuff in an array
+	 * @param   string  $structurePath  Path to location in flexform
+	 * @param   object  $pObj           Reference to parent object
+	 * @return  void
 	 */
 	function translationDetails_flexFormCallBack($dsArr, $dataValue, $PA, $structurePath, &$pObj) {
 
@@ -475,12 +478,12 @@ class tx_l10nmgr_tools {
 	 * $this->_callBackParams_translationXMLArray
 	 * $this->_callBackParams_keyForTranslationDetails
 	 *
-	 * @param	array		$dsArr			Data Structure
-	 * @param	string		$dataValue		Data value
-	 * @param	array		$PA				Various stuff in an array
-	 * @param	string		$structurePath	Path to location in flexform
-	 * @param	object		$pObj			Reference to parent object
-	 * @return	void
+	 * @param   array   $dsArr          Data Structure
+	 * @param   string  $dataValue      Data value
+	 * @param   array   $PA             Various stuff in an array
+	 * @param   string  $structurePath  Path to location in flexform
+	 * @param   object  $pObj           Reference to parent object
+	 * @return  void
 	 */
 	function translationDetails_flexFormCallBackForOverlay($dsArr, $dataValue, $PA, $structurePath, &$pObj) {
 
@@ -500,14 +503,14 @@ class tx_l10nmgr_tools {
 	/**
 	 * Add field to detailsOutput array. First, a lot of checks are done...
 	 *
-	 * @param	string		$key					Key is a combination of table, uid, field and structure path, identifying the field
-	 * @param	array		$TCEformsCfg			TCA configuration for field
-	 * @param	string		$dataValue				Default value (current)
-	 * @param	string		$translationValue		Translated value (current)
-	 * @param	string		$diffDefaultValue		Default value of time of current translated value (used for diff'ing with $dataValue)
-	 * @param	array		$previewLanguageValues	Array of preview language values identified by keys (which are sys_language uids)
-	 * @param	array		$contentRow				Content row
-	 * @return	void
+	 * @param   string  $key                   Key is a combination of table, uid, field and structure path, identifying the field
+	 * @param   array   $TCEformsCfg           TCA configuration for field
+	 * @param   string  $dataValue             Default value (current)
+	 * @param   string  $translationValue      Translated value (current)
+	 * @param   string  $diffDefaultValue      Default value of time of current translated value (used for diff'ing with $dataValue)
+	 * @param   array   $previewLanguageValues Array of preview language values identified by keys (which are sys_language uids)
+	 * @param   array   $contentRow            Content row
+	 * @return  void
 	 */
 	function translationDetails_addField($key, $TCEformsCfg, $dataValue, $translationValue, $diffDefaultValue = '', $previewLanguageValues = array(), $contentRow = array()) {
 		$msg = '';
@@ -527,7 +530,7 @@ class tx_l10nmgr_tools {
 						if (!$this->filters['l10n_categories'] || t3lib_div::inList($this->filters['l10n_categories'], $TCEformsCfg['l10n_cat'])) {
 							if (!$this->filters['fieldTypes'] || t3lib_div::inList($this->filters['fieldTypes'], $TCEformsCfg['config']['type']) || $this->bypassFilter) {
 								if (!$this->filters['noEmptyValues'] || !(!$dataValue && !$translationValue)) { // Checking that no translation value exists either; if a translation value is found it is considered that it should be translated even if the default value is empty for some reason.
-									if (!$this->filters['noIntegers'] || !t3lib_div::testInt($dataValue) || $this->bypassFilter) {
+									if (!$this->filters['noIntegers'] || !\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($dataValue) || $this->bypassFilter) {
 										$this->detailsOutput['fields'][$key] = array(
 											'defaultValue' => $dataValue,
 											'translationValue' => $translationValue,
@@ -569,9 +572,9 @@ class tx_l10nmgr_tools {
 	/**
 	 * Check if the field is an RTE in the Backend, for a given row of data
 	 *
-	 * @param string $key Key is a combination of table, uid, field and structure path, identifying the field
-	 * @param array  $TCEformsCfg TCA configuration for field
-	 * @param array  $contentRow The table row being handled
+	 * @param  string  $key          Key is a combination of table, uid, field and structure path, identifying the field
+	 * @param  array   $TCEformsCfg  TCA configuration for field
+	 * @param  array   $contentRow   The table row being handled
 	 * @return boolean
 	 */
 	protected function _isRTEField($key, $TCEformsCfg, $contentRow) {
@@ -593,11 +596,12 @@ class tx_l10nmgr_tools {
 	/**
 	 * Creating localization index for a single record (which must be default/international language and an online version!)
 	 *
-	 * @param	string		$table	Table name
-	 * @param	integer		$uid	Record UID
-	 * @return	mixed		FALSE if the input record is not one that can be translated. Otherwise an array holding information about the status.
+	 * @param  string       $table      Table name
+	 * @param  integer      $uid        Record UID
+	 * @param  integer|NULL $languageID Language ID of the record
+	 * @return  mixed    FALSE if the input record is not one that can be translated. Otherwise an array holding information about the status.
 	 */
-	function indexDetailsRecord($table, $uid) {
+	function indexDetailsRecord($table, $uid, $languageID = NULL) {
 		$rec = $table == 'pages' ? t3lib_BEfunc::getRecord($table, $uid) : $this->getSingleRecordToTranslate($table, $uid);
 
 		if (is_array($rec) && $rec['pid'] != -1) {
@@ -606,8 +610,10 @@ class tx_l10nmgr_tools {
 				t3lib_BEfunc::workspaceOL($table, $rec);
 				$items = array();
 				foreach ($this->sys_languages as $r) {
-					$items['fullDetails'][$r['uid']] = $this->translationDetails($table, $rec, $r['uid']);
-					$items['indexRecord'][$r['uid']] = $this->compileIndexRecord($table, $items['fullDetails'][$r['uid']], $r['uid'], $pid);
+					if (is_null($languageID) || $r['uid'] === $languageID) {
+						$items['fullDetails'][$r['uid']] = $this->translationDetails($table, $rec, $r['uid']);
+						$items['indexRecord'][$r['uid']] = $this->compileIndexRecord($table, $items['fullDetails'][$r['uid']], $r['uid'], $pid);
+					}
 				}
 				return $items;
 			} else {
@@ -621,8 +627,8 @@ class tx_l10nmgr_tools {
 	/**
 	 * Creating localization index for all records on a page
 	 *
-	 * @param	integer		$pageId	Page ID
-	 * @return	array		Array of the traversed items
+	 * @param  integer $pageId Page ID
+	 * @return  array    Array of the traversed items
 	 */
 	function indexDetailsPage($pageId) {
 		global $TCA;
@@ -656,9 +662,9 @@ class tx_l10nmgr_tools {
 	/**
 	 * Update index for record
 	 *
-	 * @param	string	$table	Table name
-	 * @param	int		$uid	UID
-	 * @return	string
+	 * @param  string $table Table name
+	 * @param  int    $uid   UID
+	 * @return  string
 	 */
 	function updateIndexForRecord($table, $uid) {
 		$output = '';
@@ -687,10 +693,10 @@ class tx_l10nmgr_tools {
 	}
 
 	/**
-	 * @param	string	$table	Table name
-	 * @param	int		$uid	UID
-	 * @param	bool	$exec	Execution flag
-	 * @return	array
+	 * @param  string $table Table name
+	 * @param  int    $uid   UID
+	 * @param  bool   $exec  Execution flag
+	 * @return  array
 	 */
 	function flushTranslations($table, $uid, $exec = FALSE) {
 
@@ -725,7 +731,7 @@ class tx_l10nmgr_tools {
 									if (is_array($infoRec['fields'])) {
 										foreach ($infoRec['fields'] as $theKey => $theVal) {
 											$pp = explode(':', $theKey);
-											if ($pp[3] && $pp[0] === $tt && (int)$pp[1] === (int)$rUid) {
+											if ($pp[3] && $pp[0] === $tt && (int) $pp[1] === (int) $rUid) {
 												$remove['resetFlexFormFields'][$tt][$rUid][$pp[2]][] = $pp[3];
 
 												if (!is_array($TCEmain_data[$tt][$rUid][$pp[2]])) {
@@ -769,9 +775,9 @@ class tx_l10nmgr_tools {
 	/**
 	 * Diff-compare markup
 	 *
-	 * @param	string	$old	Old content
-	 * @param	string	$new	New content
-	 * @return	string	Marked up string.
+	 * @param  string $old Old content
+	 * @param  string $new New content
+	 * @return  string  Marked up string.
 	 */
 	function diffCMP($old, $new) {
 		// Create diff-result:
@@ -782,26 +788,24 @@ class tx_l10nmgr_tools {
 	/**
 	 * Creates the record to insert in the index table.
 	 *
-	 * @param	string		$table			Table name
-	 * @param	array		$fullDetails	Details as fetched (as gotten by ->translationDetails())
-	 * @param	integer		$sys_lang		The language UID for which this record is made
-	 * @param	integer		$pid			PID of record
-	 * @return	array		Record.
+	 * @param  string  $table       Table name
+	 * @param  array   $fullDetails Details as fetched (as gotten by ->translationDetails())
+	 * @param  integer $sys_lang    The language UID for which this record is made
+	 * @param  integer $pid         PID of record
+	 * @return  array    Record.
 	 */
 	function compileIndexRecord($table, $fullDetails, $sys_lang, $pid) {
 
 		$record = array(
 			'hash' => '',
 			'tablename' => $fullDetails['translationInfo']['table'],
-			'recuid' => $fullDetails['translationInfo']['uid'],
+			'recuid' => (int)  $fullDetails['translationInfo']['uid'],
 			'recpid' => $pid,
-			'sys_language_uid' => $fullDetails['translationInfo']['sys_language_uid'], // can be zero (default) or -1 (international)
+			'sys_language_uid' => (int) $fullDetails['translationInfo']['sys_language_uid'], // can be zero (default) or -1 (international)
 			'translation_lang' => $sys_lang,
-			'translation_recuid' => $fullDetails['translationInfo']['translations'][$sys_lang]['uid'],
+			'translation_recuid' => (int) $fullDetails['translationInfo']['translations'][$sys_lang]['uid'],
 			'workspace' => $GLOBALS['BE_USER']->workspace,
-			'serializedDiff' => array(
-
-			),
+			'serializedDiff' => array(),
 			'flag_new' => 0, // Something awaits to get translated => Put to TODO list as a new element
 			'flag_unknown' => 0, // Status of this is unknown, probably because it has been "localized" but not yet translated from the default language => Put to TODO LIST as a priority
 			'flag_noChange' => 0, // If only "noChange" is set for the record, all is well!
@@ -842,8 +846,8 @@ class tx_l10nmgr_tools {
 	/**
 	 * Updates translation index table with input record
 	 *
-	 * @param	array	$record	Array (generated with ->compileIndexRecord())
-	 * @return	void
+	 * @param  array $record Array (generated with ->compileIndexRecord())
+	 * @return  void
 	 */
 	function updateIndexTable($record) {
 		$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_l10nmgr_index', 'hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($record['hash'], 'tx_l10nmgr_index'));
@@ -853,11 +857,12 @@ class tx_l10nmgr_tools {
 	/**
 	 * Update translation index table based on a "details" record (made by indexDetailsRecord())
 	 *
-	 * @param	array		$rDetails	See output of indexDetailsRecord()
-	 * @param	boolean		$echo		If true, will output log information for each insert
-	 * @return	void
+	 * @param  array   $rDetails  See output of indexDetailsRecord()
+	 * @param  boolean $echo      If true, will output log information for each insert
+	 * @return  void
 	 */
 	function updateIndexTableFromDetailsArray($rDetails, $echo = FALSE) {
+
 		if ($rDetails && is_array($rDetails['indexRecord']) && count($rDetails['indexRecord'])) {
 			foreach ($rDetails['indexRecord'] as $rIndexRecord) {
 				if ($echo) {
@@ -871,8 +876,8 @@ class tx_l10nmgr_tools {
 	/**
 	 * Flush Index Of Workspace - removes all index records for workspace - useful to nightly build-up of the index.
 	 *
-	 * @param	int		$ws	Workspace ID
-	 * @return	void
+	 * @param  int $ws Workspace ID
+	 * @return  void
 	 */
 	function flushIndexOfWorkspace($ws) {
 		$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_l10nmgr_index', 'workspace=' . intval($ws));

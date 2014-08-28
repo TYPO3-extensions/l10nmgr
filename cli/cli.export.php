@@ -3,6 +3,7 @@
 /***************************************************************
  *  Copyright notice
  *  (c) 2009 Daniel Zielinski (d.zielinski
+ *
  * @l10ntech.de)
  *  All rights reserved
  *  [...]
@@ -12,12 +13,6 @@
 if (!defined('TYPO3_cliMode')) {
 	die('You cannot run this script directly!');
 }
-
-// Include basis cli class
-require_once(PATH_t3lib . 'class.t3lib_admin.php');
-require_once(PATH_t3lib . 'class.t3lib_cli.php');
-
-require_once(PATH_typo3 . 'template.php');
 
 // Load language support
 require_once(t3lib_extMgm::extPath('lang', 'lang.php'));
@@ -39,9 +34,7 @@ require_once($extPath . 'models/class.tx_l10nmgr_translationData.php');
 require_once($extPath . 'models/class.tx_l10nmgr_translationDataFactory.php');
 require_once($extPath . 'models/class.tx_l10nmgr_l10nBaseService.php');
 
-require_once(PATH_t3lib . 'class.t3lib_parsehtml_proc.php');
-
-class tx_cliexport_cli extends t3lib_cli {
+class tx_cliexport_cli extends \TYPO3\CMS\Core\Controller\CommandLineController {
 
 	/**
 	 * @var array $lConf Extension configuration
@@ -54,7 +47,7 @@ class tx_cliexport_cli extends t3lib_cli {
 	function tx_cliexport_cli() {
 
 		// Running parent class constructor
-		parent::t3lib_cli();
+		parent::__construct();
 
 		// Adding options to help archive:
 		$this->cli_options[] = array('--format', 'Format for export of translatable data', "The value can be:\n  CATXML = XML for translation tools (default)\n  EXCEL = Microsoft XML format \n");
@@ -86,7 +79,7 @@ class tx_cliexport_cli extends t3lib_cli {
 		global $lang;
 
 		// Performance measuring
-		$time_start = microtime(true);
+		$time_start = microtime(TRUE);
 
 		// Load the configuration
 		$this->loadExtConf();
@@ -132,7 +125,7 @@ class tx_cliexport_cli extends t3lib_cli {
 		// get workspace ID
 		//$wsId = (string)$this->cli_args['_DEFAULT'][4];
 		$wsId = isset($this->cli_args['--workspace']) ? $this->cli_args['--workspace'][0] : '0';
-		if (t3lib_div::testInt($wsId) === FALSE) {
+		if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($wsId) === FALSE) {
 			$this->cli_echo($lang->getLL('error.workspace_id_int.msg') . "\n");
 			exit;
 		}
@@ -146,12 +139,12 @@ class tx_cliexport_cli extends t3lib_cli {
 
 		if ($format == 'CATXML') {
 			foreach ($l10ncfgs as $l10ncfg) {
-				if (t3lib_div::testInt($l10ncfg) === FALSE) {
+				if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($l10ncfg) === FALSE) {
 					$this->cli_echo($lang->getLL('error.l10ncfg_id_int.msg') . "\n");
 					exit;
 				}
 				foreach ($tlangs as $tlang) {
-					if (t3lib_div::testInt($tlang) === FALSE) {
+					if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($tlang) === FALSE) {
 						$this->cli_echo($lang->getLL('error.target_language_id_integer.msg') . "\n");
 						exit;
 					}
@@ -160,12 +153,12 @@ class tx_cliexport_cli extends t3lib_cli {
 			}
 		} elseif ($format == 'EXCEL') {
 			foreach ($l10ncfgs as $l10ncfg) {
-				if (t3lib_div::testInt($l10ncfg) === FALSE) {
+				if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($l10ncfg) === FALSE) {
 					$this->cli_echo($lang->getLL('error.l10ncfg_id_int.msg') . "\n");
 					exit;
 				}
 				foreach ($tlangs as $tlang) {
-					if (t3lib_div::testInt($tlang) === FALSE) {
+					if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($tlang) === FALSE) {
 						$this->cli_echo($lang->getLL('error.target_language_id_integer.msg') . "\n");
 						exit;
 					}
@@ -175,7 +168,7 @@ class tx_cliexport_cli extends t3lib_cli {
 		}
 		// Send email notification if set
 
-		$time_end = microtime(true);
+		$time_end = microtime(TRUE);
 		$time = $time_end - $time_start;
 		$this->cli_echo($msg . LF);
 		$this->cli_echo(sprintf($lang->getLL('export.process.duration.message'), $time) . LF);
@@ -194,18 +187,18 @@ class tx_cliexport_cli extends t3lib_cli {
 
 		$error = '';
 
-			// Load the configuration
+		// Load the configuration
 		$this->loadExtConf();
 
-			/** @var $l10nmgrCfgObj tx_l10nmgr_l10nConfiguration */
+		/** @var $l10nmgrCfgObj tx_l10nmgr_l10nConfiguration */
 		$l10nmgrCfgObj = t3lib_div::makeInstance('tx_l10nmgr_l10nConfiguration');
 		$l10nmgrCfgObj->load($l10ncfg);
 		if ($l10nmgrCfgObj->isLoaded()) {
 
-				/** @var $l10nmgrGetXML tx_l10nmgr_CATXMLView */
+			/** @var $l10nmgrGetXML tx_l10nmgr_CATXMLView */
 			$l10nmgrGetXML = t3lib_div::makeInstance('tx_l10nmgr_CATXMLView', $l10nmgrCfgObj, $tlang);
 
-				// Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
+			// Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
 			if ($l10nmgrCfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables')) {
 				$staticLangArr = t3lib_BEfunc::getRecordRaw('sys_language', 'static_lang_isocode = ' . $l10nmgrCfgObj->getData('sourceLangStaticId'), 'uid');
 				if (is_array($staticLangArr) && ($staticLangArr['uid'] > 0)) {
@@ -224,8 +217,8 @@ class tx_cliexport_cli extends t3lib_cli {
 				$l10nmgrGetXML->setModeNoHidden();
 			}
 
-				// If the check for already exported content is enabled, run the ckeck.
-			$checkExportsCli = isset($this->cli_args['--check-exports']) ? (bool)$this->cli_args['--check-exports'][0] : FALSE;
+			// If the check for already exported content is enabled, run the ckeck.
+			$checkExportsCli = isset($this->cli_args['--check-exports']) ? (bool) $this->cli_args['--check-exports'][0] : FALSE;
 			$checkExports = $l10nmgrGetXML->checkExports();
 			if (($checkExportsCli === TRUE) && ($checkExports === FALSE)) {
 				$this->cli_echo($lang->getLL('export.process.duplicate.title') . ' ' . $lang->getLL('export.process.duplicate.message') . LF);
@@ -257,7 +250,7 @@ class tx_cliexport_cli extends t3lib_cli {
 					$this->cli_echo($lang->getLL('error.ftp.disabled.msg') . "\n");
 				}
 
-				if( $this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
+				if ($this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
 					$this->cli_echo(sprintf($lang->getLL('export.file_saved.msg'), $xmlFileName) . "\n");
 				}
 			}
@@ -281,18 +274,18 @@ class tx_cliexport_cli extends t3lib_cli {
 
 		$error = '';
 
-			// Load the configuration
+		// Load the configuration
 		$this->loadExtConf();
 
-			/** @var $l10nmgrCfgObj tx_l10nmgr_l10nConfiguration */
+		/** @var $l10nmgrCfgObj tx_l10nmgr_l10nConfiguration */
 		$l10nmgrCfgObj = t3lib_div::makeInstance('tx_l10nmgr_l10nConfiguration');
 		$l10nmgrCfgObj->load($l10ncfg);
 		if ($l10nmgrCfgObj->isLoaded()) {
 
-				/** @var $l10nmgrGetXML tx_l10nmgr_excelXMLView */
+			/** @var $l10nmgrGetXML tx_l10nmgr_excelXMLView */
 			$l10nmgrGetXML = t3lib_div::makeInstance('tx_l10nmgr_excelXMLView', $l10nmgrCfgObj, $tlang);
 
-				// Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
+			// Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
 			if ($l10nmgrCfgObj->getData('sourceLangStaticId') && t3lib_extMgm::isLoaded('static_info_tables')) {
 				$staticLangArr = t3lib_BEfunc::getRecordRaw('sys_language', 'static_lang_isocode = ' . $l10nmgrCfgObj->getData('sourceLangStaticId'), 'uid');
 				if (is_array($staticLangArr) && ($staticLangArr['uid'] > 0)) {
@@ -311,8 +304,8 @@ class tx_cliexport_cli extends t3lib_cli {
 				$l10nmgrGetXML->setModeNoHidden();
 			}
 
-				// If the check for already exported content is enabled, run the ckeck.
-			$checkExportsCli = isset($this->cli_args['--check-exports']) ? (bool)$this->cli_args['--check-exports'][0] : FALSE;
+			// If the check for already exported content is enabled, run the ckeck.
+			$checkExportsCli = isset($this->cli_args['--check-exports']) ? (bool) $this->cli_args['--check-exports'][0] : FALSE;
 			$checkExports = $l10nmgrGetXML->checkExports();
 			if (($checkExportsCli === TRUE) && ($checkExports == FALSE)) {
 				$this->cli_echo($lang->getLL('export.process.duplicate.title') . ' ' . $lang->getLL('export.process.duplicate.message') . LF);
@@ -344,7 +337,7 @@ class tx_cliexport_cli extends t3lib_cli {
 					$this->cli_echo($lang->getLL('error.ftp.disabled.msg') . "\n");
 				}
 
-				if( $this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
+				if ($this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
 					$this->cli_echo(sprintf($lang->getLL('export.file_saved.msg'), $xmlFileName) . "\n");
 				}
 			}
