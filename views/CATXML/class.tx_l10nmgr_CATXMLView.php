@@ -117,9 +117,13 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 										if ($_isTranformedXML) {
 											$output[] = "\t\t" . '<data table="' . $table . '" elementUid="' . $elementUid . '" key="' . $key . '" transformations="1">' . $dataForTranslation . '</data>' . "\n";
 										} else {
+											// Substitute HTML entities with actual characters (we use UTF-8 anyway:-) but leave quotes untouched
+											$dataForTranslation = html_entity_decode($dataForTranslation, ENT_NOQUOTES, 'UTF-8');
 											//Substitute & with &amp; in non-RTE fields
-											$dataForTranslation = str_replace(' & ', ' &amp; ', $dataForTranslation);
+											$dataForTranslation = preg_replace('/&(?!(amp|nbsp|quot|apos|lt|gt);)/', '&amp;', $dataForTranslation);
+											//Substitute > and < in non-RTE fields
 											$dataForTranslation = str_replace(' < ', ' &lt; ', $dataForTranslation);
+											$dataForTranslation = str_replace(' > ', ' &gt; ', $dataForTranslation);
 											//$dataForTranslation = t3lib_div::deHSCentities($dataForTranslation);
 
 											$params = $BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');
