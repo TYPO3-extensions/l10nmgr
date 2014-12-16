@@ -124,6 +124,8 @@ class tx_l10nmgr_CATXMLView extends tx_l10nmgr_abstractExportView {
 											//Substitute > and < in non-RTE fields
 											$dataForTranslation = str_replace(' < ', ' &lt; ', $dataForTranslation);
 											$dataForTranslation = str_replace(' > ', ' &gt; ', $dataForTranslation);
+											$dataForTranslation = str_replace('<br>', '<br/>', $dataForTranslation);
+											$dataForTranslation = str_replace('<hr>', '<hr/>', $dataForTranslation);
 											//$dataForTranslation = t3lib_div::deHSCentities($dataForTranslation);
 
 											$params = $BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');

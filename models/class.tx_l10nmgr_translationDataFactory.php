@@ -143,12 +143,15 @@ class tx_l10nmgr_translationDataFactory {
 							$translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;
 						} else {
 							//Substitute &amp; with & and <br/> with <br>
-							$row['XMLvalue'] = str_replace('&amp;', '&', $row['XMLvalue']);
-							$row['XMLvalue'] = str_replace('<br/>', '<br>', $row['XMLvalue']);
-							$row['XMLvalue'] = str_replace('<br />', '<br>', $row['XMLvalue']);
-							$row['values'][0] = str_replace('&amp;', '&', $row['values'][0]);
-							$row['values'][0] = str_replace('<br/>', '<br>', $row['values'][0]);
-							$row['values'][0] = str_replace('<br />', '<br>', $row['values'][0]);
+							//$row['XMLvalue'] = htmlspecialchars($row['XMLvalue'],ENT_COMPAT|ENT_IGNORE|ENT_XHTML,'UTF-8',false);
+							//$row['XMLvalue'] = str_replace('&amp;', '&', $row['XMLvalue']);
+							//$row['XMLvalue'] = str_replace('<br/>', '<br>', $row['XMLvalue']);
+							//$row['XMLvalue'] = str_replace('<br />', '<br>', $row['XMLvalue']);
+							$row['values'][0] = preg_replace('/&(?!(amp|nbsp|quot|apos|lt|gt);)/', '&amp;', $row['values'][0]);
+							$row['values'][0] = preg_replace('/\xc2\xa0/', '&nbsp;', $row['values'][0]);
+							$row['values'][0] = htmlspecialchars($row['values'][0],ENT_COMPAT|ENT_IGNORE|ENT_XHTML,'UTF-8',false);
+							//$row['values'][0] = str_replace('<br/>', '<br>', $row['values'][0]);
+							//$row['values'][0] = str_replace('<br />', '<br>', $row['values'][0]);
 
 							//check if $row['values'][0] is beginning of $row['XMLvalue']
 							if (TYPO3_DLOG) {
