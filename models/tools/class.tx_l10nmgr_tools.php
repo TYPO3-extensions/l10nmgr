@@ -764,6 +764,7 @@ class tx_l10nmgr_tools {
 			$tce->stripslashes_values = FALSE;
 			$tce->dontProcessTransformations = TRUE;
 			$tce->clear_flexFormData_vDEFbase = TRUE;
+			$tce->isImporting = TRUE;
 			$tce->start($TCEmain_data, $TCEmain_cmd); // check has been done previously that there is a backend user which is Admin and also in live workspace
 			$tce->process_datamap();
 			$tce->process_cmdmap();

@@ -1,3 +1,6 @@
+2015-06-08 Jo Hasenau <info@cybercraft.de>
+	* [BUG] Fixed: Fixes to avoid double translations of gridelements children.
+
 2014-12-16 Daniel Zielinski <zielinski@loctimize.com>
 	* [BUG] Fixed: CAT XML export of HTML content elements contains non XML compliant entities making export unusable.
 	* [BUG] Added correct version number to CAT XML export file in meta data.

@@ -141,6 +141,7 @@ class tx_l10nmgr_l10nBaseService {
 			// Initialize:
 			/** @var $flexToolObj t3lib_flexformtools */
 			$flexToolObj = t3lib_div::makeInstance('t3lib_flexformtools');
+			$gridElementsInstalled = t3lib_extMgm::isLoaded('gridelements');
 			$TCEmain_data = array();
 			$TCEmain_cmd = array();
 
@@ -165,7 +166,10 @@ class tx_l10nmgr_l10nBaseService {
 									}
 
 									// If new element is required, we prepare for localization
-									if ($Tuid === 'NEW') {
+									if($table === 'tt_content' && $gridElementsInstalled === TRUE) {
+										$element = t3lib_BEfunc::getRecordRaw($table, $where = 'uid = ' . $elementUid . ' AND colPos > -1');
+									}
+									if ($Tuid === 'NEW' && $element !== FALSE) {
 										//print "\nNEW\n";
 										$TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
 									}
@@ -209,6 +213,7 @@ class tx_l10nmgr_l10nBaseService {
 				$tce->neverHideAtCopy = TRUE;
 			}
 			$tce->stripslashes_values = FALSE;
+			$tce->isImporting = TRUE;
 			if (count($TCEmain_cmd)) {
 				$tce->start(array(), $TCEmain_cmd);
 				$tce->process_cmdmap();
@@ -250,6 +255,7 @@ class tx_l10nmgr_l10nBaseService {
 			}
 			$tce->stripslashes_values = FALSE;
 			$tce->dontProcessTransformations = TRUE;
+			$tce->isImporting = TRUE;
 			//print_r($TCEmain_data);
 			$tce->start($TCEmain_data, array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
 			$tce->process_datamap();
@@ -364,6 +370,7 @@ class tx_l10nmgr_l10nBaseService {
 			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
 			$tce->stripslashes_values = FALSE;
 			$tce->dontProcessTransformations = TRUE;
+			$tce->isImporting = TRUE;
 			$tce->start($TCEmain_data, array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
 			$tce->process_datamap();
 
