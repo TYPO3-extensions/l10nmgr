@@ -44,11 +44,17 @@
  * @access public
  */
 class tx_l10nmgr_exception_applicationError  extends tx_mvc_exception {
-	
+
+	/**
+	 * Set info describing the exception.
+	 * @param string $message       Error description.
+	 * @return void
+	 */
+	public function setMessage($message) {
+		$this->message = $message;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/exception/class.tx_l10nmgr_exception_applicationError.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/l10nmgr/exception/class.tx_l10nmgr_exception_applicationError.php']);
 }
-
-?>

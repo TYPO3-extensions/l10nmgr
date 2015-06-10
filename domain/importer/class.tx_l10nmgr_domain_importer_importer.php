@@ -98,6 +98,7 @@ class tx_l10nmgr_domain_importer_importer {
 	 * It uses the importData to get translationInfo.
 	 *
 	 * @access public
+	 * @throws tx_l10nmgr_exception_applicationError
 	 * @return bool
 	 */
 	public function run() {
@@ -158,17 +159,15 @@ class tx_l10nmgr_domain_importer_importer {
 				tx_l10nmgr_tools::restoreEnvironmentVariables();
 
 			} catch (tx_l10nmgr_exception_applicationError $e) {
-				trigger_error($e->getMessage() . ' That occurs on the file: "' . $currentFile . '"', E_USER_WARNING);
+				$e->setMessage($e->getMessage() . "\n\nThe error occurred while importing `$currentFile` file.");
+				throw $e;
 			}
 
 			$this->importData->removeProcessedFilename($currentFile);
 
 			if ($this->importData->countRemainingImportFilenames() <= 0) {
 				$this->importData->setImportIsCompletelyProcessed(TRUE);
-
-				if ($exportData instanceof tx_l10nmgr_domain_exporter_exportData) {
-					$exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
-				}
+				$exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
 			}
 
 			$isRunning = TRUE;
