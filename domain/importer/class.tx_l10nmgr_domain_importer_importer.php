@@ -93,21 +93,18 @@ class tx_l10nmgr_domain_importer_importer {
 	}
 
 	/**
-	 * This is the worker method of the importer, it uses the importData to get translationInform
+	 * This is the worker method of the importer.
+	 *
+	 * It uses the importData to get translationInfo.
 	 *
 	 * @access public
-	 *
-	 * @return boolean
-	 *
-	 * @author Timo Schmidt <schmidt@aoemedia.de>
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @return bool
 	 */
-	public function run(){
-		$isRunning = false;
+	public function run() {
+		$isRunning = FALSE;
 
-		if (! $this->importData->getImportIsCompletelyProcessed() ) {
-
-				// Hook: Preprocess data before import run
+		if (!$this->importData->getImportIsCompletelyProcessed()) {
+				// Hook: Pre-process data before import run
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['l10nmgr/domain/importer/class.tx_l10nmgr_domain_importer_importer.php']['preprocessImportRun'])) {
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['l10nmgr/domain/importer/class.tx_l10nmgr_domain_importer_importer.php']['preprocessImportRun'] as $hookFunction) {
 					$hookParameters = array();
@@ -127,29 +124,29 @@ class tx_l10nmgr_domain_importer_importer {
 				$TranslationData = $TranslationFactory->createFromExcelFile($currentFile,$this->importData->getForceTargetLanguageUid());
 			}
 
+			$exportData = NULL;
+
 			try {
 				$exportData = $this->getExportDataFromTranslationData($TranslationData);
 
-				if(tx_l10nmgr_tools::getCliMode() && $TranslationData->getBaseUrl()) {
+				if (tx_l10nmgr_tools::getCliMode() && $TranslationData->getBaseUrl()) {
 					tx_l10nmgr_tools::mockBrowserRequest($TranslationData->getBaseUrl());
 				}
 
 					// check pre requirements
 				$this->checkImportConditions($this->importData, $exportData,$TranslationData);
 
-				if ( $this->importData->getImportIsCompletelyUnprocessed() ) {
-					/**
-					 * @internal  workflowStates depend on the exportData object therefore we have to use it to mark the import as started
-					 */
+				if ($this->importData->getImportIsCompletelyUnprocessed()) {
+					/** @internal workflowStates depend on the exportData object therefore we have to use it to mark the import as started */
 					$exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTING);
 				}
 
-					// get collection of pageIds to create a translateableInformation for the relevantPages from the imported file
+					// get collection of pageIds to create a translatable information for the relevantPages from the imported file
 				$ImportPageIdCollection	= $TranslationData->getPageIdCollection();
 
 
 					// create a dataProvider based on the exportData and the relevantPageIds of the importFile
-				$factory                 = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
+				$factory = new tx_l10nmgr_domain_translateable_translateableInformationFactory();
 				$TranlateableInformation = $factory->createFromExportDataAndPageIdCollection($exportData,$ImportPageIdCollection,$TranslationData->getWorkspaceId());
 
 					// Save the translation into the database
@@ -166,13 +163,15 @@ class tx_l10nmgr_domain_importer_importer {
 
 			$this->importData->removeProcessedFilename($currentFile);
 
-			if ( $this->importData->countRemainingImportFilenames() <= 0 ) {
-				$this->importData->setImportIsCompletelyProcessed(true);
+			if ($this->importData->countRemainingImportFilenames() <= 0) {
+				$this->importData->setImportIsCompletelyProcessed(TRUE);
 
-				$exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
+				if ($exportData instanceof tx_l10nmgr_domain_exporter_exportData) {
+					$exportData->addWorkflowState(tx_l10nmgr_domain_exporter_workflowState::WORKFLOWSTATE_IMPORTED);
+				}
 			}
 
-			$isRunning = true;
+			$isRunning = TRUE;
 		}
 
 		return $isRunning;
