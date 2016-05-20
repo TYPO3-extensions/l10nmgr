@@ -1,0 +1,18 @@
+{
+  "name": "localizationteam/l10nmgr",
+  "type": "typo3-cms-extension",
+  "description": "",
+  "homepage": "http://typo3.org",
+  "license": ["GPL-2.0+"],
+  "require": {
+    "typo3/cms-core": ">=7.6.0,<8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Localizationteam\\L10nmgr\\": "Classes"
+    }
+  },
+  "replace": {
+    "l10nmgr": "*"
+  }
+}

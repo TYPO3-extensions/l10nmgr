@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2015-07-30T00:30:23Z" product-name="l10nmgr">
+		<header/>
+		<body>
+			<trans-unit id="title" xml:space="preserve" approved="yes">
+				<source>Translation Priorities:</source>
+				<target>Priorität der Übersetzungen:</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

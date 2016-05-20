@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="it" datatype="plaintext" original="messages" date="2015-07-30T00:31:05Z" product-name="l10nmgr">
+		<header/>
+		<body>
+			<trans-unit id="tx_l10nmgr_cfg" xml:space="preserve" approved="yes">
+				<source>L10N Manager Configuration</source>
+				<target>Configurazione di L10N Manager</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.title" xml:space="preserve" approved="yes">
+				<source>Title:</source>
+				<target>Titulo:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.filenameprefix" xml:space="preserve" approved="yes">
+				<source>Export filenameprefix:</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.incfcewithdefaultall" xml:space="preserve" approved="yes">
+				<source>Include FCE with default language:</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.0" xml:space="preserve" approved="yes">
+				<source>This page only</source>
+				<target>Questa pagina</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.1" xml:space="preserve" approved="yes">
+				<source>1 deep</source>
+				<target>1 livello</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.2" xml:space="preserve" approved="yes">
+				<source>2 deep</source>
+				<target>2 livelli</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.3" xml:space="preserve" approved="yes">
+				<source>3 deep</source>
+				<target>3 livelli</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.4" xml:space="preserve" approved="yes">
+				<source>Infinite</source>
+				<target>Indefinito</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.-1" xml:space="preserve" approved="yes">
+				<source>Current page</source>
+				<target>Pagina attuale</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth" xml:space="preserve" approved="yes">
+				<source>Depth of page levels:</source>
+				<target>Numero di livelli:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode.I.0" xml:space="preserve" approved="yes">
+				<source>Render ALL items (slow and huge)</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode.I.1" xml:space="preserve" approved="yes">
+				<source>Render overview with details (slow but slim)</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode.I.2" xml:space="preserve" approved="yes">
+				<source>Render overview witn no details (fast and slim)</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode" xml:space="preserve" approved="yes">
+				<source>Display mode:</source>
+				<target>Modo di vizualizzazione:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.0" xml:space="preserve" approved="yes">
+				<source>11</source>
+				<target>11</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.1" xml:space="preserve" approved="yes">
+				<source>22</source>
+				<target>22</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.2" xml:space="preserve" approved="yes">
+				<source>33</source>
+				<target>33</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.3" xml:space="preserve" approved="yes">
+				<source>44</source>
+				<target>44</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist" xml:space="preserve" approved="yes">
+				<source>Tables to export:</source>
+				<target>Tabelle da esportare:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.exclude" xml:space="preserve" approved="yes">
+				<source>Exclude elements (comma list of &quot;table:uid&quot; pairs):</source>
+				<target>Elementi da escludere (Lista CSV: &quot;tabella:uid, tabella:uid,...&quot;)</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.include" xml:space="preserve" approved="yes">
+				<source>Include elements (comma list of &quot;table:uid&quot; pairs):</source>
+				<target>Elementi da includere (Lista CSV: &quot;tabella:uid, tabella:uid,...&quot;)</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.sourceLang" xml:space="preserve" approved="yes">
+				<source>Source language:</source>
+				<target>Lingua di partenza:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.translationLang" xml:space="preserve" approved="yes">
+				<source>Target language:</source>
+				<target>Translation language:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.crdate" xml:space="preserve" approved="yes">
+				<source>Date of export</source>
+				<target>Date of export</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.exporttablelist" xml:space="preserve" approved="yes">
+				<source>Exported tables</source>
+				<target>Exported tables</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_export" xml:space="preserve" approved="yes">
+				<source>L10N Manager exports</source>
+				<target>L10N Manager Exports</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities" xml:space="preserve" approved="yes">
+				<source>Localization priority</source>
+				<target>Priorità della localizzazione</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.title" xml:space="preserve" approved="yes">
+				<source>Title:</source>
+				<target>Titulo:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.description" xml:space="preserve" approved="yes">
+				<source>Description:</source>
+				<target>Descrizione:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.languages" xml:space="preserve" approved="yes">
+				<source>Priority applies to languages:</source>
+				<target>Priorità per le segenti lingue:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.element" xml:space="preserve" approved="yes">
+				<source>Element(s):</source>
+				<target>Elementi:</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

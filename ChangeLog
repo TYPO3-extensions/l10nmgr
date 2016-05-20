@@ -1,0 +1,430 @@
+2014-12-16 Daniel Zielinski <zielinski@loctimize.com>
+	* [BUG] Fixed: CAT XML export of HTML content elements contains non XML compliant entities making export unusable.
+	* [BUG] Added correct version number to CAT XML export file in meta data.
+
+2014-11-17 Daniel Zielinski <zielinski@loctimize.com>
+	* [BUG] Fixed: CAT XML export of HTML content elements substituted < with &lt; in HTML elements making export unusable.
+	* [BUG] Added correct version number to CAT XML export file in meta data.
+
+2014-08-28 Markus Friedrich <markus.friedrich@dkd.de>
+	* [FEATURE] TYPO3 6.2 support
+	* [RELEASE] Version 3.6.0
+
+2014-01-23 Hans Höchtl <hans.hoechtl@typovision.de>
+	* [BUGFIX] Added missing require of BaseService in TCEMain-hook
+
+2014-01-22 Lars Trebing <lars@trebing.name>
+	* [BUGFIX] Provide the user with helpful information when the CLI import cannot read a file
+
+2014-01-15 Lars Trebing <lars@trebing.name>
+	* [FEATURE] Skip unaffected languages during import (performance improvement)
+	* [FEATURE] Cache language array in tx_l10nmgr_tools (performance improvement)
+
+2014-01-10 Lars Trebing <lars@trebing.name>
+	* [BUGFIX] Remove redundant workspace constraint
+
+2013-05-05 Andreas Otto <andreas@otto-hanika.de>
+	* [FEATURE] Allows importing translations into default language.
+	* [BUG] Various small bugfixes. _Check for already exported content_ works again and supports the CLI now.
+	* [RELEASE] Version 3.4.50
+
+2012-07-07 Andreas Otto <andreas@otto-hanika.de>
+	* [BUG] Fixes #38702. CLI export doesn't work if source language is set to default language. Credits go to Jonas Renggli for investigating the issue and providing a patch.
+	* [TASK] Enables export of EXCEL XML format using the CLI.
+	* [TASK] Changes meta data of EXCEL XML template.
+	* [RELEASE] Version 3.4.0
+
+2012-07-01 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #38219. Display status icons [enable_stat_hook]. Credits go to Dietrich Heise for investigating the issue and providing a patch.
+	* [~BUG] Fixes #38367. Option "New/Changed content only" not considered. Credits go to Markus Friedrich for investigating the issue and providing a patch.
+	* [RELEASE] Version 3.3.16
+
+2012-05-11 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #35545. Report XML export issues in BE module. Credits go to Francois Suter for investigating the issue and providing a patch.
+
+2012-05-10 Andreas Otto <andreas@otto-hanika.de>
+	* [~TASK] Uses t3lib_div::sysLog to write debug messages if the PHP constant TYPO3_DLOG is defined.
+	* [~BUG] Fixes #3739: problems with pattern in class.tx_l10nmgr_translationDataFactory.php.
+	* [~BUG] Bypass filter to include fields shortcut, shortcut_mode, urltype and url_scheme in translation.
+	* [~BUG] Fixes #36047. Filenames in database don't match exported files.
+	* [~BUG] Fixes #29102. No export for pages with doktype "External URL". Not allowed doktypes can now be configured in the EM. Thanks to Bernd Wilke for submitting the bug report.
+	* [~BUG] Fixes #31993. Pages with l18n_cfg = 2 are excluded. Thanks to Patric Pesch for providing a first patch.
+	* [~BUG] Fixes #35546. Move debug file out of extension folder. Writes debug information for CLI import now to syslog if $TYPO3_CONF_VARS['SYS']['enable_DLOG'] is set. Credits go to Francois Suter for investigating the issue and providing a first patch.
+	* [~BUG] Fixes #35543. Clean up tx_l10nmgr_abstractExportView. Credits go to Francois Suter for investigating the issue and providing a patch.
+	* [~TASK] Replace deprecated method t3lib_div::view_array() with t3lib_utility_Debug::viewArray().
+	* [~BUG] Fixes #35234. Flexform handling considers only TemplaVoilà field. Credits go to Francois Suter for investigating the issue and providing a patch.
+	* [~BUG] Fixes #34167. Errors should be reported during automated import. Credits go to Francois Suter for investigating the issue and providing a patch.
+	* [~BUG] Fixes #33806. PHP-Error on Excel-Export (wrong type-hint). Credits go to Hannes Gessmann for reporting the issue.
+
+2012-02-08 Andreas Otto <andreas@otto-hanika.de>
+	* [~FEATURE] Add configuration enable_neverHideAtCopy. TYPO3 4.5 changed the standard behaviour for copied records to be hidden. Technicaly a translation of a record is a copy and would result in translations not being visible. For manual translations this might be a good idea, but for XML imports of finished translations this is counter productive. Just imagine you imported the translation for a larger website and you now have to go through every page and enable the translated records manualy.
+	* [~FEATURE] Fixes #33522. Raise TYPO3 version compatibility to 4.6.99.
+	* [RELEASE] Version 3.3.15
+
+2012-01-29 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #33291. Some parts of the first patch did not apply. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #33379. Enable FTP upload on manual export. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [Release] Version 3.3.14.
+
+2012-01-22 Andreas Otto <andreas@otto-hanika.de>
+	* [~FEATURE] Fixes #3082. Hooks after importing/exporting. Credits go to Francois Suter for providing patches.
+	* Release version 3.3.13.
+
+2012-01-21 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #27683. Add langDatabaseOverlay to documentation.
+	* [~BUG] Fixes #33224. Direction cleanup task: add downloads directory. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #33259. Wrong mail actions in automated import process. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #33260. Wrong FTP interactions in import process. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #33291, Fixes #12047, Fixes #2592. Adapt BE modules to new TYPO3 skin. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Replace default icon of task module.
+
+2012-01-09 Daniel Zielinski <development@loctimize.com>
+	* Changed version to 3.3.11
+
+2011-12-11 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #31864. Insufficient test for detecting RTE fields. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [+FEATURE] Fixes #32379. Add system to clean up old files. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #32153. Add FTP support to CLI import script. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #31863. Missing messages in export script. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~TASK] Fixes #31865. Cleanup of CLI export script. Credits go to Francois Suter for investigating the issue and providing patches.
+
+2011-11-01 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #30397. Allow for transformation of custom tags in CAT XML export process. Credits go to Francois Suter for investigating the issue and providing patches.
+	* [~BUG] Fixes #27683 Fixes #8875. Add langDatabaseOverlay to documentation.
+
+2011-10-14 Daniel Zielinski <development@loctimize.com>
+	* [~BUG] Fixes #31469. Delete old translations did not work. Credits also go to Francois Suter.
+
+2011-09-29 Andreas Otto <andreas@otto-hanika.de>
+	* [~BUG] Fixes #27132. Use 1=1 instead of 1 in where clause.
+	* [~BUG] Improved RTE handling. Credits go to Helmut Hummel for sending a patch.
+
+2011-08-23 Daniel Zielinski <development@loctimize.com>
+	* Fixed bug with Excel XML export/import
+	* Added preview URL attribute in CATXML for source language
+	* Improved filetype for SDL Trados Studio 2009
+	* Changed version to 3.3.10
+
+2011-07-30 Andreas Otto <andreas@otto-hanika.de>
+	* [~TASK] Change calls to deprecated PHP methods and deprecated TYPO3 methods up to version 4.4.
+	* [~BUG] Fixes a bug where the XML export was only exporting the default language in CLI mode even when a different source language was set in the configuration.
+	* [~FEATURE] Add option to enable / disable the use of status icons in pre 4.5 pagetree.
+
+2011-07-29 Andreas Otto <andreas@otto-hanika.de>
+	* [~TASK] Fixes #8873. Increase limit for tablelist.
+	* [~BUGFIX] Merge difference between 36038 and head.
+
+2011-05-17 Daniel Zielinski <development@loctimize.com>
+	* Added version requirement
+	* Changed version to 3.3.9
+
+2011-05-10 Daniel Zielinski <development@loctimize.com>
+	* Changed version to 3.3.8
+	* Added memoQ.mqres filter
+	* Added SDL Trados 2009 filetype
+	* Changed XML2RTE to correct import of empty <p/> elements
+	* Fixed bug with double escaped entities &amp;amp; for RTE fields
+
+2011-03-30 Daniel Zielinski <development@loctimize.com>
+	* Changed split to explode function in models/class.tx_l10nmgr_CATXMLImportManager.php line 264 (for PHP >= 5.3)
+
+2010-09-26 Daniel Zielinski <development@loctimize.com>
+	* Changed file naming for exported MS Excel XML to be consistent with CAT XML files
+	* Added selection of an alternative source/reference language for the Excel export
+
+2010-09-09 Daniel Zielinski <development@loctimize.com>
+	* Added RTE transformation to templavoila_flex fields for CATXML
+
+2010-07-25 Andreas Otto <a.otto@sma.de>
+	* Bugfix #7466: L10N Manager fills the deprecation_log
+
+2010-07-13 Andreas Otto <a.otto@sma.de>
+	* Bugfix #8831: CLI export module help text is never displayed
+	* Bugfix #8832: Method extractFile in class tx_l10nmgr_zip is not using TYPO3 API to create a directory
+
+2009-07-45 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Adjusted path to l10nmgr tools in CLI cleaner
+	* Added substitution of <hr> to <hr /> in RTE2XML transformation and the other way around in XML2RTE
+
+2009-06-22 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Changed field definition for tablelist in table tx_l10nmgr_cfg to accomodate more tables to export
+
+2009-05-13 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Changed XML2RTE for CLI import (substitute url in <link) [models/tools/class.l10nmgr.xmltools.php]
+
+2009-03-30 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* CLI import file XML or ZIP (local file) TODO: If http:// or ftp://...
+	* Unzip file (not Win compatible)
+	* Generate preview link via CLI if t3_previewId present takes precendemce over first pageGrp id
+	* New calls for cli import script: modes 1 = import string, 2 = import file, 3 = source preview.
+	* Example: cli.import.php MODE PREVIEW XML FILEPATH SERVERLINK
+	* Preview param is now passed as additional argument
+	* Revision 3.3.2
+
+2009-02-03 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Bug fix in preview link generation service
+
+2009-02-02 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added email notification to CLI export (with/without attachment)
+	* Added dependency static_info_tables
+	* Revision 3.3.0 now
+
+2009-02-02 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Merged last changes from trunk into v3
+
+2009-01-30 Kasper Skarhoj
+	* Added "recUid" to sorting in translation task index list.
+
+2009-01-30 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added settings file for MemoQ
+	* Revision 3.2.2 now
+
+2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Revision 3.2.1 now
+	* Removed naming annoyances
+
+2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Merged changes from Kasper from trunk to v3 ;-)
+
+2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added option to enable/disable FTP upload via extension configuration
+
+2009-01-28 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added option to hide/display hidden system languages via extension configuration
+
+2009-01-27 Kasper Skarhoj
+	* Various modifications.
+
+2009-01-24 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added options to CLI export script (only changed content, skip hidden, multiple target languages & l10ncfgs, FTP upload!)
+	* Revision 3.1 now
+
+2009-01-23 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added serverlink param to POST interface for back link generation
+	* Modified CLI preview link generation (append serverlink)
+	* Added CLI for export of CATXML (l10nmgr_export)
+	* Renamed CLI l10nmgr to l10nmgr_import
+
+2009-01-22 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Fixed bug in CLI script related to workspaces
+	* Performance tuning in CLI import script
+
+2008-12-16 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Changed l10ncfg->isLoaded. Check for empty array!
+
+2008-12-05 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Changed localization of exclude/inlude elements in Config of translation object (was switched)
+
+2008-12-03 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Integrated patch from Wolfgang Klinger for models/class.tx_l10nmgr_translationDataFactory.php
+
+2008-11-13 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added POST interface for external calls
+	* Added dummy CLI script for import of XML
+	* Added page preview link generation on import.
+	* Added tabbed dialogue for XML export/import
+
+2008-11-11 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added option to delete previous localizations before 2nd import (only NEW elements)
+
+2008-10-21 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added optional BEenableFields to record selection
+
+2008-10-21 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added image, shortcut, templavoila_pi1 to the list of RTE-enabled fields
+
+2008-09-09 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Fixed bug with tags in non RTE fields (to be revised)
+
+2008-09-02 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Subsitute <br/> with <br> during import of transformed XML
+	* Added preserve tables on import
+	* Fixed bug with duplicate import of translation of nonRTE fields
+
+2008-09-01 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Subsitute & with &amp; in export when not an RTE-field
+	* Substitute &amp; with & on import when not an RTE-field and <br/> with <br> as import of <br/> doesn't work
+
+2008-07-25 Andreas Otto <andreas.otto@dkd.de>
+	* XML exports contain source and target lang iso-code in filename.
+	* A list of exports will be displayed if checkExports() has detected existing exports.
+
+2008-07-15 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added example in ext_tables.php how to exclude table fields from L10N
+	* Added bullets content element for RTE transformations
+
+2008-07-10 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Fixed bug with XML Import error message
+
+2008-06-26 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added textpic to the list of RTE-enabled fields
+	* Corrected bug with CATXML. Now no CDATA left in XML. Only when disabling XML-check :-)
+	* Fixed bug with inline and empty elements in fieldsi like header, subtitle etc. Seems to be due to error in xml2tree function. To be considered as workaround.
+
+2008-06-09 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Skip XML check, Check UTF-8 checkbox
+	* Updated settings for across and SDL Passolo
+
+2008-05-17 Michael Klapper <klapper@aoemedia.de>
+	* Allow doktype 6 (external url) to folow the tree used by the export models/class.tx_l10nmgr_l10nAccumulatedInformations.php
+
+2008-05-13 Daniel Zielinski
+	* Removed attribs from root element in CATXML
+
+2008-05-09 Daniel Zielinski & Fabian Seltmann @ T3DD08
+	* Changed XML format to be consistent (header->t3_XXX elements)
+	* Adapted settings for Trados and Passolo
+	* Fixed bug with broken tags (e.g. link tags)
+
+2008-04-27 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added translations for German, Spanish, Italian, French (to be continued)
+
+2008-04-25 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Added translations for German and Spanish
+	* Localization of cm1/index.php
+	* Added option: check for already exported contents
+
+2008-04-25 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Fixed PHP4 issue in views/class.tx_l10nmgr_abstractExportView.php (file_put_contents => t3lib_div::writeFile)
+
+2008-04-25 Daniel Zielinski <d.zielinski@l10ntech.de>
+	* Fixed PHP4 issue in templates/mod1_list.php preventing extension from working
+
+2008-04-17 Michael Klapper <klapper@aoemedia.de>
+	* Add PHPUnit tests based on im/export links
+
+2008-04-11 Michael Klapper <klapper@aoemedia.de>
+	* Avoid wrapping of dead a-Tag with span to highlight dead links (should be only displayed in the RTEeditor)
+
+2008-04-10 Fabian Seltmann <fs@marketing-factory.de>
+	* show now exported data in the backend where the configuration is set.
+
+2008-04-09 Fabian Seltmann <fs@marketing-factory.de>
+	* first modifications for a view in the backend, it doesn`t work until now.
+	* call the function checkExports() in cm1/index.php
+
+2008-04-09 Daniel P�tzinger <poetzinger@aoemedia.de>
+	* small modifiktions to abstraktExportView (add constructor)
+	* let HTMLListView also extend abstraktExportView
+
+2008-04-08 Fabian Seltmann <fs@marketing-factory.de>
+	* Added the function checkExports if an export exists.
+	* Added the function saveExportFile to save the xml files
+	* Added the function getExportType
+	* Added the function getFilename to save the export
+
+2008-04-07 Fabian Seltmann <fs@marketing-factory.de>
+	* Included views/class.tx_l10nmgr_abstractExportView.php
+	* Added new Table tx_l10nmgr_exportdata
+	* Added new Folder for XML exports
+	* Added new function saveExportInformation() for saving information of an export
+
+2008-03-28 Michael Klapper <klapper@aoemedia.de>
+	* Changed user interface on mod1
+	** Added some templates (html, css, js)
+
+2008-03-28 Michael Klapper <klapper@aoemedia.de>
+	* Changed internal message handling (export XML)
+	* Changed XML export indention
+	* Move label to external locallang.xml file (class.tx_l10nmgr_CATXMLImportManager.php)
+
+2008-03-27 Michael Klapper <klapper@aoemedia.de>
+	* Changed database field "sourceLangStaticId char(3) NOT NULL default ''," to save "static_countries" with ID's > 99
+	* Move label to external locallang.xml file (cm1)
+	* Change reading and displaying of available configuration files
+	* Fix the option "export from source language"
+	* Change the handling and format of skiped elements wich are not include to the XML export
+
+2008-03-26 Daniel P�tzinger <poetzinger@aoemedia.de>
+	* add ImportManager Class
+	* add checks and support for old XML CAT Version
+
+2008-03-23 Andreas Otto <andreas.otto@dkd.de>
+	*Increased version number of branch v3 to 3.0.0-dev.
+
+2008-03-14 Daniel P�tzinger
+	*seperate XML<->RTE Transformations to xmltools
+	*CATXML: add <head> part to XML, with wordcount and correct fieldcount
+	*UnitTest: add first Unit Test for xmltools class
+
+
+2008-03-11 Daniel Zielinski
+	*CATXML: Added baseURL attribute to TYPO3LOC element
+	*CATXML: Added download links for settings files
+	*CATXML: Updated SDL Trados TagEditor settings
+	*CATXML: Added nbsp entity declaration. Now preserving &nbsp;
+	*CATXML: Fixed import (added missing elementUid attribute in export, now parsing pageGrp element)
+
+2008-02-22 Daniel P�tzinger
+	*CATXML: fixes to RTE field transformations (setup of processing)
+	*CATXML: robustnesscheck for utf8 and valid xml
+
+
+2008-02-15 Daniel P�tzinger
+	* introduce new FCE translationMode: <langDatabaseOverlay>1</langDatabaseOverlay>
+	* => therefore allow translation of flexforms also for overlay records
+	* begin to work on tools class to get the translationDetails for this new translationMode
+	TODO: refactor tools class (e.g. translationDetailsRepository as main class with several helperclasses)
+				diffCalculation for this kind of FCEs
+
+2008-02-01 Daniel P�tzinger
+	* add detection for RTE field in tools class
+	* change detection of flexible CE by CType and not by language==-1 (All)
+	* use rte field in CATXML export to check if transformations should be used
+	* more stabil transformation: check if XML is valid / replace & with &amps;
+	* add transformation attribut to CATXML (to flag if a transformation is required)
+	* fix import of CATXML with xml data (no cdata): new function _getXMLFromTreeArray in translationdatafactory
+
+2008-02-01 Kasper Sk�rh�j
+	* Added --noFlush flag to command line cleaner tool, extended --pid to accept comma separated list of PIDs
+	* Added Context Sensitive Item "L10Nmgr tools" which expands to a submenu with items 'Create priority', 'Manage priorities','Update Index','Flush Translations'. These functions were requested by Dassault.
+	* For flushing to really work for flexforms (clearing the vDEFbase value) it needs the latest TYPO3 core for a modication to tcemain (clear_flexFormData_vDEFbase)
+
+2008-01-18 Daniel P�tzinger
+	* restructuring the main BE-Modul (cm1) and splitting it in a Domainmodel + MVC (description and UML is provided in doc)
+
+2007-12-05 Daniel Zielinski <d.zielinski@l10ntech.de>
+
+	* Added word and char count for calculation of translation costs (experimental!). XML export only. (funct wordCount)
+	* &nbsp; now substituted before XML export as it is not XML conform.
+	* Changed XML-Format: Now includes grouping element <pageGrp id="$pid"> to group translatable data. Needed for access to page context in CAT-Tools.
+	* XML-Format now contains format version number (needed for compatibility issues)
+	* Added download links for settings files in XML mode (temporary - should later be configurable and included in l10n package)
+
+2007-11-13 Daniel Zielinski <d.zielinski@l10ntech.de>
+
+	* Added XML settings files for across (www.across.net) and D�j�Vu (www.atril.com).
+	* All settings files now in one folder.
+
+2007-10-30 Daniel Zielinski <d.zielinski@l10ntech.de>
+
+	* Added transformation of bodytext content by using functions from t3lib_parsehtml_proc. (Now converting links, images, tags back and forth) HTML content element issue remains open.
+	* Removed xml:lang from <TYPO3LOC> element.
+	* Added targetLang and sourceLang as ISO2Letter code
+
+2007-10-23 Daniel Zielinski <d.zielinski@l10ntech.de>
+
+	* Added simple XML export. Thanks to Daniel P�tzinger.
+	* Changed file naming using ISO-2-Letter code instead of syslanguage names.
+	* Added xml:lang attribute to <TYPO3LOC> element.
+	* Added settings file for SDLTrados TagEditor to cm1.
+	* Added settings file for SDL Passolo to cm1.
+	* Added TODO/wish list.
+	* Modified l10nmgr_cfg table. Added source language selection field.
+	* Added CSH functionality.
+
+2007-10-20 Kasper Sk�rh�j
+
+	* Committed work I did on this extension for Dassault in August and October. This includes:
+	* A "Translation Tasks" module which is destined to be a "task center" for translators including listing of explicitly set priorities by webmasters.
+	* An translation index table which helps us to make a overview of what translations are pending. This also needs more adaption.
+	* Some of this may depend on core-hooks which are upcoming.
+	* Expecting to finish these features for a "first real version" in January 2008 for Dassault. Until then, use at own risk.
+
+2007-05-21 Andreas Otto <andreas.otto@dkd.de>
+
+	* Applied patch to file cm1/index.php: Make it possible to import XML files that were created with OpenOffice.org.
+
+06-11-29 Kasper Sk�rh�j  <kasperYYYY@typo3.com>
+
+	* Initial release

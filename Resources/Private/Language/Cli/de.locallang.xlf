@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2015-07-30T00:30:04Z" product-name="l10nmgr">
+		<header/>
+		<body>
+			<trans-unit id="export.file_saved.msg" xml:space="preserve" approved="yes">
+				<source>The export was saved to %s.</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.target_language_id.msg" xml:space="preserve" approved="yes">
+				<source>No target language ID given!</source>
+				<target>Keine ID für Zielsprache angegeben!</target>
+			</trans-unit>
+			<trans-unit id="error.target_language_id_integer.msg" xml:space="preserve" approved="yes">
+				<source>Target language ID is not an integer!</source>
+				<target>ID für Zielsprache ist keine Zahl!</target>
+			</trans-unit>
+			<trans-unit id="error.no_l10ncfg.msg" xml:space="preserve" approved="yes">
+				<source>No localization configuration given!</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.workspace_id_int.msg" xml:space="preserve" approved="yes">
+				<source>Workspace ID is not an integer!</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.l10ncfg_id_int.msg" xml:space="preserve" approved="yes">
+				<source>Localization Manager configuration ID is not an integer!</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.email.repient_missing.msg" xml:space="preserve" approved="yes">
+				<source>No valid email recipient given!</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.email.notification_disabled.msg" xml:space="preserve" approved="yes">
+				<source>Email notification disabled!</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.ftp.file_not_found.msg" xml:space="preserve" approved="yes">
+				<source>FTP upload error: File does not exist!</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.ftp.disabled.msg" xml:space="preserve" approved="yes">
+				<source>FTP upload disabled!</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.object_not_loaded.msg" xml:space="preserve" approved="yes">
+				<source>Localization Manager object not loaded!</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.suject.msg" xml:space="preserve" approved="yes">
+				<source>Translation job (%1$s-%2$s) from TYPO3 site: %3$s</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.greeting.msg" xml:space="preserve" approved="yes">
+				<source>Dear translator or translation project manager,</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.new_translation_job.msg" xml:space="preserve" approved="yes">
+				<source>There is a new translation job (%1$s-%2$s) available from TYPO3
+				site at %3$s.
+			</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.info.msg" xml:space="preserve" approved="yes">
+				<source>For information how to download/translate this file please refer to the
+				documentation.
+			</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.info.import.msg" xml:space="preserve" approved="yes">
+				<source>The translated XML file can be imported using the TYPO3 Localization
+				Manager (l10nmgr).
+			</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.goodbye.msg" xml:space="preserve" approved="yes">
+				<source>Kind regards,</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.info.exportef_file.msg" xml:space="preserve" approved="yes">
+				<source>Exported file:</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.new_translation_job_attached.msg" xml:space="preserve" approved="yes">
+				<source>Attached is an XML file for translation (%1$s-%2$s)
+				from TYPO3 site at %3$s.
+			</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.ftp.connection.msg" xml:space="preserve" approved="yes">
+				<source>FTP upload error: Couldn't upload file %1$s%2$s</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.ftp.connection_user.msg" xml:space="preserve" approved="yes">
+				<source>FTP error: Couldn't connect as %1$s</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="error.ftp.connection_failed.msg" xml:space="preserve" approved="yes">
+				<source>FTP error: Connection failed!</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.process.error.empty.message" xml:space="preserve" approved="yes">
+				<source>Empty element</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.process.error.invalid.message" xml:space="preserve" approved="yes">
+				<source>Detected invalid characters in element</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.process.duplicate.title" xml:space="preserve" approved="yes">
+				<source>Contents are already exported for translation!</source>
+				<target>Inhalte wurden schon für Übersetzung exportiert!</target>
+			</trans-unit>
+			<trans-unit id="export.process.duplicate.message" xml:space="preserve" approved="yes">
+				<source>Please select one of the listed exports below.</source>
+				<target>Bitte wählen Sie einen der existierenden Exporte.</target>
+			</trans-unit>
+			<trans-unit id="export.process.duration.message" xml:space="preserve" approved="yes">
+				<source>The export took %f seconds.</source>
+				<target>Der Export hat %f Sekunden gedauert.</target>
+			</trans-unit>
+			<trans-unit id="export.overview.date.label" xml:space="preserve" approved="yes">
+				<source>Date</source>
+				<target>Datum</target>
+			</trans-unit>
+			<trans-unit id="export.overview.configuration.label" xml:space="preserve" approved="yes">
+				<source>Configuration</source>
+				<target>Konfiguration</target>
+			</trans-unit>
+			<trans-unit id="export.overview.type.label" xml:space="preserve" approved="yes">
+				<source>Type</source>
+				<target>Typ</target>
+			</trans-unit>
+			<trans-unit id="export.overview.targetlanguage.label" xml:space="preserve" approved="yes">
+				<source>Target language</source>
+				<target>Zielsprache</target>
+			</trans-unit>
+			<trans-unit id="export.overview.filename.label" xml:space="preserve" approved="yes">
+				<source>Filename</source>
+				<target>Dateiname</target>
+			</trans-unit>
+			<trans-unit id="import.process.duration.message" xml:space="preserve" approved="yes">
+				<source>The import took %f seconds.</source>
+				<target>Der Import hat %f Sekunden gedauert.</target>
+			</trans-unit>
+			<trans-unit id="import.manager.error.parsing.xml2tree.message" xml:space="preserve" approved="yes">
+				<source>XML2Tree parsing error:</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.manager.error.missing.head.message" xml:space="preserve" approved="yes">
+				<source>No header part found in XML structure</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.nonfatal.errors" xml:space="preserve" approved="yes">
+				<source>The following non-fatal errors occurred:</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.subject" xml:space="preserve" approved="yes">
+				<source>Translations imported for site %s</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.intro" xml:space="preserve" approved="yes">
+				<source>The following files were imported on %1$s into %2$s:</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.ok" xml:space="preserve" approved="yes">
+				<source>OK</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.error" xml:space="preserve" approved="yes">
+				<source>ERROR</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.file" xml:space="preserve" approved="yes">
+				<source>File %s:</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.workspace" xml:space="preserve" approved="yes">
+				<source>- Workspace: %1$s (%2$d)</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.workspace.unknown" xml:space="preserve" approved="yes">
+				<source>Unknown, should not happen</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.language" xml:space="preserve" approved="yes">
+				<source>- Translation language: %s</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.l10nconfig" xml:space="preserve" approved="yes">
+				<source>- L10N Manager configuration: %1$s (%2$d)</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.l10nconfig.unknown" xml:space="preserve" approved="yes">
+				<source>Unknown, should have aborted</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.mail.import.failed" xml:space="preserve" approved="yes">
+				<source>Import failed with following error: %s</source>
+				<target></target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

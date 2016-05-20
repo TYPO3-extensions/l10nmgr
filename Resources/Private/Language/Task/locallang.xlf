@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:30:36Z" product-name="l10nmgr">
+		<header/>
+		<body>
+			<trans-unit id="fileGarbageCollection.name" xml:space="preserve">
+				<source>File garbage collection</source>
+			</trans-unit>
+			<trans-unit id="fileGarbageCollection.description" xml:space="preserve">
+				<source>Deletes all files created or stored by the L10N Manager
+				beyond a certain age.
+			</source>
+			</trans-unit>
+			<trans-unit id="fileGarbageCollection.age" xml:space="preserve">
+				<source>File age</source>
+			</trans-unit>
+			<trans-unit id="fileGarbageCollection.invalidAge" xml:space="preserve">
+				<source>Please enter a positive number of days for the file age.
+			</source>
+			</trans-unit>
+			<trans-unit id="fileGarbageCollection.excludePattern" xml:space="preserve">
+				<source>Exclude pattern</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

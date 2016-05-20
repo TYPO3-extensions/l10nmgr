@@ -1,0 +1,260 @@
+﻿<MemoQResource ResourceType="FilterConfigs" Version="1.0">
+  <Resource>
+    <Guid>aa442200-68af-4352-9c49-6291e38c1c73</Guid>
+    <FileName>XMLConverter#TYPO3 l10nmgr 3.6</FileName>
+    <Name>TYPO3 l10nmgr 3.6</Name>
+    <Description>File filter definition for XML exported from the Web CMS TYPO3 using Localization Manager (l10nmgr). Provided by Loctimize GmbH (www.loctimize.com).
+For support please contact support@loctimize.com.</Description>
+    <FilterName>MemoQ.DocConverters.XML.XMLConverter</FilterName>
+  </Resource>
+</MemoQResource>
+<MemoQFilterConfiguration filtername="XML Filter" version="V2" name="TYPO3 l10nmgr 3.6">
+  <SampleFileList>
+    <SampleFile path="C:\test.xml" encoding="65001" />
+  </SampleFileList>
+  <SampleDTDPath value="" isdtd="yes" />
+  <GeneralOptions logwarnings="no" importcomments="no" detectencoding="yes" inputencodingkey="65001" outputencodingkey="-1" normalizews="yes" observexmlspace="yes" restoreentities="no" assocdtd="" treatnewlinesassegmentbreak="no" importpisasinlinetags="no" hasprocessinginstructionattributes="no" writebom="yes" />
+  <HandledTags>
+    <Tag name="TYPO3L10N" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="head" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_l10ncfg" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_sysLang" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_sourceLang" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_targetLang" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_baseURL" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_workspaceId" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_count" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_wordCount" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_internal" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="t3_formatVersion" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="yes" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="pageGrp" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+        <Attribute name="id" translatable="no" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="sourceUrl" translatable="no" required="no" filtered="no" contentspecific="yes" context="None" comment="Content" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+      </Attributes>
+    </Tag>
+    <Tag name="data" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+        <Attribute name="table" translatable="no" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="elementUid" translatable="no" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="key" translatable="no" required="no" filtered="no" contentspecific="yes" context="Content" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="transformations" translatable="no" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+      </Attributes>
+    </Tag>
+    <Tag name="p" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="STRONG" inline="yes" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="br" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="a" inline="yes" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+        <Attribute name="href" translatable="no" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="title" translatable="yes" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="class" translatable="no" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="target" translatable="no" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="external" translatable="no" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+      </Attributes>
+    </Tag>
+    <Tag name="img" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+        <Attribute name="title" translatable="yes" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="alt" translatable="yes" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+        <Attribute name="longdesc" translatable="yes" required="no" filtered="no" contentspecific="yes" context="None" comment="None" structcontext="None" nontranstype="None">
+          <NonTransSpecificValues>
+          </NonTransSpecificValues>
+          <TranslatabilityConditions>
+          </TranslatabilityConditions>
+        </Attribute>
+      </Attributes>
+    </Tag>
+    <Tag name="h1" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="h2" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="h3" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="h4" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="h5" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="h6" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="div" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="table" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="tbody" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="th" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="td" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="tr" inline="no" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="i" inline="yes" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="b" inline="yes" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="u" inline="yes" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="hr" inline="yes" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="sup" inline="yes" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+    <Tag name="sub" inline="yes" placeholder="no" iscontxt="no" iscomment="no" isstructcontext="no" nontranslated="no" wshandling="Inherit" highlight="NoHighlight" breaksegmentaftertag="none" treatassegmentpartbreak="no" hidetranslatableattsindynamicnontranscase="yes" breaksegmentatnewlineiftagiswspreserve="no">
+      <Attributes>
+      </Attributes>
+    </Tag>
+  </HandledTags>
+  <EntityGroupes>
+    <EntityGroupe value="XMLPredefined" />
+  </EntityGroupes>
+  <CustomEntities>
+  </CustomEntities>
+  <ImportedEntities>
+  </ImportedEntities>
+  <XsltData originalfilepath="" originalfilesubdirnumber="0">
+  </XsltData>
+</MemoQFilterConfiguration>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:31:04Z" product-name="l10nmgr">
+		<header/>
+		<body>
+			<trans-unit id="tx_l10nmgr_cfg" xml:space="preserve">
+				<source>L10N Manager Configuration</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.title" xml:space="preserve">
+				<source>Title:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.filenameprefix" xml:space="preserve">
+				<source>Export filenameprefix:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.incfcewithdefaultall" xml:space="preserve">
+				<source>Include FCE with default language:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.0" xml:space="preserve">
+				<source>This page only</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.1" xml:space="preserve">
+				<source>1 deep</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.2" xml:space="preserve">
+				<source>2 deep</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.3" xml:space="preserve">
+				<source>3 deep</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.4" xml:space="preserve">
+				<source>Infinite</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.-1" xml:space="preserve">
+				<source>Current page</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth" xml:space="preserve">
+				<source>Depth of page levels:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode.I.0" xml:space="preserve">
+				<source>Render ALL items (slow and huge)</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode.I.1" xml:space="preserve">
+				<source>Render overview with details (slow but slim)</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode.I.2" xml:space="preserve">
+				<source>Render overview witn no details (fast and slim)</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode" xml:space="preserve">
+				<source>Display mode:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.0" xml:space="preserve">
+				<source>11</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.1" xml:space="preserve">
+				<source>22</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.2" xml:space="preserve">
+				<source>33</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.3" xml:space="preserve">
+				<source>44</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist" xml:space="preserve">
+				<source>Tables to export:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.exclude" xml:space="preserve">
+				<source>Exclude elements (comma list of &quot;table:uid&quot; pairs):</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.include" xml:space="preserve">
+				<source>Include elements (comma list of &quot;table:uid&quot; pairs):</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.sourceLang" xml:space="preserve">
+				<source>Source language:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.translationLang" xml:space="preserve">
+				<source>Target language:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.crdate" xml:space="preserve">
+				<source>Date of export</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.exporttablelist" xml:space="preserve">
+				<source>Exported tables</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_export" xml:space="preserve">
+				<source>L10N Manager exports</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities" xml:space="preserve">
+				<source>Localization priority</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.title" xml:space="preserve">
+				<source>Title:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.description" xml:space="preserve">
+				<source>Description:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.languages" xml:space="preserve">
+				<source>Priority applies to languages:</source>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.element" xml:space="preserve">
+				<source>Element(s):</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

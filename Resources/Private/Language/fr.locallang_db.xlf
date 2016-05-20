@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="fr" datatype="plaintext" original="messages" date="2015-07-30T00:31:04Z" product-name="l10nmgr">
+		<header/>
+		<body>
+			<trans-unit id="tx_l10nmgr_cfg" xml:space="preserve" approved="yes">
+				<source>L10N Manager Configuration</source>
+				<target>Configuration L10N-Manager</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.title" xml:space="preserve" approved="yes">
+				<source>Title:</source>
+				<target>Nom:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.filenameprefix" xml:space="preserve" approved="yes">
+				<source>Export filenameprefix:</source>
+				<target>Préfixe du nom du fichier exporté:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.incfcewithdefaultall" xml:space="preserve" approved="yes">
+				<source>Include FCE with default language:</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.0" xml:space="preserve" approved="yes">
+				<source>This page only</source>
+				<target>Cette page seulement</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.1" xml:space="preserve" approved="yes">
+				<source>1 deep</source>
+				<target>1 niveau</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.2" xml:space="preserve" approved="yes">
+				<source>2 deep</source>
+				<target>2 niveaux</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.3" xml:space="preserve" approved="yes">
+				<source>3 deep</source>
+				<target>3 niveaux</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.4" xml:space="preserve" approved="yes">
+				<source>Infinite</source>
+				<target>Infinis</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth.I.-1" xml:space="preserve" approved="yes">
+				<source>Current page</source>
+				<target>Page actuelle</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.depth" xml:space="preserve" approved="yes">
+				<source>Depth of page levels:</source>
+				<target>Profondeur</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode.I.0" xml:space="preserve" approved="yes">
+				<source>Render ALL items (slow and huge)</source>
+				<target>Afficher tous les éléments (lent et large)</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode.I.1" xml:space="preserve" approved="yes">
+				<source>Render overview with details (slow but slim)</source>
+				<target>Vue d'ensemble avec détails (lent mais moins large)</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode.I.2" xml:space="preserve" approved="yes">
+				<source>Render overview witn no details (fast and slim)</source>
+				<target>Vue d'ensemble sans détails (vite et petit)</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.displaymode" xml:space="preserve" approved="yes">
+				<source>Display mode:</source>
+				<target>Mode d'affichage:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.0" xml:space="preserve" approved="yes">
+				<source>11</source>
+				<target>11</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.1" xml:space="preserve" approved="yes">
+				<source>22</source>
+				<target>22</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.2" xml:space="preserve" approved="yes">
+				<source>33</source>
+				<target>33</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist.I.3" xml:space="preserve" approved="yes">
+				<source>44</source>
+				<target>44</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.tablelist" xml:space="preserve" approved="yes">
+				<source>Tables to export:</source>
+				<target>Tableaux à exporter:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.exclude" xml:space="preserve" approved="yes">
+				<source>Exclude elements (comma list of &quot;table:uid&quot; pairs):</source>
+				<target>Eléments à exclure (valeurs séparées par virgule: &quot;tableau:uid,
+				tableau:uid&quot;):
+			</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.include" xml:space="preserve" approved="yes">
+				<source>Include elements (comma list of &quot;table:uid&quot; pairs):</source>
+				<target>Eléments à inclure (valeurs séparées par virgule: &quot;tableau:uid,
+				tableau:uid&quot;):
+			</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.sourceLang" xml:space="preserve" approved="yes">
+				<source>Source language:</source>
+				<target>Langue source:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.translationLang" xml:space="preserve" approved="yes">
+				<source>Target language:</source>
+				<target>Langue cible:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.crdate" xml:space="preserve" approved="yes">
+				<source>Date of export</source>
+				<target>Date de la traduction</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.exporttablelist" xml:space="preserve" approved="yes">
+				<source>Exported tables</source>
+				<target>Tableaux exportés</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_export" xml:space="preserve" approved="yes">
+				<source>L10N Manager exports</source>
+				<target>Fichiers exportés</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities" xml:space="preserve" approved="yes">
+				<source>Localization priority</source>
+				<target>Priorité</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.title" xml:space="preserve" approved="yes">
+				<source>Title:</source>
+				<target>Titre:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.description" xml:space="preserve" approved="yes">
+				<source>Description:</source>
+				<target>Description:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.languages" xml:space="preserve" approved="yes">
+				<source>Priority applies to languages:</source>
+				<target>Priorité de langues:</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_priorities.element" xml:space="preserve" approved="yes">
+				<source>Element(s):</source>
+				<target>Elément(s):</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
