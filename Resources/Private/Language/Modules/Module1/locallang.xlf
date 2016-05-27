@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:30:10Z" product-name="l10nmgr">
+		<header/>
+		<body>
+			<trans-unit id="general.title" xml:space="preserve">
+				<source>L10N Manager</source>
+			</trans-unit>
+			<trans-unit id="general.no_data" xml:space="preserve">
+				<source>No configurations are available.</source>
+			</trans-unit>
+			<trans-unit id="general.description.message" xml:space="preserve">
+				<source>Please select one of the following L10N Manager configurations to
+				start the export/import (click on the title).
+			</source>
+			</trans-unit>
+			<trans-unit id="general.list.configuration.title" xml:space="preserve">
+				<source>Available configurations:</source>
+			</trans-unit>
+			<trans-unit id="general.list.headline.info.title" xml:space="preserve">
+				<source>Info</source>
+			</trans-unit>
+			<trans-unit id="general.list.headline.title.title" xml:space="preserve">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="general.list.headline.path.title" xml:space="preserve">
+				<source>Path</source>
+			</trans-unit>
+			<trans-unit id="general.list.headline.depth.title" xml:space="preserve">
+				<source>Depth</source>
+			</trans-unit>
+			<trans-unit id="general.list.headline.pid.title" xml:space="preserve">
+				<source>PID</source>
+			</trans-unit>
+			<trans-unit id="general.list.headline.tables.title" xml:space="preserve">
+				<source>Tables</source>
+			</trans-unit>
+			<trans-unit id="general.list.headline.exclude.title" xml:space="preserve">
+				<source>Exclude</source>
+			</trans-unit>
+			<trans-unit id="general.list.headline.include.title" xml:space="preserve">
+				<source>Include</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.pid.title" xml:space="preserve">
+				<source>Parent page:</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.title.title" xml:space="preserve">
+				<source>Title:</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.filenameprefix.title" xml:space="preserve">
+				<source>Filename:</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.depth.title" xml:space="preserve">
+				<source>Depth:</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.sourceLangStaticId.title" xml:space="preserve">
+				<source>Language:</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.default" xml:space="preserve">
+				<source>Default</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.tablelist.title" xml:space="preserve">
+				<source>Tables:</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.exclude.title" xml:space="preserve">
+				<source>Exclude:</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.include.title" xml:space="preserve">
+				<source>Include:</source>
+			</trans-unit>
+			<trans-unit id="general.list.headline.incfcewithdefaultlanguage.title" xml:space="preserve">
+				<source>Default FCE</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.displaymode.title" xml:space="preserve">
+				<source>Display mode:</source>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.incfcewithdefaultlanguage.title" xml:space="preserve">
+				<source>Include FCE width default language:
+			</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

@@ -3,19 +3,24 @@ namespace Localizationteam\L10nmgr\Model;
 
 /***************************************************************
  *  Copyright notice
+ *
  *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
  *  All rights reserved
+ *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
+ *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
+ *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
+ *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
@@ -25,6 +30,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Function for managing the Import of CAT XML
  *
  * @author  Daniel Poetzinger <ext@aoemedia.de>
+ *
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
@@ -77,7 +83,8 @@ class CatXmlImportManager
         global $LANG;
 
         $fileContent = GeneralUtility::getUrl($this->file);
-        $this->xmlNodes = GeneralUtility::xml2tree(str_replace('&nbsp;', '&#160;', $fileContent),
+        $this->xmlNodes = GeneralUtility::xml2tree(str_replace('&nbsp;', '&#160;',
+            $fileContent),
             3); // For some reason PHP chokes on incoming  &nbsp; in XML!
 
         if (!is_array($this->xmlNodes)) {
@@ -116,18 +123,27 @@ class CatXmlImportManager
         $error = array();
 
         if (!isset($this->headerData['t3_formatVersion']) || $this->headerData['t3_formatVersion'] != L10NMGR_FILEVERSION) {
-            $error[] = sprintf($LANG->getLL('import.manager.error.version.message'),
-                $this->headerData['t3_formatVersion'], L10NMGR_FILEVERSION);
+            $error[] = sprintf(
+                $LANG->getLL('import.manager.error.version.message'),
+                $this->headerData['t3_formatVersion'],
+                L10NMGR_FILEVERSION
+            );
         }
         if (!isset($this->headerData['t3_workspaceId']) || $this->headerData['t3_workspaceId'] != $GLOBALS['BE_USER']->workspace) {
             $GLOBALS['BE_USER']->workspace = $this->headerData['t3_workspaceId'];
-            $error[] = sprintf($LANG->getLL('import.manager.error.workspace.message'), $GLOBALS['BE_USER']->workspace,
-                $this->headerData['t3_workspaceId']);
+            $error[] = sprintf(
+                $LANG->getLL('import.manager.error.workspace.message'),
+                $GLOBALS['BE_USER']->workspace,
+                $this->headerData['t3_workspaceId']
+            );
         }
         if (!isset($this->headerData['t3_sysLang']) || $this->headerData['t3_sysLang'] != $this->sysLang) {
 
-            $error[] = sprintf($LANG->getLL('import.manager.error.language.message'), $this->sysLang,
-                $this->headerData['t3_sysLang']);
+            $error[] = sprintf(
+                $LANG->getLL('import.manager.error.language.message'),
+                $this->sysLang,
+                $this->headerData['t3_sysLang']
+            );
         }
         if (count($error) > 0) {
             $this->_errorMsg = array_merge($this->_errorMsg, $error);
@@ -143,7 +159,8 @@ class CatXmlImportManager
         global $LANG;
 
         $catXmlString = $this->xmlString;
-        $this->xmlNodes = GeneralUtility::xml2tree(str_replace('&nbsp;', '&#160;', $catXmlString),
+        $this->xmlNodes = GeneralUtility::xml2tree(str_replace('&nbsp;', '&#160;',
+            $catXmlString),
             3); // For some reason PHP chokes on incoming &nbsp; in XML!
 
         if (!is_array($this->xmlNodes)) {
@@ -171,18 +188,27 @@ class CatXmlImportManager
         $error = array();
 
         if (!isset($this->headerData['t3_formatVersion']) || $this->headerData['t3_formatVersion'] != L10NMGR_FILEVERSION) {
-            $error[] = sprintf($LANG->getLL('import.manager.error.version.message'),
-                $this->headerData['t3_formatVersion'], L10NMGR_FILEVERSION);
+            $error[] = sprintf(
+                $LANG->getLL('import.manager.error.version.message'),
+                $this->headerData['t3_formatVersion'],
+                L10NMGR_FILEVERSION
+            );
         }
         if (!isset($this->headerData['t3_workspaceId']) || $this->headerData['t3_workspaceId'] != $GLOBALS['BE_USER']->workspace) {
-            $error[] = sprintf($LANG->getLL('import.manager.error.workspace.message'), $GLOBALS['BE_USER']->workspace,
-                $this->headerData['t3_workspaceId']);
+            $error[] = sprintf(
+                $LANG->getLL('import.manager.error.workspace.message'),
+                $GLOBALS['BE_USER']->workspace,
+                $this->headerData['t3_workspaceId']
+            );
         }
         if (!isset($this->headerData['t3_sysLang'])) {
             //if (!isset($this->headerData['t3_sysLang']) || $this->headerData['t3_sysLang'] != $this->sysLang) {
 
-            $error[] = sprintf($LANG->getLL('import.manager.error.language.message'), $this->sysLang,
-                $this->headerData['t3_sysLang']);
+            $error[] = sprintf(
+                $LANG->getLL('import.manager.error.language.message'),
+                $this->sysLang,
+                $this->headerData['t3_sysLang']
+            );
         }
         if (count($error) > 0) {
             $this->_errorMsg = array_merge($this->_errorMsg, $error);
@@ -207,7 +233,6 @@ class CatXmlImportManager
      * Get pageGrp IDs for preview link generation
      *
      * @param   array    XML nodes from CATXML
-     *
      * @return  array    Page IDs for preview
      */
     function getPidsFromCATXMLNodes(&$xmlNodes)
@@ -227,7 +252,6 @@ class CatXmlImportManager
      * Get uids for which localizations shall be removed on 2nd import if option checked
      *
      * @param   array    XML nodes from CATXML
-     *
      * @return  array    Uids for which localizations shall be removed
      */
     function getDelL10NDataFromCATXMLNodes(&$xmlNodes)
@@ -254,7 +278,6 @@ class CatXmlImportManager
      * Delete previous localisations
      *
      * @param   array    table:id combinations to be deleted
-     *
      * @return  int    Number of deleted elements
      */
     function delL10N($delL10NData)
@@ -274,11 +297,11 @@ class CatXmlImportManager
             $where .= "= $elementUid AND sys_language_uid = " . $this->headerData['t3_sysLang'] . " AND t3ver_wsid = " . $this->headerData['t3_workspaceId'];
             if ($table == 'pages') {
                 $table = 'pages_language_overlay';
-                $where = 'pid = ' . (int)$elementUid . ' AND sys_language_uid = ' . (int)$this->headerData['t3_sysLang'] . ' AND t3ver_wsid = ' . (int)$this->headerData['t3_workspaceId'];
+                $where = 'pid = ' . (int)$elementUid  . ' AND sys_language_uid = ' . (int)$this->headerData['t3_sysLang'] . ' AND t3ver_wsid = ' . (int)$this->headerData['t3_workspaceId'];
             }
             $delDataQuery = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid', $table, $where, '', '', '', 'uid');
-            if (!empty($delDataQuery)) {
-                foreach ($delDataQuery as $uid => $item) {
+            if(!empty($delDataQuery)) {
+                foreach($delDataQuery as $uid => $item) {
                     $dataHandler->deleteAction($table, $uid);
                 }
             }

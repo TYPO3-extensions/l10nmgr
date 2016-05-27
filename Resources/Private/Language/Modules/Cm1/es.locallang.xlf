@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="es" datatype="plaintext" original="messages" date="2015-07-30T00:29:38Z" product-name="l10nmgr">
+		<header/>
+		<body>
+			<trans-unit id="general.action.refresh.button.title" xml:space="preserve" approved="yes">
+				<source>Refresh</source>
+				<target>Actualizar</target>
+			</trans-unit>
+			<trans-unit id="general.action.save.button.title" xml:space="preserve" approved="yes">
+				<source>Save</source>
+				<target>Guardar</target>
+			</trans-unit>
+			<trans-unit id="general.action.cancel.button.title" xml:space="preserve" approved="yes">
+				<source>Cancel</source>
+				<target>Cancelar</target>
+			</trans-unit>
+			<trans-unit id="general.action.blank.title" xml:space="preserve" approved="yes">
+				<source>--Select Action--</source>
+				<target>--Seleccionar una acción--</target>
+			</trans-unit>
+			<trans-unit id="general.action.edit.link.title" xml:space="preserve" approved="yes">
+				<source>Overview with links</source>
+				<target>Visión general con enlaces</target>
+			</trans-unit>
+			<trans-unit id="general.action.edit.inline.title" xml:space="preserve" approved="yes">
+				<source>Online translation</source>
+				<target>Traducción en línea</target>
+			</trans-unit>
+			<trans-unit id="general.action.export.excel.title" xml:space="preserve" approved="yes">
+				<source>Excel export/import</source>
+				<target>Excel:exporte/importe</target>
+			</trans-unit>
+			<trans-unit id="general.action.export.xml.title" xml:space="preserve" approved="yes">
+				<source>XML export/import</source>
+				<target>XML:exporte/importe</target>
+			</trans-unit>
+			<trans-unit id="general.action.export.xml.button.title" xml:space="preserve" approved="yes">
+				<source>Export</source>
+				<target>Exportar</target>
+			</trans-unit>
+			<trans-unit id="general.action.import.xml.button.title" xml:space="preserve" approved="yes">
+				<source>Import</source>
+				<target>Importar</target>
+			</trans-unit>
+			<trans-unit id="general.access.error.title" xml:space="preserve" approved="yes">
+				<source>ERROR: User has no access to edit any translations!</source>
+				<target>ERROR: El usuario no puede editar las traducciones en este
+				idioma!
+			</target>
+			</trans-unit>
+			<trans-unit id="general.title" xml:space="preserve" approved="yes">
+				<source>L10N Export/Import</source>
+				<target>L10N: exporte/importe</target>
+			</trans-unit>
+			<trans-unit id="general.export.configuration.title" xml:space="preserve" approved="yes">
+				<source>Configuration of translation object:</source>
+				<target>Configuración del objeto de traducción:</target>
+			</trans-unit>
+			<trans-unit id="general.export.configuration.error.title" xml:space="preserve" approved="yes">
+				<source>ERROR: No valid l10nmgr config!</source>
+				<target>ERROR: Configuración l10nmgr inválida!</target>
+			</trans-unit>
+			<trans-unit id="general.export.choose.action.title" xml:space="preserve" approved="yes">
+				<source>Choose your action</source>
+				<target>Qué quiere hacer?</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.depth.title" xml:space="preserve" approved="yes">
+				<source>Depth</source>
+				<target>Profundidad</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.tables" xml:space="preserve" approved="yes">
+				<source>Tables</source>
+				<target>Tablas</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.exclude.title" xml:space="preserve" approved="yes">
+				<source>Exclude</source>
+				<target>Excluir</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.include.title" xml:space="preserve" approved="yes">
+				<source>Include</source>
+				<target>Incluir</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.incfcewithdefaultlanguage.title" xml:space="preserve" approved="yes">
+				<source>Default FCE</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="file.settings.downloads.title" xml:space="preserve" approved="yes">
+				<source>Download settings files</source>
+				<target>Descargar archivos de configuración de etiquetas:</target>
+			</trans-unit>
+			<trans-unit id="file.settings.available.title" xml:space="preserve" approved="yes">
+				<source>Available settings files:</source>
+				<target>Archivos de configuración disponibles:</target>
+			</trans-unit>
+			<trans-unit id="file.settings.across.title" xml:space="preserve" approved="yes">
+				<source>across (.dst)</source>
+				<target>across (.dst)</target>
+			</trans-unit>
+			<trans-unit id="file.settings.dejaVu.title" xml:space="preserve" approved="yes">
+				<source>DéjàVu (.dvflt)</source>
+				<target>DéjàVu (.dvflt)</target>
+			</trans-unit>
+			<trans-unit id="file.settings.memoq.title" xml:space="preserve" approved="yes">
+				<source>memoQ (.xml)</source>
+				<target>memoQ (.xml)</target>
+			</trans-unit>
+			<trans-unit id="file.settings.memoq2013-2014.title" xml:space="preserve" approved="yes">
+				<source>memoQ 2013/2014 (.xml)</source>
+				<target>memoQ 2013/2014 (.xml)</target>
+			</trans-unit>
+			<trans-unit id="file.settings.transit.title" xml:space="preserve" approved="yes">
+				<source>STAR Transit (.ffd)</source>
+				<target>STAR Transit (.ffd)</target>
+			</trans-unit>
+			<trans-unit id="file.settings.sdltrados2007.title" xml:space="preserve" approved="yes">
+				<source>SDL Trados 2007 (.ini)</source>
+				<target>SDL Trados 2007 (.ini)</target>
+			</trans-unit>
+			<trans-unit id="file.settings.sdltrados2009.title" xml:space="preserve" approved="yes">
+				<source>SDL Trados 2009 (.sdlfiletype)</source>
+				<target>SDL Trados 2009 (.sdlfiletype)</target>
+			</trans-unit>
+			<trans-unit id="file.settings.sdltrados2011-2014.title" xml:space="preserve" approved="yes">
+				<source>SDL Trados Studio 2011/2014 (.sdlftsettings)</source>
+				<target>SDL Trados Studio 2011/2014 (.sdlftsettings)</target>
+			</trans-unit>
+			<trans-unit id="file.settings.sdlpassolo.title" xml:space="preserve" approved="yes">
+				<source>SDL Passolo 2007 / 2009 (.xfg)</source>
+				<target>SDL Passolo 2007 / 2009 (.xfg)</target>
+			</trans-unit>
+			<trans-unit id="file.settings.download.title" xml:space="preserve" approved="yes">
+				<source>Download settings file</source>
+				<target>Descargar archivo de configuración</target>
+			</trans-unit>
+			<trans-unit id="inlineedit.save.alert.title" xml:space="preserve" approved="yes">
+				<source>You are about to create/update ALL localizations in this form?
+				Continue?
+			</source>
+				<target>Está a punto de crear/actualizar las traducciones en este
+				formulario. Desea continuar?
+			</target>
+			</trans-unit>
+			<trans-unit id="inlineedit.cancel.alert.title" xml:space="preserve" approved="yes">
+				<source>You are about to discard any changes you made. Continue?
+			</source>
+				<target>Está a punto de descartar los cambios realizados en este
+				formulario. Desea continuar?
+			</target>
+			</trans-unit>
+			<trans-unit id="export.xml.headline.title" xml:space="preserve" approved="yes">
+				<source>Export</source>
+				<target>Exporte:</target>
+			</trans-unit>
+			<trans-unit id="export.xml.source-language.title" xml:space="preserve" approved="yes">
+				<source>Alternative source language:</source>
+				<target>Forzar idioma de salida:</target>
+			</trans-unit>
+			<trans-unit id="export.xml.new.title" xml:space="preserve" approved="yes">
+				<source>New/Changed content only</source>
+				<target>Traducir sólo los contenidos nuevos/modificados</target>
+			</trans-unit>
+			<trans-unit id="export.xml.noHidden.title" xml:space="preserve" approved="yes">
+				<source>No hidden content</source>
+				<target>Non esportare contenuti nascosti</target>
+			</trans-unit>
+			<trans-unit id="export.xml.check_exports.title" xml:space="preserve" approved="yes">
+				<source>Check for already exported content</source>
+				<target>Verificar si los contenidos ya fueron exportados</target>
+			</trans-unit>
+			<trans-unit id="export.xml.no_check_xml.title" xml:space="preserve" approved="yes">
+				<source>Do not check XML</source>
+				<target>No verificar formato XML</target>
+			</trans-unit>
+			<trans-unit id="export.xml.checkXml.title" xml:space="preserve" approved="yes">
+				<source>Check XML</source>
+				<target>Verificar formato XML</target>
+			</trans-unit>
+			<trans-unit id="export.xml.checkUtf8.title" xml:space="preserve" approved="yes">
+				<source>Check UTF-8</source>
+				<target>Verificar codificación</target>
+			</trans-unit>
+			<trans-unit id="export.xml.ftp.title" xml:space="preserve" approved="yes">
+				<source>Send to FTP server</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.process.error.empty.message" xml:space="preserve" approved="yes">
+				<source>Empty element</source>
+				<target>Elemento vacío</target>
+			</trans-unit>
+			<trans-unit id="export.process.error.invalid.message" xml:space="preserve" approved="yes">
+				<source>Detected invalid characters in element</source>
+				<target>Carácter inválido en el elemento</target>
+			</trans-unit>
+			<trans-unit id="export.process.duplicate.title" xml:space="preserve" approved="yes">
+				<source>Contents are already exported for translation!</source>
+				<target>Contenidos ya exportados para la traducción!</target>
+			</trans-unit>
+			<trans-unit id="export.process.duplicate.message" xml:space="preserve" approved="yes">
+				<source>Please select one of the listed exports below.</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.overview.date.label" xml:space="preserve" approved="yes">
+				<source>Date</source>
+				<target>Fecha</target>
+			</trans-unit>
+			<trans-unit id="export.overview.configuration.label" xml:space="preserve" approved="yes">
+				<source>Configuration</source>
+				<target>Configuración</target>
+			</trans-unit>
+			<trans-unit id="export.overview.type.label" xml:space="preserve" approved="yes">
+				<source>Type</source>
+				<target>Tipo</target>
+			</trans-unit>
+			<trans-unit id="export.overview.targetlanguage.label" xml:space="preserve" approved="yes">
+				<source>Target language</source>
+				<target>Idioma de destino</target>
+			</trans-unit>
+			<trans-unit id="export.overview.filename.label" xml:space="preserve" approved="yes">
+				<source>Filename</source>
+				<target>Nombre del archivo</target>
+			</trans-unit>
+			<trans-unit id="export.download.error" xml:space="preserve" approved="yes">
+				<source>Export failed</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.download.success" xml:space="preserve" approved="yes">
+				<source>Export successful</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.download.success.detail" xml:space="preserve" approved="yes">
+				<source>To download the export click on %s.</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.ftp.error" xml:space="preserve" approved="yes">
+				<source>FTP upload failed</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.ftp.success" xml:space="preserve" approved="yes">
+				<source>FTP upload successful</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.ftp.success.detail" xml:space="preserve" approved="yes">
+				<source>Export successfully uploaded to %s on FTP server</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.ftp.warnings" xml:space="preserve" approved="yes">
+				<source>Some problems occurred during export however</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.ftp.connection_failed" xml:space="preserve" approved="yes">
+				<source>Failed to connect to FTP server</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.ftp.login_failed" xml:space="preserve" approved="yes">
+				<source>Could not log into FTP server with user %s</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="export.ftp.upload_failed" xml:space="preserve" approved="yes">
+				<source>Could not upload file %1$s to FTP server in path %2$s</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.xml.headline.title" xml:space="preserve" approved="yes">
+				<source>Import</source>
+				<target>Importe:</target>
+			</trans-unit>
+			<trans-unit id="import.xml.old-format.title" xml:space="preserve" approved="yes">
+				<source>Import old format (v2)</source>
+				<target>Importar formato previo (v2)</target>
+			</trans-unit>
+			<trans-unit id="import.xml.old-format.message" xml:space="preserve" approved="yes">
+				<source>Import uses the old format without pageGrp element and
+				checks!
+			</source>
+				<target>Importe del formato sin elementos pageGrp y sin verificación!
+			</target>
+			</trans-unit>
+			<trans-unit id="import.xml.asdefaultlanguage.title" xml:space="preserve" approved="yes">
+				<source>Import as default language</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.xml.asdefaultlanguage.message" xml:space="preserve" approved="yes">
+				<source>If set this setting will overwrite the default language
+				during the import.
+			</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.xml.delL10N.title" xml:space="preserve" approved="yes">
+				<source>Delete localizations before import</source>
+				<target>Eliminar traducciones antes de importar</target>
+			</trans-unit>
+			<trans-unit id="import.xml.make_preview_link.title" xml:space="preserve" approved="yes">
+				<source>Generate preview links</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.xml.preview_links.title" xml:space="preserve" approved="yes">
+				<source>Preview links</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.xml.done.message" xml:space="preserve" approved="yes">
+				<source>Import done!</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.xml.delL10N.count.message" xml:space="preserve" approved="yes">
+				<source>Deleted %s localizations.</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.xml.delL10N.message" xml:space="preserve" approved="yes">
+				<source>Previous localizations will be deleted before importing new
+				ones!
+			</source>
+				<target>¡Las localizaciones anteriores se eliminarán previo al importe!
+			</target>
+			</trans-unit>
+			<trans-unit id="import.error.title" xml:space="preserve" approved="yes">
+				<source>Error in Import:</source>
+				<target>Error durante el importe:</target>
+			</trans-unit>
+			<trans-unit id="import.success.message" xml:space="preserve" approved="yes">
+				<source>Import done!</source>
+				<target>Importe completado!</target>
+			</trans-unit>
+			<trans-unit id="import.manager.error.parsing.xmlstring.message" xml:space="preserve" approved="yes">
+				<source>Error parsing XML string</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="import.manager.error.parsing.xml2tree.message" xml:space="preserve" approved="yes">
+				<source>XML2Tree parsing error:</source>
+				<target>Error de XML2Tree:</target>
+			</trans-unit>
+			<trans-unit id="import.manager.error.missing.meta.message" xml:space="preserve" approved="yes">
+				<source>Could not find meta data in XML!</source>
+				<target>No se encontraron metadatos en XML!</target>
+			</trans-unit>
+			<trans-unit id="import.manager.error.version.message" xml:space="preserve" approved="yes">
+				<source>Incorrect Version of the format: %s (required: %s)
+			</source>
+				<target>Versión de formato incorrecta: %s (requerida: %s)
+			</target>
+			</trans-unit>
+			<trans-unit id="import.manager.error.workspace.message" xml:space="preserve" approved="yes">
+				<source>Export was taken from a diffrent Workspace, please
+				import in this workspace to avoid problems: Current %s (required: %s)
+			</source>
+				<target>El exporte proviene de otro espacio de trabajo. Por
+				favor, importe los archivos en el espacio de trabajo del que fueron exportados para evitar errores.
+				Espacio de trabajo actual: %s (requerido: %s)
+			</target>
+			</trans-unit>
+			<trans-unit id="import.manager.error.language.message" xml:space="preserve" approved="yes">
+				<source>'Export was taken from a diffrent language, please
+				select correct language above! current: %s (required: %s)
+			</source>
+				<target>'El exporte contiene otro idioma. Por favor, seleccione
+				el idioma correcto en la lista superior! Idioma actual: %s (requerido: %s)
+			</target>
+			</trans-unit>
+			<trans-unit id="misc.messages.title" xml:space="preserve" approved="yes">
+				<source>Messages:</source>
+				<target>Mensajes:</target>
+			</trans-unit>
+			<trans-unit id="render_overview.nochange.message" xml:space="preserve" approved="yes">
+				<source>No change.</source>
+				<target>Ninguna modificación.</target>
+			</trans-unit>
+			<trans-unit id="render_overview.new.message" xml:space="preserve" approved="yes">
+				<source>NEW</source>
+				<target>NUEVO</target>
+			</trans-unit>
+			<trans-unit id="render_overview.nodiff.message" xml:space="preserve" approved="yes">
+				<source>No diff available.</source>
+				<target>Ningún Diff disponible.</target>
+			</trans-unit>
+			<trans-unit id="render_overview.clickedit.message" xml:space="preserve" approved="yes">
+				<source>Click to edit</source>
+				<target>Haga clic para editar</target>
+			</trans-unit>
+			<trans-unit id="render_overview.clicklocalize.message" xml:space="preserve" approved="yes">
+				<source>Click to localize</source>
+				<target>Haga clic para traducir</target>
+			</trans-unit>
+			<trans-unit id="l10nmgr.documentation.title" xml:space="preserve" approved="yes">
+				<source>Documentation</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.suject.msg" xml:space="preserve" approved="yes">
+				<source>Translation job (%1$s-%2$s) from TYPO3 site: %3$s</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.greeting.msg" xml:space="preserve" approved="yes">
+				<source>Dear translator or translation project manager,</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.new_translation_job.msg" xml:space="preserve" approved="yes">
+				<source>There is a new translation job (%1$s-%2$s) available from TYPO3
+				site at %3$s.
+			</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.info.msg" xml:space="preserve" approved="yes">
+				<source>For information how to download/translate this file please refer to the
+				documentation.
+			</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.info.import.msg" xml:space="preserve" approved="yes">
+				<source>The translated XML file can be imported using the TYPO3 Localization
+				Manager (l10nmgr).
+			</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.goodbye.msg" xml:space="preserve" approved="yes">
+				<source>Kind regards,</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.info.exportef_file.msg" xml:space="preserve" approved="yes">
+				<source>Exported file:</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="email.new_translation_job_attached.msg" xml:space="preserve" approved="yes">
+				<source>Attached is an XML file for translation (%1$s-%2$s)
+				from TYPO3 site at %3$s.
+			</source>
+				<target></target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

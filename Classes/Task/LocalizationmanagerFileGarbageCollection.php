@@ -3,27 +3,34 @@ namespace Localizationteam\L10nmgr\Task;
 
 /***************************************************************
  *  Copyright notice
+ *
  *  (c) 2011 Francois Suter <typo3@cobweb.ch>
  *  All rights reserved
+ *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
+ *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
+ *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
+ *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * L10N Manager file garbage collection task
+ *
  * The L10N Manager creates quite a large number of output files. It is necessary
  * to clean them up regularly, lest they accumulate and clog the file system.
+ *
  * Credits: some code taken from task tx_scheduler_RecyclerGarbageCollection by Kai Vogel
  *
  * @author Francois Suter <typo3@cobweb.ch>
@@ -59,7 +66,10 @@ class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
     {
         // There is no file ctime on windows, so this task disables itself if OS = win
         if (TYPO3_OS == 'WIN') {
-            throw new Exception('This task is not reliable on Windows OS', 1323272367);
+            throw new Exception(
+                'This task is not reliable on Windows OS',
+                1323272367
+            );
         }
 
         // Calculate a reference timestamp, based on age of files to delete
@@ -82,10 +92,8 @@ class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
      * old ones.
      *
      * @throws RuntimeException If folders are not found or files can not be deleted
-     *
      * @param string $directory Path to the directory
      * @param integer $timestamp Timestamp of the last file modification
-     *
      * @return boolean TRUE if success
      */
     protected function cleanUpDirectory($directory, $timestamp)
@@ -94,7 +102,10 @@ class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
 
         // Check if given directory exists
         if (!(@is_dir($fullPathToDirectory))) {
-            throw new RuntimeException('Given directory "' . $fullPathToDirectory . '" does not exist', 1323272107);
+            throw new RuntimeException(
+                'Given directory "' . $fullPathToDirectory . '" does not exist',
+                1323272107
+            );
         }
 
         // Find all files in the directory
@@ -108,8 +119,10 @@ class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
                     $fileObject->getFilename()) && $fileObject->getCTime() < $timestamp
             ) {
                 if (!(@unlink($fileObject->getRealPath()))) {
-                    throw new RuntimeException('Could not remove file "' . $fileObject->getRealPath() . '"',
-                        1323272115);
+                    throw new RuntimeException(
+                        'Could not remove file "' . $fileObject->getRealPath() . '"',
+                        1323272115
+                    );
                 }
             }
         }

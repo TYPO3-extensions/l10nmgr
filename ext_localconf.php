@@ -13,7 +13,7 @@ if (TYPO3_MODE == 'BE') {
         'EXT:' . $_EXTKEY . '/Classes/Cli/Import.php',
         '_CLI_user'
     );
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys']['l10nmgr_export'] = array(
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys']['l10nmgr_export'] = array(
         'EXT:' . $_EXTKEY . '/Classes/Cli/Export.php',
         '_CLI_user'
     );

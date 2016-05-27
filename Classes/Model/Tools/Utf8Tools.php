@@ -1,6 +1,5 @@
 <?php
 namespace Localizationteam\L10nmgr\Model\Tools;
-
 /**
  * Contains utf8 tools (taken from sourceforge phputf8 project)
  *
@@ -36,16 +35,15 @@ class Utf8Tools
      * Note: modified to include full ASCII range including control chars
      *
      * @see http://www.w3.org/International/questions/qa-forms-utf-8
-     *
      * @param string
-     *
      * @return mixed integer byte index or FALSE if no bad found
      * @package utf8
      * @subpackage bad
      */
     static public function utf8_bad_find($str)
     {
-        $UTF8_BAD = '([\x00-\x7F]' .                       # ASCII (including control chars)
+        $UTF8_BAD =
+            '([\x00-\x7F]' .                       # ASCII (including control chars)
             '|[\xC2-\xDF][\x80-\xBF]' .            # non-overlong 2-byte
             '|\xE0[\xA0-\xBF][\x80-\xBF]' .        # excluding overlongs
             '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' . # straight 3-byte
@@ -77,16 +75,15 @@ class Utf8Tools
      * Note: modified to include full ASCII range including control chars
      *
      * @see http://www.w3.org/International/questions/qa-forms-utf-8
-     *
      * @param string
-     *
      * @return mixed array of integers or FALSE if no bad found
      * @package utf8
      * @subpackage bad
      */
     static public function utf8_bad_findall($str)
     {
-        $UTF8_BAD = '([\x00-\x7F]' .                       # ASCII (including control chars)
+        $UTF8_BAD =
+            '([\x00-\x7F]' .                       # ASCII (including control chars)
             '|[\xC2-\xDF][\x80-\xBF]' .            # non-overlong 2-byte
             '|\xE0[\xA0-\xBF][\x80-\xBF]' .        # excluding overlongs
             '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' . # straight 3-byte
@@ -120,16 +117,15 @@ class Utf8Tools
      * Note: modified to include full ASCII range including control chars
      *
      * @see http://www.w3.org/International/questions/qa-forms-utf-8
-     *
      * @param string
-     *
      * @return string
      * @package utf8
      * @subpackage bad
      */
     static public function utf8_bad_strip($str)
     {
-        $UTF8_BAD = '([\x00-\x7F]' .                       # ASCII (including control chars)
+        $UTF8_BAD =
+            '([\x00-\x7F]' .                       # ASCII (including control chars)
             '|[\xC2-\xDF][\x80-\xBF]' .            # non-overlong 2-byte
             '|\xE0[\xA0-\xBF][\x80-\xBF]' .        # excluding overlongs
             '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' . # straight 3-byte
@@ -160,17 +156,16 @@ class Utf8Tools
      * Note: modified to include full ASCII range including control chars
      *
      * @see http://www.w3.org/International/questions/qa-forms-utf-8
-     *
      * @param string to search
      * @param string to replace bad bytes with (defaults to '?') - use ASCII
-     *
      * @return string
      * @package utf8
      * @subpackage bad
      */
     static public function utf8_bad_replace($str, $replace = '?')
     {
-        $UTF8_BAD = '([\x00-\x7F]' .                       # ASCII (including control chars)
+        $UTF8_BAD =
+            '([\x00-\x7F]' .                       # ASCII (including control chars)
             '|[\xC2-\xDF][\x80-\xBF]' .            # non-overlong 2-byte
             '|\xE0[\xA0-\xBF][\x80-\xBF]' .        # excluding overlongs
             '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' . # straight 3-byte
@@ -219,9 +214,7 @@ class Utf8Tools
      * Note: this function has been modified to simple return true or false
      *
      * @author <hsivonen@iki.fi>
-     *
      * @param string UTF-8 encoded string
-     *
      * @return boolean true if valid
      * @see http://hsivonen.iki.fi/php-utf8/
      * @see utf8_compliant
@@ -324,8 +317,13 @@ class Utf8Tools
                         * Check for illegal sequences and codepoints.
                         */
                         // From Unicode 3.1, non-shortest form is illegal
-                        if (((2 == $mBytes) && ($mUcs4 < 0x0080)) || ((3 == $mBytes) && ($mUcs4 < 0x0800)) || ((4 == $mBytes) && ($mUcs4 < 0x10000)) || (4 < $mBytes) || // From Unicode 3.2, surrogate characters are illegal
-                            (($mUcs4 & 0xFFFFF800) == 0xD800) || // Codepoints outside the Unicode range are illegal
+                        if (((2 == $mBytes) && ($mUcs4 < 0x0080)) ||
+                            ((3 == $mBytes) && ($mUcs4 < 0x0800)) ||
+                            ((4 == $mBytes) && ($mUcs4 < 0x10000)) ||
+                            (4 < $mBytes) ||
+                            // From Unicode 3.2, surrogate characters are illegal
+                            (($mUcs4 & 0xFFFFF800) == 0xD800) ||
+                            // Codepoints outside the Unicode range are illegal
                             ($mUcs4 > 0x10FFFF)
                         ) {
 
@@ -365,9 +363,7 @@ class Utf8Tools
      *
      * @see utf8_is_valid
      * @see http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php#54805
-     *
      * @param string UTF-8 string to check
-     *
      * @return boolean TRUE if string is valid UTF-8
      * @package utf8
      * @subpackage validation

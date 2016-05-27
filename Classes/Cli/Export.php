@@ -8,24 +8,25 @@ namespace Localizationteam\L10nmgr\Cli;
  * @l10ntech.de)
  *  All rights reserved
  *  [...]
+
  */
 
-use Localizationteam\L10nmgr\Model\L10nConfiguration;
-use Localizationteam\L10nmgr\View\CatXmlView;
-use Localizationteam\L10nmgr\View\ExcelXmlView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Controller\CommandLineController;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Lang\LanguageService;
+use Localizationteam\L10nmgr\View\ExcelXmlView;
+use Localizationteam\L10nmgr\View\CatXmlView;
+use Localizationteam\L10nmgr\Model\L10nConfiguration;
 
 if (!defined('TYPO3_cliMode')) {
     die('You cannot run this script directly!');
 }
 
 // Load language support
-/* @var $lang LanguageService */
+/* @var $lang LanguageService*/
 $lang = GeneralUtility::makeInstance(LanguageService::class);
 $fileRef = 'EXT:l10nmgr/Resources/Private/Language/Cli/locallang.xml';
 $lang->includeLLFile($fileRef);
@@ -98,7 +99,6 @@ class Export extends CommandLineController
      * CLI engine
      *
      * @param array $argv Command line arguments
-     *
      * @return string
      */
     public function cli_main($argv)
@@ -218,7 +218,6 @@ class Export extends CommandLineController
      *
      * @param integer $l10ncfg ID of the configuration to load
      * @param integer $tlang ID of the language to translate to
-     *
      * @return string An error message in case of failure
      */
     function exportCATXML($l10ncfg, $tlang)
@@ -237,7 +236,8 @@ class Export extends CommandLineController
         if ($l10nmgrCfgObj->isLoaded()) {
 
             /** @var $l10nmgrGetXML CatXmlView */
-            $l10nmgrGetXML = GeneralUtility::makeInstance(CatXmlView::class, $l10nmgrCfgObj, $tlang);
+            $l10nmgrGetXML = GeneralUtility::makeInstance(CatXmlView::class,
+                $l10nmgrCfgObj, $tlang);
 
             // Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
             if ($l10nmgrCfgObj->getData('sourceLangStaticId') && ExtensionManagementUtility::isLoaded('static_info_tables')) {
@@ -255,7 +255,7 @@ class Export extends CommandLineController
             }
             $hidden = isset($this->cli_args['--hidden']) ? $this->cli_args['--hidden'][0] : 'FALSE';
             if ($hidden === 'TRUE') {
-                $GLOBALS['BE_USER']->uc['moduleData']['tx_l10_nmgr_M1_tx_l10nmgr_cm1']['noHidden'] = true;
+                $GLOBALS['BE_USER']->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden'] = true;
                 $l10nmgrGetXML->setModeNoHidden();
             }
 
@@ -275,7 +275,7 @@ class Export extends CommandLineController
                     if (empty($this->lConf['email_recipient'])) {
                         $this->cli_echo($lang->getLL('error.email.repient_missing.msg') . "\n");
                     } else {
-                        // ToDo: make email configuration run again
+	                    // ToDo: make email configuration run again
                         // $this->emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang);
                     }
                 } else {
@@ -310,7 +310,6 @@ class Export extends CommandLineController
      * @param string $xmlFileName Name of the XML file
      * @param L10nConfiguration $l10nmgrCfgObj L10N Manager configuration object
      * @param integer $tlang ID of the language to translate to
-     *
      * @return string Error message
      */
     function emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang)
@@ -379,7 +378,6 @@ class Export extends CommandLineController
      *
      * @param string $xmlFileName Path to the file to upload
      * @param string $filename Name of the file to upload to
-     *
      * @return string Error message
      */
     function ftpUpload($xmlFileName, $filename)
@@ -414,7 +412,6 @@ class Export extends CommandLineController
      *
      * @param integer $l10ncfg ID of the configuration to load
      * @param integer $tlang ID of the language to translate to
-     *
      * @return string An error message in case of failure
      */
     function exportEXCELXML($l10ncfg, $tlang)
@@ -433,7 +430,8 @@ class Export extends CommandLineController
         if ($l10nmgrCfgObj->isLoaded()) {
 
             /** @var $l10nmgrGetXML ExcelXmlView */
-            $l10nmgrGetXML = GeneralUtility::makeInstance(ExcelXmlView::class, $l10nmgrCfgObj, $tlang);
+            $l10nmgrGetXML = GeneralUtility::makeInstance(ExcelXmlView::class,
+                $l10nmgrCfgObj, $tlang);
 
             // Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
             if ($l10nmgrCfgObj->getData('sourceLangStaticId') && ExtensionManagementUtility::isLoaded('static_info_tables')) {
@@ -451,7 +449,7 @@ class Export extends CommandLineController
             }
             $hidden = isset($this->cli_args['--hidden']) ? $this->cli_args['--hidden'][0] : 'FALSE';
             if ($hidden === 'TRUE') {
-                $GLOBALS['BE_USER']->uc['moduleData']['tx_l10nmgr_M1_tx_l10nmgr_cm1']['noHidden'] = true;
+                $GLOBALS['BE_USER']->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden'] = true;
                 $l10nmgrGetXML->setModeNoHidden();
             }
 

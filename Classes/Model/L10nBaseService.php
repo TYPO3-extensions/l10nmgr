@@ -3,26 +3,32 @@ namespace Localizationteam\L10nmgr\Model;
 
 /***************************************************************
  *  Copyright notice
+ *
  *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
  *  All rights reserved
+ *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
+ *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
+ *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
+ *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
  * baseService class for offering common services like saving translation etc...
@@ -114,7 +120,6 @@ class L10nBaseService
      *
      * @param array $accum Translation configuration
      * @param array $inputArray Array with incoming translation. Must match what is found in $accum
-     *
      * @return mixed False if error - else flexFormDiffArray (if $inputArray was an array and processing was performed.)
      */
     function _submitContentAndGetFlexFormDiff($accum, $inputArray)
@@ -140,7 +145,6 @@ class L10nBaseService
      * Setter for $importAsDefaultLanguage
      *
      * @param boolean $importAsDefaultLanguage
-     *
      * @return void
      */
     public function setImportAsDefaultLanguage($importAsDefaultLanguage)
@@ -153,7 +157,6 @@ class L10nBaseService
      *
      * @param array $accum Translation configuration
      * @param array $inputArray Array with incoming translation. Must match what is found in $accum
-     *
      * @return mixed False if error - else flexFormDiffArray (if $inputArray was an array and processing was performed.)
      */
     function _submitContentAsDefaultLanguageAndGetFlexFormDiff($accum, $inputArray)
@@ -183,6 +186,8 @@ class L10nBaseService
                                         unset($inputArray[$table][$elementUid][$key]);
                                         continue;
                                     }
+                                    #\TYPO3\CMS\Core\Utility\DebugUtility::debug($elementUid);
+
                                     // If FlexForm, we set value in special way:
                                     if ($Tpath) {
                                         if (!is_array($TCEmain_data[$Ttable][$elementUid][$Tfield])) {
@@ -220,6 +225,9 @@ class L10nBaseService
                 $TCEmain_data['pages'] = $TCEmain_data['pages_language_overlay'];
                 unset($TCEmain_data['pages_language_overlay']);
             }
+            #\TYPO3\CMS\Core\Utility\DebugUtility::debug($TCEmain_data);
+            //var_dump($TCEmain_data);
+
             $this->lastTCEMAINCommandsCount = 0;
 
             // Now, submitting translation data:
@@ -263,7 +271,6 @@ class L10nBaseService
      *
      * @param array $accum Translation configuration
      * @param array $inputArray Array with incoming translation. Must match what is found in $accum
-     *
      * @return mixed False if error - else flexFormDiffArray (if $inputArray was an array and processing was performed.)
      */
     function _submitContentAsTranslatedLanguageAndGetFlexFormDiff($accum, $inputArray)
@@ -300,9 +307,9 @@ class L10nBaseService
 
                                     // If new element is required, we prepare for localization
                                     if ($Tuid === 'NEW') {
-                                        if ($table === 'tt_content' && ($gridElementsInstalled === true || $fluxInstalled === true)) {
+                                        if ($table === 'tt_content' && ($gridElementsInstalled === true ||  $fluxInstalled === true)) {
                                             $element = BackendUtility::getRecordRaw($table,
-                                                'uid = ' . (int)$elementUid . ' AND deleted = 0');
+                                                    'uid = ' . (int)$elementUid . ' AND deleted = 0');
                                             if (isset($this->TCEmain_cmd['tt_content'][$elementUid])) {
                                                 unset($this->TCEmain_cmd['tt_content'][$elementUid]);
                                             }
@@ -311,43 +318,42 @@ class L10nBaseService
                                             } else {
                                                 if ($element['tx_gridelements_container'] > 0) {
                                                     $this->depthCounter = 0;
-                                                    $this->recursivelyCheckForRelationParents($element, $Tlang,
-                                                        'tx_gridelements_container', 'tx_gridelements_children');
+                                                    $this->recursivelyCheckForRelationParents($element, $Tlang, 'tx_gridelements_container', 'tx_gridelements_children');
                                                 }
                                                 if ($element['tx_flux_parent'] > 0) {
                                                     $this->depthCounter = 0;
-                                                    $this->recursivelyCheckForRelationParents($element, $Tlang,
-                                                        'tx_flux_parent', 'tx_flux_children');
+                                                    $this->recursivelyCheckForRelationParents($element, $Tlang, 'tx_flux_parent', 'tx_flux_children');
                                                 }
                                             }
                                         } elseif ($table === 'sys_file_reference') {
 
                                             $element = BackendUtility::getRecordRaw($table,
-                                                'uid = ' . (int)$elementUid . ' AND deleted = 0');
-                                            if ($element['uid_foreign'] && $element['tablenames'] && $element['fieldname']) {
-                                                if ($element['tablenames'] === 'pages') {
-                                                    if (isset($this->TCEmain_cmd[$table][$elementUid])) {
-                                                        unset($this->TCEmain_cmd[$table][$elementUid]);
-                                                    }
-                                                    $this->TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
-                                                } else {
-                                                    $parent = BackendUtility::getRecordRaw($element['tablenames'],
-                                                        $TCA[$element['tablenames']]['ctrl']['transOrigPointerField'] . ' = ' . (int)$element['uid_foreign'] . '
-			                                            AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang);
-                                                    if ($parent['uid'] > 0) {
-                                                        if (isset($this->TCEmain_cmd[$element['tablenames']][$element['uid_foreign']])) {
-                                                            unset($this->TCEmain_cmd[$element['tablenames']][$element['uid_foreign']]);
-                                                        }
-                                                        $this->TCEmain_cmd[$element['tablenames']][$element['uid_foreign']]['inlineLocalizeSynchronize'] = $element['fieldname'] . ',localize';
-                                                    }
-                                                }
-                                            }
+		                                        'uid = ' . (int)$elementUid . ' AND deleted = 0');
+	                                        if ($element['uid_foreign'] && $element['tablenames'] && $element['fieldname']) {
+		                                        if ($element['tablenames'] === 'pages') {
+			                                        if (isset($this->TCEmain_cmd[$table][$elementUid])) {
+				                                        unset($this->TCEmain_cmd[$table][$elementUid]);
+			                                        }
+		                                            $this->TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
+		                                        } else {
+			                                        $parent = BackendUtility::getRecordRaw($element['tablenames'],
+				                                        $TCA[$element['tablenames']]['ctrl']['transOrigPointerField'] . ' = ' . (int)$element['uid_foreign'] . '
+			                                            AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang
+			                                        );
+			                                        if ($parent['uid'] > 0) {
+				                                        if (isset($this->TCEmain_cmd[$element['tablenames']][$element['uid_foreign']])) {
+					                                        unset($this->TCEmain_cmd[$element['tablenames']][$element['uid_foreign']]);
+				                                        }
+				                                        $this->TCEmain_cmd[$element['tablenames']][$element['uid_foreign']]['inlineLocalizeSynchronize'] = $element['fieldname'] . ',localize';
+			                                        }
+		                                        }
+	                                        }
                                         } else {
-                                            //print "\nNEW\n";
-                                            if (isset($this->TCEmain_cmd[$table][$elementUid])) {
-                                                unset($this->TCEmain_cmd[$table][$elementUid]);
-                                            }
-                                            $this->TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
+		                                    //print "\nNEW\n";
+	                                        if (isset($this->TCEmain_cmd[$table][$elementUid])) {
+		                                        unset($this->TCEmain_cmd[$table][$elementUid]);
+	                                        }
+		                                    $this->TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
                                         }
                                     }
 
@@ -411,15 +417,16 @@ class L10nBaseService
             $this->lastTCEMAINCommandsCount = 0;
             foreach ($TCEmain_data as $table => $items) {
                 foreach ($TCEmain_data[$table] as $TuidString => $fields) {
-                    if ($table === 'sys_file_reference' && $fields['tablenames'] === 'pages') {
-                        $parent = BackendUtility::getRecordRaw('pages_language_overlay',
-                            'pid = ' . (int)$element['uid_foreign'] . '
-			                AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang);
-                        if ($parent['uid']) {
-                            $fields['tablenames'] = 'pages_language_overlay';
-                            $fields['uid_foreign'] = $parent['uid'];
-                        }
-                    }
+	                if ($table === 'sys_file_reference' && $fields['tablenames'] === 'pages') {
+		                $parent = BackendUtility::getRecordRaw('pages_language_overlay',
+			                'pid = ' . (int)$element['uid_foreign'] . '
+			                AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang
+		                );
+		                if ($parent['uid']) {
+			                $fields['tablenames'] = 'pages_language_overlay';
+			                $fields['uid_foreign'] = $parent['uid'];
+		                }
+	                }
                     list($Tuid, $Tlang, $TdefRecord) = explode('/', $TuidString);
                     $this->lastTCEMAINCommandsCount++;
                     if ($Tuid === 'NEW') {
@@ -498,26 +505,27 @@ class L10nBaseService
      * @param $parentField
      * @param $childrenField
      */
-    function recursivelyCheckForRelationParents($element, $Tlang, $parentField, $childrenField)
-    {
+    function recursivelyCheckForRelationParents($element, $Tlang, $parentField, $childrenField) {
         global $TCA;
-        $this->depthCounter++;
+        $this->depthCounter ++;
         if ($this->depthCounter < 100 && !isset($this->checkedParentRecords[$parentField][$element['uid']])) {
             $this->checkedParentRecords[$parentField][$element['uid']] = true;
             $translatedParent = BackendUtility::getRecordRaw('tt_content',
                 $TCA['tt_content']['ctrl']['transOrigPointerField'] . ' = ' . (int)$element[$parentField] . '
-	            AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang);
+	            AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang
+            );
             if ($translatedParent['uid'] > 0) {
                 $this->TCEmain_cmd['tt_content'][$translatedParent['uid']]['inlineLocalizeSynchronize'] = $childrenField . ',localize';
             } else {
                 if ($element[$parentField] > 0) {
                     $parent = BackendUtility::getRecordRaw('tt_content',
-                        'uid = ' . (int)$element[$parentField] . ' AND deleted = 0');
+                        'uid = ' . (int)$element[$parentField] . ' AND deleted = 0'
+                    );
                     $this->recursivelyCheckForRelationParents($parent, $Tlang, $parentField, $childrenField);
                 } else {
                     $this->TCEmain_cmd['tt_content'][$element['uid']]['localize'] = $Tlang;
                 }
             }
         }
-    }
+   }
 }

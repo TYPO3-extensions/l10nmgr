@@ -27,9 +27,10 @@ class Template
     var $pageId = 0;
 
     /**
+     *
+     *
      * @param  array $registryData All available data
      * @param  string $templateFile Relative path to the template file
-     *
      * @access  public
      * @return  void
      */
@@ -77,20 +78,19 @@ class Template
      */
     function getDocument()
     {
-        return $this->moduleument;
+        return $this->document;
     }
 
     /**
      * Set wherever you want to use the document object
      *
      * @param  template $document Modul template object
-     *
      * @access  public
      * @return  void
      */
     function setDocument($document)
     {
-        $this->moduleument = (is_object($document)) ? $document : null;
+        $this->document = (is_object($document)) ? $document : null;
     }
 
     /**
@@ -108,7 +108,6 @@ class Template
      * Set wherever you want to use the parent page id clicked in the tree
      *
      * @param  integer $pid
-     *
      * @access  public
      * @return  void
      */

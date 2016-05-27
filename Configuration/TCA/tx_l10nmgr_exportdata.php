@@ -2,7 +2,7 @@
 
 $l10n = 'LLL:EXT:l10nmgr/Resources/Private/Language/locallang_db.xlf';
 
-return array(
+return array (
     'ctrl' => array(
         'title' => $l10n . ':tx_l10nmgr_export',
         'label' => 'title',
@@ -61,37 +61,37 @@ return array(
                 'readOnly' => 1,
             )
         ),
-        'source_lang' => array(
-            'exclude' => 1,
-            'label' => $l10n . ':tx_l10nmgr_cfg.sourceLang',
-            'config' => array(
-                'type' => 'input',
-                'size' => '48',
+	    'source_lang' => array(
+		    'exclude' => 1,
+		    'label' => $l10n . ':tx_l10nmgr_cfg.sourceLang',
+		    'config' => array(
+			    'type' => 'input',
+			    'size' => '48',
+			    'readOnly' => 1,
+		    )
+	    ),
+	    'l10ncfg_id' => array(
+			'exclude' => 1,
+			'label' => $l10n . ':tx_l10nmgr_priorities.configuration',
+			'config' => array(
+				'type' => 'group',
+				'internal_type' => 'db',
+				'allowed' => 'tx_l10nmgr_cfg',
+				'size' => 1,
+				'minitems' => 0,
+				'maxitems' => 1,
                 'readOnly' => 1,
-            )
-        ),
-        'l10ncfg_id' => array(
-            'exclude' => 1,
-            'label' => $l10n . ':tx_l10nmgr_priorities.configuration',
-            'config' => array(
-                'type' => 'group',
-                'internal_type' => 'db',
-                'allowed' => 'tx_l10nmgr_cfg',
-                'size' => 1,
-                'minitems' => 0,
-                'maxitems' => 1,
-                'readOnly' => 1,
-            )
-        ),
-        'filename' => array(
-            'exclude' => 1,
-            'label' => $l10n . ':tx_l10nmgr_cfg.filename',
-            'config' => array(
-                'type' => 'input',
-                'size' => '48',
-                'readOnly' => 1,
-            )
-        ),
+			)
+	    ),
+	    'filename' => array(
+		    'exclude' => 1,
+		    'label' => $l10n . ':tx_l10nmgr_cfg.filename',
+		    'config' => array(
+			    'type' => 'input',
+			    'size' => '48',
+			    'readOnly' => 1,
+		    )
+	    ),
     ),
     'types' => array(
         '0' => array('showitem' => 'title, crdate, translation_lang, tablelist, source_lang, l10ncfg_id, exportType, filename')

@@ -3,23 +3,29 @@ namespace Localizationteam\L10nmgr\Model\Tools;
 
     /***************************************************************
      *  Copyright notice
+     *
      *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
      *  All rights reserved
+     *
      *  This script is part of the TYPO3 project. The TYPO3 project is
      *  free software; you can redistribute it and/or modify
      *  it under the terms of the GNU General Public License as published by
      *  the Free Software Foundation; either version 2 of the License, or
      *  (at your option) any later version.
+     *
      *  The GNU General Public License can be found at
      *  http://www.gnu.org/copyleft/gpl.html.
+     *
      *  This script is distributed in the hope that it will be useful,
      *  but WITHOUT ANY WARRANTY; without even the implied warranty of
      *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
      *  GNU General Public License for more details.
+     *
      *  This copyright notice MUST APPEAR in all copies of the script!
      ***************************************************************/
 /**
  * Contains xml tools
+ *
  * $Id$
  *
  * @author  Daniel Pötzinger <development@aoemedia.de>
@@ -42,8 +48,8 @@ class XmlTools
     /**
      * Transforms a RTE Field to valid XML
      *
-     * @param  string    HTML String which should be transformed
      *
+     * @param  string    HTML String which should be transformed
      * @return  mixed    false if transformation failed, string with XML if all fine
      */
     function RTE2XML($content, $withStripBadUTF8 = 0)
@@ -107,8 +113,8 @@ class XmlTools
     /**
      * Transforms a XML back to RTE / reverse function of RTE2XML
      *
-     * @param  string    XMLString which should be transformed
      *
+     * @param  string    XMLString which should be transformed
      * @return  string    string with HTML
      */
     function XML2RTE($xmlstring)
@@ -142,7 +148,8 @@ class XmlTools
 
         //Writes debug information for CLI import to syslog if $TYPO3_CONF_VARS['SYS']['enable_DLOG'] is set.
         if (TYPO3_DLOG) {
-            GeneralUtility::sysLog(__FILE__ . ': Before RTE transformation:' . LF . $xmlstring . LF, 'l10nmgr');
+            GeneralUtility::sysLog(__FILE__ . ': Before RTE transformation:' . LF . $xmlstring . LF,
+                'l10nmgr');
         }
         $xmlstring = str_replace("\xc2\xa0", '&nbsp;', $xmlstring);
         $content = $this->parseHTML->TS_transform_db($xmlstring, 0); // removes links from content if not called first!
@@ -161,7 +168,8 @@ class XmlTools
 
         //Writes debug information for CLI import to syslog if $TYPO3_CONF_VARS['SYS']['enable_DLOG'] is set.
         if (TYPO3_DLOG) {
-            GeneralUtility::sysLog(__FILE__ . ': After RTE transformation:' . LF . $content . LF, 'l10nmgr');
+            GeneralUtility::sysLog(__FILE__ . ': After RTE transformation:' . LF . $content . LF,
+                'l10nmgr');
         }
 
         return $content;

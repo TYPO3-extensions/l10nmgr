@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:29:52Z" product-name="l10nmgr">
+		<header/>
+		<body>
+			<trans-unit id="title" xml:space="preserve">
+				<source>L10N Translation Index Overview</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

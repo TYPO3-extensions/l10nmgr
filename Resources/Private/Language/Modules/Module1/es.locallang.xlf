@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="es" datatype="plaintext" original="messages" date="2015-07-30T00:30:11Z" product-name="l10nmgr">
+		<header/>
+		<body>
+			<trans-unit id="general.title" xml:space="preserve" approved="yes">
+				<source>L10N Manager</source>
+				<target>L10N Manager</target>
+			</trans-unit>
+			<trans-unit id="general.no_data" xml:space="preserve" approved="yes">
+				<source>No configurations are available.</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="general.description.message" xml:space="preserve" approved="yes">
+				<source>Please select one of the following L10N Manager configurations to
+				start the export/import (click on the title).
+			</source>
+				<target>Por favor, seleccione una de las siguientes configuraciones para
+				iniciar el exporte/importe.
+			</target>
+			</trans-unit>
+			<trans-unit id="general.list.configuration.title" xml:space="preserve" approved="yes">
+				<source>Available configurations:</source>
+				<target>Configuraciones disponibles:</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.info.title" xml:space="preserve" approved="yes">
+				<source>Info</source>
+				<target>Información</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.title.title" xml:space="preserve" approved="yes">
+				<source>Title</source>
+				<target>Titulo</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.path.title" xml:space="preserve" approved="yes">
+				<source>Path</source>
+				<target>Localización</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.depth.title" xml:space="preserve" approved="yes">
+				<source>Depth</source>
+				<target>Niveles</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.pid.title" xml:space="preserve" approved="yes">
+				<source>PID</source>
+				<target>PID</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.tables.title" xml:space="preserve" approved="yes">
+				<source>Tables</source>
+				<target>Tablas</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.exclude.title" xml:space="preserve" approved="yes">
+				<source>Exclude</source>
+				<target>Excluir</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.include.title" xml:space="preserve" approved="yes">
+				<source>Include</source>
+				<target>Incluir</target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.pid.title" xml:space="preserve" approved="yes">
+				<source>Parent page:</source>
+				<target>Página primaria:</target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.title.title" xml:space="preserve" approved="yes">
+				<source>Title:</source>
+				<target>Titulo:</target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.filenameprefix.title" xml:space="preserve" approved="yes">
+				<source>Filename:</source>
+				<target>Nombre del archivo:</target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.depth.title" xml:space="preserve" approved="yes">
+				<source>Depth:</source>
+				<target>Niveles:</target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.sourceLangStaticId.title" xml:space="preserve" approved="yes">
+				<source>Language:</source>
+				<target>Idioma:</target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.default" xml:space="preserve" approved="yes">
+				<source>Default</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.tablelist.title" xml:space="preserve" approved="yes">
+				<source>Tables:</source>
+				<target>Tablas:</target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.exclude.title" xml:space="preserve" approved="yes">
+				<source>Exclude:</source>
+				<target>Excluir:</target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.include.title" xml:space="preserve" approved="yes">
+				<source>Include:</source>
+				<target>Incluir:</target>
+			</trans-unit>
+			<trans-unit id="general.list.headline.incfcewithdefaultlanguage.title" xml:space="preserve" approved="yes">
+				<source>Default FCE</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.displaymode.title" xml:space="preserve" approved="yes">
+				<source>Display mode:</source>
+				<target>Modo display:</target>
+			</trans-unit>
+			<trans-unit id="general.list.infodetail.incfcewithdefaultlanguage.title" xml:space="preserve" approved="yes">
+				<source>Include FCE width default language:
+			</source>
+				<target>Incluir FCE con idoma estándar:
+			</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

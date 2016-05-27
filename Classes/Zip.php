@@ -1,18 +1,22 @@
 <?php
 namespace Localizationteam\L10nmgr;
-
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Zip file creation class.
  * Makes zip files.
+ *
  * Based on :
+ *
  *  http://www.zend.com/codex.php?id=535&single=1
  *  By Eric Mueller <eric@themepark.com>
+ *
  *  http://www.zend.com/codex.php?id=470&single=1
  *  by Denis125 <webmaster@atlant.ru>
+ *
  *  a patch from Peter Listiak <mlady@users.sourceforge.net> for last modified
  *  date and time of the compressed file
+ *
  * Official ZIP file format: http://www.pkware.com/appnote.txt
  *
  * @access  public
@@ -74,7 +78,10 @@ class Zip
         $name = str_replace('\\', '/', $name);
 
         $dtime = dechex($this->unix2DosTime($time));
-        $hexdtime = '\x' . $dtime[6] . $dtime[7] . '\x' . $dtime[4] . $dtime[5] . '\x' . $dtime[2] . $dtime[3] . '\x' . $dtime[0] . $dtime[1];
+        $hexdtime = '\x' . $dtime[6] . $dtime[7]
+            . '\x' . $dtime[4] . $dtime[5]
+            . '\x' . $dtime[2] . $dtime[3]
+            . '\x' . $dtime[0] . $dtime[1];
         eval('$hexdtime = "' . $hexdtime . '";');
 
         $fr = "\x50\x4b\x03\x04";
@@ -142,6 +149,7 @@ class Zip
      * @param  integer  the current Unix timestamp
      *
      * @return integer  the current date in a four byte DOS format
+     *
      * @access private
      */
     function unix2DosTime($unixtime = 0)
@@ -157,13 +165,15 @@ class Zip
             $timearray['seconds'] = 0;
         } // end if
 
-        return (($timearray['year'] - 1980) << 25) | ($timearray['mon'] << 21) | ($timearray['mday'] << 16) | ($timearray['hours'] << 11) | ($timearray['minutes'] << 5) | ($timearray['seconds'] >> 1);
+        return (($timearray['year'] - 1980) << 25) | ($timearray['mon'] << 21) | ($timearray['mday'] << 16) |
+        ($timearray['hours'] << 11) | ($timearray['minutes'] << 5) | ($timearray['seconds'] >> 1);
     } // end of the 'addFile()' method
 
     /**
      * Dumps out file
      *
      * @return  string  the zipped file
+     *
      * @access public
      */
     function file()
@@ -171,12 +181,15 @@ class Zip
         $data = implode('', $this->datasec);
         $ctrldir = implode('', $this->ctrl_dir);
 
-        return $data . $ctrldir . $this->eof_ctrl_dir . pack('v',
-            sizeof($this->ctrl_dir)) . // total # of entries "on this disk"
-        pack('v', sizeof($this->ctrl_dir)) . // total # of entries overall
-        pack('V', strlen($ctrldir)) . // size of central dir
-        pack('V', strlen($data)) . // offset to start of central dir
-        "\x00\x00"; // .zip file comment length
+        return
+            $data .
+            $ctrldir .
+            $this->eof_ctrl_dir .
+            pack('v', sizeof($this->ctrl_dir)) . // total # of entries "on this disk"
+            pack('v', sizeof($this->ctrl_dir)) . // total # of entries overall
+            pack('V', strlen($ctrldir)) . // size of central dir
+            pack('V', strlen($data)) . // offset to start of central dir
+            "\x00\x00"; // .zip file comment length
     } // end of the 'file()' method
 
     /**
@@ -184,7 +197,6 @@ class Zip
      * The file is libunzipped in PATH_site.'typo3temp/' + a randomly named folder.
      *
      * @param  $file
-     *
      * @return mixed
      * @access private
      */
@@ -222,7 +234,6 @@ class Zip
      *
      * @param       array $fileArr
      * @param       string $extPath
-     *
      * @return      array          Array with files and folders
      * @access      private
      */
@@ -230,7 +241,8 @@ class Zip
     {
         $extList = '';
         $fileArr[] = $extPath;
-        $fileArr = array_merge($fileArr, GeneralUtility::getFilesInDir($extPath, $extList, 1, 1));
+        $fileArr = array_merge($fileArr,
+            GeneralUtility::getFilesInDir($extPath, $extList, 1, 1));
 
         $dirs = GeneralUtility::get_dirs($extPath);
         if (is_array($dirs)) {
@@ -250,7 +262,6 @@ class Zip
      * $tempDir must be a subfolder to typo3temp/
      *
      * @param  string $tempDir
-     *
      * @return void
      * @access private
      */

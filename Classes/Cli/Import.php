@@ -3,20 +3,25 @@ namespace Localizationteam\L10nmgr\Cli;
 
 /***************************************************************
  *  Copyright notice
+ *
  *  (c) 2008 Daniel Zielinski (d.zielinski@l10ntech.de)
  *  (c) 2011 Francois Suter (typo3@cobweb.ch)
  *  All rights reserved
+ *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
+ *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
+ *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
+ *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
@@ -24,21 +29,21 @@ if (!defined('TYPO3_cliMode')) {
     die('You cannot run this script directly!');
 }
 
-use Localizationteam\L10nmgr\Model\CatXmlImportManager;
-use Localizationteam\L10nmgr\Model\L10nBaseService;
-use Localizationteam\L10nmgr\Model\L10nConfiguration;
-use Localizationteam\L10nmgr\Model\MkPreviewLinkService;
-use Localizationteam\L10nmgr\Model\TranslationData;
-use Localizationteam\L10nmgr\Model\TranslationDataFactory;
-use Localizationteam\L10nmgr\Zip;
 use TYPO3\CMS\Core\Controller\CommandLineController;
 use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Localizationteam\L10nmgr\Model\L10nConfiguration;
+use Localizationteam\L10nmgr\Model\L10nBaseService;
+use Localizationteam\L10nmgr\Model\TranslationData;
+use Localizationteam\L10nmgr\Model\TranslationDataFactory;
+use Localizationteam\L10nmgr\Model\CatXmlImportManager;
+use Localizationteam\L10nmgr\Model\MkPreviewLinkService;
+use Localizationteam\L10nmgr\Zip;
 use TYPO3\CMS\Lang\LanguageService;
 
 // Load language support
-/* @var $lang LanguageService */
+/* @var $lang LanguageService*/
 $lang = GeneralUtility::makeInstance(LanguageService::class);
 $fileRef = 'EXT:l10nmgr/Resources/Private/Language/Cli/locallang.xml';
 $lang->includeLLFile($fileRef);
@@ -132,7 +137,6 @@ class Import extends CommandLineController
      * Main method called during the CLI run
      *
      * @param array $argv Command line arguments
-     *
      * @return string
      */
     public function cli_main($argv)
@@ -271,14 +275,12 @@ class Import extends CommandLineController
         $this->callParameters['importAsDefaultLanguage'] = $importAsDefaultLanguage;
     }
 
-    /**
-     * Get workspace ID from XML (quick & dirty)
-     *
-     * @param string $xml XML string to parse
-     *
-     * @return int ID of the workspace to import to
-     * @throws \TYPO3\CMS\Core\Exception
-     */
+	/**
+	 * Get workspace ID from XML (quick & dirty)
+	 * @param string $xml XML string to parse
+	 * @return int ID of the workspace to import to
+	 * @throws \TYPO3\CMS\Core\Exception
+	 */
     protected function getWsIdFromCATXML($xml)
     {
         preg_match('/<t3_workspaceId>([^<]+)/', $xml, $matches);
@@ -310,7 +312,8 @@ class Import extends CommandLineController
         $factory = GeneralUtility::makeInstance(TranslationDataFactory::class);
 
         /** @var $importManager CatXmlImportManager */
-        $importManager = GeneralUtility::makeInstance(CatXmlImportManager::class, '', $this->sysLanguage,
+        $importManager = GeneralUtility::makeInstance(CatXmlImportManager::class, '',
+            $this->sysLanguage,
             $this->callParameters['string']);
 
         // Parse and check XML, load header data
@@ -381,7 +384,8 @@ class Import extends CommandLineController
         $error = '';
 
         /** @var $importManager CatXmlImportManager */
-        $importManager = GeneralUtility::makeInstance(CatXmlImportManager::class, '', $this->sysLanguage,
+        $importManager = GeneralUtility::makeInstance(CatXmlImportManager::class, '',
+            $this->sysLanguage,
             $this->callParameters['string']);
 
         // Parse and check XML, load header data
@@ -440,7 +444,8 @@ class Import extends CommandLineController
 
                     // Relevant processing of XML Import with the help of the Importmanager
                     /** @var $importManager CatXmlImportManager */
-                    $importManager = GeneralUtility::makeInstance(CatXmlImportManager::class, $xmlFile,
+                    $importManager = GeneralUtility::makeInstance(CatXmlImportManager::class,
+                        $xmlFile,
                         $this->sysLanguage, '');
                     if ($importManager->parseAndCheckXMLFile() === false) {
                         $out .= "\n\n" . $importManager->getErrorMessages();
@@ -648,7 +653,6 @@ class Import extends CommandLineController
      *
      * @param array $files Array of files to be checked
      * @param string $ext File extension to be tested for
-     *
      * @return array Files that passed test
      */
     protected function checkFileType($files, $ext)
@@ -663,21 +667,21 @@ class Import extends CommandLineController
         return $passed;
     }
 
-    /**
-     * Extracts the header of a CATXML file
-     *
-     * @param string $filepath Path to the file
-     *
-     * @return bool
-     * @throws \TYPO3\CMS\Core\Exception
-     */
+	/**
+	 * Extracts the header of a CATXML file
+	 * @param string $filepath Path to the file
+	 * @return bool
+	 * @throws \TYPO3\CMS\Core\Exception
+	 */
     protected function getXMLFileHead($filepath)
     {
         $getURLReport = array();
         $fileContent = GeneralUtility::getUrl($filepath, 0, false, $getURLReport);
         if ($getURLReport['error']) {
-            throw new Exception("File or URL cannot be read.\n  \\TYPO3\\CMS\\Core\\Utility\\GeneralUtility::getURL() error code: " . $getURLReport['error'] . "\n  \\TYPO3\\CMS\\Core\\Utility\\GeneralUtility::getURL() message: “" . $getURLReport['message'] . '”',
-                1390394945);
+            throw new Exception(
+                "File or URL cannot be read.\n  \\TYPO3\\CMS\\Core\\Utility\\GeneralUtility::getURL() error code: " . $getURLReport['error'] . "\n  \\TYPO3\\CMS\\Core\\Utility\\GeneralUtility::getURL() message: “" . $getURLReport['message'] . '”',
+                1390394945
+            );
         }
 
         // For some reason PHP chokes on incoming &nbsp; in XML!
@@ -721,7 +725,8 @@ class Import extends CommandLineController
         // Send mail only if notifications are active and at least one file was imported
         if ($this->extensionConfiguration['enable_notification'] && count($this->filesImported) > 0) {
             // If at least a recipient is indeed defined, proceed with sending the mail
-            $recipients = GeneralUtility::trimExplode(',', $this->extensionConfiguration['email_recipient_import']);
+            $recipients = GeneralUtility::trimExplode(',',
+                $this->extensionConfiguration['email_recipient_import']);
             if (count($recipients) > 0) {
                 // First of all get a list of all workspaces and all l10nmgr configurations to use in the reporting
                 $workspaces = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,title', 'sys_workspace', '', '', '', '',

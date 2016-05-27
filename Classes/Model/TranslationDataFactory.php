@@ -3,25 +3,32 @@ namespace Localizationteam\L10nmgr\Model;
 
 /***************************************************************
  *  Copyright notice
+ *
  *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
  *  All rights reserved
+ *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
+ *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
+ *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
+ *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Localizationteam\L10nmgr\Model\Tools\XmlTools;
 use TYPO3\CMS\Core\Html\RteHtmlParser;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Localizationteam\L10nmgr\Model\TranslationData;
+use Localizationteam\L10nmgr\Model\Tools\XmlTools;
 
 /**
  * Returns initialised TranslationData Objects
@@ -29,6 +36,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @author  Kasper Skaarhoj <kasperYYYY@typo3.com>
  * @author  Daniel Pötzinger <ext@aoemedia.de>
+ *
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
@@ -45,7 +53,6 @@ class TranslationDataFactory
      * see tx_l10nmgr_CATXMLImportManager
      *
      * @param array $xmlNodes Array with XMLNodes from the CATXML
-     *
      * @return TranslationData Object with data
      **/
     function getTranslationDataFromCATXMLNodes(&$xmlNodes)
@@ -63,7 +70,6 @@ class TranslationDataFactory
      * Parses XML String and returns translationData
      *
      * @param array $xmlNodes Array with XMLNodes
-     *
      * @return array with translated information
      **/
     function _getParsedCATXMLFromXMLNodes(&$xmlNodes)
@@ -112,8 +118,8 @@ class TranslationDataFactory
                             }
                             $pattern2 = '/' . preg_replace('/\//i', '\/', preg_quote($pattern)) . '/';
                             $pattern = '/^' . preg_replace('/\//i', '\/', preg_quote($pattern)) . '/';
-                            $originalValue = htmlspecialchars($row['XMLvalue'], ENT_COMPAT | ENT_IGNORE | ENT_XHTML,
-                                'UTF-8', false);
+	                        $originalValue = htmlspecialchars($row['XMLvalue'], ENT_COMPAT | ENT_IGNORE | ENT_XHTML,
+		                        'UTF-8', false);
                             if (TYPO3_DLOG) {
                                 GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': Pattern: ' . $pattern,
                                     'l10nmgr');
@@ -127,7 +133,7 @@ class TranslationDataFactory
                                 }
                                 $translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $row['XMLvalue'];
                             } elseif ((preg_match('/<[^>]+>/i', $originalValue)) && (!preg_match($pattern2,
-                                    $originalValue, $treffer))
+		                            $originalValue, $treffer))
                             ) {
                                 if (TYPO3_DLOG) {
                                     GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': TAG found in: ' . $row['XMLvalue'],
@@ -160,7 +166,6 @@ class TranslationDataFactory
      * public Factory method to get initialized translationData Object from the passed XML
      *
      * @param string $xmlFile Path to the XML file
-     *
      * @return TranslationData Object with data
      **/
     function getTranslationDataFromExcelXMLFile($xmlFile)
@@ -184,7 +189,6 @@ class TranslationDataFactory
      * TODO: possibly make separate class for this.
      *
      * @param string $fileContent String with XML
-     *
      * @return array with translated information
      **/
     function _getParsedExcelXML($fileContent)
@@ -228,7 +232,6 @@ class TranslationDataFactory
      *    public Factory method to get initialised tranlationData Object from the passed XML
      *
      * @param string $xmlFile Path to the XML file
-     *
      * @return TranslationData Object with data
      **/
     function getTranslationDataFromOldFormatCATXMLFile($xmlFile)
@@ -250,7 +253,6 @@ class TranslationDataFactory
      * For supporting older Format (without pagegrp element)
      *
      * @param string $fileContent String with XML
-     *
      * @return array with translated information
      **/
     function _getParsedCATXMLFromOldFormat($fileContent)

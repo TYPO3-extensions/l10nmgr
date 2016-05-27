@@ -8,13 +8,12 @@ namespace Localizationteam\L10nmgr\View;
  * @package     TYPO3
  * @date        20150909-2127
  * @subpackage  l10nmgr
+ * 
  */
-interface PostSaveInterface
-{
+interface PostSaveInterface {
 
     /**
      * @param array $params
-     *
      * @return void
      */
     public function postExportAction(array $params);
