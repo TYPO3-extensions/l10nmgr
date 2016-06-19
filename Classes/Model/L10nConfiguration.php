@@ -101,7 +101,7 @@ class L10nConfiguration
 	    // Showing the tree:
         // Initialize starting point of page tree:
         $treeStartingPoint = $l10ncfg['depth'] == -1 ? (int)GeneralUtility::_GET('srcPID') : (int)$l10ncfg['pid'];
-	    if ($treeStartingRecord > 0) {
+	    if ($treeStartingPoint > 0) {
 	        $treeStartingRecord = BackendUtility::getRecordWSOL('pages', $treeStartingPoint);
 	    }
         $depth = $l10ncfg['depth'];
