@@ -215,7 +215,13 @@ class TranslationDataFactory
                 if (!isset($row['ch']['Cell'][0]['attrs']['ss:Index'])) {
                     list($Ttable, $Tuid, $Tkey) = explode('][',
                         substr(trim($row['ch']['Cell'][0]['ch']['Data'][0]['values'][0]), 12, -1));
-                    $translation[$Ttable][$Tuid][$Tkey] = $row['ch']['Cell'][4]['ch']['Data'][0]['values'][0];
+                    // Ensure that data (in ss:Data cells) like formatted cells is taken properly from that cell
+					if (isset($row['ch']['Cell'][4]['ch']['ss:Data'][0]['values'][0])) {
+						$translatedData = $row['ch']['Cell'][4]['ch']['ss:Data'][0]['values'][0];
+					} else {
+						$translatedData = $row['ch']['Cell'][4]['ch']['Data'][0]['values'][0];
+					}
+					$translation[$Ttable][$Tuid][$Tkey] = $translatedData;
                 }
             }
         }
