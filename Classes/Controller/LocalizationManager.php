@@ -763,17 +763,19 @@ class LocalizationManager extends BaseScriptClass
             'sdlpassolo' => 'SDLPassolo.xfg',
         );
 
-        $tabContentXmlDownloads = $this->moduleTemplate->icons(1) . $GLOBALS['LANG']->getLL('file.settings.available.title');
+        $tabContentXmlDownloads = '<h4>' . $GLOBALS['LANG']->getLL('file.settings.available.title') . '</h4><ul>';
 
-        for (reset($allowedSettingFiles); list($settingId, $settingFileName) = each($allowedSettingFiles);) {
-            $currentFile = GeneralUtility::resolveBackPath($BACK_PATH . ExtensionManagementUtility::extRelPath('l10nmgr') . 'settings/' . $settingFileName);
+        foreach ($allowedSettingFiles as $settingId => $settingFileName) {
+            $absoluteFileName = GeneralUtility::getFileAbsFileName('EXT:l10nmgr/Configuration/Settings/' . $settingFileName);
+            $currentFile = GeneralUtility::resolveBackPath($BACK_PATH . ExtensionManagementUtility::extRelPath('l10nmgr') . 'Configuration/Settings/' . $settingFileName);
 
-            if (is_file($currentFile) && is_readable($currentFile)) {
+            if (is_file($absoluteFileName) && is_readable($absoluteFileName)) {
 
-                $size = GeneralUtility::formatSize((int)filesize($currentFile), ' Bytes| KB| MB| GB');
-                $tabContentXmlDownloads .= '<br/><a href="' . GeneralUtility::rawUrlEncodeFP($currentFile) . '" title="' . $GLOBALS['LANG']->getLL('file.settings.download.title') . '" target="_blank">' . $GLOBALS['LANG']->getLL('file.settings.' . $settingId . '.title') . ' (' . $size . ')' . '</a> ';
+                $size = GeneralUtility::formatSize((int)filesize($absoluteFileName), ' Bytes| KB| MB| GB');
+                $tabContentXmlDownloads .= '<li><a class="t3-link" href="' . GeneralUtility::rawUrlEncodeFP($currentFile) . '" title="' . $GLOBALS['LANG']->getLL('file.settings.download.title') . '" target="_blank">' . $GLOBALS['LANG']->getLL('file.settings.' . $settingId . '.title') . ' (' . $size . ')' . '</a></li>';
             }
         }
+        $tabContentXmlDownloads .= '</ul>';
 
         return $tabContentXmlDownloads;
     }
