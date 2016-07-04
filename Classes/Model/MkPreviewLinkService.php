@@ -33,11 +33,14 @@ class MkPreviewLinkService
 
     var $_errorMsg = array();
 
+    var $previewHook;
+
     function __construct($t3_workspaceId, $t3_sysLang, $pageIds)
     {
         $this->sysLang = $t3_sysLang;
         $this->pageIds = $pageIds;
         $this->workspaceId = $t3_workspaceId;
+        $this->previewHook = GeneralUtility::makeInstance(PreviewHook::class);
     }
 
     // Generate single source preview link for service
@@ -47,7 +50,7 @@ class MkPreviewLinkService
         $ttlHours = (int)$GLOBALS['BE_USER']->getTSConfigVal('options.workspaces.previewLinkTTLHours');
         $ttlHours = ($ttlHours ? $ttlHours : 24 * 2);
         $params = 'id=' . $this->pageIds[0] . '&L=' . $srcLang . '&ADMCMD_previewWS=' . $this->workspaceId;
-        $previewUrl = $baseUrl . 'index.php?ADMCMD_prev=' . PreviewHook::compilePreviewKeyword($params,
+        $previewUrl = $baseUrl . 'index.php?ADMCMD_prev=' . $this->previewHook->compilePreviewKeyword($params,
                 $GLOBALS['BE_USER']->user['uid'], 60 * 60 * $ttlHours);
 
         return $previewUrl;
@@ -61,7 +64,7 @@ class MkPreviewLinkService
         $ttlHours = ($ttlHours ? $ttlHours : 24 * 2);
         //no_cache=1 ???
         $params = 'id=' . $this->pageIds[0] . '&L=' . $this->sysLang . '&ADMCMD_previewWS=' . $this->workspaceId . '&serverlink=' . $serverlink;
-        $previewUrl = $baseUrl . 'index.php?ADMCMD_prev=' . PreviewHook::compilePreviewKeyword($params,
+        $previewUrl = $baseUrl . 'index.php?ADMCMD_prev=' . $this->previewHook->compilePreviewKeyword($params,
                 $GLOBALS['BE_USER']->user['uid'], 60 * 60 * $ttlHours);
 
         return $previewUrl;
@@ -76,7 +79,7 @@ class MkPreviewLinkService
             $ttlHours = (int)$GLOBALS['BE_USER']->getTSConfigVal('options.workspaces.previewLinkTTLHours');
             $ttlHours = ($ttlHours ? $ttlHours : 24 * 2);
             $params = 'id=' . $pageId . '&L=' . $this->sysLang . '&ADMCMD_previewWS=' . $this->workspaceId;
-            $previewUrls[$pageId] = GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'index.php?ADMCMD_prev=' . PreviewHook::compilePreviewKeyword($params,
+            $previewUrls[$pageId] = GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'index.php?ADMCMD_prev=' . $this->previewHook->compilePreviewKeyword($params,
                     $GLOBALS['BE_USER']->user['uid'], 60 * 60 * $ttlHours);
         }
 
