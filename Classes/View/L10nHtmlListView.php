@@ -34,13 +34,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class L10nHtmlListView extends AbstractExportView
 {
-
     var $l10ncfgObj; //
     var $sysLang; // Internal array (=datarow of config record)
-
     //internal flags:
     var $modeWithInlineEdit = false;
-
     var $modeShowEditLinks = false;
 
     function __construct($l10ncfgObj, $sysLang)
@@ -72,18 +69,13 @@ class L10nHtmlListView extends AbstractExportView
      */
     function renderOverview()
     {
-
         global $LANG;
-
         $sysLang = $this->sysLang;
         $accumObj = $this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
         $accum = $accumObj->getInfoArray();
         $l10ncfg = $this->l10ncfg;
-
         $output = '';
-
         $showSingle = GeneralUtility::_GET('showSingle');
-
         if ($l10ncfg['displaymode'] > 0) {
             $showSingle = $showSingle ? $showSingle : 'NONE';
             if ($l10ncfg['displaymode'] == 2) {
@@ -92,26 +84,20 @@ class L10nHtmlListView extends AbstractExportView
         } else {
             $noAnalysis = false;
         }
-
         // Traverse the structure and generate HTML output:
         foreach ($accum as $pId => $page) {
             $output .= '<h3>' . $page['header']['icon'] . htmlspecialchars($page['header']['title']) . ' [' . $pId . ']</h3>';
-
             $tableRows = array();
-
             foreach ($accum[$pId]['items'] as $table => $elements) {
                 foreach ($elements as $elementUid => $data) {
                     if (is_array($data['fields'])) {
-
                         $FtableRows = array();
                         $flags = array();
-
                         if (!$noAnalysis || $showSingle === $table . ':' . $elementUid) {
                             foreach ($data['fields'] as $key => $tData) {
                                 if (is_array($tData)) {
                                     list(, $uidString, $fieldName) = explode(':', $key);
                                     list($uidValue) = explode('/', $uidString);
-
                                     $diff = '';
                                     $edit = true;
                                     $noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),
@@ -130,28 +116,23 @@ class L10nHtmlListView extends AbstractExportView
                                         $diff = $this->diffCMP($tData['diffDefaultValue'], $tData['defaultValue']);
                                         $flags['update']++;
                                     }
-
                                     if (!$this->modeOnlyChanged || !$noChangeFlag) {
                                         $fieldCells = array();
                                         $fieldCells[] = '<b>' . htmlspecialchars($fieldName) . '</b>' . ($tData['msg'] ? '<br/><em>' . htmlspecialchars($tData['msg']) . '</em>' : '');
                                         $fieldCells[] = nl2br(htmlspecialchars($tData['defaultValue']));
                                         $fieldCells[] = $edit && $this->modeWithInlineEdit ? ($tData['fieldType'] === 'text' ? '<textarea name="' . htmlspecialchars('translation[' . $table . '][' . $elementUid . '][' . $key . ']') . '" cols="60" rows="5">' . GeneralUtility::formatForTextarea($tData['translationValue']) . '</textarea>' : '<input name="' . htmlspecialchars('translation[' . $table . '][' . $elementUid . '][' . $key . ']') . '" value="' . htmlspecialchars($tData['translationValue']) . '" size="60" />') : nl2br(htmlspecialchars($tData['translationValue']));
                                         $fieldCells[] = $diff;
-
                                         if ($page['header']['prevLang']) {
                                             reset($tData['previewLanguageValues']);
                                             $fieldCells[] = nl2br(htmlspecialchars(current($tData['previewLanguageValues'])));
                                         }
-
-                                        $FtableRows[] = '<tr class="db_list_normal"><td>' . implode('</td><td>',
+                                        $FtableRows[] = '<tr><td>' . implode('</td><td>',
                                                 $fieldCells) . '</td></tr>';
                                     }
                                 }
                             }
                         }
-
                         if (count($FtableRows) || $noAnalysis) {
-
                             // Link:
                             if ($this->modeShowEditLinks) {
                                 reset($data['fields']);
@@ -166,33 +147,28 @@ class L10nHtmlListView extends AbstractExportView
                             } else {
                                 $editLink = '';
                             }
-
-                            $tableRows[] = '<tr class="t3-row-header">
+                            $tableRows[] = '<tr class="info">
 								<th colspan="2"><a href="' . htmlspecialchars('index.php?id=' . GeneralUtility::_GET('id') . '&showSingle=' . rawurlencode($table . ':' . $elementUid)) . '">' . htmlspecialchars($table . ':' . $elementUid) . '</a>' . $editLink . '</th>
 								<th colspan="3">' . htmlspecialchars(GeneralUtility::arrayToLogString($flags)) . '</th>
 							</tr>';
-
                             if (!$showSingle || $showSingle === $table . ':' . $elementUid) {
-                                $tableRows[] = '<tr class="bgColor-20 tableheader">
-									<td>Fieldname:</td>
-									<td width="25%">Default:</td>
-									<td width="25%">Translation:</td>
-									<td width="25%">Diff:</td>
-									' . ($page['header']['prevLang'] ? '<td width="25%">PrevLang:</td>' : '') . '
+                                $tableRows[] = '<tr>
+									<th>Fieldname</th>
+									<th width="25%">Default</th>
+									<th width="25%">Translation</th>
+									<th width="25%">Diff</th>
+									' . ($page['header']['prevLang'] ? '<th width="25%">PrevLang</th>' : '') . '
 								</tr>';
-
                                 $tableRows = array_merge($tableRows, $FtableRows);
                             }
                         }
                     }
                 }
             }
-
             if (count($tableRows)) {
                 $output .= '<table class="table table-striped table-hover">' . implode('', $tableRows) . '</table>';
             }
         }
-
         return $output;
     }
 }

@@ -45,7 +45,6 @@ use TYPO3\CMS\Core\Utility\DiffUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * l10nmgr module Configuration Manager
  *
@@ -57,7 +56,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @author  Jo Hasenau <info@cybercraft.de>
  */
 
-
 /**
  * Translation management tool
  *
@@ -67,7 +65,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class LocalizationManager extends BaseScriptClass
 {
-
     var $flexFormDiffArray = array();
     /**
      * @var  integer    Default language to export
@@ -77,33 +74,28 @@ class LocalizationManager extends BaseScriptClass
      * @var array Extension configuration
      */
     protected $lConf = array();
-
     /**
      * ModuleTemplate Container
      *
      * @var ModuleTemplate
      */
     protected $moduleTemplate;
-
     /**
      * Document Template Object
      *
      * @var \TYPO3\CMS\Backend\Template\DocumentTemplate
      */
     public $doc;
-
     /**
      * The name of the module
      *
      * @var string
      */
     protected $moduleName = 'ConfigurationManager_LocalizationManager';
-
     /**
      * @var IconFactory
      */
     protected $iconFactory;
-
 
     /**
      * Constructor
@@ -130,16 +122,12 @@ class LocalizationManager extends BaseScriptClass
     {
         $GLOBALS['SOBE'] = $this;
         $this->init();
-
         // Checking for first level external objects
         $this->checkExtObj();
-
         // Checking second level external objects
         $this->checkSubExtObj();
         $this->main();
-
         $this->moduleTemplate->setContent($this->content);
-
         $response->getBody()->write($this->moduleTemplate->renderContent());
         return $response;
     }
@@ -173,14 +161,13 @@ class LocalizationManager extends BaseScriptClass
             ),
             'lang' => array(),
             'onlyChangedContent' => '',
+            'check_exports' => 1,
             'noHidden' => ''
         );
-
         // Load system languages into menu:
         /** @var $t8Tools TranslationConfigurationProvider */
         $t8Tools = GeneralUtility::makeInstance(TranslationConfigurationProvider::class);
         $sysL = $t8Tools->getSystemLanguages();
-
         foreach ($sysL as $sL) {
             if ($sL['uid'] > 0 && $GLOBALS['BE_USER']->checkLanguageAccess($sL['uid'])) {
                 if ($this->lConf['enable_hidden_languages'] == 1) {
@@ -190,7 +177,6 @@ class LocalizationManager extends BaseScriptClass
                 }
             }
         }
-
         parent::menuConfig();
     }
 
@@ -214,7 +200,6 @@ class LocalizationManager extends BaseScriptClass
     {
         // Get language to export/import
         $this->sysLanguage = $this->MOD_SETTINGS["lang"];
-
         // Draw the header.
         $this->moduleTemplate->addJavaScriptCode(
             'jumpToUrl',
@@ -226,68 +211,62 @@ class LocalizationManager extends BaseScriptClass
             '
         );
         $this->moduleTemplate->setForm('<form action="" method="post" enctype="multipart/form-data">');
-
         // Find l10n configuration record
         /** @var $l10ncfgObj L10nConfiguration */
         $l10ncfgObj = GeneralUtility::makeInstance(L10nConfiguration::class);
-        $l10ncfgObj->load((int) GeneralUtility::_GP('exportUID'));
-
+        $l10ncfgObj->load((int)GeneralUtility::_GP('exportUID'));
         if ($l10ncfgObj->isLoaded()) {
-
             // Setting page id
             $this->id = $l10ncfgObj->getData('pid');
             $this->perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
             $this->pageinfo = BackendUtility::readPageAccess($this->id, $this->perms_clause);
             $access = is_array($this->pageinfo) ? 1 : 0;
             if ($this->id && $access) {
-
                 // Header:
                 //				$this->content.=$this->moduleTemplate->startPage($GLOBALS['LANG']->getLL('general.title'));
-                $this->content.=$this->moduleTemplate->header($GLOBALS['LANG']->getLL('general.title'));
-
+                $this->content .= $this->moduleTemplate->header($GLOBALS['LANG']->getLL('general.title'));
                 // Create and render view to show details for the current l10nmgrcfg
                 /** @var $l10nmgrconfigurationView L10nConfigurationDetailView */
                 $l10nmgrconfigurationView = GeneralUtility::makeInstance(L10nConfigurationDetailView::class,
                     $l10ncfgObj, $this->moduleTemplate);
-                $this->content .= $this->moduleTemplate->section($GLOBALS['LANG']->getLL('general.manager'), $l10nmgrconfigurationView->render(), false, true);
-
+                $this->content .= $this->moduleTemplate->section($GLOBALS['LANG']->getLL('general.manager'),
+                    $l10nmgrconfigurationView->render(), false, true);
                 $this->content .= $this->moduleTemplate->divider(15);
                 $title = $this->MOD_MENU["action"][$this->MOD_SETTINGS["action"]];
                 $this->content .= $this->moduleTemplate->section(
                     $title,
-                    '<div class="col-md-4">
+                    '<div class="col-md-6">
                     <div class="form-inline form-inline-spaced">
                     <div class="form-section">' .
-                    $this->getFuncMenu($l10ncfgObj->getId(),
+                    $this->getFuncMenu($this->id,
                         "SET[action]", $this->MOD_SETTINGS["action"], $this->MOD_MENU["action"], '',
-                        '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')),
+                        '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
                         $GLOBALS['LANG']->getLL('general.export.choose.action.title')) .
                     '<br />' .
-                    $this->getFuncMenu($l10ncfgObj->getId(),
+                    $this->getFuncMenu($this->id,
                         "SET[lang]", $this->sysLanguage, $this->MOD_MENU["lang"], '',
-                        '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')),
+                        '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
                         $GLOBALS['LANG']->getLL('export.overview.targetlanguage.label')) .
                     '<br /><br /></div><div class="form-section">' .
                     $this->getFuncCheck(
-                        $l10ncfgObj->getId(),
+                        $this->id,
                         "SET[onlyChangedContent]",
                         $this->MOD_SETTINGS["onlyChangedContent"],
                         '',
-                        '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')),
+                        '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
                         '',
                         $GLOBALS['LANG']->getLL('export.xml.new.title')
-                    ) .  '<br />' .
+                    ) . '<br />' .
                     $this->getFuncCheck(
-                        $l10ncfgObj->getId(),
+                        $this->id,
                         "SET[noHidden]",
                         $this->MOD_SETTINGS["noHidden"],
                         '',
-                        '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')),
+                        '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
                         '',
                         $GLOBALS['LANG']->getLL('export.xml.noHidden.title')
                     ) .
                     '<br /><br ></div></div></div>');
-
                 // Render content:
                 if (!count($this->MOD_MENU['lang'])) {
                     $this->content .= $this->moduleTemplate->section('ERROR',
@@ -309,7 +288,6 @@ class LocalizationManager extends BaseScriptClass
     function moduleContent($l10ncfgObj)
     {
         global $LANG, $BE_USER;
-
         switch ($this->MOD_SETTINGS["action"]) {
             case 'inlineEdit':
             case 'link':
@@ -317,7 +295,6 @@ class LocalizationManager extends BaseScriptClass
                 $htmlListView = GeneralUtility::makeInstance(L10nHtmlListView::class, $l10ncfgObj, $this->sysLanguage);
                 $subheader = $GLOBALS['LANG']->getLL('inlineEdit');
                 $subcontent = '';
-
                 if ($this->MOD_SETTINGS["action"] == 'inlineEdit') {
                     $subheader = $GLOBALS['LANG']->getLL('link');
                     $subcontent = $this->inlineEditAction($l10ncfgObj);
@@ -325,7 +302,6 @@ class LocalizationManager extends BaseScriptClass
                 }
                 // Render the module content (for all modes):
                 //*******************************************
-
                 if ($this->MOD_SETTINGS["onlyChangedContent"]) {
                     $htmlListView->setModeOnlyChanged();
                 }
@@ -337,59 +313,49 @@ class LocalizationManager extends BaseScriptClass
                 }
                 $subcontent .= '</div></div><div class="col-md-12">' . $htmlListView->renderOverview();
                 break;
-
             case 'export_excel':
                 $subheader = $GLOBALS['LANG']->getLL('export_excel');
                 $subcontent = $this->excelExportImportAction($l10ncfgObj);
                 break;
-
             case 'export_xml': // XML import/export
                 $prefs['utf8'] = GeneralUtility::_POST('check_utf8');
                 $prefs['noxmlcheck'] = GeneralUtility::_POST('no_check_xml');
                 $BE_USER->pushModuleData('l10nmgr/cm1/prefs', $prefs);
-
                 $subheader = $GLOBALS['LANG']->getLL('export_xml');
                 $subcontent = $this->catXMLExportImportAction($l10ncfgObj);
                 break;
-
             DEFAULT: // Default display:
-                $subcontent = '<input type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" />';
+                $subcontent = '<input class="btn btn-default" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" />';
                 break;
         } //switch block
-
         $this->content .= $this->moduleTemplate->section($subheader,
-            '<div class="col-md-4"><div class="form-inline form-inline-spaced">' . $subcontent . '</div></div>'
+            '<div class="col-md-6"><div class="form-inline form-inline-spaced">' . $subcontent . '</div></div>'
         );
     }
 
     function inlineEditAction($l10ncfgObj)
     {
-
         /** @var $service L10nBaseService */
         $service = GeneralUtility::makeInstance(L10nBaseService::class);
         $info = '';
         // Buttons:
-        $info .= '<input type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.save.button.title') . '" name="saveInline" onclick="return confirm(\'' . $GLOBALS['LANG']->getLL('inlineedit.save.alert.title') . '\');" />';
-        $info .= '<input type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.cancel.button.title') . '" name="_" onclick="return confirm(\'' . $GLOBALS['LANG']->getLL('inlineedit.cancel.alert.title') . '\');" />';
-
+        $info .= '<input class="btn btn-success" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.save.button.title') . '" name="saveInline" onclick="return confirm(\'' . $GLOBALS['LANG']->getLL('inlineedit.save.alert.title') . '\');" />&nbsp;';
+        $info .= '<input class="btn btn-danger" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.cancel.button.title') . '" name="_" onclick="return confirm(\'' . $GLOBALS['LANG']->getLL('inlineedit.cancel.alert.title') . '\');" />';
         //simple init of translation object:
         /** @var $translationData TranslationData */
         $translationData = GeneralUtility::makeInstance(TranslationData::class);
         $translationData->setTranslationData(GeneralUtility::_POST('translation'));
         $translationData->setLanguage($this->sysLanguage);
-
         // See, if incoming translation is available, if so, submit it
         if (GeneralUtility::_POST('saveInline')) {
             $service->saveTranslation($l10ncfgObj, $translationData);
         }
-
         return $info;
     }
 
     function excelExportImportAction($l10ncfgObj)
     {
         global $LANG, $BACK_PATH;
-
         /** @var $service L10nBaseService */
         $service = GeneralUtility::makeInstance(L10nBaseService::class);
         if (GeneralUtility::_POST('import_asdefaultlanguage') == '1') {
@@ -399,44 +365,43 @@ class LocalizationManager extends BaseScriptClass
         $_selectOptions = array('0' => '-default-');
         $_selectOptions = $_selectOptions + $this->MOD_MENU["lang"];
         $info = '<div class="form-section">' .
-                    '<div class="form-group"><div class="checkbox"><label>' .
-                        '<input type="checkbox" value="1" checked="checked" name="check_exports" /> ' . $GLOBALS['LANG']->getLL('export.xml.check_exports.title') . '<br />' .
-                    '</label></div></div><br />' .
-                    '<div class="form-group"><div class="checkbox"><label>' .
-                        '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $GLOBALS['LANG']->getLL('import.xml.asdefaultlanguage.title') .
-                    '</label></div></div><br /><br />' .
-                '</div><div class="form-section"><div class="form-group">
+            $this->getFuncCheck(
+                $this->id,
+                'SET[check_exports]',
+                $this->MOD_SETTINGS['check_exports'],
+                '',
+                '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUid=' . $l10ncfgObj->getId(),
+                '',
+                $GLOBALS['LANG']->getLL('export.xml.check_exports.title')
+            ) . '<br />' .
+            '<div class="form-group"><div class="checkbox"><label>' .
+            '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $GLOBALS['LANG']->getLL('import.xml.asdefaultlanguage.title') .
+            '</label></div></div><br /><br />' .
+            '</div><div class="form-section"><div class="form-group">
                     <label>' . $GLOBALS['LANG']->getLL('export.xml.source-language.title') . '</label><br />' .
-                    $this->_getSelectField("export_xml_forcepreviewlanguage", '0', $_selectOptions) .
-                '<br /><br /></div></div><div class="form-section">
+            $this->_getSelectField("export_xml_forcepreviewlanguage", '0', $_selectOptions) .
+            '<br /><br /></div></div><div class="form-section">
                 <label>' . $GLOBALS['LANG']->getLL('general.action.import.upload.title') . '</label><br />' .
-                        '<input type="file" size="60" name="uploaded_import_file" />' .
-                '<br /></div><div class="form-section">' .
-                    '<input class="btn btn-default col-md-2 btn-info" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
-                    '<input class="btn btn-default col-md-5 btn-success" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.export.xml.button.title') . '" name="export_excel" /> ' .
-                    '<input class="btn btn-default col-md-5 btn-warning" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.import.xml.button.title') . '" name="import_excel" />
+            '<input type="file" size="60" name="uploaded_import_file" />' .
+            '<br /></div><div class="form-section">' .
+            '<input class="btn btn-default btn-info" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
+            '<input class="btn btn-default btn-success" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.export.xml.button.title') . '" name="export_excel" /> ' .
+            '<input class="btn btn-default btn-warning" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.import.xml.button.title') . '" name="import_excel" />
                 <br /><br /></div></div>';
-
         // Read uploaded file:
         if (GeneralUtility::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name'])) {
             $uploadedTempFile = GeneralUtility::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
-
             /** @var  $factory TranslationDataFactory */
             $factory = GeneralUtility::makeInstance(TranslationDataFactory::class);
             //TODO: catch exeption
             $translationData = $factory->getTranslationDataFromExcelXMLFile($uploadedTempFile);
             $translationData->setLanguage($this->sysLanguage);
-
             GeneralUtility::unlink_tempfile($uploadedTempFile);
-
             $service->saveTranslation($l10ncfgObj, $translationData);
-
             $info .= '<br/><br/>' . $this->moduleTemplate->icons(1) . $GLOBALS['LANG']->getLL('import.success.message') . '<br/><br/>';
         }
-
         // If export of XML is asked for, do that (this will exit and push a file for download)
         if (GeneralUtility::_POST('export_excel')) {
-
             // Render the XML
             /** @var $viewClass ExcelXmlView */
             $viewClass = GeneralUtility::makeInstance(ExcelXmlView::class, $l10ncfgObj, $this->sysLanguage);
@@ -450,9 +415,8 @@ class LocalizationManager extends BaseScriptClass
             if ($this->MOD_SETTINGS['noHidden']) {
                 $viewClass->setModeNoHidden();
             }
-
             //Check the export
-            if ((GeneralUtility::_POST('check_exports') == '1') && ($viewClass->checkExports() == false)) {
+            if ($this->MOD_SETTINGS['check_exports'] && !$viewClass->checkExports()) {
                 /** @var $flashMessage FlashMessage */
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class,
                     $GLOBALS['LANG']->getLL('export.process.duplicate.message'),
@@ -478,23 +442,19 @@ class LocalizationManager extends BaseScriptClass
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
                 $info .= $flashMessage->render();
                 $info .= $viewClass->renderInternalMessagesAsFlashMessage($status);
-
                 $viewClass->saveExportInformation();
             }
         }
-
         return $info;
     }
 
     function _getSelectField($elementName, $currentValue, $menuItems)
     {
         $options = array();
-
         foreach ($menuItems as $value => $label) {
             $options[] = '<option value="' . htmlspecialchars($value) . '"' . (!strcmp($currentValue,
                     $value) ? ' selected="selected"' : '') . '>' . GeneralUtility::deHSCentities(htmlspecialchars($label)) . '</option>';
         }
-
         if (count($options) > 0) {
             return '
 				<select class="form-control" name="' . $elementName . '" >
@@ -517,17 +477,14 @@ class LocalizationManager extends BaseScriptClass
     {
         // Save content to the disk and get the file name
         $filename = $xmlView->render();
-
         return $filename;
     }
 
     function catXMLExportImportAction($l10ncfgObj)
     {
         global $BE_USER;
-
         /** @var $service L10nBaseService */
         $service = GeneralUtility::makeInstance(L10nBaseService::class);
-
         $menuItems = array(
             '0' => array(
                 'label' => $GLOBALS['LANG']->getLL('export.xml.headline.title'),
@@ -543,20 +500,16 @@ class LocalizationManager extends BaseScriptClass
             ),
             '3' => array(
                 'label' => $GLOBALS['LANG']->getLL('l10nmgr.documentation.title'),
-                'content' => '<a class="btn btn-default btn-block btn-success" href="/' . ExtensionManagementUtility::siteRelPath('l10nmgr') . 'Documentation/manual.sxw" target="_new">Download</a>'
+                'content' => '<a class="btn btn-success" href="/' . ExtensionManagementUtility::siteRelPath('l10nmgr') . 'Documentation/manual.sxw" target="_new">Download</a>'
             )
         );
-
         $info = $this->moduleTemplate->getDynamicTabMenu($menuItems, 'ddtabs');
-
-
         $actionInfo = '';
         // Read uploaded file:
         if (GeneralUtility::_POST('import_xml') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name'])) {
             $uploadedTempFile = GeneralUtility::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
             /** @var $factory TranslationDataFactory */
             $factory = GeneralUtility::makeInstance(TranslationDataFactory::class);
-
             //print "<pre>";
             //var_dump($GLOBALS['BE_USER']->user);
             //print "</pre>";
@@ -607,7 +560,6 @@ class LocalizationManager extends BaseScriptClass
         if (GeneralUtility::_POST('export_xml')) {
             // Save user prefs
             $BE_USER->pushModuleData('l10nmgr/cm1/checkUTF8', GeneralUtility::_POST('check_utf8'));
-
             // Render the XML
             /** @var $viewClass CatXmlView */
             $viewClass = GeneralUtility::makeInstance(CatXmlView::class, $l10ncfgObj, $this->sysLanguage);
@@ -622,7 +574,7 @@ class LocalizationManager extends BaseScriptClass
                 $viewClass->setModeNoHidden();
             }
             // Check the export
-            if ((GeneralUtility::_POST('check_exports') == '1') && ($viewClass->checkExports() == false)) {
+            if ($this->MOD_SETTINGS['check_exports'] && !$viewClass->checkExports()) {
                 /** @var $flashMessage FlashMessage */
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class,
                     $GLOBALS['LANG']->getLL('export.process.duplicate.message'),
@@ -667,13 +619,11 @@ class LocalizationManager extends BaseScriptClass
                         $message = $e->getMessage() . ' (' . $e->getCode() . ')';
                         $status = FlashMessage::ERROR;
                     }
-
                     /** @var $flashMessage FlashMessage */
                     $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
                     $actionInfo .= $flashMessage->render();
                     $actionInfo .= $viewClass->renderInternalMessagesAsFlashMessage($status);
                 }
-
                 $viewClass->saveExportInformation();
             }
         }
@@ -681,76 +631,73 @@ class LocalizationManager extends BaseScriptClass
             $info .= $this->moduleTemplate->header($GLOBALS['LANG']->getLL('misc.messages.title'));
             $info .= $actionInfo;
         }
-
         // $info .= '</div>';
-
         return $info;
     }
 
     /**
      * @return string
      */
-    function getTabContentXmlExport() {
+    function getTabContentXmlExport()
+    {
         $_selectOptions = array('0' => '-default-');
         $_selectOptions = $_selectOptions + $this->MOD_MENU["lang"];
-
         $tabContentXmlExport = '<div class="form-section">' .
-                '<div class="form-group"><div class="checkbox"><label>' .
-                    '<input type="checkbox" value="1" name="check_exports" /> ' . $GLOBALS['LANG']->getLL('export.xml.check_exports.title') .
-                '</label></div></div><br />' .
-                '<div class="form-group"><div class="checkbox"><label>' .
-                    '<input type="checkbox" value="1" checked="checked" name="no_check_xml" /> ' . $GLOBALS['LANG']->getLL('export.xml.no_check_xml.title') .
-                '</label></div></div><br />' .
-                '<div class="form-group"><div class="checkbox"><label>' .
-                    '<input type="checkbox" value="1" name="check_utf8" /> ' . $GLOBALS['LANG']->getLL('export.xml.checkUtf8.title') .
-                '</label></div></div><br /><br />' .
+            '<div class="form-group"><div class="checkbox"><label>' .
+            '<input type="checkbox" value="1" name="check_exports" /> ' . $GLOBALS['LANG']->getLL('export.xml.check_exports.title') .
+            '</label></div></div><br />' .
+            '<div class="form-group"><div class="checkbox"><label>' .
+            '<input type="checkbox" value="1" checked="checked" name="no_check_xml" /> ' . $GLOBALS['LANG']->getLL('export.xml.no_check_xml.title') .
+            '</label></div></div><br />' .
+            '<div class="form-group"><div class="checkbox"><label>' .
+            '<input type="checkbox" value="1" name="check_utf8" /> ' . $GLOBALS['LANG']->getLL('export.xml.checkUtf8.title') .
+            '</label></div></div><br /><br />' .
             '</div><div class="form-section">' .
-                '<div class="form-group">' .
-                '<label>' . $GLOBALS['LANG']->getLL('export.xml.source-language.title') . '</label><br />' .
+            '<div class="form-group">' .
+            '<label>' . $GLOBALS['LANG']->getLL('export.xml.source-language.title') . '</label><br />' .
             $this->_getSelectField("export_xml_forcepreviewlanguage", '0', $_selectOptions) .
             '<br /><br /></div></div>';
-
         // Add the option to send to FTP server, if FTP information is defined
         if (!empty($this->lConf['ftp_server']) && !empty($this->lConf['ftp_server_username']) && !empty($this->lConf['ftp_server_password'])) {
             $tabContentXmlExport .= '<input type="checkbox" value="1" name="ftp_upload" id="tx_l10nmgr_ftp_upload" />
                 <label for="tx_l10nmgr_ftp_upload">' . $GLOBALS['LANG']->getLL('export.xml.ftp.title') . '</label>';
         }
-
-        $tabContentXmlExport .= '<input class="btn btn-default btn-info col-md-4" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" />' .
-            '<input class="btn btn-default btn-success col-md-8" type="submit" value="Export" name="export_xml" />';
-
+        $tabContentXmlExport .= '<div class="form-section"><input class="btn btn-default btn-info" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
+            '<input class="btn btn-default btn-success" type="submit" value="Export" name="export_xml" /><br class="clearfix">&nbsp;</div>';
         return $tabContentXmlExport;
     }
 
     /**
      * @return string
      */
-    function getTabContentXmlImport() {
+    function getTabContentXmlImport()
+    {
         $tabContentXmlImport = '<div class="form-section">' .
             '<div class="form-group"><div class="checkbox"><label>' .
-                '<input type="checkbox" value="1" name="make_preview_link" /> ' . $GLOBALS['LANG']->getLL('import.xml.make_preview_link.title') .
+            '<input type="checkbox" value="1" name="make_preview_link" /> ' . $GLOBALS['LANG']->getLL('import.xml.make_preview_link.title') .
             '</label></div></div><br />' .
             '<div class="form-group"><div class="checkbox"><label>' .
-                '<input type="checkbox" value="1" name="import_delL10N" /> ' . $GLOBALS['LANG']->getLL('import.xml.delL10N.title') .
+            '<input type="checkbox" value="1" name="import_delL10N" /> ' . $GLOBALS['LANG']->getLL('import.xml.delL10N.title') .
             '</label></div></div><br />' .
             '<div class="form-group"><div class="checkbox"><label>' .
-                '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $GLOBALS['LANG']->getLL('import.xml.asdefaultlanguage.title') .
+            '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $GLOBALS['LANG']->getLL('import.xml.asdefaultlanguage.title') .
             '</label></div></div><br /><br /></div>' .
             '<div class="form-section">' .
-                '<input type="file" size="60" name="uploaded_import_file" /><br />' .
+            '<input type="file" size="60" name="uploaded_import_file" /><br />' .
             '</div>' .
-                '<input class="btn btn-default btn-info col-md-4" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
-                '<input class="btn btn-default btn-warning col-md-8" type="submit" value="Import" name="import_xml" />';
-
+            '<div class="form-section">' .
+            '<input class="btn btn-info" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
+            '<input class="btn btn-warning" type="submit" value="Import" name="import_xml" />' .
+            '<br class="clearfix">&nbsp;</div>';
         return $tabContentXmlImport;
     }
 
     /**
      * @return string
      */
-    function getTabContentXmlDownloads() {
+    function getTabContentXmlDownloads()
+    {
         global $BACK_PATH;
-
         $allowedSettingFiles = array(
             'across' => 'acrossL10nmgrConfig.dst',
             'dejaVu' => 'dejaVuL10nmgrConfig.dvflt',
@@ -762,21 +709,16 @@ class LocalizationManager extends BaseScriptClass
             'sdltrados2011-2014' => 'TYPO3_ConfigurationManager_v3.6.free.sdlftsettings',
             'sdlpassolo' => 'SDLPassolo.xfg',
         );
-
         $tabContentXmlDownloads = '<h4>' . $GLOBALS['LANG']->getLL('file.settings.available.title') . '</h4><ul>';
-
         foreach ($allowedSettingFiles as $settingId => $settingFileName) {
             $absoluteFileName = GeneralUtility::getFileAbsFileName('EXT:l10nmgr/Configuration/Settings/' . $settingFileName);
             $currentFile = GeneralUtility::resolveBackPath($BACK_PATH . ExtensionManagementUtility::extRelPath('l10nmgr') . 'Configuration/Settings/' . $settingFileName);
-
             if (is_file($absoluteFileName) && is_readable($absoluteFileName)) {
-
                 $size = GeneralUtility::formatSize((int)filesize($absoluteFileName), ' Bytes| KB| MB| GB');
                 $tabContentXmlDownloads .= '<li><a class="t3-link" href="' . GeneralUtility::rawUrlEncodeFP($currentFile) . '" title="' . $GLOBALS['LANG']->getLL('file.settings.download.title') . '" target="_blank">' . $GLOBALS['LANG']->getLL('file.settings.' . $settingId . '.title') . ' (' . $size . ')' . '</a></li>';
             }
         }
         $tabContentXmlDownloads .= '</ul>';
-
         return $tabContentXmlDownloads;
     }
 
@@ -793,7 +735,6 @@ class LocalizationManager extends BaseScriptClass
         // Save content to the disk and get the file name
         $filename = $xmlView->render();
         $xmlFileName = basename($filename);
-
         // Try connecting to FTP server and uploading the file
         // If any step fails, an exception is thrown
         $connection = ftp_connect($this->lConf['ftp_server']);
@@ -815,7 +756,6 @@ class LocalizationManager extends BaseScriptClass
         } else {
             throw new Exception($GLOBALS['LANG']->getLL('export.ftp.connection_failed'), 1326906675);
         }
-
         // If everything went well, return the file's base name
         return $xmlFileName;
     }
@@ -835,7 +775,6 @@ class LocalizationManager extends BaseScriptClass
         $recipients = GeneralUtility::trimExplode(',', $this->lConf['email_recipient']);
         if (count($recipients) > 0) {
             $fullFilename = PATH_site . 'uploads/tx_l10nmgr/jobs/out/' . $xmlFileName;
-
             // Get source & target language ISO codes
             $sourceStaticLangArr = BackendUtility::getRecord('static_languages',
                 $l10nmgrCfgObj->l10ncfg['sourceLangStaticId'], 'lg_iso_2');
@@ -870,7 +809,6 @@ class LocalizationManager extends BaseScriptClass
                     $sourceLang, $targetLang, $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
             }
             $msg = implode(chr(10), $message);
-
             // Instantiate the mail object, set all necessary properties and send the mail
             /** @var $mailObject MailMessage */
             $mailObject = GeneralUtility::makeInstance(MailMessage::class);
@@ -895,15 +833,12 @@ class LocalizationManager extends BaseScriptClass
     protected function getButtons()
     {
         $buttons = array();
-
         $buttons['reload'] = '<a href="' . $GLOBALS['MCONF']['_'] . '" title="' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xml:labels.reload',
                 true) . '">' . $this->iconFactory->getIcon('actions-system-refresh') . '</a>';
-
         // Shortcut
         if ($GLOBALS['BE_USER']->mayMakeShortcut()) {
             $buttons['shortcut'] = $this->moduleTemplate->makeShortcutIcon('', 'function', $this->MCONF['name']);
         }
-
         return $buttons;
     }
 
@@ -914,7 +849,6 @@ class LocalizationManager extends BaseScriptClass
      */
     public function printContent()
     {
-
         //		$this->content .= $this->moduleTemplate->endPage();
         echo $this->content;
     }
@@ -932,7 +866,6 @@ class LocalizationManager extends BaseScriptClass
         // Create diff-result:
         /** @var $DiffUtility DiffUtility */
         $DiffUtility = GeneralUtility::makeInstance(DiffUtility::class);
-
         return $DiffUtility->makeDiffDisplay($old, $new);
     }
 
@@ -965,29 +898,34 @@ class LocalizationManager extends BaseScriptClass
      *
      * @return string HTML code for selector box
      */
-    public static function getFuncMenu($mainParams, $elementName, $currentValue, $menuItems, $script = '', $addParams = '', $label = '')
-    {
+    public static function getFuncMenu(
+        $mainParams,
+        $elementName,
+        $currentValue,
+        $menuItems,
+        $script = '',
+        $addParams = '',
+        $label = ''
+    ) {
         if (!is_array($menuItems)) {
             return '';
         }
         $scriptUrl = self::buildScriptUrl($mainParams, $addParams, $script);
         $options = array();
         foreach ($menuItems as $value => $text) {
-            $options[] = '<option value="' . htmlspecialchars($value) . '"' . ((string)$currentValue === (string)$value ? ' selected="selected"' : '') . '>' . htmlspecialchars($text, ENT_COMPAT, 'UTF-8', false) . '</option>';
+            $options[] = '<option value="' . htmlspecialchars($value) . '"' . ((string)$currentValue === (string)$value ? ' selected="selected"' : '') . '>' . htmlspecialchars($text,
+                    ENT_COMPAT, 'UTF-8', false) . '</option>';
         }
-
         $label = $label !== '' ?
             ('<label>' . htmlspecialchars($label) . '</label><br />') :
             '';
-
         if (!empty($options)) {
             $onChange = 'jumpToUrl(' . GeneralUtility::quoteJSvalue($scriptUrl . '&' . $elementName . '=') . '+this.options[this.selectedIndex].value,this);';
             return '
-
 				<!-- Function Menu of module -->
                 <div class="form-group">' .
-                $label .
-				'<select class="form-control clear-both" name="' . $elementName . '" onchange="' . htmlspecialchars($onChange) . '">
+            $label .
+            '<select class="form-control clear-both" name="' . $elementName . '" onchange="' . htmlspecialchars($onChange) . '">
 					' . implode('
 					', $options) . '
 				</select>
@@ -1012,13 +950,19 @@ class LocalizationManager extends BaseScriptClass
      * @return string HTML code for checkbox
      * @see getFuncMenu()
      */
-    public static function getFuncCheck($mainParams, $elementName, $currentValue, $script = '', $addParams = '', $tagParams = '', $label = '')
-    {
+    public static function getFuncCheck(
+        $mainParams,
+        $elementName,
+        $currentValue,
+        $script = '',
+        $addParams = '',
+        $tagParams = '',
+        $label = ''
+    ) {
         $scriptUrl = self::buildScriptUrl($mainParams, $addParams, $script);
         $onClick = 'jumpToUrl(' . GeneralUtility::quoteJSvalue($scriptUrl . '&' . $elementName . '=') . '+(this.checked?1:0),this);';
-
         return
-            '<div class="form-group">'.
+            '<div class="form-group">' .
             '<div class="checkbox">
             <label>
             <input' .
@@ -1051,7 +995,6 @@ class LocalizationManager extends BaseScriptClass
         if (!$script) {
             $script = basename(PATH_thisScript);
         }
-
         if (GeneralUtility::_GP('route')) {
             $router = GeneralUtility::makeInstance(Router::class);
             $route = $router->match(GeneralUtility::_GP('route'));
@@ -1063,10 +1006,8 @@ class LocalizationManager extends BaseScriptClass
         } else {
             $scriptUrl = $script . '?' . GeneralUtility::implodeArrayForUrl('', $mainParams) . $addParams;
         }
-
         return $scriptUrl;
     }
-
 }
 
 ?>
