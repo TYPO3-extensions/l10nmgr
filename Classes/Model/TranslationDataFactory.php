@@ -25,7 +25,6 @@ namespace Localizationteam\L10nmgr\Model;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Html\RteHtmlParser;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Localizationteam\L10nmgr\Model\TranslationData;
 use Localizationteam\L10nmgr\Model\Tools\XmlTools;

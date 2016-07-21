@@ -75,6 +75,11 @@ class Import extends CommandLineController
     protected $sysLanguage;
 
     /**
+     * @var integer ID of the forced source language being handled
+     */
+    protected $previewLanguage;
+
+    /**
      * @var string Path to temporary de-archiving directory, to be removed after import
      */
     protected $directoryToCleanUp;
@@ -338,6 +343,9 @@ class Import extends CommandLineController
 
             //Do import...
             $this->sysLanguage = $importManager->headerData['t3_sysLang']; //set import language to t3_sysLang from XML
+            if ($importManager->headerData['t3_sourceLang'] === $importManager->headerData['t3_targetLang']) {
+                $this->previewLanguage = $this->sysLanguage;
+            }
 
             //Delete previous translations
             $importManager->delL10N($importManager->getDelL10NDataFromCATXMLNodes($importManager->xmlNodes));
@@ -361,6 +369,7 @@ class Import extends CommandLineController
             /** @var $translationData TranslationData */
             $translationData = $factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
             $translationData->setLanguage($this->sysLanguage);
+            $translationData->setPreviewLanguage($this->previewLanguage);
             unset($importManager);
 
             $service->saveTranslation($l10ncfgObj, $translationData);
@@ -433,6 +442,9 @@ class Import extends CommandLineController
                     $GLOBALS['BE_USER']->setWorkspace($xmlFileHead['t3_workspaceId'][0]['XMLvalue']);
                     // Set import language to t3_sysLang from XML
                     $this->sysLanguage = $xmlFileHead['t3_sysLang'][0]['XMLvalue'];
+                    if ($xmlFileHead['t3_sourceLang'][0]['XMLvalue'] === $xmlFileHead['t3_targetLang'][0]['XMLvalue']) {
+                        $this->previewLanguage = $this->sysLanguage;
+                    }
 
                     /** @var $service L10nBaseService */
                     $service = GeneralUtility::makeInstance(L10nBaseService::class);
@@ -482,6 +494,7 @@ class Import extends CommandLineController
                         /** @var $translationData TranslationData */
                         $translationData = $factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
                         $translationData->setLanguage($this->sysLanguage);
+                        $translationData->setPreviewLanguage($this->previewLanguage);
                         unset($importManager);
                         $service->saveTranslation($l10ncfgObj, $translationData);
 

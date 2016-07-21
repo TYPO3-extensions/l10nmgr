@@ -190,10 +190,10 @@ class L10nAccumulatedInformation
 
                         if ($table === 'pages') {
                             $accum[$pageId]['items'][$table][$pageId] = $t8Tools->translationDetails('pages',
-                                BackendUtility::getRecordWSOL('pages', $pageId), $sysLang, $flexFormDiff);
+                                BackendUtility::getRecordWSOL('pages', $pageId), $sysLang, $flexFormDiff, $previewLanguage);
                             $this->_increaseInternalCounters($accum[$pageId]['items'][$table][$pageId]['fields']);
                         } else {
-                            $allRows = $t8Tools->getRecordsToTranslateFromTable($table, $pageId);
+                            $allRows = $t8Tools->getRecordsToTranslateFromTable($table, $pageId, $previewLanguage);
 
                             if (is_array($allRows)) {
                                 if (count($allRows)) {
@@ -203,13 +203,13 @@ class L10nAccumulatedInformation
                                         if (is_array($row) && count($tableUidConstraintIndex) > 0) {
                                             if (is_array($row) && isset($tableUidConstraintIndex[$table . ':' . $row['uid']])) {
                                                 $accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,
-                                                    $row, $sysLang, $flexFormDiff);
+                                                    $row, $sysLang, $flexFormDiff, $previewLanguage);
                                                 $this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);
                                             }
                                         } else {
                                             if (is_array($row) && !isset($excludeIndex[$table . ':' . $row['uid']])) {
                                                 $accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,
-                                                    $row, $sysLang, $flexFormDiff);
+                                                    $row, $sysLang, $flexFormDiff, $previewLanguage);
                                                 $this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);
                                             }
                                         }
@@ -228,7 +228,7 @@ class L10nAccumulatedInformation
             $row = BackendUtility::getRecordWSOL($table, $uid);
             if (count($row)) {
                 $accum[-1]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table, $row, $sysLang,
-                    $flexFormDiff);
+                    $flexFormDiff, $previewLanguage);
                 $this->_increaseInternalCounters($accum[-1]['items'][$table][$row['uid']]['fields']);
             }
         }

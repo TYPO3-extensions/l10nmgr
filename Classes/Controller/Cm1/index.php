@@ -92,6 +92,10 @@ class Cm1 extends BaseScriptClass
      */
     var $sysLanguage = '0'; // Internal
     /**
+     * @var  integer    Forced source language to export
+     */
+    var $previewLanguage = '0'; // Internal
+    /**
      * @var array Extension configuration
      */
     protected $lConf = array();
@@ -323,6 +327,7 @@ class Cm1 extends BaseScriptClass
         $translationData = GeneralUtility::makeInstance(TranslationData::class);
         $translationData->setTranslationData(GeneralUtility::_POST('translation'));
         $translationData->setLanguage($this->sysLanguage);
+        $translationData->setPreviewLanguage($this->previewLanguage);
 
         // See, if incoming translation is available, if so, submit it
         if (GeneralUtility::_POST('saveInline')) {
@@ -363,6 +368,7 @@ class Cm1 extends BaseScriptClass
             //TODO: catch exeption
             $translationData = $factory->getTranslationDataFromExcelXMLFile($uploadedTempFile);
             $translationData->setLanguage($this->sysLanguage);
+            $translationData->setPreviewLanguage($this->previewLanguage);
 
             GeneralUtility::unlink_tempfile($uploadedTempFile);
 
@@ -553,6 +559,7 @@ class Cm1 extends BaseScriptClass
                 $actionInfo .= $GLOBALS['LANG']->getLL('import.xml.old-format.message');
                 $translationData = $factory->getTranslationDataFromOldFormatCATXMLFile($uploadedTempFile);
                 $translationData->setLanguage($this->sysLanguage);
+                $translationData->setPreviewLanguage($this->previewLanguage);
                 $service->saveTranslation($l10ncfgObj, $translationData);
                 $actionInfo .= '<br/><br/>' . $this->doc->icons(1) . 'Import done<br/><br/>(Command count:' . $service->lastTCEMAINCommandsCount . ')';
             } else {
@@ -579,8 +586,12 @@ class Cm1 extends BaseScriptClass
                             $t3_sysLang = $importManager->headerData['t3_sysLang'], $pageIds);
                         $actionInfo .= $mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
                     }
+                    if ($importManager->headerData['t3_sourceLang'] === $importManager->headerData['t3_targetLang']) {
+                        $this->previewLanguage = $this->sysLanguage;
+                    }
                     $translationData = $factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
                     $translationData->setLanguage($this->sysLanguage);
+                    $translationData->setPreviewLanguage($this->previewLanguage);
                     //$actionInfo.="<pre>".var_export($GLOBALS['BE_USER'],true)."</pre>";
                     unset($importManager);
                     $service->saveTranslation($l10ncfgObj, $translationData);

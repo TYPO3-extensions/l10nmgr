@@ -25,7 +25,6 @@ namespace Localizationteam\L10nmgr\Model;
  ***************************************************************/
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -96,9 +95,12 @@ class L10nBaseService
                 $processingObject->processBeforeSaving($l10ncfgObj, $translationObj, $this);
             }
         }
-
+    
         $sysLang = $translationObj->getLanguage();
+        $previewLanguage = $translationObj->getPreviewLanguage();
         $accumObj = $l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
+        $accumObj->setForcedPreviewLanguage($previewLanguage);
+
         $flexFormDiffArray = $this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray($sysLang),
             $translationObj->getTranslationData());
 

@@ -38,6 +38,8 @@ class TranslationData
 
     var $sysLang;
 
+    var $previewLanguage;
+
     function setTranslationData($data)
     {
         $this->data = $data;
@@ -48,6 +50,11 @@ class TranslationData
         $this->sysLang = $sysLang;
     }
 
+    function setPreviewLanguage($previewLanguage)
+    {
+        $this->previewLanguage = $previewLanguage;
+    }
+
     function &getTranslationData()
     {
         return $this->data;
@@ -56,5 +63,10 @@ class TranslationData
     function getLanguage()
     {
         return $this->sysLang;
+    }
+
+    function getPreviewLanguage()
+    {
+        return $this->previewLanguage;
     }
 }
