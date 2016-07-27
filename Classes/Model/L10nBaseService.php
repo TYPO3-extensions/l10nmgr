@@ -90,7 +90,9 @@ class L10nBaseService
                 $processingObject->processBeforeSaving($l10ncfgObj, $translationObj, $this);
             }
         }
-        
+
+        $this->remapInputDataForExistingTranslations($l10ncfgObj, $translationObj);
+
         $sysLang = $translationObj->getLanguage();
         $previewLanguage = $translationObj->getPreviewLanguage();
         $accumObj = $l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
@@ -522,5 +524,51 @@ class L10nBaseService
                 }
             }
         }
+    }
+
+
+    /**
+     * If you want to reimport the same file over and over again, by default this can only be done once because the input array
+     * contains "NEW" all over the place in th XML file.
+     * This feature (enabled per configuration record) maps the data of the existing record in the target language
+     * to re-import the data again and again.
+     *
+     * This also allows to import data of records that have been added in TYPO3 in the meantime.
+     *
+     * @param L10nConfiguration $configurationObject
+     * @param TranslationData $translationData
+     */
+    protected function remapInputDataForExistingTranslations(L10nConfiguration $configurationObject, TranslationData $translationData)
+    {
+        // feature is not enabled
+        if (!$configurationObject->getData('overrideexistingtranslations')) {
+            return;
+        }
+
+        $inputArray = $translationData->getTranslationData();
+
+        // clean up input array and replace the "NEW" fields with actual values if they have been translated already
+        $cleanedInputArray = array();
+        foreach ($inputArray as $table => $elementsInTable) {
+            foreach ($elementsInTable as $elementUid => $fields) {
+                foreach ($fields as $fieldKey => $translatedValue) {
+                    // check if the record was marked as "new" but was translated already
+                    list($Ttable, $TuidString, $Tfield, $Tpath) = explode(':', $fieldKey);
+                    list($Tuid, $Tlang, $TdefRecord) = explode('/', $TuidString);
+                    if ($Tuid === 'NEW') {
+                        $translatedRecord = BackendUtility::getRecordLocalization($Ttable, $TdefRecord, $Tlang);
+                        if (!empty($translatedRecord)) {
+                            $translatedRecord = reset($translatedRecord);
+                            if ($translatedRecord['uid'] > 0) {
+                                $fieldKey = $Ttable . ':' . $translatedRecord['uid'] . ':' . $Tfield;
+                            }
+                        }
+                    }
+                    $cleanedInputArray[$table][$elementUid][$fieldKey] = $translatedValue;
+                }
+            }
+        }
+
+        $translationData->setTranslationData($cleanedInputArray);
     }
 }

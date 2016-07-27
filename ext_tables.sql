@@ -17,6 +17,7 @@ CREATE TABLE tx_l10nmgr_cfg (
 	sourceLangStaticId char(3) NOT NULL default '',
 	incfcewithdefaultlanguage int(11) DEFAULT '0' NOT NULL,
 	filenameprefix tinytext NOT NULL,
+	overrideexistingtranslations tinyint(4) DEFAULT '0',
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)

@@ -82,6 +82,9 @@
 			<trans-unit id="tx_l10nmgr_cfg.exporttablelist" xml:space="preserve">
 				<source>Exported tables</source>
 			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.overrideexistingtranslations" xml:space="preserve">
+				<source>Override existing labels in added translations on re-import</source>
+			</trans-unit>
 			<trans-unit id="tx_l10nmgr_export" xml:space="preserve">
 				<source>L10N Manager exports</source>
 			</trans-unit>
