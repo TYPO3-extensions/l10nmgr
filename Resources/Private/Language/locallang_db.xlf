@@ -82,6 +82,9 @@
 			<trans-unit id="tx_l10nmgr_cfg.exporttablelist" xml:space="preserve">
 				<source>Exported tables</source>
 			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.pretranslatecontent" xml:space="preserve">
+				<source>Translate all content elements on pages on import (use with option below). Use this if you have trouble with grid elements and / or sys_file_references</source>
+			</trans-unit>
 			<trans-unit id="tx_l10nmgr_cfg.overrideexistingtranslations" xml:space="preserve">
 				<source>Override existing labels in added translations on re-import</source>
 			</trans-unit>

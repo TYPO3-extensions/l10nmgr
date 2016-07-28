@@ -15,7 +15,7 @@ return array(
         'fe_admin_fieldList' => 'title, depth, tablelist, exclude',
     ),
     'interface' => array(
-        'showRecordFieldList' => 'title,depth,sourceLangStaticId,tablelist,exclude,incfcewithdefaultlanguage,overrideexistingtranslations'
+        'showRecordFieldList' => 'title,depth,sourceLangStaticId,tablelist,exclude,incfcewithdefaultlanguage,pretranslatecontent,overrideexistingtranslations'
     ),
     'columns' => array(
         'title' => array(
@@ -122,6 +122,14 @@ return array(
                 'default' => '0'
             )
         ),
+        'pretranslatecontent' => array(
+            'exclude' => 1,
+            'label' => $l10n . ':tx_l10nmgr_cfg.pretranslatecontent',
+            'config' => array(
+                'type' => 'check',
+                'default' => '0'
+            )
+        ),
         'overrideexistingtranslations' => array(
             'exclude' => 1,
             'label' => $l10n . ':tx_l10nmgr_cfg.overrideexistingtranslations',
@@ -132,7 +140,7 @@ return array(
         )
     ),
     'types' => array(
-        '0' => array('showitem' => 'title,filenameprefix;;;;2-2-2, depth;;;;3-3-3, sourceLangStaticId, tablelist, exclude, include, displaymode, incfcewithdefaultlanguage, overrideexistingtranslations')
+        '0' => array('showitem' => 'title,filenameprefix;;;;2-2-2, depth;;;;3-3-3, sourceLangStaticId, tablelist, exclude, include, displaymode, incfcewithdefaultlanguage, pretranslatecontent, overrideexistingtranslations')
     ),
     'palettes' => array(
         '1' => array('showitem' => '')
