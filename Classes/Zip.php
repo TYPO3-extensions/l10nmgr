@@ -19,47 +19,47 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Zip
 {
-
+    
     /**
      * Array to store compressed data
      *
      * @var  array $datasec
      */
     var $datasec = array();
-
+    
     /**
      * Central directory
      *
      * @var  array $ctrl_dir
      */
     var $ctrl_dir = array();
-
+    
     /**
      * End of central directory record
      *
      * @var  string $eof_ctrl_dir
      */
     var $eof_ctrl_dir = "\x50\x4b\x05\x06\x00\x00\x00\x00";
-
+    
     /**
      * Last offset position
      *
      * @var  integer $old_offset
      */
     var $old_offset = 0;
-
+    
     /**
      * Unzip Application
      *
      * @var  string $unzipAppCmd
      */
-
+    
     var $unzipAppCmd = '/usr/bin/unzip -qq ###ARCHIVENAME### -d ###DIRECTORY###'; // Unzip Application (don't set to blank!) ** MODIFIED RL, 15.08.03
     //TODO: Take global var for unzip program...
-
+    
     // Example for WinRAR:
     // var $unzipAppCmd ='c:\Programme\WinRAR\winrar.exe x -afzip -ibck -inul -o+ ###ARCHIVENAME### ###DIRECTORY###';
-
+    
     /**
      * Adds "file" to archive
      *
@@ -72,17 +72,17 @@ class Zip
     function addFile($data, $name, $time = 0)
     {
         $name = str_replace('\\', '/', $name);
-
+        
         $dtime = dechex($this->unix2DosTime($time));
         $hexdtime = '\x' . $dtime[6] . $dtime[7] . '\x' . $dtime[4] . $dtime[5] . '\x' . $dtime[2] . $dtime[3] . '\x' . $dtime[0] . $dtime[1];
         eval('$hexdtime = "' . $hexdtime . '";');
-
+        
         $fr = "\x50\x4b\x03\x04";
         $fr .= "\x14\x00"; // ver needed to extract
         $fr .= "\x00\x00"; // gen purpose bit flag
         $fr .= "\x08\x00"; // compression method
         $fr .= $hexdtime; // last mod time and date
-
+        
         // "local file header" segment
         $unc_len = strlen($data);
         $crc = crc32($data);
@@ -95,19 +95,19 @@ class Zip
         $fr .= pack('v', strlen($name)); // length of filename
         $fr .= pack('v', 0); // extra field length
         $fr .= $name;
-
+        
         // "file data" segment
         $fr .= $zdata;
-
+        
         // "data descriptor" segment (optional but necessary if archive is not
         // served as file)
         $fr .= pack('V', $crc); // crc32
         $fr .= pack('V', $c_len); // compressed filesize
         $fr .= pack('V', $unc_len); // uncompressed filesize
-
+        
         // add this entry to array
         $this->datasec[] = $fr;
-
+        
         // now add to central directory record
         $cdrec = "\x50\x4b\x01\x02";
         $cdrec .= "\x00\x00"; // version made by
@@ -124,17 +124,17 @@ class Zip
         $cdrec .= pack('v', 0); // disk number start
         $cdrec .= pack('v', 0); // internal file attributes
         $cdrec .= pack('V', 32); // external file attributes - 'archive' bit set
-
+        
         $cdrec .= pack('V', $this->old_offset); // relative offset of local header
         $this->old_offset += strlen($fr);
-
+        
         $cdrec .= $name;
-
+        
         // optional extra field, file comment goes here
         // save to central directory
         $this->ctrl_dir[] = $cdrec;
     } // end of the 'unix2DosTime()' method
-
+    
     /**
      * Converts an Unix timestamp to a four byte DOS date and time format (date
      * in high two bytes, time in low two bytes allowing magnitude comparison).
@@ -147,7 +147,7 @@ class Zip
     function unix2DosTime($unixtime = 0)
     {
         $timearray = ($unixtime == 0) ? getdate() : getdate($unixtime);
-
+        
         if ($timearray['year'] < 1980) {
             $timearray['year'] = 1980;
             $timearray['mon'] = 1;
@@ -156,10 +156,10 @@ class Zip
             $timearray['minutes'] = 0;
             $timearray['seconds'] = 0;
         } // end if
-
+        
         return (($timearray['year'] - 1980) << 25) | ($timearray['mon'] << 21) | ($timearray['mday'] << 16) | ($timearray['hours'] << 11) | ($timearray['minutes'] << 5) | ($timearray['seconds'] >> 1);
     } // end of the 'addFile()' method
-
+    
     /**
      * Dumps out file
      *
@@ -170,7 +170,7 @@ class Zip
     {
         $data = implode('', $this->datasec);
         $ctrldir = implode('', $this->ctrl_dir);
-
+        
         return $data . $ctrldir . $this->eof_ctrl_dir . pack('v',
             sizeof($this->ctrl_dir)) . // total # of entries "on this disk"
         pack('v', sizeof($this->ctrl_dir)) . // total # of entries overall
@@ -178,7 +178,7 @@ class Zip
         pack('V', strlen($data)) . // offset to start of central dir
         "\x00\x00"; // .zip file comment length
     } // end of the 'file()' method
-
+    
     /**
      * This takes the ZIP file, unzips it, reads all documents, store them in database for next retrieval.
      * The file is libunzipped in PATH_site.'typo3temp/' + a randomly named folder.
@@ -198,16 +198,16 @@ class Zip
                 #       $cmd = $this->unzipAppPath.' -t '.$this->file;
                 #       exec($cmd,$dat);
                 #       debug($dat);
-
+                
                 // Unzip the files inside: **MODIFIED RL, 15.08.03
                 $cmd = $this->unzipAppCmd;
                 $cmd = str_replace('###ARCHIVENAME###', $file, $cmd);
                 $cmd = str_replace('###DIRECTORY###', $tempDir, $cmd);
                 exec($cmd);
-
+                
                 $out['fileArr'] = $this->getAllFilesAndFoldersInPath(array(), $tempDir);
                 $out['tempDir'] = $tempDir;
-
+                
                 return $out;
             } else {
                 return 'No dir: ' . $tempDir;
@@ -216,7 +216,7 @@ class Zip
             return 'No file: ' . $file;
         }
     }
-
+    
     /**
      * Returns an array with all files and folders in $extPath
      *
@@ -231,7 +231,7 @@ class Zip
         $extList = '';
         $fileArr[] = $extPath;
         $fileArr = array_merge($fileArr, GeneralUtility::getFilesInDir($extPath, $extList, 1, 1));
-
+        
         $dirs = GeneralUtility::get_dirs($extPath);
         if (is_array($dirs)) {
             reset($dirs);
@@ -241,10 +241,10 @@ class Zip
                 }
             }
         }
-
+        
         return $fileArr;
     }
-
+    
     /**
      * Removes directory with all files from the path $tempDir.
      * $tempDir must be a subfolder to typo3temp/
@@ -260,7 +260,7 @@ class Zip
         if (!GeneralUtility::isFirstPartOfStr($tempDir, $testDir)) {
             die($tempDir . ' was not within ' . $testDir);
         }
-
+        
         // Go through dirs:
         $dirs = GeneralUtility::get_dirs($tempDir);
         if (is_array($dirs)) {

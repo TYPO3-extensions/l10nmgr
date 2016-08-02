@@ -71,6 +71,10 @@ class LocalizationManager extends BaseScriptClass
      */
     var $sysLanguage = '0'; // Internal
     /**
+     * @var  integer    Forced source language to export
+     */
+    var $previewLanguage = '0'; // Internal
+    /**
      * @var array Extension configuration
      */
     protected $lConf = array();
@@ -96,7 +100,7 @@ class LocalizationManager extends BaseScriptClass
      * @var IconFactory
      */
     protected $iconFactory;
-
+    
     /**
      * Constructor
      */
@@ -109,7 +113,7 @@ class LocalizationManager extends BaseScriptClass
             'name' => $this->moduleName,
         );
     }
-
+    
     /**
      * Injects the request object for the current request or subrequest
      * Then checks for module functions that have hooked in, and renders menu etc.
@@ -131,7 +135,7 @@ class LocalizationManager extends BaseScriptClass
         $response->getBody()->write($this->moduleTemplate->renderContent());
         return $response;
     }
-
+    
     /**
      * Initializes the Module
      *
@@ -142,7 +146,7 @@ class LocalizationManager extends BaseScriptClass
         $GLOBALS['BE_USER']->modAccess($this->MCONF, 1);
         parent::init();
     }
-
+    
     /**
      * Adds items to the ->MOD_MENU array. Used for the function menu selector.
      *
@@ -179,7 +183,7 @@ class LocalizationManager extends BaseScriptClass
         }
         parent::menuConfig();
     }
-
+    
     /**
      * The function loadExtConf loads the extension configuration.
      *
@@ -190,7 +194,7 @@ class LocalizationManager extends BaseScriptClass
         // Load the configuration
         $this->lConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr']);
     }
-
+    
     /**
      * Main function of the module. Write the content to
      *
@@ -277,7 +281,7 @@ class LocalizationManager extends BaseScriptClass
             }
         }
     }
-
+    
     /**
      * Creating module content
      *
@@ -332,7 +336,7 @@ class LocalizationManager extends BaseScriptClass
             '<div class="col-md-6"><div class="form-inline form-inline-spaced">' . $subcontent . '</div></div>'
         );
     }
-
+    
     function inlineEditAction($l10ncfgObj)
     {
         /** @var $service L10nBaseService */
@@ -346,13 +350,14 @@ class LocalizationManager extends BaseScriptClass
         $translationData = GeneralUtility::makeInstance(TranslationData::class);
         $translationData->setTranslationData(GeneralUtility::_POST('translation'));
         $translationData->setLanguage($this->sysLanguage);
+        $translationData->setPreviewLanguage($this->previewLanguage);
         // See, if incoming translation is available, if so, submit it
         if (GeneralUtility::_POST('saveInline')) {
             $service->saveTranslation($l10ncfgObj, $translationData);
         }
         return $info;
     }
-
+    
     function excelExportImportAction($l10ncfgObj)
     {
         global $LANG, $BACK_PATH;
@@ -396,6 +401,7 @@ class LocalizationManager extends BaseScriptClass
             //TODO: catch exeption
             $translationData = $factory->getTranslationDataFromExcelXMLFile($uploadedTempFile);
             $translationData->setLanguage($this->sysLanguage);
+            $translationData->setPreviewLanguage($this->previewLanguage);
             GeneralUtility::unlink_tempfile($uploadedTempFile);
             $service->saveTranslation($l10ncfgObj, $translationData);
             $info .= '<br/><br/>' . $this->moduleTemplate->icons(1) . $GLOBALS['LANG']->getLL('import.success.message') . '<br/><br/>';
@@ -447,7 +453,7 @@ class LocalizationManager extends BaseScriptClass
         }
         return $info;
     }
-
+    
     function _getSelectField($elementName, $currentValue, $menuItems)
     {
         $options = array();
@@ -464,7 +470,7 @@ class LocalizationManager extends BaseScriptClass
 						';
         }
     }
-
+    
     /**
      * Sends download header and calls render method of the view.
      * Used for excelXML and CATXML.
@@ -479,7 +485,7 @@ class LocalizationManager extends BaseScriptClass
         $filename = $xmlView->render();
         return $filename;
     }
-
+    
     function catXMLExportImportAction($l10ncfgObj)
     {
         global $BE_USER;
@@ -521,6 +527,7 @@ class LocalizationManager extends BaseScriptClass
                 $actionInfo .= $GLOBALS['LANG']->getLL('import.xml.old-format.message');
                 $translationData = $factory->getTranslationDataFromOldFormatCATXMLFile($uploadedTempFile);
                 $translationData->setLanguage($this->sysLanguage);
+                $translationData->setPreviewLanguage($this->previewLanguage);
                 $service->saveTranslation($l10ncfgObj, $translationData);
                 $actionInfo .= '<br/><br/>' . $this->moduleTemplate->icons(1) . 'Import done<br/><br/>(Command count:' . $service->lastTCEMAINCommandsCount . ')';
             } else {
@@ -546,8 +553,12 @@ class LocalizationManager extends BaseScriptClass
                             $t3_sysLang = $importManager->headerData['t3_sysLang'], $pageIds);
                         $actionInfo .= $mkPreviewLinks->renderPreviewLinks($mkPreviewLinks->mkPreviewLinks());
                     }
+                    if ($importManager->headerData['t3_sourceLang'] === $importManager->headerData['t3_targetLang']) {
+                        $this->previewLanguage = $this->sysLanguage;
+                    }
                     $translationData = $factory->getTranslationDataFromCATXMLNodes($importManager->getXMLNodes());
                     $translationData->setLanguage($this->sysLanguage);
+                    $translationData->setPreviewLanguage($this->previewLanguage);
                     //$actionInfo.="<pre>".var_export($GLOBALS['BE_USER'],true)."</pre>";
                     unset($importManager);
                     $service->saveTranslation($l10ncfgObj, $translationData);
@@ -634,7 +645,7 @@ class LocalizationManager extends BaseScriptClass
         // $info .= '</div>';
         return $info;
     }
-
+    
     /**
      * @return string
      */
@@ -666,7 +677,7 @@ class LocalizationManager extends BaseScriptClass
             '<input class="btn btn-default btn-success" type="submit" value="Export" name="export_xml" /><br class="clearfix">&nbsp;</div>';
         return $tabContentXmlExport;
     }
-
+    
     /**
      * @return string
      */
@@ -691,7 +702,7 @@ class LocalizationManager extends BaseScriptClass
             '<br class="clearfix">&nbsp;</div>';
         return $tabContentXmlImport;
     }
-
+    
     /**
      * @return string
      */
@@ -721,7 +732,7 @@ class LocalizationManager extends BaseScriptClass
         $tabContentXmlDownloads .= '</ul>';
         return $tabContentXmlDownloads;
     }
-
+    
     /**
      * Uploads the XML export to the FTP server
      *
@@ -759,7 +770,7 @@ class LocalizationManager extends BaseScriptClass
         // If everything went well, return the file's base name
         return $xmlFileName;
     }
-
+    
     /**
      * The function emailNotification sends an email with a translation job to the recipient specified in the extension config.
      *
@@ -824,7 +835,7 @@ class LocalizationManager extends BaseScriptClass
             $mailObject->send();
         }
     }
-
+    
     /**
      * Create the panel of buttons for submitting the form or otherwise perform operations.
      *
@@ -841,7 +852,7 @@ class LocalizationManager extends BaseScriptClass
         }
         return $buttons;
     }
-
+    
     /**
      * Printing output content
      *
@@ -852,7 +863,7 @@ class LocalizationManager extends BaseScriptClass
         //		$this->content .= $this->moduleTemplate->endPage();
         echo $this->content;
     }
-
+    
     /**
      * Diff-compare markup
      *
@@ -868,7 +879,7 @@ class LocalizationManager extends BaseScriptClass
         $DiffUtility = GeneralUtility::makeInstance(DiffUtility::class);
         return $DiffUtility->makeDiffDisplay($old, $new);
     }
-
+    
     /**
      * @param string Mime type
      * @param string Filename
@@ -882,7 +893,7 @@ class LocalizationManager extends BaseScriptClass
         Header('Content-Type: ' . $mimeType);
         Header('Content-Disposition: attachment; filename=' . $filename);
     }
-
+    
     /**
      * Returns a selector box "function menu" for a module
      * Requires the JS function jumpToUrl() to be available
@@ -934,7 +945,7 @@ class LocalizationManager extends BaseScriptClass
         }
         return '';
     }
-
+    
     /**
      * Checkbox function menu.
      * Works like ->getFuncMenu() but takes no $menuItem array since this is a simple checkbox.
@@ -978,7 +989,7 @@ class LocalizationManager extends BaseScriptClass
             </div>
             </div>';
     }
-
+    
     /**
      * Builds the URL to the current script with given arguments
      *

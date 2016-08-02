@@ -34,7 +34,6 @@ namespace Localizationteam\L10nmgr\Controller\Cm3;
  *  199:     function makeTableRow($rec)
  * TOTAL FUNCTIONS: 6
  * (This index is automatically created/updated by the extension "extdeveval")
-
  */
 
 // DEFAULT initialization of a module [BEGIN]
@@ -55,7 +54,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Cm3 extends BaseScriptClass
 {
-
+    
     /**
      * Adds items to the ->MOD_MENU array. Used for the function menu selector.
      *
@@ -64,10 +63,10 @@ class Cm3 extends BaseScriptClass
     function menuConfig()
     {
         global $LANG;
-
+        
         parent::menuConfig();
     }
-
+    
     /**
      * Main function of the module. Write the content to
      *
@@ -76,12 +75,12 @@ class Cm3 extends BaseScriptClass
     function main()
     {
         global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA, $CLIENT, $TYPO3_CONF_VARS;
-
+        
         // Draw the header.
         $this->module = GeneralUtility::makeInstance(DocumentTemplate::class);
         $this->module->backPath = $BACK_PATH;
         $this->module->form = '<form action="" method="post" enctype="multipart/form-data">';
-
+        
         // JavaScript
         $this->module->JScode = '
 			<script language="javascript" type="text/javascript">
@@ -91,21 +90,21 @@ class Cm3 extends BaseScriptClass
 				}
 			</script>
 		';
-
+        
         // Header:
         $this->content .= $this->module->startPage($LANG->getLL('title'));
         $this->content .= $this->module->header($LANG->getLL('title'));
-
+        
         $this->content .= $this->module->divider(5);
-
+        
         // Render the module content (for all modes):
         $this->content .= $this->module->section('',
             $this->moduleContent((string)GeneralUtility::_GP('table'), (int)GeneralUtility::_GP('id'),
                 GeneralUtility::_GP('cmd')));
-
+        
         $this->content .= $this->module->spacer(10);
     }
-
+    
     /**
      * [Describe function...]
      *
@@ -117,12 +116,12 @@ class Cm3 extends BaseScriptClass
     function moduleContent($table, $uid, $cmd)
     {
         if ($GLOBALS['TCA'][$table]) {
-
+            
             $output = '';
-
+            
             $this->l10nMgrTools = GeneralUtility::makeInstance(Tools::class);
             $this->l10nMgrTools->verbose = false; // Otherwise it will show records which has fields but none editable.
-
+            
             switch ((string)$cmd) {
                 case 'updateIndex':
                     $output = $this->l10nMgrTools->updateIndexForRecord($table, $uid);
@@ -132,14 +131,14 @@ class Cm3 extends BaseScriptClass
                     if ($GLOBALS['BE_USER']->isAdmin()) {
                         $res = $this->l10nMgrTools->flushTranslations($table, $uid,
                             GeneralUtility::_POST('_flush') ? true : false);
-
+                        
                         if (!GeneralUtility::_POST('_flush')) {
                             $output .= 'To flush the translations shown below, press the "Flush" button below:<br/><input type="submit" name="_flush" value="FLUSH" /><br/><br/>';
                         } else {
                             $output .= 'Translations below were flushed!';
                         }
                         $output .= t3lib_utility_Debug::viewArray($res[0]);
-
+                        
                         if (GeneralUtility::_POST('_flush')) {
                             $output .= $this->l10nMgrTools->updateIndexForRecord($table, $uid);
                             t3lib_BEfunc::setUpdateSignal('updatePageTree');
@@ -153,11 +152,11 @@ class Cm3 extends BaseScriptClass
                     header('Location: ' . GeneralUtility::locationHeaderUrl($GLOBALS['BACK_PATH'] . 'db_list.php?id=0&table=tx_l10nmgr_priorities'));
                     break;
             }
-
+            
             return $output;
         }
     }
-
+    
     /**
      * Printing output content
      *
@@ -165,7 +164,7 @@ class Cm3 extends BaseScriptClass
      */
     function printContent()
     {
-
+        
         $this->content .= $this->module->endPage();
         echo $this->content;
     }

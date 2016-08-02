@@ -1,6 +1,6 @@
 <?php
 namespace Localizationteam\L10nmgr\Controller;
-
+    
     /***************************************************************
      *  Copyright notice
      *  (c) 2007 Kasper Skårhøj <kasperYYYY@typo3.com>
@@ -36,13 +36,13 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
  */
 class Module2
 {
-
+    
     // Internal, static:
     var $defaultWidth = 300; // Default width of the navigation frame. Can be overridden from $TBE_STYLES['dims']['navFrameWidth'] (alternative default value) AND from User TSconfig
-
+    
     // Internal, dynamic:
     var $content; // Content accumulation.
-
+    
     /**
      * Creates the header and frameset for the module/submodules
      *
@@ -51,13 +51,13 @@ class Module2
     function main()
     {
         global $BE_USER, $TBE_TEMPLATE, $TBE_STYLES;
-
+        
         // Setting frame width:
         $width = $this->defaultWidth;
-
+        
         // THis onload handler is a bug-fix for a possible bug in Safari browser for Mac. Posted by Jack COLE. Should not influence other browsers negatively.
         $onLoadHandler = ' onload="if (top.content.nav_frame.location.href.length == 1) {top.content.nav_frame.location=\'' . $URL_nav . '\';};"';
-
+        
         $this->content .= '
 			<frameset cols="' . $width . ',*"' . $onLoadHandler . '>
 				<frame name="nav_frame" src="' . BackendUtility::getModuleUrl('ConfigurationManager_TranslationTasks') . '" marginwidth="0" marginheight="0" scrolling="auto" />
@@ -68,7 +68,7 @@ class Module2
 		';
         $this->printContent();
     }
-
+    
     /**
      * Outputting the accumulated content to screen
      *

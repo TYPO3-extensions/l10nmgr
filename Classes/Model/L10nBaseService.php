@@ -34,7 +34,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class L10nBaseService
 {
-
+    
     protected static $targetLanguageID = null;
     /**
      * @var bool Translate even if empty.
@@ -60,13 +60,13 @@ class L10nBaseService
      * @var int
      */
     protected $depthCounter = 0;
-
+    
     public function __construct()
     {
         // Load the extension's configuration
         $this->extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr']);
     }
-
+    
     /**
      * @return integer|NULL
      */
@@ -74,7 +74,7 @@ class L10nBaseService
     {
         return self::$targetLanguageID;
     }
-
+    
     /**
      * Save the translation
      *
@@ -90,16 +90,19 @@ class L10nBaseService
                 $processingObject->processBeforeSaving($l10ncfgObj, $translationObj, $this);
             }
         }
-
+        
         $sysLang = $translationObj->getLanguage();
+        $previewLanguage = $translationObj->getPreviewLanguage();
         $accumObj = $l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
+        $accumObj->setForcedPreviewLanguage($previewLanguage);
+        
         $flexFormDiffArray = $this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray($sysLang),
             $translationObj->getTranslationData());
-
+        
         if ($flexFormDiffArray !== false) {
             $l10ncfgObj->updateFlexFormDiff($sysLang, $flexFormDiffArray);
         }
-
+        
         // Provide a hook for specific manipulations after saving
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['savePostProcess'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['savePostProcess'] as $classReference) {
@@ -108,7 +111,7 @@ class L10nBaseService
             }
         }
     }
-
+    
     /**
      * Submit incoming content to database. Must match what is available in $accum.
      *
@@ -125,7 +128,7 @@ class L10nBaseService
             return $this->_submitContentAsTranslatedLanguageAndGetFlexFormDiff($accum, $inputArray);
         }
     }
-
+    
     /**
      * Getter for $importAsDefaultLanguage
      *
@@ -135,7 +138,7 @@ class L10nBaseService
     {
         return $this->importAsDefaultLanguage;
     }
-
+    
     /**
      * Setter for $importAsDefaultLanguage
      *
@@ -147,7 +150,7 @@ class L10nBaseService
     {
         $this->importAsDefaultLanguage = $importAsDefaultLanguage;
     }
-
+    
     /**
      * Submit incoming content as default language to database. Must match what is available in $accum.
      *
@@ -163,21 +166,21 @@ class L10nBaseService
             /** @var $flexToolObj FlexFormTools */
             $flexToolObj = GeneralUtility::makeInstance(FlexFormTools::class);
             $TCEmain_data = array();
-
+            
             $_flexFormDiffArray = array();
             // Traverse:
             foreach ($accum as $pId => $page) {
                 foreach ($accum[$pId]['items'] as $table => $elements) {
                     foreach ($elements as $elementUid => $data) {
                         if (is_array($data['fields'])) {
-
+                            
                             foreach ($data['fields'] as $key => $tData) {
-
+                                
                                 if (is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {
-
+                                    
                                     list($Ttable, $TuidString, $Tfield, $Tpath) = explode(':', $key);
                                     list($Tuid, $Tlang, $TdefRecord) = explode('/', $TuidString);
-
+                                    
                                     if (!$this->createTranslationAlsoIfEmpty && $inputArray[$table][$elementUid][$key] == '' && $Tuid == 'NEW') {
                                         //if data is empty do not save it
                                         unset($inputArray[$table][$elementUid][$key]);
@@ -215,13 +218,13 @@ class L10nBaseService
                     }
                 }
             }
-
+            
             if ($TCEmain_data['pages_language_overlay']) {
                 $TCEmain_data['pages'] = $TCEmain_data['pages_language_overlay'];
                 unset($TCEmain_data['pages_language_overlay']);
             }
             $this->lastTCEMAINCommandsCount = 0;
-
+            
             // Now, submitting translation data:
             $tce = GeneralUtility::makeInstance(DataHandler::class);
             $tce->stripslashes_values = false;
@@ -230,14 +233,14 @@ class L10nBaseService
             $tce->start($TCEmain_data,
                 array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
             $tce->process_datamap();
-
+            
             if (count($tce->errorLog)) {
                 GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': TCEmain update errors: ' . GeneralUtility::arrayToLogString($tce->errorLog),
                     'l10nmgr');
             }
-
+            
             if (count($tce->autoVersionIdMap) && count($_flexFormDiffArray)) {
-
+                
                 foreach ($_flexFormDiffArray as $key => $value) {
                     list($Ttable, $Tuid, $Trest) = explode(':', $key, 3);
                     if ($tce->autoVersionIdMap[$Ttable][$Tuid]) {
@@ -246,18 +249,18 @@ class L10nBaseService
                     }
                 }
             }
-
+            
             // Should be empty now - or there were more information in the incoming array than there should be!
             if (count($inputArray)) {
                 debug($inputArray, 'These fields were ignored since they were not in the configuration:');
             }
-
+            
             return $_flexFormDiffArray;
         } else {
             return false;
         }
     }
-
+    
     /**
      * Submit incoming content as translated language to database. Must match what is available in $accum.
      *
@@ -277,27 +280,27 @@ class L10nBaseService
             $fluxInstalled = ExtensionManagementUtility::isLoaded('flux');
             $TCEmain_data = array();
             $this->TCEmain_cmd = array();
-
+            
             $_flexFormDiffArray = array();
             // Traverse:
             foreach ($accum as $pId => $page) {
                 foreach ($accum[$pId]['items'] as $table => $elements) {
                     foreach ($elements as $elementUid => $data) {
                         if (is_array($data['fields'])) {
-
+                            
                             foreach ($data['fields'] as $key => $tData) {
-
+                                
                                 if (is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {
-
+                                    
                                     list($Ttable, $TuidString, $Tfield, $Tpath) = explode(':', $key);
                                     list($Tuid, $Tlang, $TdefRecord) = explode('/', $TuidString);
-
+                                    
                                     if (!$this->createTranslationAlsoIfEmpty && $inputArray[$table][$elementUid][$key] == '' && $Tuid == 'NEW') {
                                         //if data is empty do not save it
                                         unset($inputArray[$table][$elementUid][$key]);
                                         continue;
                                     }
-
+                                    
                                     // If new element is required, we prepare for localization
                                     if ($Tuid === 'NEW') {
                                         if ($table === 'tt_content' && ($gridElementsInstalled === true || $fluxInstalled === true)) {
@@ -321,7 +324,7 @@ class L10nBaseService
                                                 }
                                             }
                                         } elseif ($table === 'sys_file_reference') {
-
+                                            
                                             $element = BackendUtility::getRecordRaw($table,
                                                 'uid = ' . (int)$elementUid . ' AND deleted = 0');
                                             if ($element['uid_foreign'] && $element['tablenames'] && $element['fieldname']) {
@@ -350,7 +353,7 @@ class L10nBaseService
                                             $this->TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
                                         }
                                     }
-
+                                    
                                     // If FlexForm, we set value in special way:
                                     if ($Tpath) {
                                         if (!is_array($TCEmain_data[$Ttable][$TuidString][$Tfield])) {
@@ -383,9 +386,9 @@ class L10nBaseService
                     }
                 }
             }
-
+            
             self::$targetLanguageID = $Tlang;
-
+            
             // Execute CMD array: Localizing records:
             /** @var $tce DataHandler */
             $tce = GeneralUtility::makeInstance(DataHandler::class);
@@ -401,7 +404,7 @@ class L10nBaseService
                     debug($tce->errorLog, 'TCEmain localization errors:');
                 }
             }
-
+            
             // Before remapping
             if (TYPO3_DLOG) {
                 GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': TCEmain_data before remapping: ' . GeneralUtility::arrayToLogString($TCEmain_data),
@@ -439,7 +442,7 @@ class L10nBaseService
                 GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': TCEmain_data after remapping: ' . GeneralUtility::arrayToLogString($TCEmain_data),
                     'l10nmgr');
             }
-
+            
             // Now, submitting translation data:
             /** @var $tce DataHandler */
             $tce = GeneralUtility::makeInstance(DataHandler::class);
@@ -453,14 +456,14 @@ class L10nBaseService
             $tce->start($TCEmain_data,
                 array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
             $tce->process_datamap();
-
+            
             self::$targetLanguageID = null;
-
+            
             if (count($tce->errorLog)) {
                 GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': TCEmain update errors: ' . GeneralUtility::arrayToLogString($tce->errorLog),
                     'l10nmgr');
             }
-
+            
             if (count($tce->autoVersionIdMap) && count($_flexFormDiffArray)) {
                 if (TYPO3_DLOG) {
                     GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': flexFormDiffArry: ' . GeneralUtility::arrayToLogString($this->flexFormDiffArray),
@@ -480,18 +483,18 @@ class L10nBaseService
                         'l10nmgr');
                 }
             }
-
+            
             // Should be empty now - or there were more information in the incoming array than there should be!
             if (count($inputArray)) {
                 debug($inputArray, 'These fields were ignored since they were not in the configuration:');
             }
-
+            
             return $_flexFormDiffArray;
         } else {
             return false;
         }
     }
-
+    
     /**
      * @param $element
      * @param $Tlang

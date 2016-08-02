@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:31:04Z" product-name="l10nmgr">
-		<header/>
-		<body>
-			<trans-unit id="tx_l10nmgr_cfg" xml:space="preserve">
+    <file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:31:04Z"
+          product-name="l10nmgr">
+        <header/>
+        <body>
+            <trans-unit id="tx_l10nmgr_cfg" xml:space="preserve">
 				<source>L10N Manager Configuration</source>
 			</trans-unit>
 			<trans-unit id="tx_l10nmgr_cfg.title" xml:space="preserve">
@@ -99,6 +100,6 @@
 			<trans-unit id="tx_l10nmgr_priorities.element" xml:space="preserve">
 				<source>Element(s):</source>
 			</trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

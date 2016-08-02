@@ -1,6 +1,6 @@
 <?php
 namespace Localizationteam\L10nmgr\Controller;
-
+    
     /***************************************************************
      *  Copyright notice
      *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
@@ -18,11 +18,11 @@ namespace Localizationteam\L10nmgr\Controller;
      *  GNU General Public License for more details.
      *  This copyright notice MUST APPEAR in all copies of the script!
      ***************************************************************/
-    /**
-     * Module 'L10N Manager' for the 'l10nmgr' extension.
-     *
-     * @author  Kasper Skårhøj <kasperYYYY@typo3.com>
-     */
+/**
+ * Module 'L10N Manager' for the 'l10nmgr' extension.
+ *
+ * @author  Kasper Skårhøj <kasperYYYY@typo3.com>
+ */
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,45 +43,45 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ConfigurationManager extends BaseScriptClass
 {
-
+    
     var $pageinfo;
-
+    
     /**
      * @var array Cache of the page details already fetched from the database
      */
     protected $pageDetails = array();
-
+    
     /**
      * @var array Cache of the language records already fetched from the database
      */
     protected $languageDetails = array();
-
+    
     /**
      * ModuleTemplate Container
      *
      * @var ModuleTemplate
      */
     protected $moduleTemplate;
-
+    
     /**
      * Document Template Object
      *
      * @var \TYPO3\CMS\Backend\Template\DocumentTemplate
      */
     public $doc;
-
+    
     /**
      * The name of the module
      *
      * @var string
      */
     protected $moduleName = 'web_ConfigurationManager';
-
+    
     /**
      * @var IconFactory
      */
     protected $iconFactory;
-
+    
     /**
      * Constructor
      */
@@ -94,7 +94,7 @@ class ConfigurationManager extends BaseScriptClass
             'name' => $this->moduleName,
         );
     }
-
+    
     /**
      * Injects the request object for the current request or subrequest
      * Then checks for module functions that have hooked in, and renders menu etc.
@@ -107,20 +107,20 @@ class ConfigurationManager extends BaseScriptClass
     {
         $GLOBALS['SOBE'] = $this;
         $this->init();
-
+        
         // Checking for first level external objects
         $this->checkExtObj();
-
+        
         // Checking second level external objects
         $this->checkSubExtObj();
         $this->main();
-
+        
         $this->moduleTemplate->setContent($this->content);
-
+        
         $response->getBody()->write($this->moduleTemplate->renderContent());
         return $response;
     }
-
+    
     /**
      * Initializes the Module
      *
@@ -131,7 +131,7 @@ class ConfigurationManager extends BaseScriptClass
         $GLOBALS['BE_USER']->modAccess($this->MCONF, 1);
         parent::init();
     }
-
+    
     /**
      * Main function of the module. Write the content to $this->content
      * If you chose "web" as main module, you will need to consider the $this->id parameter which will contain the uid-number of the page clicked in the page tree
@@ -141,7 +141,7 @@ class ConfigurationManager extends BaseScriptClass
     public function main()
     {
         $extRelPath = ExtensionManagementUtility::extRelPath('l10nmgr');
-
+        
         // Get a template instance and load the template
         $this->moduleTemplate->backPath = $GLOBALS['BACK_PATH'];
         // NOTE: this module uses the same template as the CM1 module
@@ -150,12 +150,12 @@ class ConfigurationManager extends BaseScriptClass
         $this->moduleTemplate->loadJavascriptLib($extRelPath . 'Resources/Public/Contrib/jquery-1.2.3.js');
         $this->moduleTemplate->loadJavascriptLib($extRelPath . 'Resources/Public/Contrib/jquery.tooltip.js');
         $this->moduleTemplate->loadJavascriptLib($extRelPath . 'Resources/Private/Templates/mod1_list.js');
-
+        
         // Get the actual content
         $this->content = $this->moduleContent();
-
+        
     }
-
+    
     /**
      * Generates and returns the content of the module
      *
@@ -172,7 +172,8 @@ class ConfigurationManager extends BaseScriptClass
             $content .= $this->moduleTemplate->section('', nl2br($GLOBALS['LANG']->getLL('general.no_date')));
             // List all configurations
         } else {
-            $content .= $this->moduleTemplate->section($GLOBALS['LANG']->getLL('general.list.configuration.manager'), nl2br($GLOBALS['LANG']->getLL('general.description.message')), false, true);
+            $content .= $this->moduleTemplate->section($GLOBALS['LANG']->getLL('general.list.configuration.manager'),
+                nl2br($GLOBALS['LANG']->getLL('general.description.message')), false, true);
             $content .= $this->moduleTemplate->section($GLOBALS['LANG']->getLL('general.list.configuration.title'), '');
             $content .= '<div class="table-fit"><table class="table table-striped table-hover">';
             // Assemble the header row
@@ -197,11 +198,12 @@ class ConfigurationManager extends BaseScriptClass
                 $configurationDetails .= '</div>';
                 $content .= '<tr class="db_list_normal">';
                 $content .= '<td>' . $configurationDetails . '</td>';
-                $content .= '<td><a href="' . BackendUtility::getModuleUrl('ConfigurationManager_LocalizationManager', array(
-                        'id' => $record['pid'],
-                        'srcPID' => $record['pid'],
-                        'exportUID' => $record['uid'],
-                    )) . '">' . $record['title'] . '</a>' . '</td>';
+                $content .= '<td><a href="' . BackendUtility::getModuleUrl('ConfigurationManager_LocalizationManager',
+                        array(
+                            'id' => $record['pid'],
+                            'srcPID' => $record['pid'],
+                            'exportUID' => $record['uid'],
+                        )) . '">' . $record['title'] . '</a>' . '</td>';
                 // Get the full page path
                 // If very long, make sure to still display the full path
                 $pagePath = BackendUtility::getRecordPath($record['pid'], '1', 20, 50);
@@ -216,10 +218,10 @@ class ConfigurationManager extends BaseScriptClass
             }
             $content .= '</tbody></table></div>';
         }
-
+        
         return $content;
     }
-
+    
     /**
      * Returns all l10nmgr configurations to which the current user has access, based on page permissions
      *
@@ -238,10 +240,10 @@ class ConfigurationManager extends BaseScriptClass
                 $allowedConfigurations[] = $row;
             }
         }
-
+        
         return $allowedConfigurations;
     }
-
+    
     /**
      * Renders a detailed view of a l10nmgr configuration
      *
@@ -287,10 +289,10 @@ class ConfigurationManager extends BaseScriptClass
         $details .= '<td>' . $configuration['incfcewithdefaultlanguage'] . '</td>';
         $details .= '</tr>';
         $details .= '</table>';
-
+        
         return $details;
     }
-
+    
     /**
      * Returns the details of a given page record, possibly from cache if already fetched earlier
      *
@@ -307,10 +309,10 @@ class ConfigurationManager extends BaseScriptClass
             $record = BackendUtility::getRecord('pages', $uid);
             $this->pageDetails[$uid] = $record;
         }
-
+        
         return $record;
     }
-
+    
     /**
      * Create the panel of buttons for submitting the form or otherwise perform operations.
      *
@@ -319,18 +321,18 @@ class ConfigurationManager extends BaseScriptClass
     protected function getButtons()
     {
         $buttons = array();
-
+        
         $buttons['reload'] = '<a href="' . $GLOBALS['MCONF']['_'] . '" title="' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xml:labels.reload',
                 true) . '">' . $this->iconFactory->getIcon('actions-system-refresh') . '</a>';
-
+        
         // Shortcut
         if ($GLOBALS['BE_USER']->mayMakeShortcut()) {
             $buttons['shortcut'] = $this->moduleTemplate->makeShortcutIcon('', 'function', $this->MCONF['name']);
         }
-
+        
         return $buttons;
     }
-
+    
     /**
      * Prints out the module HTML
      *
@@ -340,7 +342,7 @@ class ConfigurationManager extends BaseScriptClass
     {
         print $this->content;
     }
-
+    
     /**
      * Returns the details of a given static language record, possibly from cache if already fetched earlier
      *
@@ -360,7 +362,7 @@ class ConfigurationManager extends BaseScriptClass
                 $this->languageDetails[$uid] = $record;
             }
         }
-
+        
         return $record;
     }
 }

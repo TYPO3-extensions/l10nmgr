@@ -1,6 +1,6 @@
 <?php
 namespace Localizationteam\L10nmgr\Model;
-
+    
     /***************************************************************
      *  Copyright notice
      *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
@@ -28,28 +28,41 @@ namespace Localizationteam\L10nmgr\Model;
  */
 class TranslationData
 {
-
+    
     var $data = array();
-
+    
     var $sysLang;
-
+    
+    var $previewLanguage;
+    
     function setTranslationData($data)
     {
         $this->data = $data;
     }
-
+    
     function setLanguage($sysLang)
     {
         $this->sysLang = $sysLang;
     }
-
+    
     function &getTranslationData()
     {
         return $this->data;
     }
-
+    
     function getLanguage()
     {
         return $this->sysLang;
     }
+    
+    function getPreviewLanguage()
+    {
+        return $this->previewLanguage;
+    }
+    
+    function setPreviewLanguage($previewLanguage)
+    {
+        $this->previewLanguage = $previewLanguage;
+    }
+    
 }

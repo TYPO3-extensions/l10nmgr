@@ -1,6 +1,6 @@
 <?php
 namespace Localizationteam\L10nmgr\Model\Tools;
-
+    
     /***************************************************************
      *  Copyright notice
      *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
@@ -30,15 +30,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class XmlTools
 {
-
+    
     /** @var $parseHTML RteHtmlParser */
     var $parseHTML;
-
+    
     function __construct()
     {
         $this->parseHTML = GeneralUtility::makeInstance(RteHtmlParser::class);
     }
-
+    
     /**
      * Transforms a RTE Field to valid XML
      *
@@ -66,12 +66,12 @@ class XmlTools
         $content = $this->parseHTML->TS_links_rte($content);
         // $this->parseHTML->procOptions['disableUnifyLineBreaks'] = TRUE;
         $content = $this->parseHTML->TS_transform_rte($content, 1);
-
+        
         //substitute & with &amp;
         //$content=str_replace('&','&amp;',$content); Changed by DZ 2011-05-11
         $content = str_replace('<hr>', '<hr />', $content);
         $content = str_replace('<br>', '<br />', $content);
-
+        
         $content = GeneralUtility::deHSCentities($content);
         if ($withStripBadUTF8 == 1) {
             $content = Utf8Tools::utf8_bad_strip($content);
@@ -82,18 +82,18 @@ class XmlTools
             return false;
         }
     }
-
+    
     function isValidXMLString($xmlString)
     {
         return $this->isValidXML('<!DOCTYPE dummy [ <!ENTITY nbsp " "> ]><dummy>' . $xmlString . '</dummy>');
     }
-
+    
     function isValidXML($xml)
     {
         $parser = xml_parser_create();
         $vals = array();
         $index = array();
-
+        
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 0);
         xml_parse_into_struct($parser, $xml, $vals, $index);
@@ -103,7 +103,7 @@ class XmlTools
             return true;
         }
     }
-
+    
     /**
      * Transforms a XML back to RTE / reverse function of RTE2XML
      *
@@ -114,32 +114,32 @@ class XmlTools
     function XML2RTE($xmlstring)
     {
         //fixed setting of Parser (TO-DO set it via typoscript)
-
+        
         //Added because import failed
         $xmlstring = str_replace('<br/>', '<br>', $xmlstring);
         $xmlstring = str_replace('<br />', '<br>', $xmlstring);
-
+        
         $xmlstring = str_replace('<hr/>', '<hr>', $xmlstring);
         $xmlstring = str_replace('<hr />', '<hr>', $xmlstring);
         $xmlstring = str_replace('<p/>', '<p></p>',
             $xmlstring); // DZ: Added 2011-05-11 to avoid import problem with <p/> elements
-
+        
         $this->parseHTML->procOptions['typolist'] = false;
         $this->parseHTML->procOptions['typohead'] = false;
         $this->parseHTML->procOptions['keepPDIVattribs'] = true;
         $this->parseHTML->procOptions['dontConvBRtoParagraph'] = true;
-
+        
         if (!is_array($this->parseHTML->procOptions['HTMLparser_db.'])) {
             $this->parseHTML->procOptions['HTMLparser_db.'] = array();
         }
-
+        
         $this->parseHTML->procOptions['HTMLparser_db.']['xhtml_cleaning'] = true;
         //trick to preserve strong tags
         $this->parseHTML->procOptions['denyTags'] = 'strong';
         $this->parseHTML->procOptions['preserveTables'] = true;
         // $this->parseHTML->procOptions['disableUnifyLineBreaks'] = TRUE;
         $this->parseHTML->procOptions['dontRemoveUnknownTags_db'] = true;
-
+        
         //Writes debug information for CLI import to syslog if $TYPO3_CONF_VARS['SYS']['enable_DLOG'] is set.
         if (TYPO3_DLOG) {
             GeneralUtility::sysLog(__FILE__ . ': Before RTE transformation:' . LF . $xmlstring . LF, 'l10nmgr');
@@ -155,15 +155,15 @@ class XmlTools
                 $content = $processingObject->transform_db($content, $this->parseHTML);
             }
         }
-
+        
         //substitute URL in <link> for CLI import
         $content = preg_replace('/<link http(s)?:\/\/[\w\.\/]*\?id=/', '<link ', $content);
-
+        
         //Writes debug information for CLI import to syslog if $TYPO3_CONF_VARS['SYS']['enable_DLOG'] is set.
         if (TYPO3_DLOG) {
             GeneralUtility::sysLog(__FILE__ . ': After RTE transformation:' . LF . $content . LF, 'l10nmgr');
         }
-
+        
         return $content;
     }
 }

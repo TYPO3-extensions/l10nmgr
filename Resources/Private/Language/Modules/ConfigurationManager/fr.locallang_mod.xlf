@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" target-language="fr" datatype="plaintext" original="messages" date="2015-07-30T00:30:18Z" product-name="l10nmgr">
-		<header/>
-		<body>
-			<trans-unit id="mlang_tabs_tab" xml:space="preserve" approved="yes">
+    <file source-language="en" target-language="fr" datatype="plaintext" original="messages" date="2015-07-30T00:30:18Z"
+          product-name="l10nmgr">
+        <header/>
+        <body>
+            <trans-unit id="mlang_tabs_tab" xml:space="preserve" approved="yes">
 				<source>L10N Manager</source>
 				<target>L10N Manager</target>
 			</trans-unit>
@@ -16,6 +17,6 @@
 				<target>Exportation des contenus à traduire/Importation des contenus traduits
 			</target>
 			</trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

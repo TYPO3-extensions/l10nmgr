@@ -1,6 +1,6 @@
 <?php
 namespace Localizationteam\L10nmgr\View;
-
+    
     /***************************************************************
      *  Copyright notice
      *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
@@ -30,17 +30,17 @@ namespace Localizationteam\L10nmgr\View;
  */
 class L10nConfigurationDetailView
 {
-
+    
     /**
      * @var L10nConfiguration
      */
     var $l10ncfgObj; // Internal array (=datarow of config record)
-
+    
     /**
      * @var $module
      */
     var $module = null;
-
+    
     /**
      * constructor. Set the internal required objects as parameter in constructor (kind of dependency injection, and communicate the dependencies)
      *
@@ -52,7 +52,7 @@ class L10nConfigurationDetailView
         $this->l10ncfgObj = $l10ncfgObj;
         $this->module = $module;
     }
-
+    
     /**
      * returns HTML table with infos for the l10nmgr config.
      *  (needs valid configuration to be set)
@@ -63,11 +63,11 @@ class L10nConfigurationDetailView
     {
         global $LANG;
         $content = '';
-
+        
         if (!$this->_hasValidConfig()) {
             return $LANG->getLL('general.export.configuration.error.title');
         }
-
+        
         $configurationSettings = '
 				<table class="table table-striped table-hover">
 					<tr class="t3-row-header">
@@ -86,12 +86,12 @@ class L10nConfigurationDetailView
 						<td>' . htmlspecialchars($this->l10ncfgObj->getData('include')) . '&nbsp;</td>
 					</tr>
 				</table>';
-
+        
         $content .= $this->module->section($LANG->getLL('general.export.configuration.title'), $configurationSettings);
-
+        
         return $content;
     }
-
+    
     /**
      * checks if the internal L10nConfiguration object is valid
      *

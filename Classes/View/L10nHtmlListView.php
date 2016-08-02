@@ -39,7 +39,7 @@ class L10nHtmlListView extends AbstractExportView
     //internal flags:
     var $modeWithInlineEdit = false;
     var $modeShowEditLinks = false;
-
+    
     function __construct($l10ncfgObj, $sysLang)
     {
         global $BACK_PATH;
@@ -47,17 +47,17 @@ class L10nHtmlListView extends AbstractExportView
         $this->module->backPath = $BACK_PATH;
         parent::__construct($l10ncfgObj, $sysLang);
     }
-
+    
     function setModeWithInlineEdit()
     {
         $this->modeWithInlineEdit = true;
     }
-
+    
     function setModeShowEditLinks()
     {
         $this->modeShowEditLinks = true;
     }
-
+    
     /**
      * Render the module content in HTML
      *

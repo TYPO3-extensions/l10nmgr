@@ -37,7 +37,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class L10nAccumulatedInformation
 {
-
+    
     /**
      * @var string The status of this object, set to processed if internal variables are calculated.
      */
@@ -78,7 +78,7 @@ class L10nAccumulatedInformation
      * @var array Extension's configuration as from the EM
      */
     protected $extensionConfiguration = array();
-
+    
     /**
      * Constructor
      *
@@ -91,17 +91,17 @@ class L10nAccumulatedInformation
         // Load the extension's configuration
         $this->extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr']);
         $this->disallowDoktypes = GeneralUtility::trimExplode(',', $this->extensionConfiguration['disallowDoktypes']);
-
+        
         $this->tree = $tree;
         $this->l10ncfg = $l10ncfg;
         $this->sysLang = $sysLang;
     }
-
+    
     function setForcedPreviewLanguage($prevLangId)
     {
         $this->forcedPreviewLanguage = $prevLangId;
     }
-
+    
     /**
      * return information array with accumulated information. This way client classes have access to the accumulated array directly. and can read this array in order to create some output...
      *
@@ -110,10 +110,10 @@ class L10nAccumulatedInformation
     function getInfoArray()
     {
         $this->process();
-
+        
         return $this->_accumulatedInformations;
     }
-
+    
     function process()
     {
         if ($this->objectStatus != 'processed') {
@@ -121,7 +121,7 @@ class L10nAccumulatedInformation
         }
         $this->objectStatus = 'processed';
     }
-
+    
     /** set internal _accumulatedInformations array. Is called from constructor and uses the given tree, lang and l10ncfg
      *
      * @return void
@@ -133,21 +133,21 @@ class L10nAccumulatedInformation
         $l10ncfg = $this->l10ncfg;
         $accum = array();
         $sysLang = $this->sysLang;
-
+        
         // FlexForm Diff data:
         $flexFormDiff = unserialize($l10ncfg['flexformdiff']);
         $flexFormDiff = $flexFormDiff[$sysLang];
-
+        
         $excludeIndex = array_flip(GeneralUtility::trimExplode(',', $l10ncfg['exclude'], 1));
         $tableUidConstraintIndex = array_flip(GeneralUtility::trimExplode(',', $l10ncfg['tableUidConstraint'], 1));
-
+        
         // Init:
         $t8Tools = GeneralUtility::makeInstance(Tools::class);
         $t8Tools->verbose = false; // Otherwise it will show records which has fields but none editable.
         if ($l10ncfg['incfcewithdefaultlanguage'] == 1) {
             $t8Tools->includeFceWithDefaultLanguage = true;
         }
-
+        
         // Set preview language (only first one in list is supported):
         if ($this->forcedPreviewLanguage != '') {
             $previewLanguage = $this->forcedPreviewLanguage;
@@ -158,33 +158,34 @@ class L10nAccumulatedInformation
         if ($previewLanguage) {
             $t8Tools->previewLanguages = array($previewLanguage);
         }
-
+        
         // Traverse tree elements:
         foreach ($tree->tree as $treeElement) {
-
+            
             $pageId = $treeElement['row']['uid'];
             if (!isset($excludeIndex['pages:' . $pageId]) && !in_array($treeElement['row']['doktype'],
                     $this->disallowDoktypes)
             ) {
-
+                
                 $accum[$pageId]['header']['title'] = $treeElement['row']['title'];
                 $accum[$pageId]['header']['icon'] = $treeElement['HTML'];
                 $accum[$pageId]['header']['prevLang'] = $previewLanguage;
                 $accum[$pageId]['items'] = array();
-
+                
                 // Traverse tables:
                 foreach ($TCA as $table => $cfg) {
-
+                    
                     // Only those tables we want to work on:
                     if (GeneralUtility::inList($l10ncfg['tablelist'], $table)) {
-
+                        
                         if ($table === 'pages') {
                             $accum[$pageId]['items'][$table][$pageId] = $t8Tools->translationDetails('pages',
-                                BackendUtility::getRecordWSOL('pages', $pageId), $sysLang, $flexFormDiff);
+                                BackendUtility::getRecordWSOL('pages', $pageId), $sysLang, $flexFormDiff,
+                                $previewLanguage);
                             $this->_increaseInternalCounters($accum[$pageId]['items'][$table][$pageId]['fields']);
                         } else {
                             $allRows = $t8Tools->getRecordsToTranslateFromTable($table, $pageId);
-
+                            
                             if (is_array($allRows)) {
                                 if (count($allRows)) {
                                     // Now, for each record, look for localization:
@@ -193,13 +194,13 @@ class L10nAccumulatedInformation
                                         if (is_array($row) && count($tableUidConstraintIndex) > 0) {
                                             if (is_array($row) && isset($tableUidConstraintIndex[$table . ':' . $row['uid']])) {
                                                 $accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,
-                                                    $row, $sysLang, $flexFormDiff);
+                                                    $row, $sysLang, $flexFormDiff, $previewLanguage);
                                                 $this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);
                                             }
                                         } else {
                                             if (is_array($row) && !isset($excludeIndex[$table . ':' . $row['uid']])) {
                                                 $accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,
-                                                    $row, $sysLang, $flexFormDiff);
+                                                    $row, $sysLang, $flexFormDiff, $previewLanguage);
                                                 $this->_increaseInternalCounters($accum[$pageId]['items'][$table][$row['uid']]['fields']);
                                             }
                                         }
@@ -211,22 +212,22 @@ class L10nAccumulatedInformation
                 }
             }
         }
-
+        
         $includeIndex = array_unique(GeneralUtility::trimExplode(',', $l10ncfg['include'], 1));
         foreach ($includeIndex as $recId) {
             list($table, $uid) = explode(':', $recId);
             $row = BackendUtility::getRecordWSOL($table, $uid);
             if (count($row)) {
                 $accum[-1]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table, $row, $sysLang,
-                    $flexFormDiff);
+                    $flexFormDiff, $previewLanguage);
                 $this->_increaseInternalCounters($accum[-1]['items'][$table][$row['uid']]['fields']);
             }
         }
-
+        
         #		debug($accum);
         $this->_accumulatedInformations = $accum;
     }
-
+    
     function _increaseInternalCounters($fieldsArray)
     {
         if (is_array($fieldsArray)) {
@@ -238,12 +239,12 @@ class L10nAccumulatedInformation
             }
         }
     }
-
+    
     function getFieldCount()
     {
         return $this->_fieldCount;
     }
-
+    
     function getWordCount()
     {
         return $this->_wordCount;

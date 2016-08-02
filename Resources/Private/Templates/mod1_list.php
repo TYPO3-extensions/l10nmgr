@@ -35,27 +35,27 @@ echo $gD5->spacer(5); ?>
         <th><?php echo $LANG->getLL('general.list.headline.incfcewithdefaultlanguage.title'); ?></th>
     </tr>
     </thead>
-
+    
     <tbody>
     <?php $pagePermissionClause = $GLOBALS['BE_USER']->getPagePermsClause(1); ?>
     <?php $allConfigurationElementsStruct = $this->getRegistryData(); ?>
     <?php for (reset($allConfigurationElementsStruct); list(, $configurationElementArray) = each($allConfigurationElementsStruct);) { ?>
-
+        
         <?php if (!is_array(t3lib_BEfunc::readPageAccess($configurationElementArray['pid'], $pagePermissionClause))) {
             continue;
         } ?>
-
+        
         <tr class="bgColor3">
             <td align="center">
                 <a class="tooltip" href="#<?php echo 'tooltip_' . $configurationElementArray['uid']; ?>">
                     <?php $gD6 = $this->getDocument();
                     $gD6->icons(1); ?>
                 </a>
-
+                
                 <?php $parentPageArray = BackendUtility::getRecord('pages', $configurationElementArray['pid']); ?>
                 <?php $staticInfoTablesArray = BackendUtility::getRecord('static_languages',
                     \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($configurationElementArray['sourceLangStaticId'])); ?>
-
+                
                 <div style="display:none;" id="<?php echo 'tooltip_' . $configurationElementArray['uid']; ?>"
                      class="infotip">
                     <table class="infodetail" cellspacing="0" cellpadding="0">

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:30:47Z" product-name="l10nmgr">
-		<header/>
-		<body>
-			<trans-unit id=".alttitle" xml:space="preserve">
+    <file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:30:47Z"
+          product-name="l10nmgr">
+        <header/>
+        <body>
+            <trans-unit id=".alttitle" xml:space="preserve">
 				<source>L10N Manager</source>
 			</trans-unit>
 			<trans-unit id=".description" xml:space="preserve">
@@ -25,6 +26,6 @@
 				exclude from the clean up.
 			</source>
 			</trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

@@ -35,9 +35,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TranslationTasks extends BaseScriptClass
 {
-
+    
     var $pageinfo;
-
+    
     /**
      * main action to be registered in ext_tables.php
      */
@@ -47,7 +47,7 @@ class TranslationTasks extends BaseScriptClass
         $this->main();
         $this->printContent();
     }
-
+    
     function init()
     {
         $this->MCONF['name'] = 'ConfigurationManager_TranslationTasks';
@@ -55,7 +55,7 @@ class TranslationTasks extends BaseScriptClass
         $GLOBALS['LANG']->includeLLFile("EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang.xlf");
         parent::init();
     }
-
+    
     /**
      * Adds items to the ->MOD_MENU array. Used for the function menu selector.
      *
@@ -66,11 +66,10 @@ class TranslationTasks extends BaseScriptClass
         global $LANG;
         parent::menuConfig();
     }
-
+    
     /**
      * Main function of the module. Write the content to $this->content
      * If you chose "web" as main module, you will need to consider the $this->id parameter which will contain the uid-number of the page clicked in the page tree
-
      */
     function main()
     {
@@ -78,7 +77,7 @@ class TranslationTasks extends BaseScriptClass
         $this->module = GeneralUtility::makeInstance(DocumentTemplate::class);
         $this->module->backPath = $GLOBALS['BACK_PATH'];
         $this->module->form = '<form action="" method="post">';
-
+        
         // JavaScript
         $this->module->JScode = '
 			<script language="javascript" type="text/javascript">
@@ -88,30 +87,30 @@ class TranslationTasks extends BaseScriptClass
 				}
 			</script>
 		';
-
+        
         // Setting up the context sensitive menu:
         $CMparts = $this->module->getContextMenuCode();
         $this->module->JScode .= $CMparts[0];
         $this->module->bodyTagAdditions = $CMparts[1];
         $this->module->postCode .= $CMparts[2];
-
+        
         $this->content .= $this->module->startPage($GLOBALS['LANG']->getLL("title"));
         $this->content .= $this->module->header($GLOBALS['LANG']->getLL("title"));
         $this->content .= $this->module->spacer(5);
-
+        
         // Render content:
         $this->moduleContent();
-
+        
         // ShortCut
         if ($GLOBALS['BE_USER']->mayMakeShortcut()) {
             $this->content .= $this->module->spacer(20) . $this->module->section("",
                     $this->module->makeShortcutIcon("id", implode(",", array_keys($this->MOD_MENU)),
                         $this->MCONF["name"]));
         }
-
+        
         $this->content .= $this->module->spacer(10);
     }
-
+    
     /**
      * Generates the module content
      *
@@ -119,14 +118,14 @@ class TranslationTasks extends BaseScriptClass
      */
     function moduleContent()
     {
-
+        
         // Selecting priorities:
         $priorities = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_priorities',
             '1=1' . BackendUtility::deleteClause('tx_l10nmgr_priorities'), '', 'sorting');
         $tRows = array();
         $c = 0;
         foreach ($priorities as $priorityRecord) {
-
+            
             if ($lTable = $this->languageRows($priorityRecord['languages'], $priorityRecord['element'])) {
                 $c++;
                 $tRows[] = '
@@ -138,29 +137,29 @@ class TranslationTasks extends BaseScriptClass
 				</tr>';
             }
         }
-
+        
         $content .= '<table border="0" cellpadding="4" cellspacing="2">' . implode('', $tRows) . '</table>';
-
+        
         $this->content .= $this->module->section("Priority list:", $content, 0, 1);
     }
-
+    
     function languageRows($languageList, $elementList)
     {
-
+        
         // Initialization:
         $elements = $this->explodeElement($elementList);
         $firstEl = current($elements);
         $hookObj = GeneralUtility::makeInstance(Tcemain::class);
-
+        
         $this->l10nMgrTools = GeneralUtility::makeInstance(Tools::class);
         $this->l10nMgrTools->verbose = false; // Otherwise it will show records which has fields but none editable.
         $inputRecord = BackendUtility::getRecord($firstEl[0], $firstEl[1], 'pid');
         $this->sysLanguages = $this->l10nMgrTools->t8Tools->getSystemLanguages($firstEl[0] == 'pages' ? $firstEl[1] : $inputRecord['pid']);
         $languages = $this->getLanguages($languageList, $this->sysLanguages);
-
+        
         if (count($languages)) {
             $tRows = array();
-
+            
             // Header:
             $cells = '<td class="bgColor2 tableheader">Element:</td>';
             foreach ($languages as $l) {
@@ -170,7 +169,7 @@ class TranslationTasks extends BaseScriptClass
                 }
             }
             $tRows[] = $cells;
-
+            
             foreach ($elements as $el) {
                 $cells = '';
                 $rec_on = array();
@@ -180,16 +179,16 @@ class TranslationTasks extends BaseScriptClass
                 }
                 $icon = IconUtility::getSpriteIconForRecord($el[0], $rec_on);
                 $icon = $this->module->wrapClickMenuOnIcon($icon, $el[0], $rec_on['uid'], 2);
-
+                
                 $linkToIt = '<a href="#" onclick="' . htmlspecialchars('parent.list_frame.location.href="' . $GLOBALS['BACK_PATH'] . ExtensionManagementUtility::extRelPath('l10nmgr') . 'cm2/index.php?table=' . $el[0] . '&uid=' . $el[1] . '"; return false;') . '" target="listframe">
 					' . BackendUtility::getRecordTitle($el[0], $rec_on, true) . '
 						</a>';
-
+                
                 if ($el[0] == 'pages') {
                     // If another page module was specified, replace the default Page module with the new one
                     $newPageModule = trim($GLOBALS['BE_USER']->getTSConfigVal('options.overridePageModule'));
                     $pageModule = BackendUtility::isModuleSetInTBE_MODULES($newPageModule) ? $newPageModule : 'web_layout';
-
+                    
                     $path_module_path = GeneralUtility::resolveBackPath($GLOBALS['BACK_PATH'] . '../' . substr($GLOBALS['TBE_MODULES']['_PATHS'][$pageModule],
                             strlen(PATH_site)));
                     $onclick = 'parent.list_frame.location.href="' . $path_module_path . '?id=' . $el[1] . '"; return false;';
@@ -197,48 +196,48 @@ class TranslationTasks extends BaseScriptClass
                 } else {
                     $pmLink = '';
                 }
-
+                
                 $cells = '<td>' . $icon . $linkToIt . $pmLink . '</td>';
-
+                
                 foreach ($languages as $l) {
                     if ($l >= 1) {
                         $cells .= '<td align="center">' . $hookObj->calcStat(array($el[0], $el[1]), $l) . '</td>';
                     }
                 }
-
+                
                 $tRows[] = $cells;
             }
-
+            
             return '<table border="0" cellpadding="0" cellspacing="0"><tr>' . implode('</tr><tr>',
                 $tRows) . '</tr></table>';
         }
     }
-
+    
     function explodeElement($elementList)
     {
         $elements = GeneralUtility::trimExplode(',', $elementList);
         foreach ($elements as $k => $element) {
             $elements[$k] = GeneralUtility::revExplode('_', $element, 2);
         }
-
+        
         return $elements;
     }
-
+    
     function getLanguages($limitLanguageList, $sysLanguages)
     {
         $languageListArray = explode(',',
             $GLOBALS['BE_USER']->groupData['allowed_languages'] ? $GLOBALS['BE_USER']->groupData['allowed_languages'] : implode(',',
                 array_keys($sysLanguages)));
-
+        
         foreach ($languageListArray as $kkk => $val) {
             if ($limitLanguageList && !GeneralUtility::inList($limitLanguageList, $val)) {
                 unset($languageListArray[$kkk]);
             }
         }
-
+        
         return $languageListArray;
     }
-
+    
     /**
      * Prints out the module HTML
      *
@@ -246,9 +245,10 @@ class TranslationTasks extends BaseScriptClass
      */
     function printContent()
     {
-
+        
         $this->content .= $this->module->endPage();
         echo $this->content;
     }
 }
+
 ?>

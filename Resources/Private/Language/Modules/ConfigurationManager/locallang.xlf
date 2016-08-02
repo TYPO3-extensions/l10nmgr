@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:30:10Z" product-name="l10nmgr">
-		<header/>
-		<body>
-			<trans-unit id="general.title" xml:space="preserve">
+    <file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:30:10Z"
+          product-name="l10nmgr">
+        <header/>
+        <body>
+            <trans-unit id="general.title" xml:space="preserve">
 				<source>L10N Manager</source>
 			</trans-unit>
 			<trans-unit id="general.no_data" xml:space="preserve">
@@ -81,6 +82,6 @@
 				<source>Include FCE width default language:
 			</source>
 			</trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

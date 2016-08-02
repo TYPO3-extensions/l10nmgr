@@ -5,27 +5,27 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 class Template
 {
-
+    
     /**
      * @var  array $registryData Store all available data used by the template file
      */
     var $registryData = array();
-
+    
     /**
      * @var  string $templateFile Relative path to the template file
      */
     var $templateFile = '';
-
+    
     /**
      * @var  template $document Modul template object
      */
     var $document = null;
-
+    
     /**
      * @var  integer $pageId Page id of parent page clicked in the tree
      */
     var $pageId = 0;
-
+    
     /**
      * @param  array $registryData All available data
      * @param  string $templateFile Relative path to the template file
@@ -35,11 +35,11 @@ class Template
      */
     function Template($registryData, $templateFile)
     {
-
+        
         $this->registryData = (is_array($registryData)) ? $registryData : array();
         $this->templateFile = $templateFile;
     }
-
+    
     /**
      * Build the HTML based template view
      *
@@ -49,15 +49,15 @@ class Template
     function render()
     {
         $content = '';
-
+        
         ob_start();
         require($this->templateFile);
         $content = ob_get_contents();
         ob_end_clean();
-
+        
         return $content;
     }
-
+    
     /**
      * Return the availabel data
      *
@@ -68,7 +68,7 @@ class Template
     {
         return $this->registryData;
     }
-
+    
     /**
      * Get the modul document object
      *
@@ -79,7 +79,7 @@ class Template
     {
         return $this->moduleument;
     }
-
+    
     /**
      * Set wherever you want to use the document object
      *
@@ -92,7 +92,7 @@ class Template
     {
         $this->moduleument = (is_object($document)) ? $document : null;
     }
-
+    
     /**
      * Get the page id of page clicked in the tree
      *
@@ -103,7 +103,7 @@ class Template
     {
         return $this->pageId;
     }
-
+    
     /**
      * Set wherever you want to use the parent page id clicked in the tree
      *

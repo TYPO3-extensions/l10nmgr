@@ -30,37 +30,37 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CatXmlImportManager
 {
-
+    
     /**
      * @var  string $file filepath with XML
      */
     var $file = '';
-
+    
     /**
      * @var  string $xml CATXML
      */
     var $xml = '';
-
+    
     /**
      * @var  string $xmlNodes parsed XML
      */
     var $xmlNodes = '';
-
+    
     /**
      * @var  string $headerData headerData of the XML
      */
     var $headerData = '';
-
+    
     /**
      * @var  integer $sysLang selected import language (for check purposes - sys_language_uid)
      */
     var $sysLang;
-
+    
     /**
      * @var  array $_errorMsg accumulated errormessages
      */
     var $_errorMsg = array();
-
+    
     function __construct($file, $sysLang, $xmlString)
     {
         $this->sysLang = $sysLang;
@@ -71,37 +71,37 @@ class CatXmlImportManager
             $this->xmlString = $xmlString;
         }
     }
-
+    
     function parseAndCheckXMLFile()
     {
         global $LANG;
-
+        
         $fileContent = GeneralUtility::getUrl($this->file);
         $this->xmlNodes = GeneralUtility::xml2tree(str_replace('&nbsp;', '&#160;', $fileContent),
             3); // For some reason PHP chokes on incoming  &nbsp; in XML!
-
+        
         if (!is_array($this->xmlNodes)) {
             $this->_errorMsg[] = $LANG->getLL('import.manager.error.parsing.xml2tree.message') . $this->xmlNodes . ' Content: ' . $fileContent;
-
+            
             return false;
         }
-
+        
         $headerInformationNodes = $this->xmlNodes['TYPO3L10N'][0]['ch']['head'][0]['ch'];
         if (!is_array($headerInformationNodes)) {
             $this->_errorMsg[] = $LANG->getLL('import.manager.error.missing.head.message');
-
+            
             return false;
         }
-
+        
         $this->_setHeaderData($headerInformationNodes);
         if ($this->_isIncorrectXMLFile()) {
             return false;
         }
     }
-
+    
     function _setHeaderData($headerInformationNodes)
     {
-
+        
         if (!is_array($headerInformationNodes)) {
             return;
         }
@@ -109,12 +109,12 @@ class CatXmlImportManager
             $this->headerData[$k] = $v[0]['values'][0];
         }
     }
-
+    
     function _isIncorrectXMLFile()
     {
         global $LANG;
         $error = array();
-
+        
         if (!isset($this->headerData['t3_formatVersion']) || $this->headerData['t3_formatVersion'] != L10NMGR_FILEVERSION) {
             $error[] = sprintf($LANG->getLL('import.manager.error.version.message'),
                 $this->headerData['t3_formatVersion'], L10NMGR_FILEVERSION);
@@ -125,51 +125,51 @@ class CatXmlImportManager
                 $this->headerData['t3_workspaceId']);
         }
         if (!isset($this->headerData['t3_sysLang']) || $this->headerData['t3_sysLang'] != $this->sysLang) {
-
+            
             $error[] = sprintf($LANG->getLL('import.manager.error.language.message'), $this->sysLang,
                 $this->headerData['t3_sysLang']);
         }
         if (count($error) > 0) {
             $this->_errorMsg = array_merge($this->_errorMsg, $error);
-
+            
             return true;
         }
-
+        
         return false;
     }
-
+    
     function parseAndCheckXMLString()
     {
         global $LANG;
-
+        
         $catXmlString = $this->xmlString;
         $this->xmlNodes = GeneralUtility::xml2tree(str_replace('&nbsp;', '&#160;', $catXmlString),
             3); // For some reason PHP chokes on incoming &nbsp; in XML!
-
+        
         if (!is_array($this->xmlNodes)) {
             $this->_errorMsg[] = $LANG->getLL('import.manager.error.parsing.xml2tree.message') . $this->xmlNodes;
-
+            
             return false;
         }
-
+        
         $headerInformationNodes = $this->xmlNodes['TYPO3L10N'][0]['ch']['head'][0]['ch'];
         if (!is_array($headerInformationNodes)) {
             $this->_errorMsg[] = $LANG->getLL('import.manager.error.missing.head.message');
-
+            
             return false;
         }
-
+        
         $this->_setHeaderData($headerInformationNodes);
         if ($this->_isIncorrectXMLString()) {
             return false;
         }
     }
-
+    
     function _isIncorrectXMLString()
     {
         global $LANG;
         $error = array();
-
+        
         if (!isset($this->headerData['t3_formatVersion']) || $this->headerData['t3_formatVersion'] != L10NMGR_FILEVERSION) {
             $error[] = sprintf($LANG->getLL('import.manager.error.version.message'),
                 $this->headerData['t3_formatVersion'], L10NMGR_FILEVERSION);
@@ -180,29 +180,29 @@ class CatXmlImportManager
         }
         if (!isset($this->headerData['t3_sysLang'])) {
             //if (!isset($this->headerData['t3_sysLang']) || $this->headerData['t3_sysLang'] != $this->sysLang) {
-
+            
             $error[] = sprintf($LANG->getLL('import.manager.error.language.message'), $this->sysLang,
                 $this->headerData['t3_sysLang']);
         }
         if (count($error) > 0) {
             $this->_errorMsg = array_merge($this->_errorMsg, $error);
-
+            
             return true;
         }
-
+        
         return false;
     }
-
+    
     function getErrorMessages()
     {
         return implode('<br />', $this->_errorMsg);
     }
-
+    
     function &getXMLNodes()
     {
         return $this->xmlNodes;
     }
-
+    
     /**
      * Get pageGrp IDs for preview link generation
      *
@@ -213,16 +213,16 @@ class CatXmlImportManager
     function getPidsFromCATXMLNodes(&$xmlNodes)
     {
         $pids = array();
-
+        
         if (is_array($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'])) {
             foreach ($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'] as $pageGrp) {
                 $pids[] = $pageGrp[attrs][id];
             }
         }
-
+        
         return $pids;
     }
-
+    
     /**
      * Get uids for which localizations shall be removed on 2nd import if option checked
      *
@@ -233,7 +233,7 @@ class CatXmlImportManager
     function getDelL10NDataFromCATXMLNodes(&$xmlNodes)
     {
         //get L10Ns to be deleted before import
-
+        
         $delL10NUids = array();
         if (is_array($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'])) {
             foreach ($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'] as $pageGrp) {
@@ -246,10 +246,10 @@ class CatXmlImportManager
                 }
             }
         }
-
+        
         return array_unique($delL10NUids);
     }
-
+    
     /**
      * Delete previous localisations
      *
@@ -259,7 +259,7 @@ class CatXmlImportManager
      */
     function delL10N($delL10NData)
     {
-
+        
         //delete previous L10Ns
         $cmdCount = 0;
         $dataHandler = GeneralUtility::makeInstance('TYPO3\CMS\Core\DataHandling\DataHandler');
@@ -284,7 +284,7 @@ class CatXmlImportManager
             }
             $cmdCount++;
         }
-
+        
         return $cmdCount;
     }
 }

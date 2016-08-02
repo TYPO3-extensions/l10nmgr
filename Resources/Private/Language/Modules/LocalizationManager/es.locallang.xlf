@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" target-language="es" datatype="plaintext" original="messages" date="2015-07-30T00:29:38Z" product-name="l10nmgr">
-		<header/>
-		<body>
-			<trans-unit id="general.action.refresh.button.title" xml:space="preserve" approved="yes">
+    <file source-language="en" target-language="es" datatype="plaintext" original="messages" date="2015-07-30T00:29:38Z"
+          product-name="l10nmgr">
+        <header/>
+        <body>
+            <trans-unit id="general.action.refresh.button.title" xml:space="preserve" approved="yes">
 				<source>Refresh</source>
 				<target>Actualizar</target>
 			</trans-unit>
@@ -423,6 +424,6 @@
 			</source>
 				<target></target>
 			</trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

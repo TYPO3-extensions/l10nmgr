@@ -32,17 +32,17 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
  */
 class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements tx_scheduler_AdditionalFieldProvider
 {
-
+    
     /**
      * @var integer Default age
      */
     protected $defaultAge = 30;
-
+    
     /**
      * @var string Default pattern of files to exclude from cleanup
      */
     protected $defaultPattern = '(index\.html|\.htaccess)';
-
+    
     /**
      * Add an integer input field for age of fiels to delete
      *
@@ -67,36 +67,36 @@ class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements
                 $taskInfo['l10nmgr_fileGarbageCollection_excludePattern'] = $task->excludePattern;
             }
         }
-
+        
         // Add field for file age
         $fieldName = 'tx_scheduler[l10nmgr_fileGarbageCollection_age]';
         $fieldId = 'task_fileGarbageCollection_age';
         $fieldValue = (int)$taskInfo['l10nmgr_fileGarbageCollection_age'];
         $fieldHtml = '<input type="text" name="' . $fieldName . '" id="' . $fieldId . '" value="' . htmlspecialchars($fieldValue) . '" size="10" />';
-
+        
         $additionalFields[$fieldId] = array(
             'code' => $fieldHtml,
             'label' => 'LLL:EXT:l10nmgr/tasks/locallang.xml:fileGarbageCollection.age',
             'cshKey' => '_tasks_txl10nmgr',
             'cshLabel' => $fieldId,
         );
-
+        
         // Add field with pattern for excluding files
         $fieldName = 'tx_scheduler[l10nmgr_fileGarbageCollection_excludePattern]';
         $fieldId = 'task_fileGarbageCollection_excludePattern';
         $fieldValue = $taskInfo['l10nmgr_fileGarbageCollection_excludePattern'];
         $fieldHtml = '<input type="text" name="' . $fieldName . '" id="' . $fieldId . '" value="' . htmlspecialchars($fieldValue) . '" size="30" />';
-
+        
         $additionalFields[$fieldId] = array(
             'code' => $fieldHtml,
             'label' => 'LLL:EXT:l10nmgr/tasks/locallang.xml:fileGarbageCollection.excludePattern',
             'cshKey' => '_tasks_txl10nmgr',
             'cshLabel' => $fieldId,
         );
-
+        
         return $additionalFields;
     }
-
+    
     /**
      * Checks if the given value is an integer
      *
@@ -115,10 +115,10 @@ class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements
             $parentObject->addMessage($GLOBALS['LANG']->sL('LLL:EXT:l10nmgr/tasks/locallang.xml:fileGarbageCollection.invalidAge'),
                 FlashMessage::ERROR);
         }
-
+        
         return $result;
     }
-
+    
     /**
      * Saves given integer value in task object
      *

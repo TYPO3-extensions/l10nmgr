@@ -32,19 +32,19 @@ class ExcelXmlView extends AbstractExportView
 {
     //internal flags:
     var $modeOnlyChanged = false;
-
+    
     var $exportType = '0';
-
+    
     /**
      * @var integer $forcedSourceLanguage Overwrite the default language uid with the desired language to export
      */
     var $forcedSourceLanguage = false;
-
+    
     function __construct($l10ncfgObj, $sysLang)
     {
         parent::__construct($l10ncfgObj, $sysLang);
     }
-
+    
     /**
      * Render the excel XML export
      *
@@ -61,12 +61,12 @@ class ExcelXmlView extends AbstractExportView
             $accumObj->setForcedPreviewLanguage($this->forcedSourceLanguage);
         }
         $accum = $accumObj->getInfoArray();
-
+        
         $output = array();
-
+        
         // Traverse the structure and generate HTML output:
         foreach ($accum as $pId => $page) {
-
+            
             $output[] = '
 			<!-- Page header -->
 		   <Row>
@@ -76,7 +76,7 @@ class ExcelXmlView extends AbstractExportView
 		    <Cell ss:StyleID="s35"></Cell>
 		    ' . ($page['header']['prevLang'] ? '<Cell ss:StyleID="s35"></Cell>' : '') . '
 		   </Row>';
-
+            
             $output[] = '
 			<!-- Field list header -->
 		   <Row>
@@ -86,17 +86,17 @@ class ExcelXmlView extends AbstractExportView
 		    <Cell ss:StyleID="s38"><Data ss:Type="String">Translation:</Data></Cell>
 		    <Cell ss:StyleID="s38"><Data ss:Type="String">Difference since last tr.:</Data></Cell>
 		   </Row>';
-
+            
             foreach ($accum[$pId]['items'] as $table => $elements) {
                 foreach ($elements as $elementUid => $data) {
                     if (is_array($data['fields'])) {
-
+                        
                         $fieldsForRecord = array();
                         foreach ($data['fields'] as $key => $tData) {
                             if (is_array($tData)) {
                                 list(, $uidString, $fieldName) = explode(':', $key);
                                 list($uidValue) = explode('/', $uidString);
-
+                                
                                 //DZ
                                 if (($this->forcedSourceLanguage && isset($tData['previewLanguageValues'][$this->forcedSourceLanguage])) || $this->forcedSourceLanguage === false) {
                                     //DZ
@@ -109,7 +109,7 @@ class ExcelXmlView extends AbstractExportView
                                         $sourceColState = 'ss:AutoFitWidth="0" ss:Width="233.0"';
                                         $altSourceColState = 'ss:Hidden="1" ss:AutoFitWidth="0"';
                                     }
-
+                                    
                                     $diff = '';
                                     $noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),
                                         trim($tData['defaultValue']));
@@ -130,7 +130,7 @@ class ExcelXmlView extends AbstractExportView
                                         $diff = str_replace('</span>', '</Font>', $diff);
                                     }
                                     $diff .= ($tData['msg'] ? '[NOTE: ' . htmlspecialchars($tData['msg']) . ']' : '');
-
+                                    
                                     if (!$this->modeOnlyChanged || !$noChangeFlag) {
                                         reset($tData['previewLanguageValues']);
                                         $fieldsForRecord[] = '
@@ -164,9 +164,9 @@ class ExcelXmlView extends AbstractExportView
                                 ';
                                 }
                             }
-
+                            
                         }
-
+                        
                         if (count($fieldsForRecord)) {
                             $output[] = '
 							<!-- Element header -->
@@ -178,13 +178,13 @@ class ExcelXmlView extends AbstractExportView
 						    ' . ($page['header']['prevLang'] ? '<Cell ss:StyleID="s37"></Cell>' : '') . '
 						   </Row>
 							';
-
+                            
                             $output = array_merge($output, $fieldsForRecord);
                         }
                     }
                 }
             }
-
+            
             $output[] = '
 				<!-- Spacer row -->
 			   <Row>
@@ -199,17 +199,17 @@ class ExcelXmlView extends AbstractExportView
                 $output = $processingObject->processBeforeExportingExcelXml($output, $this);
             }
         }
-
+        
         $excelXML = GeneralUtility::getUrl(ExtensionManagementUtility::extPath('l10nmgr') . 'Resources/Private/Templates/ExcelTemplate.xml');
         $excelXML = str_replace('###INSERT_ROWS###', implode('', $output), $excelXML);
         $excelXML = str_replace('###INSERT_ROW_COUNT###', count($output), $excelXML);
         $excelXML = str_replace('###SOURCE_COL_STATE###', $sourceColState, $excelXML);
         $excelXML = str_replace('###ALT_SOURCE_COL_STATE###', $altSourceColState, $excelXML);
         $excelXML = str_replace('###INSERT_INFORMATION###', $this->renderInternalMessage(), $excelXML);
-
+        
         return $this->saveExportFile($excelXML);
     }
-
+    
     /**
      * Renders the list of internal message as XML tags
      *
@@ -223,10 +223,10 @@ class ExcelXmlView extends AbstractExportView
             $messages .= "\n\t\t\t" . '<Row>' . "\n\t\t\t\t" . '<Cell ss:Index="2" ss:StyleID="s26"><Data ss:Type="String">Description</Data></Cell>' . "\n\t\t\t\t" . '<Cell ss:StyleID="s27"><Data ss:Type="String">' . $messageInformation['message'] . '</Data></Cell>' . "\n\t\t\t" . '</Row>';
             $messages .= "\n\t\t\t" . '<Row>' . "\n\t\t\t\t" . '<Cell ss:Index="2" ss:StyleID="s26"><Data ss:Type="String">Key</Data></Cell>' . "\n\t\t\t\t" . '<Cell ss:StyleID="s27"><Data ss:Type="String">' . $messageInformation['key'] . '</Data></Cell>' . "\n\t\t\t" . '</Row>';
         }
-
+        
         return $messages;
     }
-
+    
     /**
      * Force a new source language to export the content to translate
      *
@@ -239,6 +239,6 @@ class ExcelXmlView extends AbstractExportView
     {
         $this->forcedSourceLanguage = $id;
     }
-
-
+    
+    
 }

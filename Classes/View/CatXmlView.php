@@ -38,19 +38,19 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CatXmlView extends AbstractExportView
 {
-
+    
     /**
      * @var  integer $forcedSourceLanguage Overwrite the default language uid with the desired language to export
      */
     var $forcedSourceLanguage = false;
-
+    
     var $exportType = '1';
-
+    
     function __construct($l10ncfgObj, $sysLang)
     {
         parent::__construct($l10ncfgObj, $sysLang);
     }
-
+    
     /**
      * Render the simple XML export
      *
@@ -61,7 +61,7 @@ class CatXmlView extends AbstractExportView
     function render()
     {
         global $LANG, $BE_USER;
-
+        
         $sysLang = $this->sysLang;
         $accumObj = $this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
         if ($this->forcedSourceLanguage) {
@@ -72,7 +72,7 @@ class CatXmlView extends AbstractExportView
         /** @var $xmlTool XmlTools */
         $xmlTool = GeneralUtility::makeInstance(XmlTools::class);
         $output = array();
-
+        
         // Traverse the structure and generate XML output:
         foreach ($accum as $pId => $page) {
             $output[] = "\t" . '<pageGrp id="' . $pId . '" sourceUrl="' . GeneralUtility::getIndpEnv("TYPO3_SITE_URL") . 'index.php?id=' . $pId . '">' . "\n";
@@ -81,21 +81,21 @@ class CatXmlView extends AbstractExportView
                     if (!empty($data['ISOcode'])) {
                         $targetIso = $data['ISOcode'];
                     }
-
+                    
                     if (is_array($data['fields'])) {
                         $fieldsForRecord = array();
                         foreach ($data['fields'] as $key => $tData) {
                             if (is_array($tData)) {
                                 list(, $uidString, $fieldName) = explode(':', $key);
                                 list($uidValue) = explode('/', $uidString);
-
+                                
                                 $noChangeFlag = !strcmp(trim($tData['diffDefaultValue']), trim($tData['defaultValue']));
-
+                                
                                 if (!$this->modeOnlyChanged || !$noChangeFlag) {
-
+                                    
                                     // @DP: Why this check?
                                     if (($this->forcedSourceLanguage && isset($tData['previewLanguageValues'][$this->forcedSourceLanguage])) || $this->forcedSourceLanguage === false) {
-
+                                        
                                         if ($this->forcedSourceLanguage) {
                                             $dataForTranslation = $tData['previewLanguageValues'][$this->forcedSourceLanguage];
                                         } else {
@@ -109,7 +109,7 @@ class CatXmlView extends AbstractExportView
                                         //echo $tData['fieldType'];
                                         //if (preg_match('/templavoila_flex/',$key)) { echo "1 -"; }
                                         //echo $key."\n";
-
+                                        
                                         if ($tData['fieldType'] == 'text' && $tData['isRTE'] || (preg_match('/templavoila_flex/',
                                                 $key))
                                         ) {
@@ -134,7 +134,7 @@ class CatXmlView extends AbstractExportView
                                             $dataForTranslation = str_replace('<br>', '<br/>', $dataForTranslation);
                                             $dataForTranslation = str_replace('<hr>', '<hr/>', $dataForTranslation);
                                             //$dataForTranslation = \TYPO3\CMS\Core\Utility\GeneralUtility::deHSCentities($dataForTranslation);
-
+                                            
                                             $params = $BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');
                                             if ($params['utf8'] == '1') {
                                                 $dataForTranslation = Utf8Tools::utf8_bad_strip($dataForTranslation);
@@ -169,7 +169,7 @@ class CatXmlView extends AbstractExportView
                 $output = $processingObject->processBeforeExportingCatXml($output, $this);
             }
         }
-
+        
         // get ISO2L code for source language
         if ($this->l10ncfgObj->getData('sourceLangStaticId') && ExtensionManagementUtility::isLoaded('static_info_tables')) {
             $sourceIso2L = '';
@@ -177,7 +177,7 @@ class CatXmlView extends AbstractExportView
                 $this->l10ncfgObj->getData('sourceLangStaticId'), 'lg_iso_2');
             $sourceIso2L = ' sourceLang="' . $staticLangArr['lg_iso_2'] . '"';
         }
-
+        
         $XML = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
         $XML .= '<!DOCTYPE TYPO3L10N [ <!ENTITY nbsp " "> ]>' . "\n" . '<TYPO3L10N>' . "\n";
         $XML .= "\t" . '<head>' . "\n";
@@ -195,10 +195,10 @@ class CatXmlView extends AbstractExportView
         $XML .= "\t" . '</head>' . "\n";
         $XML .= implode('', $output) . "\n";
         $XML .= "</TYPO3L10N>";
-
+        
         return $this->saveExportFile($XML);
     }
-
+    
     /**
      * Renders the list of internal message as XML tags
      *
@@ -213,10 +213,10 @@ class CatXmlView extends AbstractExportView
             }
             $messages .= "\t\t" . '<t3_skippedItem>' . "\n\t\t\t\t" . '<t3_description>' . $messageInformation['message'] . '</t3_description>' . "\n\t\t\t\t" . '<t3_key>' . $messageInformation['key'] . '</t3_key>' . "\n\t\t\t" . '</t3_skippedItem>' . "\r";
         }
-
+        
         return $messages;
     }
-
+    
     /**
      * Force a new source language to export the content to translate
      *

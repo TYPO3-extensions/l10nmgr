@@ -1,6 +1,6 @@
 <?php
 namespace Localizationteam\L10nmgr;
-
+    
     /***************************************************************
      *  Copyright notice
      *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
@@ -30,7 +30,6 @@ namespace Localizationteam\L10nmgr;
  *  101:     function includeLL()
  * TOTAL FUNCTIONS: 2
  * (This index is automatically created/updated by the extension "extdeveval")
-
  */
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -44,7 +43,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ClickMenu
 {
-
+    
     /**
      * Main function
      *
@@ -58,16 +57,16 @@ class ClickMenu
     function main(&$backRef, $menuItems, $table, $uid)
     {
         global $BE_USER, $TCA, $LANG;
-
+        
         $localItems = Array();
         if (!$backRef->cmLevel) {
-
+            
             // Returns directly, because the clicked item was not from the pages table
             if ($table == "tx_l10nmgr_cfg") {
-
+                
                 // Adds the regular item:
                 $LL = $this->includeLL();
-
+                
                 // Repeat this (below) for as many items you want to add!
                 // Remember to add entries in the localconf.php file for additional titles.
                 $url = ExtensionManagementUtility::extRelPath("l10nmgr") . "cm1/index.php?id=" . $uid;
@@ -77,15 +76,15 @@ class ClickMenu
                     1 // Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
                 );
             }
-
+            
             $localItems["moreoptions_tx_l10nmgr_cm3"] = $backRef->linkItem('L10Nmgr tools', '',
                 "top.loadTopMenu('" . GeneralUtility::linkThisScript() . "&cmLevel=1&subname=moreoptions_tx_l10nmgrXX_cm3');return false;",
                 0, 1);
-
+            
             // Simply merges the two arrays together and returns ...
             $menuItems = array_merge($menuItems, $localItems);
         } elseif (GeneralUtility::_GET('subname') == 'moreoptions_tx_l10nmgrXX_cm3') {
-
+            
             $url = ExtensionManagementUtility::extRelPath("l10nmgr") . "cm3/index.php?id=" . $uid . '&table=' . $table;
             $localItems[] = $backRef->linkItem('Create priority', '',
                 $backRef->urlRefForCM($url . '&cmd=createPriority'), 1);
@@ -94,13 +93,13 @@ class ClickMenu
             $localItems[] = $backRef->linkItem('Update Index', '', $backRef->urlRefForCM($url . '&cmd=updateIndex'), 1);
             $localItems[] = $backRef->linkItem('Flush Translations', '',
                 $backRef->urlRefForCM($url . '&cmd=flushTranslations'), 1);
-
+            
             $menuItems = array_merge($menuItems, $localItems);
         }
-
+        
         return $menuItems;
     }
-
+    
     /**
      * Reads the [extDir]/locallang.xml and returns the $LOCAL_LANG array found in that file.
      *
@@ -109,9 +108,9 @@ class ClickMenu
     function includeLL()
     {
         global $LANG;
-
+        
         $LOCAL_LANG = $LANG->includeLLFile('EXT:l10nmgr/Resources/Private/Language/locallang.xml', false);
-
+        
         return $LOCAL_LANG;
     }
 }

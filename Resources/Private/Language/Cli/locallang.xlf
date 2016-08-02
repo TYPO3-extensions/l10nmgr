@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:30:04Z" product-name="l10nmgr">
-		<header/>
-		<body>
-			<trans-unit id="export.file_saved.msg" xml:space="preserve">
+    <file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:30:04Z"
+          product-name="l10nmgr">
+        <header/>
+        <body>
+            <trans-unit id="export.file_saved.msg" xml:space="preserve">
 				<source>The export was saved to %s.</source>
 			</trans-unit>
 			<trans-unit id="error.target_language_id.msg" xml:space="preserve">
@@ -152,6 +153,6 @@
 			<trans-unit id="import.mail.import.failed" xml:space="preserve">
 				<source>Import failed with following error: %s</source>
 			</trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

@@ -37,9 +37,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class L10nConfiguration
 {
-
+    
     var $l10ncfg = array();
-
+    
     /**
      * loads internal array with l10nmgrcfg record
      *
@@ -51,7 +51,7 @@ class L10nConfiguration
     {
         $this->l10ncfg = BackendUtility::getRecord('tx_l10nmgr_cfg', $id);
     }
-
+    
     /**
      * checks if configuration is valid
      *
@@ -66,7 +66,7 @@ class L10nConfiguration
             return false;
         }
     }
-
+    
     /**
      * get uid field
      *
@@ -76,7 +76,7 @@ class L10nConfiguration
     {
         return $this->getData('uid');
     }
-
+    
     /**
      * get a field of the current cfgr record
      *
@@ -88,7 +88,7 @@ class L10nConfiguration
     {
         return $this->l10ncfg[$key];
     }
-
+    
     /**
      * Factory method to create AccumulatedInformations Object (e.g. build tree etc...) (Factorys should have all dependencies passed as parameter)
      *
@@ -99,7 +99,7 @@ class L10nConfiguration
      **/
     function getL10nAccumulatedInformationsObjectForLanguage($sysLang, $overrideStartingPoint = '')
     {
-
+        
         $l10ncfg = $this->l10ncfg;
         $treeStartingRecord = array();
         // Showing the tree:
@@ -109,13 +109,13 @@ class L10nConfiguration
             $treeStartingRecord = BackendUtility::getRecordWSOL('pages', $treeStartingPoint);
         }
         $depth = $l10ncfg['depth'];
-
+        
         // Initialize tree object:
         /** @var $tree PageTreeView */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $tree->init('AND ' . $GLOBALS['BE_USER']->getPagePermsClause(1));
         $tree->addField('l18n_cfg');
-
+        
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $HTML = $iconFactory->getIconForRecord('pages', $treeStartingRecord, Icon::SIZE_SMALL)->render();
         $tree->tree[] = array(
@@ -126,14 +126,14 @@ class L10nConfiguration
         if ($depth > 0) {
             $tree->getTree($treeStartingPoint, $depth, '');
         }
-
+        
         //now create and init accum Info object:
         /** @var $accumObj L10nAccumulatedInformation */
         $accumObj = GeneralUtility::makeInstance(L10nAccumulatedInformation::class, $tree, $l10ncfg, $sysLang);
-
+        
         return $accumObj;
     }
-
+    
     function updateFlexFormDiff($sysLang, $flexFormDiffArray)
     {
         $l10ncfg = $this->l10ncfg;
@@ -143,11 +143,11 @@ class L10nConfiguration
         if (!is_array($flexFormDiffForAllLanguages)) {
             $flexFormDiffForAllLanguages = array();
         }
-
+        
         // Set the data (
         $flexFormDiffForAllLanguages[$sysLang] = array_merge((array)$flexFormDiffForAllLanguages[$sysLang],
             $flexFormDiffArray);
-
+        
         // Serialize back and save it to record:
         $l10ncfg['flexformdiff'] = serialize($flexFormDiffForAllLanguages);
         $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg', 'uid=' . (int)$l10ncfg['uid'],

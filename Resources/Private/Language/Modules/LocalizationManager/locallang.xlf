@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:29:38Z" product-name="l10nmgr">
-		<header/>
-		<body>
-			<trans-unit id="general.action.import.upload.title" xml:space="preserve">
+    <file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:29:38Z"
+          product-name="l10nmgr">
+        <header/>
+        <body>
+            <trans-unit id="general.action.import.upload.title" xml:space="preserve">
 				<source>Select a file to import</source>
 			</trans-unit>
 			<trans-unit id="general.action.import.upload.button.title" xml:space="preserve">
@@ -325,6 +326,6 @@
 				from TYPO3 site at %3$s.
 			</source>
 			</trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

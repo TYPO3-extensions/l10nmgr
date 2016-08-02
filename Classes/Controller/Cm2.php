@@ -34,7 +34,6 @@ namespace Localizationteam\L10nmgr\Controller;
  *  199:     function makeTableRow($rec)
  * TOTAL FUNCTIONS: 6
  * (This index is automatically created/updated by the extension "extdeveval")
-
  */
 
 // DEFAULT initialization of a module [BEGIN]
@@ -54,7 +53,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Cm2 extends BaseScriptClass
 {
-
+    
     /**
      * main action to be registered in ext_tables.php
      */
@@ -64,7 +63,7 @@ class Cm2 extends BaseScriptClass
         $this->main();
         $this->printContent();
     }
-
+    
     /**
      * Adds items to the ->MOD_MENU array. Used for the function menu selector.
      *
@@ -73,10 +72,10 @@ class Cm2 extends BaseScriptClass
     function menuConfig()
     {
         global $LANG;
-
+        
         parent::menuConfig();
     }
-
+    
     /**
      * Main function of the module. Write the content to
      *
@@ -85,12 +84,12 @@ class Cm2 extends BaseScriptClass
     function main()
     {
         global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA, $CLIENT, $TYPO3_CONF_VARS;
-
+        
         // Draw the header.
         $this->module = GeneralUtility::makeInstance(DocumentTemplate::class);
         $this->module->backPath = $BACK_PATH;
         $this->module->form = '<form action="" method="post" enctype="multipart/form-data">';
-
+        
         // JavaScript
         $this->module->JScode = '
 			<script language="javascript" type="text/javascript">
@@ -100,20 +99,20 @@ class Cm2 extends BaseScriptClass
 				}
 			</script>
 		';
-
+        
         // Header:
         $this->content .= $this->module->startPage($LANG->getLL('title'));
         $this->content .= $this->module->header($LANG->getLL('title'));
-
+        
         $this->content .= $this->module->divider(5);
-
+        
         // Render the module content (for all modes):
         $this->content .= $this->module->section('',
             $this->moduleContent((string)GeneralUtility::_GP('table'), (int)GeneralUtility::_GP('uid')));
-
+        
         $this->content .= $this->module->spacer(10);
     }
-
+    
     /**
      * [Describe function...]
      *
@@ -125,26 +124,26 @@ class Cm2 extends BaseScriptClass
     function moduleContent($table, $uid)
     {
         if ($GLOBALS['TCA'][$table]) {
-
+            
             $this->l10nMgrTools = GeneralUtility::makeInstance(\Localizationteam\L10nmgr\Model\Tools\Tools::class);
             $this->l10nMgrTools->verbose = false; // Otherwise it will show records which has fields but none editable.
-
+            
             $output = '';
             if (GeneralUtility::_POST('_updateIndex')) {
                 $output .= $this->l10nMgrTools->updateIndexForRecord($table, $uid);
                 t3lib_BEfunc::setUpdateSignal('updatePageTree');
             }
-
+            
             $inputRecord = t3lib_BEfunc::getRecord($table, $uid, 'pid');
-
+            
             $pathShown = t3lib_BEfunc::getRecordPath($table == 'pages' ? $uid : $inputRecord['pid'], '', 20);
-
+            
             $this->sysLanguages = $this->l10nMgrTools->t8Tools->getSystemLanguages($table == 'pages' ? $uid : $inputRecord['pid']);
             $languageListArray = explode(',',
                 $GLOBALS['BE_USER']->groupData['allowed_languages'] ? $GLOBALS['BE_USER']->groupData['allowed_languages'] : implode(',',
                     array_keys($this->sysLanguages)));
             $limitLanguageList = trim(GeneralUtility::_GP('languageList'));
-
+            
             foreach ($languageListArray as $kkk => $val) {
                 if ($limitLanguageList && !GeneralUtility::inList($limitLanguageList, $val)) {
                     unset($languageListArray[$kkk]);
@@ -154,7 +153,7 @@ class Cm2 extends BaseScriptClass
                 $languageListArray[] = 0;
             }
             $languageList = implode(',', $languageListArray);
-
+            
             // Fetch translation index records:
             if ($table != 'pages') {
                 $records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
@@ -166,9 +165,9 @@ class Cm2 extends BaseScriptClass
                     'recpid=' . (int)$uid . ' AND translation_lang IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($languageList) . ')' . ' AND workspace=' . (int)$GLOBALS['BE_USER']->workspace . ' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
                     '', 'translation_lang, tablename, recuid');
             }
-
+            
             #	\TYPO3\CMS\Core\Utility\GeneralUtility::debugRows($records,'Index entries for '.$table.':'.$uid);
-
+            
             $tRows = array();
             $tRows[] = '<tr class="bgColor2 tableheader">
 				<td colspan="2">Base element:</td>
@@ -181,7 +180,7 @@ class Cm2 extends BaseScriptClass
 				<td>Diff:</td>
 			</tr>';
             //\TYPO3\CMS\Core\Utility\GeneralUtility::debugRows($records);
-
+            
             foreach ($records as $rec) {
                 if ($rec['tablename'] == 'pages') {
                     $tRows[] = $this->makeTableRow($rec);
@@ -195,10 +194,10 @@ class Cm2 extends BaseScriptClass
                     $tRows[] = $this->makeTableRow($rec);
                 }
             }
-
+            
             $output .= 'Path: <i>' . $pathShown . '</i><br><table border="0" cellpadding="1" cellspacing="1">' . implode('',
                     $tRows) . '</table>';
-
+            
             // Updating index
             if ($GLOBALS['BE_USER']->isAdmin()) {
                 $output .= '<br><br>Functions for "' . $table . ':' . $uid . '":<br/>
@@ -207,11 +206,11 @@ class Cm2 extends BaseScriptClass
 					<input type="submit" name="_" value="Create priority" onclick="' . htmlspecialchars('document.location="' . $GLOBALS['BACK_PATH'] . 'alt_doc.php?returnUrl=' . rawurlencode('db_list.php?id=0&table=tx_l10nmgr_priorities') . '&edit[tx_l10nmgr_priorities][0]=new&defVals[tx_l10nmgr_priorities][element]=' . rawurlencode($table . '_' . $uid) . '";return false;') . '"/><br>
 					';
             }
-
+            
             return $output;
         }
     }
-
+    
     /**
      * [Describe function...]
      *
@@ -221,7 +220,7 @@ class Cm2 extends BaseScriptClass
      */
     function makeTableRow($rec)
     {
-
+        
         //Render information for base record:
         $baseRecord = t3lib_BEfunc::getRecordWSOL($rec['tablename'], $rec['recuid']);
         $icon = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord($rec['tablename'], $baseRecord);
@@ -230,7 +229,7 @@ class Cm2 extends BaseScriptClass
         $tFlag = '<img src="' . htmlspecialchars($GLOBALS['BACK_PATH'] . $this->sysLanguages[$rec['translation_lang']]['flagIcon']) . '" alt="' . htmlspecialchars($this->sysLanguages[$rec['translation_lang']]['title']) . '" title="' . htmlspecialchars($this->sysLanguages[$rec['translation_lang']]['title']) . '" />';
         $baseRecordStr = '<a href="#" onclick="' . htmlspecialchars(t3lib_BEfunc::editOnClick('&edit[' . $rec['tablename'] . '][' . $rec['recuid'] . ']=edit',
                 $this->module->backPath)) . '">' . $icon . $title . '</a>';
-
+        
         // Render for translation if any:
         $translationRecord = false;
         if ($rec['translation_recuid']) {
@@ -244,7 +243,7 @@ class Cm2 extends BaseScriptClass
         } else {
             $translationRecStr = '';
         }
-
+        
         // Action:
         if (is_array($translationRecord)) {
             $action = '<a href="#" onclick="' . htmlspecialchars(t3lib_BEfunc::editOnClick('&edit[' . $translationTable . '][' . $translationRecord['uid'] . ']=edit',
@@ -255,7 +254,7 @@ class Cm2 extends BaseScriptClass
         } else {
             $action = '<a href="' . htmlspecialchars($this->module->issueCommand('&cmd[' . $rec['tablename'] . '][' . $rec['recuid'] . '][localize]=' . $rec['translation_lang'])) . '"><em>[Localize]</em></a>';
         }
-
+        
         return '<tr class="bgColor4-20">
 			<td valign="top">' . $baseRecordFlag . '</td>
 			<td valign="top" nowrap="nowrap">' . $baseRecordStr . '</td>
@@ -269,7 +268,7 @@ class Cm2 extends BaseScriptClass
 			<td>' . implode('<br/>', unserialize($rec['serializedDiff'])) . '</td>
 		</tr>';
     }
-
+    
     /**
      * Printing output content
      *
@@ -277,9 +276,10 @@ class Cm2 extends BaseScriptClass
      */
     function printContent()
     {
-
+        
         $this->content .= $this->module->endPage();
         echo $this->content;
     }
 }
+
 ?>

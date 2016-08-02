@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:30:59Z" product-name="l10nmgr">
-		<header/>
-		<body>
-			<trans-unit id=".description" xml:space="preserve">
+    <file source-language="en" datatype="plaintext" original="messages" date="2015-07-30T00:30:59Z"
+          product-name="l10nmgr">
+        <header/>
+        <body>
+            <trans-unit id=".description" xml:space="preserve">
 				<source></source>
 			</trans-unit>
 			<trans-unit id=".details" xml:space="preserve">
@@ -72,6 +73,6 @@
 			<trans-unit id="include.details" xml:space="preserve">
 				<source></source>
 			</trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

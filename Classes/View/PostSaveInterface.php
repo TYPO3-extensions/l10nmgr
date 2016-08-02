@@ -11,12 +11,12 @@ namespace Localizationteam\L10nmgr\View;
  */
 interface PostSaveInterface
 {
-
+    
     /**
      * @param array $params
      *
      * @return void
      */
     public function postExportAction(array $params);
-
+    
 }

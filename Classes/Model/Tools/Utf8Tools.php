@@ -8,7 +8,7 @@ namespace Localizationteam\L10nmgr\Model\Tools;
  */
 class Utf8Tools
 {
-
+    
     /**
      * @version $Id: bad.php,v 1.2 2006/02/26 13:20:44 harryf Exp $
      * Tools for locating / replacing bad bytes in UTF-8 strings
@@ -26,7 +26,7 @@ class Utf8Tools
      * @subpackage bad
      * @see utf8_is_valid
      */
-
+    
     //--------------------------------------------------------------------
     /**
      * Locates the first bad byte in a UTF-8 string returning it's
@@ -64,10 +64,10 @@ class Utf8Tools
             $pos += $bytes;
             $str = substr($str, $bytes);
         }
-
+        
         return false;
     }
-
+    
     //--------------------------------------------------------------------
     /**
      * Locates all bad bytes in a UTF-8 string and returns a list of their
@@ -108,10 +108,10 @@ class Utf8Tools
         if (count($badList) > 0) {
             return $badList;
         }
-
+        
         return false;
     }
-
+    
     //--------------------------------------------------------------------
     /**
      * Strips out any bad bytes from a UTF-8 string and returns the rest
@@ -147,10 +147,10 @@ class Utf8Tools
         }
         $result = ob_get_contents();
         ob_end_clean();
-
+        
         return $result;
     }
-
+    
     //--------------------------------------------------------------------
     /**
      * Replace bad bytes with an alternative character - ASCII character
@@ -190,11 +190,11 @@ class Utf8Tools
         }
         $result = ob_get_contents();
         ob_end_clean();
-
+        
         return $result;
     }
-
-
+    
+    
     /**
      * @version $Id: validation.php,v 1.2 2006/02/26 13:20:44 harryf Exp $
      * Tools for validing a UTF-8 string is well formed.
@@ -211,7 +211,7 @@ class Utf8Tools
      * @package utf8
      * @subpackage validation
      */
-
+    
     //--------------------------------------------------------------------
     /**
      * Tests a string as to whether it's valid UTF-8 and supported by the
@@ -230,20 +230,20 @@ class Utf8Tools
      */
     static public function utf8_is_valid($str)
     {
-
+        
         $mState = 0;  // cached expected number of octets after the current octet
         // until the beginning of the next UTF8 character sequence
         $mUcs4 = 0;   // cached Unicode character
         $mBytes = 1;  // cached expected number of octets in the current sequence
-
+        
         $len = strlen($str);
-
+        
         for ($i = 0; $i < $len; $i++) {
-
+            
             $in = ord($str{$i});
-
+            
             if ($mState == 0) {
-
+                
                 // When mState is zero we expect either a US-ASCII character or a
                 // multi-octet sequence.
                 if (0 == (0x80 & ($in))) {
@@ -303,23 +303,23 @@ class Utf8Tools
                     }
                 }
             } else {
-
+                
                 // When mState is non-zero, we expect a continuation of the multi-octet
                 // sequence
                 if (0x80 == (0xC0 & ($in))) {
-
+                    
                     // Legal continuation.
                     $shift = ($mState - 1) * 6;
                     $tmp = $in;
                     $tmp = ($tmp & 0x0000003F) << $shift;
                     $mUcs4 |= $tmp;
-
+                    
                     /**
                      * End of the multi-octet sequence. mUcs4 now contains the final
                      * Unicode codepoint to be output
                      */
                     if (0 == --$mState) {
-
+                        
                         /*
                         * Check for illegal sequences and codepoints.
                         */
@@ -328,10 +328,10 @@ class Utf8Tools
                             (($mUcs4 & 0xFFFFF800) == 0xD800) || // Codepoints outside the Unicode range are illegal
                             ($mUcs4 > 0x10FFFF)
                         ) {
-
+                            
                             return false;
                         }
-
+                        
                         //initialize UTF8 cache
                         $mState = 0;
                         $mUcs4 = 0;
@@ -342,15 +342,15 @@ class Utf8Tools
                      *((0xC0 & (*in) != 0x80) && (mState != 0))
                      * Incomplete multi-octet sequence.
                      */
-
+                    
                     return false;
                 }
             }
         }
-
+        
         return true;
     }
-
+    
     //--------------------------------------------------------------------
     /**
      * Tests whether a string complies as UTF-8. This will be much

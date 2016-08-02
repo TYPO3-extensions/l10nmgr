@@ -30,11 +30,11 @@ use TYPO3\CMS\Version\Hook\PreviewHook;
  */
 class MkPreviewLinkService
 {
-
+    
     var $_errorMsg = array();
-
+    
     var $previewHook;
-
+    
     function __construct($t3_workspaceId, $t3_sysLang, $pageIds)
     {
         $this->sysLang = $t3_sysLang;
@@ -42,38 +42,38 @@ class MkPreviewLinkService
         $this->workspaceId = $t3_workspaceId;
         $this->previewHook = GeneralUtility::makeInstance(PreviewHook::class);
     }
-
+    
     // Generate single source preview link for service
     function mkSingleSrcPreviewLink($baseUrl, $srcLang)
     {
-
+        
         $ttlHours = (int)$GLOBALS['BE_USER']->getTSConfigVal('options.workspaces.previewLinkTTLHours');
         $ttlHours = ($ttlHours ? $ttlHours : 24 * 2);
         $params = 'id=' . $this->pageIds[0] . '&L=' . $srcLang . '&ADMCMD_previewWS=' . $this->workspaceId;
         $previewUrl = $baseUrl . 'index.php?ADMCMD_prev=' . $this->previewHook->compilePreviewKeyword($params,
                 $GLOBALS['BE_USER']->user['uid'], 60 * 60 * $ttlHours);
-
+        
         return $previewUrl;
     }
-
+    
     // Generate single target preview link for CLI
     function mkSinglePreviewLink($baseUrl, $serverlink)
     {
-
+        
         $ttlHours = (int)$GLOBALS['BE_USER']->getTSConfigVal('options.workspaces.previewLinkTTLHours');
         $ttlHours = ($ttlHours ? $ttlHours : 24 * 2);
         //no_cache=1 ???
         $params = 'id=' . $this->pageIds[0] . '&L=' . $this->sysLang . '&ADMCMD_previewWS=' . $this->workspaceId . '&serverlink=' . $serverlink;
         $previewUrl = $baseUrl . 'index.php?ADMCMD_prev=' . $this->previewHook->compilePreviewKeyword($params,
                 $GLOBALS['BE_USER']->user['uid'], 60 * 60 * $ttlHours);
-
+        
         return $previewUrl;
     }
-
+    
     // Generate list of preview links for backend or email
     function mkPreviewLinks()
     {
-
+        
         $previewUrls = array();
         foreach ($this->pageIds as $pageId) {
             $ttlHours = (int)$GLOBALS['BE_USER']->getTSConfigVal('options.workspaces.previewLinkTTLHours');
@@ -82,10 +82,10 @@ class MkPreviewLinkService
             $previewUrls[$pageId] = GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'index.php?ADMCMD_prev=' . $this->previewHook->compilePreviewKeyword($params,
                     $GLOBALS['BE_USER']->user['uid'], 60 * 60 * $ttlHours);
         }
-
+        
         return $previewUrls;
     }
-
+    
     function renderPreviewLinks($previewLinks)
     {
         $out = '<ol>';
@@ -93,7 +93,7 @@ class MkPreviewLinkService
             $out .= '<li>' . $key . ': <a href="' . $previewLink . '" target="_new">' . $previewLink . '</a></li>';
         }
         $out .= '</ol>';
-
+        
         return $out;
     }
 }

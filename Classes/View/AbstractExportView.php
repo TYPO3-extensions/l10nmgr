@@ -36,7 +36,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  **/
 abstract class AbstractExportView
 {
-
+    
     /**
      * @var  L10nConfiguration The language configuration object
      */
@@ -60,33 +60,33 @@ abstract class AbstractExportView
      * @var  array List of messages issued during rendering
      */
     protected $internalMessages = array();
-
+    
     function __construct($l10ncfgObj, $sysLang)
     {
         $this->sysLang = $sysLang;
         $this->l10ncfgObj = $l10ncfgObj;
     }
-
+    
     function getExportType()
     {
         return $this->exportType;
     }
-
+    
     function setModeNoHidden()
     {
         $this->modeNoHidden = true;
     }
-
+    
     function setModeOnlyChanged()
     {
         $this->modeOnlyChanged = true;
     }
-
+    
     function setModeOnlyNew()
     {
         $this->modeOnlyNew = true;
     }
-
+    
     /**
      * Saves the information of the export in the database table 'tx_l10nmgr_sava_data'
      *
@@ -94,10 +94,10 @@ abstract class AbstractExportView
      */
     function saveExportInformation()
     {
-
+        
         // get current date
         $date = time();
-
+        
         // query to insert the data in the database
         $field_values = array(
             'source_lang' => $this->forcedSourceLanguage ? $this->forcedSourceLanguage : 0,
@@ -112,9 +112,9 @@ abstract class AbstractExportView
             'filename' => $this->getFilename(),
             'exportType' => $this->exportType
         );
-
+        
         $res = $this->getDatabaseConnection()->exec_INSERTquery('tx_l10nmgr_exportdata', $field_values);
-
+        
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportView'])) {
             $params = array(
                 'uid' => $this->getDatabaseConnection()->sql_insert_id(),
@@ -129,7 +129,7 @@ abstract class AbstractExportView
         }
         return $res;
     }
-
+    
     /**
      * Get filename
      *
@@ -140,10 +140,10 @@ abstract class AbstractExportView
         if (empty($this->filename)) {
             $this->setFilename();
         }
-
+        
         return $this->filename;
     }
-
+    
     /**
      * Set filename
      *
@@ -153,31 +153,31 @@ abstract class AbstractExportView
     {
         $sourceLang = '';
         $targetLang = '';
-
+        
         if ($this->exportType == '0') {
             $fileType = 'excel';
         } else {
             $fileType = 'catxml';
         }
-
+        
         if ($this->l10ncfgObj->getData('sourceLangStaticId') && ExtensionManagementUtility::isLoaded('static_info_tables')) {
             $sourceIso2L = '';
             $staticLangArr = BackendUtility::getRecord('static_languages',
                 $this->l10ncfgObj->getData('sourceLangStaticId'), 'lg_iso_2');
             $sourceIso2L = ' sourceLang = "' . $staticLangArr['lg_iso_2'] . '"';
         }
-
+        
         if ($this->sysLang && ExtensionManagementUtility::isLoaded('static_info_tables')) {
             $targetLangSysLangArr = BackendUtility::getRecord('sys_language', $this->sysLang);
             $targetLangArr = BackendUtility::getRecord('static_languages',
                 $targetLangSysLangArr['static_lang_isocode']);
         }
-
+        
         // Set sourceLang for filename
         if (isset($staticLangArr['lg_iso_2']) && !empty($staticLangArr['lg_iso_2'])) {
             $sourceLang = $staticLangArr['lg_iso_2'];
         }
-
+        
         // Use locale for targetLang in filename if available
         if (isset($targetLangArr['lg_collate_locale']) && !empty($targetLangArr['lg_collate_locale'])) {
             $targetLang = $targetLangArr['lg_collate_locale'];
@@ -185,14 +185,14 @@ abstract class AbstractExportView
         } elseif (isset($targetLangArr['lg_iso_2']) && !empty($targetLangArr['lg_iso_2'])) {
             $targetLang = $targetLangArr['lg_iso_2'];
         }
-
+        
         $fileNamePrefix = (trim($this->l10ncfgObj->getData('filenameprefix'))) ? $this->l10ncfgObj->getData('filenameprefix') . '_' . $fileType : $fileType;
-
+        
         // Setting filename:
         $filename = $fileNamePrefix . '_' . $sourceLang . '_to_' . $targetLang . '_' . date('dmy-His') . '.xml';
         $this->filename = $filename;
     }
-
+    
     /**
      * Checks if an export exists
      *
@@ -201,7 +201,7 @@ abstract class AbstractExportView
     function checkExports()
     {
         $ret = false;
-
+        
         $res = $this->getDatabaseConnection()->exec_SELECTquery('l10ncfg_id,exportType,translation_lang',
             'tx_l10nmgr_exportdata',
             'l10ncfg_id =' . (int)$this->l10ncfgObj->getData('uid') . ' AND exportType = ' . $this->exportType . ' AND translation_lang = ' . $this->sysLang);
@@ -210,16 +210,16 @@ abstract class AbstractExportView
         } else {
             $numRows = 0;
         }
-
+        
         if ($numRows > 0) {
             $ret = false;
         } else {
             $ret = true;
         }
-
+        
         return $ret;
     }
-
+    
     /**
      * Renders a list of saved exports as HTML table.
      *
@@ -231,7 +231,7 @@ abstract class AbstractExportView
         $out = '';
         $content = array();
         $exports = $this->fetchExports();
-
+        
         foreach ($exports AS $export => $exportData) {
             $content[$export] = sprintf('
 <tr class="db_list_normal">
@@ -244,7 +244,7 @@ abstract class AbstractExportView
                 $exportData['translation_lang'], sprintf('<a href="%suploads/tx_l10nmgr/jobs/out/%s">%s</a>',
                     GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), $exportData['filename'], $exportData['filename']));
         }
-
+        
         $out = sprintf('
 <table class="table table-striped table-hover">
 	<thead>
@@ -262,10 +262,10 @@ abstract class AbstractExportView
 </table>', $LANG->getLL('export.overview.date.label'), $LANG->getLL('export.overview.configuration.label'),
             $LANG->getLL('export.overview.type.label'), $LANG->getLL('export.overview.targetlanguage.label'),
             $LANG->getLL('export.overview.filename.label'), implode(chr(10), $content));
-
+        
         return $out;
     }
-
+    
     /**
      * Fetches saved exports based on configuration, export format and target language.
      *
@@ -275,19 +275,19 @@ abstract class AbstractExportView
     function fetchExports()
     {
         $exports = array();
-
+        
         $res = $this->getDatabaseConnection()->exec_SELECTgetRows('crdate,l10ncfg_id,exportType,translation_lang,filename',
             'tx_l10nmgr_exportdata',
             'l10ncfg_id = ' . (int)$this->l10ncfgObj->getData('uid') . ' AND exportType = ' . $this->exportType . ' AND translation_lang = ' . $this->sysLang,
             '', 'crdate DESC');
-
+        
         if (is_array($res)) {
             $exports = $res;
         }
-
+        
         return $exports;
     }
-
+    
     /**
      * Renders a list of saved exports as text.
      *
@@ -299,21 +299,21 @@ abstract class AbstractExportView
         $out = '';
         $content = array();
         $exports = $this->fetchExports();
-
+        
         foreach ($exports AS $export => $exportData) {
             $content[$export] = sprintf('%-15s%-15s%-15s%-15s%s', BackendUtility::datetime($exportData['crdate']),
                 $exportData['l10ncfg_id'], $exportData['exportType'], $exportData['translation_lang'],
                 sprintf('%suploads/tx_l10nmgr/jobs/out/%s', PATH_site, $exportData['filename']));
         }
-
+        
         $out = sprintf('%-15s%-15s%-15s%-15s%s%s%s', $LANG->getLL('export.overview.date.label'),
             $LANG->getLL('export.overview.configuration.label'), $LANG->getLL('export.overview.type.label'),
             $LANG->getLL('export.overview.targetlanguage.label'), $LANG->getLL('export.overview.filename.label'), LF,
             implode(LF, $content));
-
+        
         return $out;
     }
-
+    
     /**
      * Saves the exported files to the folder /uploads/tx_l10nmgr/jobs/out/
      *
@@ -325,10 +325,10 @@ abstract class AbstractExportView
     {
         $fileExportName = 'uploads/tx_l10nmgr/jobs/out/' . $this->getFilename();
         GeneralUtility::writeFile(PATH_site . $fileExportName, $fileContent);
-
+        
         return $fileExportName;
     }
-
+    
     /**
      * Diff-compare markup
      *
@@ -342,10 +342,10 @@ abstract class AbstractExportView
         // Creates diff-result
         /** @var $t3lib_diff_Obj DiffUtility */
         $t3lib_diff_Obj = GeneralUtility::makeInstance(DiffUtility::class);
-
+        
         return $t3lib_diff_Obj->makeDiffDisplay($old, $new);
     }
-
+    
     /**
      * Renders internal messages as flash message.
      * If the export was successful, check if there were any internal warnings.
@@ -371,10 +371,10 @@ abstract class AbstractExportView
                 $ret .= $flashMessage->render();
             }
         }
-
+        
         return $ret;
     }
-
+    
     /**
      * Returns the list of internal messages
      *
@@ -384,7 +384,7 @@ abstract class AbstractExportView
     {
         return $this->internalMessages;
     }
-
+    
     /**
      * Store a message in the internal queue
      * Note: this method is protected. Messages should not be set from the outside.
@@ -401,7 +401,7 @@ abstract class AbstractExportView
             'key' => $key
         );
     }
-
+    
     /**
      * @return DatabaseConnection
      */

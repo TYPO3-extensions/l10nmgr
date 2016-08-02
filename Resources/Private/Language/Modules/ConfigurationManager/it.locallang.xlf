@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" target-language="it" datatype="plaintext" original="messages" date="2015-07-30T00:30:11Z" product-name="l10nmgr">
-		<header/>
-		<body>
-			<trans-unit id="general.title" xml:space="preserve" approved="yes">
+    <file source-language="en" target-language="it" datatype="plaintext" original="messages" date="2015-07-30T00:30:11Z"
+          product-name="l10nmgr">
+        <header/>
+        <body>
+            <trans-unit id="general.title" xml:space="preserve" approved="yes">
 				<source>L10N Manager</source>
 				<target>L10N Manager</target>
 			</trans-unit>
@@ -105,6 +106,6 @@
 				<target>Includere FCE con lingua default:
 			</target>
 			</trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

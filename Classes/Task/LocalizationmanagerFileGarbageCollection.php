@@ -32,7 +32,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
 {
-
+    
     /**
      * @var array List of directories in which files should be cleaned up
      */
@@ -49,7 +49,7 @@ class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
      * @var string Pattern for files to exclude from clean up
      */
     public $excludePattern = '(index\.html|\.htaccess)';
-
+    
     /**
      * Removes old files, called by the Scheduler.
      *
@@ -61,22 +61,22 @@ class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
         if (TYPO3_OS == 'WIN') {
             throw new Exception('This task is not reliable on Windows OS', 1323272367);
         }
-
+        
         // Calculate a reference timestamp, based on age of files to delete
         $seconds = (60 * 60 * 24 * (int)$this->age);
         $timestamp = ($GLOBALS['EXEC_TIME'] - $seconds);
-
+        
         // Loop on all target directories
         $globalResult = true;
         foreach (self::$targetDirectories as $directory) {
             $result = $this->cleanUpDirectory($directory, $timestamp);
             $globalResult &= $result;
         }
-
+        
         // Return the global result, which is a success only if all directories could be cleaned up without problem
         return $globalResult;
     }
-
+    
     /**
      * Gets a list of all files in a directory recursively and removes
      * old ones.
@@ -91,18 +91,18 @@ class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
     protected function cleanUpDirectory($directory, $timestamp)
     {
         $fullPathToDirectory = GeneralUtility::getFileAbsFileName($directory);
-
+        
         // Check if given directory exists
         if (!(@is_dir($fullPathToDirectory))) {
             throw new RuntimeException('Given directory "' . $fullPathToDirectory . '" does not exist', 1323272107);
         }
-
+        
         // Find all files in the directory
         $directoryContent = new DirectoryIterator($fullPathToDirectory);
         /** @var $fileObject SplFileInfo */
         $fileObject = null;
         foreach ($directoryContent as $fileObject) {
-
+            
             // Remove files that are older than given timestamp and don't match the exclude pattern
             if ($fileObject->isFile() && !preg_match('/' . $this->excludePattern . '/i',
                     $fileObject->getFilename()) && $fileObject->getCTime() < $timestamp
@@ -113,7 +113,7 @@ class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
                 }
             }
         }
-
+        
         return true;
     }
 }

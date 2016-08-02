@@ -1,6 +1,6 @@
 <?php
 namespace Localizationteam\L10nmgr;
-
+    
     /***************************************************************
      *  Copyright notice
      *  (c) 2007 Kasper Skaarhoj (kasperYYYY@typo3.com)
@@ -36,7 +36,6 @@ namespace Localizationteam\L10nmgr;
      *  172:     function main_autoFix($resultArray)
      * TOTAL FUNCTIONS: 4
      * (This index is automatically created/updated by the extension "extdeveval")
-
      */
 
 
@@ -56,7 +55,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
  */
 class Index extends \TYPO3\CMS\Lowlevel\CleanerCommand
 {
-
+    
     /**
      * @var array List of not allowed doktypes
      */
@@ -77,7 +76,7 @@ class Index extends \TYPO3\CMS\Lowlevel\CleanerCommand
      * @var array Extension's configuration as from the EM
      */
     protected $extensionConfiguration = array();
-
+    
     /**
      * Constructor
      *
@@ -88,9 +87,9 @@ class Index extends \TYPO3\CMS\Lowlevel\CleanerCommand
         // Load the extension's configuration
         $this->extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr']);
         $this->disallowDoktypes = GeneralUtility::trimExplode(',', $this->extensionConfiguration['disallowDoktypes']);
-
+        
         parent::__construct();
-
+        
         // Setting up help:
         $this->cli_options[] = array(
             '--echotree level',
@@ -116,22 +115,22 @@ class Index extends \TYPO3\CMS\Lowlevel\CleanerCommand
             '--bypassFilter',
             'If set, the external filter will not be called. The external filter allows other extensions to block certain records from getting processed. For instance TemplaVoila provides such a filter than will make sure records which are not used on a page are not indexed.'
         );
-
+        
         $this->cli_help['name'] = 'tx_l10nmgr_index -- Building translation index';
         $this->cli_help['description'] = trim('
 Traversing page tree and building an index of translation needs
 ');
-
+        
         $this->cli_help['examples'] = '';
     }
-
+    
     /**
      * @return  array
      */
     function main()
     {
         global $TYPO3_DB;
-
+        
         // Initialize result array:
         $resultArray = array(
             'message' => $this->cli_help['name'] . chr(10) . chr(10) . $this->cli_help['description'],
@@ -140,30 +139,30 @@ Traversing page tree and building an index of translation needs
             ),
             'index' => array(),
         );
-
+        
         $startingPoints = GeneralUtility::intExplode(',', $this->cli_argValue('--pid'));
         $workspaceID = $this->cli_isArg('--workspace') ? MathUtility::forceIntegerInRange($this->cli_argValue('--workspace'),
             -1) : 0;
         $depth = $this->cli_isArg('--depth') ? MathUtility::forceIntegerInRange($this->cli_argValue('--depth'),
             0) : 1000;
-
+        
         if ($workspaceID != 0) {
             $GLOBALS['BE_USER']->setWorkspace($workspaceID);
             if ($GLOBALS['BE_USER']->workspace != $workspaceID) {
                 die('Workspace ' . $workspaceID . ' did not exist!' . chr(10));
             }
         }
-
+        
         $this->resultArray = &$resultArray;
         foreach ($startingPoints as $pidPoint) {
             if ($pidPoint >= 0) {
                 $this->genTree($pidPoint, $depth, (int)$this->cli_argValue('--echotree'), 'main_parseTreeCallBack');
             }
         }
-
+        
         return $resultArray;
     }
-
+    
     /**
      * Call back function for page tree traversal!
      *
@@ -178,27 +177,27 @@ Traversing page tree and building an index of translation needs
     function main_parseTreeCallBack($tableName, $uid, $echoLevel, $versionSwapmode, $rootIsVersion)
     {
         global $TCA;
-
+        
         if ($tableName == 'pages' && $uid > 0) {
             $pageId = $uid;
             $flexFormDiff = array();
             $sysLang = 1;
             $excludeIndex = array();
-
+            
             if (!$versionSwapmode) {
                 // Init:
                 $t8Tools = GeneralUtility::makeInstance(Tools::class);
                 $t8Tools->verbose = false; // Otherwise it will show records which has fields but none editable.
                 $t8Tools->bypassFilter = $this->cli_isArg('--bypassFilter') ? true : false;
-
+                
                 $pageRecord = BackendUtility::getRecord('pages', $uid);
                 if (!in_array($pageRecord['doktype'],
                         $this->disallowDoktypes) && !isset($excludeIndex['pages:' . $pageId])
                 ) {
-
+                    
                     $accum['header']['title'] = $pageRecord['title'];
                     $accum['items'] = $t8Tools->indexDetailsPage($pageId);
-
+                    
                     $this->resultArray['index'][$uid] = $accum;
                 }
             } else {
@@ -208,7 +207,7 @@ Traversing page tree and building an index of translation needs
             }
         }
     }
-
+    
     /**
      * Mandatory autofix function
      * Will run auto-fix on the result array. Echos status during processing.
@@ -222,14 +221,14 @@ Traversing page tree and building an index of translation needs
         // Init:
         $t8Tools = GeneralUtility::makeInstance(Tools::class);
         $t8Tools->verbose = false; // Otherwise it will show records which has fields but none editable.
-
+        
         if (!$this->cli_isArg('--noFlush')) {
             echo 'Flushing translation index for workspace ' . $GLOBALS['BE_USER']->workspace . chr(10);
             $t8Tools->flushIndexOfWorkspace($GLOBALS['BE_USER']->workspace);
         } else {
             echo 'Did NOT flush translation index for workspace ' . $GLOBALS['BE_USER']->workspace . ' since it was disabled by --noFlush' . chr(10);
         }
-
+        
         foreach ($this->resultArray['index'] as $pageId => $accum) {
             echo 'Adding entries for page ' . $pageId . ' "' . $accum['header']['title'] . '":' . chr(10);
             if (is_array($accum['items'])) {
