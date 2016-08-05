@@ -915,7 +915,7 @@ class Tools
             
             // First, select all records that are default language OR international:
             $allRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table,
-                'pid=' . intval($pageId) . ' AND ' .
+                'pid=' . intval($pageId) .
                 ' AND (' .
                 $TCA[$table]['ctrl']['languageField'] . '<=0' .
                 (
