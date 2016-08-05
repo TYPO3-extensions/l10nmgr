@@ -357,6 +357,16 @@ class L10nBaseService
 	                                        }
 		                                    $this->TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
                                         }
+                                        $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['importNewTceMainCmd'];
+                                        if (is_array($hooks)) {
+                                            foreach ($hooks as $hookObj) {
+                                                $parameters = array(
+                                                    'data' => $data,
+                                                    'TCEmain_cmd' => $this->TCEmain_cmd
+                                                );
+                                                $this->TCEmain_cmd = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
+                                            }
+                                        }
                                     }
 
                                     // If FlexForm, we set value in special way:
