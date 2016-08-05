@@ -329,7 +329,7 @@ class L10nBaseService
                                                 }
                                             }
                                         } elseif ($table === 'sys_file_reference') {
-                                            
+
                                             $element = BackendUtility::getRecordRaw($table,
                                                 'uid = ' . (int)$elementUid . ' AND deleted = 0');
                                             if ($element['uid_foreign'] && $element['tablenames'] && $element['fieldname']) {
@@ -356,6 +356,16 @@ class L10nBaseService
                                                 unset($this->TCEmain_cmd[$table][$elementUid]);
                                             }
                                             $this->TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
+                                        }
+                                        $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['importNewTceMainCmd'];
+                                        if (is_array($hooks)) {
+                                            foreach ($hooks as $hookObj) {
+                                                $parameters = array(
+                                                    'data' => $data,
+                                                    'TCEmain_cmd' => $this->TCEmain_cmd
+                                                );
+                                                $this->TCEmain_cmd = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
+                                            }
                                         }
                                     }
                                     
