@@ -25,6 +25,7 @@ namespace Localizationteam\L10nmgr\Model\Tools;
  * @author  Daniel Pötzinger <development@aoemedia.de>
  */
 
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Html\RteHtmlParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -62,11 +63,10 @@ class XmlTools
             }
         }
         $content = str_replace(CR, '', $content);
-        $content = $this->parseHTML->TS_images_rte($content);
-        $content = $this->parseHTML->TS_links_rte($content);
-        // $this->parseHTML->procOptions['disableUnifyLineBreaks'] = TRUE;
-        $content = $this->parseHTML->TS_transform_rte($content, 1);
-        
+        $pageTsConf = BackendUtility::getPagesTSconfig(0);
+        $rteConfiguration = $pageTsConf['RTE.']['default.'];
+        $content = $this->parseHTML->RTE_transform($content, array(), 'rte', $rteConfiguration);
+
         //substitute & with &amp;
         //$content=str_replace('&','&amp;',$content); Changed by DZ 2011-05-11
         $content = str_replace('<hr>', '<hr />', $content);
@@ -121,33 +121,15 @@ class XmlTools
         
         $xmlstring = str_replace('<hr/>', '<hr>', $xmlstring);
         $xmlstring = str_replace('<hr />', '<hr>', $xmlstring);
-        $xmlstring = str_replace('<p/>', '<p></p>',
-            $xmlstring); // DZ: Added 2011-05-11 to avoid import problem with <p/> elements
-        
-        $this->parseHTML->procOptions['typolist'] = false;
-        $this->parseHTML->procOptions['typohead'] = false;
-        $this->parseHTML->procOptions['keepPDIVattribs'] = true;
-        $this->parseHTML->procOptions['dontConvBRtoParagraph'] = true;
-        
-        if (!is_array($this->parseHTML->procOptions['HTMLparser_db.'])) {
-            $this->parseHTML->procOptions['HTMLparser_db.'] = array();
-        }
-        
-        $this->parseHTML->procOptions['HTMLparser_db.']['xhtml_cleaning'] = true;
-        //trick to preserve strong tags
-        $this->parseHTML->procOptions['denyTags'] = 'strong';
-        $this->parseHTML->procOptions['preserveTables'] = true;
-        // $this->parseHTML->procOptions['disableUnifyLineBreaks'] = TRUE;
-        $this->parseHTML->procOptions['dontRemoveUnknownTags_db'] = true;
-        
+        $xmlstring = str_replace("\xc2\xa0", '&nbsp;', $xmlstring);
         //Writes debug information for CLI import to syslog if $TYPO3_CONF_VARS['SYS']['enable_DLOG'] is set.
         if (TYPO3_DLOG) {
             GeneralUtility::sysLog(__FILE__ . ': Before RTE transformation:' . LF . $xmlstring . LF, 'l10nmgr');
         }
-        $xmlstring = str_replace("\xc2\xa0", '&nbsp;', $xmlstring);
-        $content = $this->parseHTML->TS_transform_db($xmlstring, 0); // removes links from content if not called first!
-        $content = $this->parseHTML->TS_images_db($content);
-        $content = $this->parseHTML->TS_links_db($content);
+        $pageTsConf = BackendUtility::getPagesTSconfig(0);
+        $rteConf = $pageTsConf['RTE.']['default.'];
+        $content = $this->parseHTML->RTE_transform($xmlstring, array(), 'db', $rteConf);
+
         // Last call special transformations (registered using hooks)
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['transformation'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['transformation'] as $classReference) {
