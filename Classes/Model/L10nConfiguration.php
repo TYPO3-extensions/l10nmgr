@@ -93,22 +93,27 @@ class L10nConfiguration
      * Factory method to create AccumulatedInformations Object (e.g. build tree etc...) (Factorys should have all dependencies passed as parameter)
      *
      * @param int $sysLang sys_language_uid
-     * @param mixed $overrideStartingPoint optional override startingpoint  TODO!
      *
      * @return L10nAccumulatedInformations
      **/
-    function getL10nAccumulatedInformationsObjectForLanguage($sysLang, $overrideStartingPoint = '')
+    function getL10nAccumulatedInformationsObjectForLanguage($sysLang)
     {
         
         $l10ncfg = $this->l10ncfg;
         $treeStartingRecord = array();
+        $depth = $l10ncfg['depth'];
         // Showing the tree:
         // Initialize starting point of page tree:
-        $treeStartingPoint = $l10ncfg['depth'] == -1 ? (int)GeneralUtility::_GET('srcPID') : (int)$l10ncfg['pid'];
-        if ($treeStartingPoint > 0) {
-            $treeStartingRecord = BackendUtility::getRecordWSOL('pages', $treeStartingPoint);
+        if ($depth < 0) {
+            $treeStartingPoints = $l10ncfg['depth'] == -2 ? GeneralUtility::intExplode(',', $l10ncfg['pages']) : array((int)GeneralUtility::_GET('srcPID'));
+        } else {
+            $treeStartingPoints = array((int)$l10ncfg['pid']);
         }
-        $depth = $l10ncfg['depth'];
+        if (!empty($treeStartingPoints)) {
+            foreach ($treeStartingPoints as $page) {
+                $treeStartingRecords[] = BackendUtility::getRecordWSOL('pages', $page);
+            }
+        }
         
         // Initialize tree object:
         /** @var $tree PageTreeView */
@@ -117,14 +122,27 @@ class L10nConfiguration
         $tree->addField('l18n_cfg');
         
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $HTML = $iconFactory->getIconForRecord('pages', $treeStartingRecord, Icon::SIZE_SMALL)->render();
-        $tree->tree[] = array(
-            'row' => $treeStartingRecord,
-            'HTML' => $HTML
-        );
         // Create the tree from starting point:
-        if ($depth > 0) {
-            $tree->getTree($treeStartingPoint, $depth, '');
+        if (!empty($treeStartingRecords)) {
+            $page = array_shift($treeStartingRecords);
+            $HTML = $iconFactory->getIconForRecord('pages', $page, Icon::SIZE_SMALL)->render();
+            $tree->tree[] = array(
+                'row' => $page,
+                'HTML' => $HTML
+            );
+            if ($depth > 0) {
+                $tree->getTree($page, $depth, '');
+            } else {
+                if (!empty($treeStartingRecords)) {
+                    foreach ($treeStartingRecords as $page) {
+                        $HTML = $iconFactory->getIconForRecord('pages', $page, Icon::SIZE_SMALL)->render();
+                        $tree->tree[] = array(
+                            'row' => $page,
+                            'HTML' => $HTML
+                        );
+                    }
+                }
+            }
         }
         
         //now create and init accum Info object:

@@ -10,12 +10,13 @@ return array(
         'cruser_id' => 'cruser_id',
         'default_sortby' => 'ORDER BY title',
         'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('l10nmgr') . 'Resources/Public/Icons/icon_tx_l10nmgr_cfg.gif',
+        'requestUpdate' => 'depth',
     ),
     'feInterface' => array(
         'fe_admin_fieldList' => 'title, depth, tablelist, exclude',
     ),
     'interface' => array(
-        'showRecordFieldList' => 'title,depth,sourceLangStaticId,tablelist,exclude,incfcewithdefaultlanguage,pretranslatecontent,overrideexistingtranslations'
+        'showRecordFieldList' => 'title,depth,pages,sourceLangStaticId,tablelist,exclude,incfcewithdefaultlanguage,pretranslatecontent,overrideexistingtranslations'
     ),
     'columns' => array(
         'title' => array(
@@ -48,9 +49,22 @@ return array(
                     array($l10n . ':tx_l10nmgr_cfg.depth.I.3', '3'),
                     array($l10n . ':tx_l10nmgr_cfg.depth.I.4', '100'),
                     array($l10n . ':tx_l10nmgr_cfg.depth.I.-1', '-1'),
+                    array($l10n . ':tx_l10nmgr_cfg.depth.I.-2', '-2'),
                 ),
                 'size' => 1,
                 'maxitems' => 1,
+            )
+        ),
+        'pages' => array(
+            'exclude' => 1,
+            'label' => $l10n . ':tx_l10nmgr_cfg.pages',
+            'displayCond' => 'FIELD:depth:<=:-2',
+            'config' => array(
+                'type' => 'group',
+                'internal_type' => 'db',
+                'allowed' => 'pages',
+                'size' => 5,
+                'maxitems' => 100
             )
         ),
         'displaymode' => array(
@@ -140,7 +154,7 @@ return array(
         )
     ),
     'types' => array(
-        '0' => array('showitem' => 'title,filenameprefix;;;;2-2-2, depth;;;;3-3-3, sourceLangStaticId, tablelist, exclude, include, displaymode, incfcewithdefaultlanguage, pretranslatecontent, overrideexistingtranslations')
+        '0' => array('showitem' => 'title,filenameprefix;;;;2-2-2, depth;;;;3-3-3, pages, sourceLangStaticId, tablelist, exclude, include, displaymode, incfcewithdefaultlanguage, pretranslatecontent, overrideexistingtranslations')
     ),
     'palettes' => array(
         '1' => array('showitem' => '')
