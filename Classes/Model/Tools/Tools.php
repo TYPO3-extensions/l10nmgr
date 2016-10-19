@@ -381,14 +381,13 @@ class Tools
      * @param  string $table Table name
      * @param  integer $uid Record UID
      * @param  integer|NULL $languageID Language ID of the record
-     * @param  integer $previewLanguage
      *
      * @return mixed FALSE if the input record is not one that can be translated. Otherwise an array holding information about the status.
      */
-    function indexDetailsRecord($table, $uid, $languageID = null, $previewLanguage = 0)
+    function indexDetailsRecord($table, $uid, $languageID = null)
     {
         $rec = $table == 'pages' ? BackendUtility::getRecord($table, $uid) : $this->getSingleRecordToTranslate($table,
-            $uid, $previewLanguage);
+            $uid, $languageID);
         
         if (is_array($rec) && $rec['pid'] != -1) {
             $pid = $table == 'pages' ? $rec['uid'] : $rec['pid'];
@@ -398,7 +397,7 @@ class Tools
                 foreach ($this->sys_languages as $r) {
                     if (is_null($languageID) || $r['uid'] === $languageID) {
                         $items['fullDetails'][$r['uid']] = $this->translationDetails($table, $rec, $r['uid'],
-                            $previewLanguage);
+                            $languageID);
                         $items['indexRecord'][$r['uid']] = $this->compileIndexRecord($table,
                             $items['fullDetails'][$r['uid']], $r['uid'], $pid);
                     }
