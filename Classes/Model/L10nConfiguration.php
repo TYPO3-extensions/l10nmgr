@@ -23,6 +23,7 @@ use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -132,7 +133,7 @@ class L10nConfiguration
                     'HTML' => $HTML
                 );
                 if ($depth > 0) {
-                    $tree->getTree($page, $depth, '');
+                    $tree->getTree($page['uid'], $depth, '');
                 } else {
                     if (!empty($treeStartingRecords)) {
                         foreach ($treeStartingRecords as $page) {
