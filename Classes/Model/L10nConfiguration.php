@@ -101,11 +101,11 @@ class L10nConfiguration
         
         $l10ncfg = $this->l10ncfg;
         $treeStartingRecords = array();
-        $depth = $l10ncfg['depth'];
+        $depth = (int)$l10ncfg['depth'];
         // Showing the tree:
         // Initialize starting point of page tree:
-        if ($depth < 0) {
-            $treeStartingPoints = $l10ncfg['depth'] == -2 ? GeneralUtility::intExplode(',', $l10ncfg['pages']) : array((int)GeneralUtility::_GET('srcPID'));
+        if ($depth === -1 || $depth === -2 && $l10ncfg['pages']) {
+            $treeStartingPoints = $l10ncfg['depth'] === -2 ? GeneralUtility::intExplode(',', $l10ncfg['pages']) : array((int)GeneralUtility::_GET('srcPID'));
         } else {
             $treeStartingPoints = array((int)$l10ncfg['pid']);
         }
