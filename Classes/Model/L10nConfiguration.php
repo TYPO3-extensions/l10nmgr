@@ -100,7 +100,7 @@ class L10nConfiguration
     {
         
         $l10ncfg = $this->l10ncfg;
-        $treeStartingRecord = array();
+        $treeStartingRecords = array();
         $depth = $l10ncfg['depth'];
         // Showing the tree:
         // Initialize starting point of page tree:
@@ -125,21 +125,23 @@ class L10nConfiguration
         // Create the tree from starting point:
         if (!empty($treeStartingRecords)) {
             $page = array_shift($treeStartingRecords);
-            $HTML = $iconFactory->getIconForRecord('pages', $page, Icon::SIZE_SMALL)->render();
-            $tree->tree[] = array(
-                'row' => $page,
-                'HTML' => $HTML
-            );
-            if ($depth > 0) {
-                $tree->getTree($page, $depth, '');
-            } else {
-                if (!empty($treeStartingRecords)) {
-                    foreach ($treeStartingRecords as $page) {
-                        $HTML = $iconFactory->getIconForRecord('pages', $page, Icon::SIZE_SMALL)->render();
-                        $tree->tree[] = array(
-                            'row' => $page,
-                            'HTML' => $HTML
-                        );
+            if (!empty($page)) {
+                $HTML = $iconFactory->getIconForRecord('pages', $page, Icon::SIZE_SMALL)->render();
+                $tree->tree[] = array(
+                    'row' => $page,
+                    'HTML' => $HTML
+                );
+                if ($depth > 0) {
+                    $tree->getTree($page, $depth, '');
+                } else {
+                    if (!empty($treeStartingRecords)) {
+                        foreach ($treeStartingRecords as $page) {
+                            $HTML = $iconFactory->getIconForRecord('pages', $page, Icon::SIZE_SMALL)->render();
+                            $tree->tree[] = array(
+                                'row' => $page,
+                                'HTML' => $HTML
+                            );
+                        }
                     }
                 }
             }
