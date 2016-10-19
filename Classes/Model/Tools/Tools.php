@@ -290,6 +290,7 @@ class Tools
         $diffDefaultValue = $pObj->getArrayValueByPath($structurePath,
             $this->_callBackParams_translationDiffsourceXMLArray);
         
+        $previewLanguageValues = array();
         foreach ($this->previewLanguages as $prevSysUid) {
             $previewLanguageValues[$prevSysUid] = $pObj->getArrayValueByPath($structurePath,
                 $this->_callBackParams_previewLanguageXMLArrays[$prevSysUid]);
