@@ -100,20 +100,24 @@ abstract class AbstractExportView
         
         // query to insert the data in the database
         $field_values = array(
-            'source_lang' => $this->forcedSourceLanguage ? $this->forcedSourceLanguage : 0,
-            'translation_lang' => $this->sysLang,
+            'source_lang' => (int)$this->forcedSourceLanguage ? (int)$this->forcedSourceLanguage : 0,
+            'translation_lang' => (int)$this->sysLang,
             'crdate' => $date,
             'tstamp' => $date,
-            'l10ncfg_id' => $this->l10ncfgObj->getData('uid'),
-            'pid' => $this->l10ncfgObj->getData('pid'),
-            'tablelist' => $this->l10ncfgObj->getData('tablelist'),
-            'title' => $this->l10ncfgObj->getData('title'),
-            'cruser_id' => $this->l10ncfgObj->getData('cruser_id'),
-            'filename' => $this->getFilename(),
-            'exportType' => $this->exportType
+            'l10ncfg_id' => (int)$this->l10ncfgObj->getData('uid'),
+            'pid' => (int)$this->l10ncfgObj->getData('pid'),
+            'tablelist' => (string)$this->l10ncfgObj->getData('tablelist'),
+            'title' => (string)$this->l10ncfgObj->getData('title'),
+            'cruser_id' => (int)$this->l10ncfgObj->getData('cruser_id'),
+            'filename' => (string)$this->getFilename(),
+            'exportType' => (int)$this->exportType
         );
         
-        $res = $this->getDatabaseConnection()->exec_INSERTquery('tx_l10nmgr_exportdata', $field_values);
+        $res = $this->getDatabaseConnection()->exec_INSERTquery(
+            'tx_l10nmgr_exportdata',
+            $field_values,
+            array('source_lang','translation_lang','crdate','tstamp','l10ncfg_id','pid','cruser_id','exportType')
+        );
         
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportView'])) {
             $params = array(
