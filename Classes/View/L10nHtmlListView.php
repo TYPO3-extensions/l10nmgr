@@ -144,7 +144,7 @@ class L10nHtmlListView extends AbstractExportView
                                         $fieldCells[] = $edit && $this->modeWithInlineEdit ? ($tData['fieldType'] === 'text' ? '<textarea name="' . htmlspecialchars('translation[' . $table . '][' . $elementUid . '][' . $key . ']') . '" cols="60" rows="5">' . GeneralUtility::formatForTextarea($tData['translationValue']) . '</textarea>' : '<input name="' . htmlspecialchars('translation[' . $table . '][' . $elementUid . '][' . $key . ']') . '" value="' . htmlspecialchars($tData['translationValue']) . '" size="60" />') : nl2br(htmlspecialchars($tData['translationValue']));
                                         $fieldCells[] = $diff;
 
-                                        if ($page['header']['prevLang']) {
+                                        if ($page['header']['prevLang'] && is_array($tData['previewLanguageValues'])) {
                                             reset($tData['previewLanguageValues']);
                                             $fieldCells[] = nl2br(htmlspecialchars(current($tData['previewLanguageValues'])));
                                         }
@@ -160,7 +160,9 @@ class L10nHtmlListView extends AbstractExportView
 
                             // Link:
                             if ($this->modeShowEditLinks) {
-                                reset($data['fields']);
+                                if (is_array($data['fields'])) {
+                                    reset($data['fields']);
+                                }
                                 list(, $uidString) = explode(':', key($data['fields']));
                                 if (substr($uidString, 0, 3) !== 'NEW') {
                                     $editId = is_array($data['translationInfo']['translations'][$sysLang]) ? $data['translationInfo']['translations'][$sysLang]['uid'] : $data['translationInfo']['uid'];

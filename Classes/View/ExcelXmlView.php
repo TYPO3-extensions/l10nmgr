@@ -135,7 +135,9 @@ class ExcelXmlView extends AbstractExportView
                                     $diff .= ($tData['msg'] ? '[NOTE: ' . htmlspecialchars($tData['msg']) . ']' : '');
 
                                     if (!$this->modeOnlyChanged || !$noChangeFlag) {
-                                        reset($tData['previewLanguageValues']);
+                                        if (is_array($tData['previewLanguageValues'])) {
+                                            reset($tData['previewLanguageValues']);
+                                        }
                                         $fieldsForRecord[] = '
 								<!-- Translation row: -->
 								   <Row ss:StyleID="s25">
