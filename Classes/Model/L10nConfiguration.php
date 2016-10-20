@@ -100,48 +100,47 @@ class L10nConfiguration
     {
         
         $l10ncfg = $this->l10ncfg;
-        $treeStartingRecords = array();
         $depth = (int)$l10ncfg['depth'];
+        $treeStartingRecords = array();
         // Showing the tree:
         // Initialize starting point of page tree:
-        if ($depth === -1 || $depth === -2 && $l10ncfg['pages']) {
-            $treeStartingPoints = $l10ncfg['depth'] === -2 ? GeneralUtility::intExplode(',', $l10ncfg['pages']) : array((int)GeneralUtility::_GET('srcPID'));
+        if ($depth === -1) {
+            $treeStartingPoints = array((int)GeneralUtility::_GET('srcPID'));
         } else {
-            $treeStartingPoints = array((int)$l10ncfg['pid']);
-        }
-        if (!empty($treeStartingPoints)) {
-            foreach ($treeStartingPoints as $page) {
-                $treeStartingRecords[] = BackendUtility::getRecordWSOL('pages', $page);
+            if ($depth === -2 && !empty($l10ncfg['pages'])) {
+                $treeStartingPoints = GeneralUtility::intExplode(',', $l10ncfg['pages']);
+            } else {
+                $treeStartingPoints = array((int)$l10ncfg['pid']);
             }
         }
-        
-        // Initialize tree object:
-        /** @var $tree PageTreeView */
-        $tree = GeneralUtility::makeInstance(PageTreeView::class);
-        $tree->init('AND ' . $GLOBALS['BE_USER']->getPagePermsClause(1));
-        $tree->addField('l18n_cfg');
-        
-        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        // Create the tree from starting point:
-        if (!empty($treeStartingRecords)) {
+        if (!empty($treeStartingPoints)) {
+            foreach ($treeStartingPoints as $treeStartingPoint) {
+                $treeStartingRecords[] = BackendUtility::getRecordWSOL('pages', $treeStartingPoint);
+            }
+            // Initialize tree object:
+            /** @var $tree PageTreeView */
+            $tree = GeneralUtility::makeInstance(PageTreeView::class);
+            $tree->init('AND ' . $GLOBALS['BE_USER']->getPagePermsClause(1));
+            $tree->addField('l18n_cfg');
+            
+            $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
             $page = array_shift($treeStartingRecords);
-            if (!empty($page)) {
-                $HTML = $iconFactory->getIconForRecord('pages', $page, Icon::SIZE_SMALL)->render();
-                $tree->tree[] = array(
-                    'row' => $page,
-                    'HTML' => $HTML
-                );
-                if ($depth > 0) {
-                    $tree->getTree($page['uid'], $depth, '');
-                } else {
-                    if (!empty($treeStartingRecords)) {
-                        foreach ($treeStartingRecords as $page) {
-                            $HTML = $iconFactory->getIconForRecord('pages', $page, Icon::SIZE_SMALL)->render();
-                            $tree->tree[] = array(
-                                'row' => $page,
-                                'HTML' => $HTML
-                            );
-                        }
+            $HTML = $iconFactory->getIconForRecord('pages', $page, Icon::SIZE_SMALL)->render();
+            $tree->tree[] = array(
+                'row' => $page,
+                'HTML' => $HTML
+            );
+            // Create the tree from starting point or page list:
+            if ($depth > 0) {
+                $tree->getTree($page['uid'], $depth, '');
+            } else {
+                if (!empty($treeStartingRecords)) {
+                    foreach ($treeStartingRecords as $page) {
+                        $HTML = $iconFactory->getIconForRecord('pages', $page, Icon::SIZE_SMALL)->render();
+                        $tree->tree[] = array(
+                            'row' => $page,
+                            'HTML' => $HTML
+                        );
                     }
                 }
             }

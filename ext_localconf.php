@@ -21,7 +21,7 @@ if (TYPO3_MODE == 'BE') {
 
 //! increase with every change to XML Format
 define('L10NMGR_FILEVERSION', '1.2');
-define('L10NMGR_VERSION', '5.0.0');
+define('L10NMGR_VERSION', '7.0.0');
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['lowlevel']['cleanerModules']['tx_l10nmgr_index'] = array('EXT:l10nmgr/Classes/Index.php:Index');
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['tx_l10nmgr'] = 'EXT:l10nmgr/Classes/Hooks/Tcemain.php:&Tcemain';
