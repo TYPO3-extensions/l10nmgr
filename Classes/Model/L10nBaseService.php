@@ -667,6 +667,9 @@ class L10nBaseService
                             $translatedRecord = reset($translatedRecord);
                             if ($translatedRecord['uid'] > 0) {
                                 $fieldKey = $Ttable . ':' . $translatedRecord['uid'] . ':' . $Tfield;
+                                if ($Tpath) {
+                                    $fieldKey .= ':' .  $Tpath;
+                                }
                             }
                         }
                     }
