@@ -628,14 +628,14 @@ class Tools
                             $translationsTemp = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                                 $selFieldList ? $selFieldList : 'uid,' . $GLOBALS['TCA'][$trTable]['ctrl']['languageField'],
                                 $trTable,
-                                '(' . $GLOBALS['TCA'][$trTable]['ctrl']['transOrigPointerField'] . '=' . (int)$uid .
+                                '((' . $GLOBALS['TCA'][$trTable]['ctrl']['transOrigPointerField'] . '=' . (int)$uid .
                                 ' AND pid=' . (int)($table === 'pages' ? $row['uid'] : $row['pid']) .
                                 ' AND ' . $GLOBALS['TCA'][$trTable]['ctrl']['languageField'] . (!$sys_language_uid ? '>0' : '=' . (int)$sys_language_uid) . ')' .
                                 ( $previewLanguage > 0 && $table !== 'pages' ?
                                 ' OR (' . $GLOBALS['TCA'][$trTable]['ctrl']['transOrigPointerField'] . '=0' .
                                 ' AND uid=' . (int)($uid) .
                                 ' AND pid=' . (int)$row['pid'] .
-                                ' AND ' . $GLOBALS['TCA'][$trTable]['ctrl']['languageField'] . '=' . $previewLanguage . ')' : '') .
+                                ' AND ' . $GLOBALS['TCA'][$trTable]['ctrl']['languageField'] . '=' . $previewLanguage . ')' : '') . ')' .
                                 BackendUtility::deleteClause($trTable) .
                                 BackendUtility::versioningPlaceholderClause($trTable));
                             $translations = array();
