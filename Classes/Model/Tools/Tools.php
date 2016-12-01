@@ -192,7 +192,19 @@ class Tools
                 ) {
                     $this->bypassFilter = true;
                 }
-                if (!GeneralUtility::isFirstPartOfStr($TCEformsCfg['displayCond'], 'HIDE_L10N_SIBLINGS')) {
+                $is_HIDE_L10N_SIBLINGS = false;
+                if (is_array($TCEformsCfg['displayCond'])) {
+                    $GLOBALS['is_HIDE_L10N_SIBLINGS'] = $is_HIDE_L10N_SIBLINGS;
+                    array_walk_recursive($TCEformsCfg['displayCond'], function ($i, $k) {
+                        if (GeneralUtility::isFirstPartOfStr($i, 'HIDE_L10N_SIBLINGS')) {
+                            $GLOBALS['is_HIDE_L10N_SIBLINGS'] = true;
+                        }
+                    });
+                    $is_HIDE_L10N_SIBLINGS = $GLOBALS['is_HIDE_L10N_SIBLINGS'];
+                } else {
+                    $is_HIDE_L10N_SIBLINGS = GeneralUtility::isFirstPartOfStr($TCEformsCfg['displayCond'], 'HIDE_L10N_SIBLINGS');
+                }
+				if (!$is_HIDE_L10N_SIBLINGS) {
                     if (!GeneralUtility::isFirstPartOfStr($kFieldName, 't3ver_')) {
                         if (!$this->filters['l10n_categories'] || GeneralUtility::inList($this->filters['l10n_categories'],
                                 $TCEformsCfg['l10n_cat'])
