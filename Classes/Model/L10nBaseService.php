@@ -23,11 +23,11 @@ namespace Localizationteam\L10nmgr\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * baseService class for offering common services like saving translation etc...
@@ -237,9 +237,11 @@ class L10nBaseService
             $tce->stripslashes_values = false;
             $tce->dontProcessTransformations = true;
             $tce->isImporting = true;
-            $tce->start($TCEmain_data,
-                array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
-            $tce->process_datamap();
+            foreach (array_chunk($TCEmain_data, 100) as $dataPart) {
+                $tce->start($dataPart,
+                    array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
+                $tce->process_datamap();
+            }
 
             if (count($tce->errorLog)) {
                 GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': TCEmain update errors: ' . GeneralUtility::arrayToLogString($tce->errorLog),
@@ -469,9 +471,11 @@ class L10nBaseService
             $tce->dontProcessTransformations = true;
             $tce->isImporting = true;
             //print_r($TCEmain_data);
-            $tce->start($TCEmain_data,
-                array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
-            $tce->process_datamap();
+            foreach (array_chunk($TCEmain_data, 100) as $dataPart) {
+                $tce->start($dataPart,
+                    array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
+                $tce->process_datamap();
+            }
 
             self::$targetLanguageID = null;
 
