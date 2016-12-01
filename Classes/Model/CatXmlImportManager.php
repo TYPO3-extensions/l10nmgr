@@ -289,16 +289,14 @@ class CatXmlImportManager
         $dataHandler->start(array(), array());
         foreach ($delL10NData as $element) {
             list($table, $elementUid) = explode(':', $element);
-            if (isset($GLOBALS['TCA'][$table]['columns']['l10n_parent'])) {
-                $where = 'l10n_parent';
-            } else {
-                $where = 'l18n_parent';
-            }
-            $where .= "= $elementUid AND sys_language_uid = " . $this->headerData['t3_sysLang'] . " AND t3ver_wsid = " . $this->headerData['t3_workspaceId'];
             if ($table == 'pages') {
                 $table = 'pages_language_overlay';
                 $where = 'pid = ' . (int)$elementUid  . ' AND sys_language_uid = ' . (int)$this->headerData['t3_sysLang'] . ' AND t3ver_wsid = ' . (int)$this->headerData['t3_workspaceId'];
-            }
+            } else {
+                $languageField = $GLOBALS['TCA'][$table]['ctrl']['languageField'];
+                $l18nPointerField = $GLOBALS['TCA'][$table]['ctrl']['transOrigPointerField'];
+                $where = $l18nPointerField . " = $elementUid AND " . $languageField . " = " . $this->headerData['t3_sysLang'] . " AND t3ver_wsid = " . $this->headerData['t3_workspaceId'];
+			}
             $delDataQuery = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid', $table, $where, '', '', '', 'uid');
             if(!empty($delDataQuery)) {
                 foreach($delDataQuery as $uid => $item) {
