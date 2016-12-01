@@ -177,6 +177,15 @@ class L10nBaseService
             foreach ($accum as $pId => $page) {
                 foreach ($accum[$pId]['items'] as $table => $elements) {
                     foreach ($elements as $elementUid => $data) {
+                        $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['beforeDataFields'];
+                        if (is_array($hooks)) {
+                            foreach ($hooks as $hookObj) {
+                                $parameters = array(
+                                    'data' => $data
+                                );
+                                $data = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
+                            }
+                        }
                         if (is_array($data['fields'])) {
                             
                             foreach ($data['fields'] as $key => $tData) {
@@ -215,6 +224,16 @@ class L10nBaseService
                             }
                             if (is_array($inputArray[$table][$elementUid]) && !count($inputArray[$table][$elementUid])) {
                                 unset($inputArray[$table][$elementUid]); // Unsetting so in the end we can see if $inputArray was fully processed.
+                            }
+                        }
+                        $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['afterDataFields'];
+                        if (is_array($hooks)) {
+                            foreach ($hooks as $hookObj) {
+                                $parameters = array(
+                                    'TCEmain_data' => $TCEmain_data,
+                                    'TCEmain_cmd' => $this->TCEmain_cmd
+                                );
+                                $inputArray = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
                             }
                         }
                     }
@@ -293,8 +312,16 @@ class L10nBaseService
             foreach ($accum as $pId => $page) {
                 foreach ($accum[$pId]['items'] as $table => $elements) {
                     foreach ($elements as $elementUid => $data) {
+                        $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['beforeDataFields'];
+                        if (is_array($hooks)) {
+                            foreach ($hooks as $hookObj) {
+                                $parameters = array(
+                                    'data' => $data
+                                );
+                                $data = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
+                            }
+                        }
                         if (is_array($data['fields'])) {
-                            
                             foreach ($data['fields'] as $key => $tData) {
                                 
                                 if (is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {
@@ -395,6 +422,16 @@ class L10nBaseService
                             }
                             if (is_array($inputArray[$table][$elementUid]) && !count($inputArray[$table][$elementUid])) {
                                 unset($inputArray[$table][$elementUid]); // Unsetting so in the end we can see if $inputArray was fully processed.
+                            }
+                        }
+                        $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['afterDataFields'];
+                        if (is_array($hooks)) {
+                            foreach ($hooks as $hookObj) {
+                                $parameters = array(
+                                    'TCEmain_data' => $TCEmain_data,
+                                    'TCEmain_cmd' => $this->TCEmain_cmd
+                                );
+                                $inputArray = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
                             }
                         }
                     }
