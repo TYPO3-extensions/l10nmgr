@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array(
     'description' => 'Module for managing localization import and export',
     'category' => 'module',
 	'shy' => 0,
-    'version' => '5.0.1',
+    'version' => '5.1.0',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
@@ -38,13 +38,13 @@ $EM_CONF[$_EXTKEY] = array(
                 array(
                     'php' => '5.5.0-0.0.0',
                     'typo3' => '6.2.0-6.2.99',
+                    'static_info_tables' => '6.3.0-0.0.0',
                 ),
             'conflicts' =>
                 array(),
             'suggests' =>
                 array(),
         ),
-	'_md5_values_when_last_written' => '',
 	'suggests' => array()
 );
 
