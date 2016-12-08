@@ -253,11 +253,8 @@ class L10nBaseService
             $tce->stripslashes_values = false;
             $tce->dontProcessTransformations = true;
             $tce->isImporting = true;
-            foreach (array_chunk($TCEmain_data, 100) as $dataPart) {
-                $tce->start($dataPart,
-                    array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
-                $tce->process_datamap();
-            }
+            $tce->start($TCEmain_data, array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
+            $tce->process_datamap();
             
             if (count($tce->errorLog)) {
                 GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': TCEmain update errors: ' . GeneralUtility::arrayToLogString($tce->errorLog),
@@ -505,11 +502,8 @@ class L10nBaseService
             $tce->stripslashes_values = false;
             $tce->dontProcessTransformations = true;
             $tce->isImporting = true;
-            foreach (array_chunk($TCEmain_data, 100) as $dataPart) {
-                $tce->start($dataPart,
-                    array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
-                $tce->process_datamap();
-            }
+            $tce->start($TCEmain_data, array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
+            $tce->process_datamap();
             
             self::$targetLanguageID = null;
             
