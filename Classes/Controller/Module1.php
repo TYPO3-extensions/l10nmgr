@@ -180,7 +180,9 @@ class Module1 extends BaseScriptClass
         $configurations = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             '*',
             'tx_l10nmgr_cfg',
-            '1=1' . BackendUtility::deleteClause('tx_l10nmgr_cfg')
+            '1=1' . BackendUtility::deleteClause('tx_l10nmgr_cfg'),
+            '',
+            'title'
         );
         // Filter out the configurations which the user is allowed to see, base on the page access rights
         $pagePermissionsClause = $GLOBALS['BE_USER']->getPagePermsClause(1);
