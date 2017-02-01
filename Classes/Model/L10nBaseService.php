@@ -555,9 +555,12 @@ class L10nBaseService
         $this->depthCounter++;
         if ($this->depthCounter < 100 && !isset($this->checkedParentRecords[$parentField][$element['uid']])) {
             $this->checkedParentRecords[$parentField][$element['uid']] = true;
-            $translatedParent = BackendUtility::getRecordRaw('tt_content',
-                $TCA['tt_content']['ctrl']['transOrigPointerField'] . ' = ' . (int)$element[$parentField] . '
-	            AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang);
+            if ($element[$parentField] > 0) {
+                $translatedParent = BackendUtility::getRecordRaw('tt_content',
+                    $TCA['tt_content']['ctrl']['transOrigPointerField'] . ' = ' . (int)$element[$parentField] . '
+	                AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang
+                );
+            }
             if ($translatedParent['uid'] > 0) {
                 $this->TCEmain_cmd['tt_content'][$translatedParent['uid']]['inlineLocalizeSynchronize'] = $childrenField . ',localize';
             } else {
