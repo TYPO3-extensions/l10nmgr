@@ -197,11 +197,18 @@ class Cm2 extends BaseScriptClass
             
             // Updating index
             if ($GLOBALS['BE_USER']->isAdmin()) {
-                $output .= '<br><br>Functions for "' . $table . ':' . $uid . '":<br/>
-					<input type="submit" name="_updateIndex" value="Update Index" /><br>
-					<input type="submit" name="_" value="Flush Translations" onclick="' . htmlspecialchars('document.location="../cm3/index.php?table=' . htmlspecialchars($table) . '&id=' . (int)$uid . '&cmd=flushTranslations";return false;') . '"/><br>
-					<input type="submit" name="_" value="Create priority" onclick="' . htmlspecialchars('document.location="' . $GLOBALS['BACK_PATH'] . 'alt_doc.php?returnUrl=' . rawurlencode('db_list.php?id=0&table=tx_l10nmgr_priorities') . '&edit[tx_l10nmgr_priorities][0]=new&defVals[tx_l10nmgr_priorities][element]=' . rawurlencode($table . '_' . $uid) . '";return false;') . '"/><br>
-					';
+                $output .= '<br /><br />Functions for "' . $table . ':' . $uid . '" : <br />' .
+					'<input type="submit" name="_updateIndex" value="Update Index" /><br />' .
+					'<input type="submit" name="_" value="Flush Translations" onclick="' .
+                    htmlspecialchars('document.location=\'../cm3/index.php?table=' . htmlspecialchars($table) . '&id=' . (int)$uid . '&cmd=flushTranslations\';return false;') .
+                    '" /><br />' .
+					'<input type="submit" name="_" value="Create priority" onclick="' .
+                    htmlspecialchars('document.location=\'' . $GLOBALS['BACK_PATH'] . 'alt_doc.php?returnUrl=' .
+                        rawurlencode('db_list.php?id=0&table=tx_l10nmgr_priorities') . '&edit[tx_l10nmgr_priorities][0]=new&defVals[tx_l10nmgr_priorities][element]=' .
+                        rawurlencode($table . '_' . $uid) .
+                        '\';return false;'
+                    ) .
+                    '" /><br />';
             }
             
         }

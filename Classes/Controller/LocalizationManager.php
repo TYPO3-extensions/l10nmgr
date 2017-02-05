@@ -935,9 +935,8 @@ class LocalizationManager extends BaseScriptClass
 				<!-- Function Menu of module -->
                 <div class="form-group">' .
             $label .
-            '<select class="form-control clear-both" name="' . $elementName . '" onchange="' . htmlspecialchars($onChange) . '">
-					' . implode('
-					', $options) . '
+            '<select class="form-control clear-both" name="' . $elementName . '" onchange="' . htmlspecialchars($onChange) . '">' .
+                implode(LF, $options) . '
 				</select>
 				</div>
 						';
@@ -977,9 +976,9 @@ class LocalizationManager extends BaseScriptClass
             <label>
             <input' .
             ' type="checkbox"' .
-            ' name="' . $elementName . '"' .
-            ($currentValue ? ' checked="checked"' : '') .
-            ' onclick="' . htmlspecialchars($onClick) . '"' .
+            ' name="' . $elementName . '" ' .
+            ($currentValue ? 'checked="checked" ' : '') .
+            ' onclick="' . htmlspecialchars($onClick) . '" ' .
             ($tagParams ? ' ' . $tagParams : '') .
             ' value="1"' .
             ' />&nbsp;' .

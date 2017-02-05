@@ -77,10 +77,8 @@
         <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="###INSERT_ROW_COUNT###" x:FullColumns="1" x:FullRows="1">
             <Column ss:Hidden="1" ss:AutoFitWidth="0"/>
             <Column ss:AutoFitWidth="0" ss:Width="85.0"/>
-            <Column
-            ###SOURCE_COL_STATE### />
-            <Column
-            ###ALT_SOURCE_COL_STATE### />
+            <Column ###SOURCE_COL_STATE### />
+            <Column ###ALT_SOURCE_COL_STATE### />
             <Column ss:AutoFitWidth="0" ss:Width="233.0"/>
             <Column ss:AutoFitWidth="0" ss:Width="151.0"/>
             ###INSERT_ROWS###
