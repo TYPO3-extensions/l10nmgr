@@ -115,7 +115,6 @@ return array(
         'sourceLangStaticId' => array(
             'exclude' => 1,
             'label' => $l10n . ':tx_l10nmgr_cfg.sourceLang',
-            'displayCond' => 'EXT:static_info_tables:LOADED:true',
             'config' => array(
                 'type' => 'select',
                 'items' => array(
