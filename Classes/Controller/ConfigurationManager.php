@@ -169,12 +169,11 @@ class ConfigurationManager extends BaseScriptClass
         $l10nConfigurations = $this->getAllConfigurations();
         // No configurations, issue a simple message
         if (count($l10nConfigurations) == 0) {
-            $content .= $this->moduleTemplate->section('', nl2br($GLOBALS['LANG']->getLL('general.no_date')));
+            $content .= '<div>' . nl2br($GLOBALS['LANG']->getLL('general.no_date')) . '</div>';
             // List all configurations
         } else {
-            $content .= $this->moduleTemplate->section($GLOBALS['LANG']->getLL('general.list.configuration.manager'),
-                nl2br($GLOBALS['LANG']->getLL('general.description.message')), false, true);
-            $content .= $this->moduleTemplate->section($GLOBALS['LANG']->getLL('general.list.configuration.title'), '');
+            $content .= '<div><h2 class="uppercase">' . $GLOBALS['LANG']->getLL('general.list.configuration.manager') . '</h2>' . nl2br($GLOBALS['LANG']->getLL('general.description.message')) . '</div>';
+            $content .= '<div><h2 class="uppercase">' . $GLOBALS['LANG']->getLL('general.list.configuration.title') . '</h2></div>';
             $content .= '<div class="table-fit"><table class="table table-striped table-hover">';
             // Assemble the header row
             $content .= '<thead>';

@@ -104,13 +104,10 @@ class Cm2 extends BaseScriptClass
         $this->content .= $this->module->startPage($LANG->getLL('title'));
         $this->content .= $this->module->header($LANG->getLL('title'));
         
-        $this->content .= $this->module->divider(5);
+        $this->content .= '<hr />';
         
         // Render the module content (for all modes):
-        $this->content .= $this->module->section('',
-            $this->moduleContent((string)GeneralUtility::_GP('table'), (int)GeneralUtility::_GP('uid')));
-        
-        $this->content .= $this->module->spacer(10);
+        $this->content .= '<div class="bottomspace10">' . $this->moduleContent((string)GeneralUtility::_GP('table'), (int)GeneralUtility::_GP('uid')) . '</div>';
     }
     
     /**

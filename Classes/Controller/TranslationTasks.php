@@ -96,19 +96,17 @@ class TranslationTasks extends BaseScriptClass
         
         $this->content .= $this->module->startPage($GLOBALS['LANG']->getLL("title"));
         $this->content .= $this->module->header($GLOBALS['LANG']->getLL("title"));
-        $this->content .= $this->module->spacer(5);
+        $this->content .= '<div class="topspace5"></div>';
         
         // Render content:
         $this->moduleContent();
         
         // ShortCut
         if ($GLOBALS['BE_USER']->mayMakeShortcut()) {
-            $this->content .= $this->module->spacer(20) . $this->module->section("",
-                    $this->module->makeShortcutIcon("id", implode(",", array_keys($this->MOD_MENU)),
-                        $this->MCONF["name"]));
+            $this->content .= '<hr /><div>' . $this->module->makeShortcutIcon("id", implode(",", array_keys($this->MOD_MENU)), $this->MCONF["name"]) . '</div>';
         }
         
-        $this->content .= $this->module->spacer(10);
+        $this->content .= '<div class="bottomspace10"></div>';
     }
     
     /**
@@ -138,9 +136,9 @@ class TranslationTasks extends BaseScriptClass
             }
         }
         
-        $content .= '<table border="0" cellpadding="4" cellspacing="2">' . implode('', $tRows) . '</table>';
+        $content = '<table border="0" cellpadding="4" cellspacing="2">' . implode('', $tRows) . '</table>';
         
-        $this->content .= $this->module->section("Priority list:", $content, 0, 1);
+        $this->content .= '<div><h2 class="uppercase">Priority list:</h2>' . $content . '</div>';
     }
     
     function languageRows($languageList, $elementList)

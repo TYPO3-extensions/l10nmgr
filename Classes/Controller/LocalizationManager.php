@@ -232,13 +232,13 @@ class LocalizationManager extends BaseScriptClass
                 /** @var $l10nmgrconfigurationView L10nConfigurationDetailView */
                 $l10nmgrconfigurationView = GeneralUtility::makeInstance(L10nConfigurationDetailView::class,
                     $l10ncfgObj, $this->moduleTemplate);
-                $this->content .= $this->moduleTemplate->section($GLOBALS['LANG']->getLL('general.manager'),
-                    $l10nmgrconfigurationView->render(), false, true);
-                $this->content .= $this->moduleTemplate->divider(15);
+                $this->content .= '<div><h2 class="uppercase">' . $GLOBALS['LANG']->getLL('general.manager') . '</h2>' .
+                    $l10nmgrconfigurationView->render() . '</div>';
+                $this->content .= '<hr />';
                 $title = $this->MOD_MENU["action"][$this->MOD_SETTINGS["action"]];
-                $this->content .= $this->moduleTemplate->section(
-                    $title,
-                    '<div class="col-md-6">
+                $this->content .= '<div> 
+                    <h2 class="uppercase">' . $title . '</h2>
+                    <div class="col-md-6">
                     <div class="form-inline form-inline-spaced">
                     <div class="form-section">' .
                     $this->getFuncMenu($this->id,
@@ -269,11 +269,10 @@ class LocalizationManager extends BaseScriptClass
                         '',
                         $GLOBALS['LANG']->getLL('export.xml.noHidden.title')
                     ) .
-                    '<br /><br ></div></div></div>');
+                    '<br /><br ></div></div></div></div>';
                 // Render content:
                 if (!count($this->MOD_MENU['lang'])) {
-                    $this->content .= $this->moduleTemplate->section('ERROR',
-                        $GLOBALS['LANG']->getLL('general.access.error.title'));
+                    $this->content .= '<div><h2>ERROR<h2>' . $GLOBALS['LANG']->getLL('general.access.error.title') . '</div>';
                 } else {
                     $this->moduleContent($l10ncfgObj);
                 }
@@ -331,9 +330,8 @@ class LocalizationManager extends BaseScriptClass
                 $subcontent = '<input class="btn btn-default" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" />';
                 break;
         } //switch block
-        $this->content .= $this->moduleTemplate->section($subheader,
-            '<div class="col-md-6"><div class="form-inline form-inline-spaced">' . $subcontent . '</div></div>'
-        );
+        $this->content .= '<div><h3 class="uppercase">' . $subheader . '</h3>' .
+            '<div class="col-md-6"><div class="form-inline form-inline-spaced">' . $subcontent . '</div></div></div>';
     }
     
     function inlineEditAction($l10ncfgObj)

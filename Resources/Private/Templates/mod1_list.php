@@ -15,14 +15,11 @@ echo $gD1->startPage($LANG->getLL('general.title')); ?>
 <?php $gD2 = $this->getDocument();
 echo $gD2->header($LANG->getLL('general.title')); ?>
 <?php $gD3 = $this->getDocument();
-echo $gD3->section('', nl2br($LANG->getLL('general.description.message'))); ?>
+echo '<div>' . nl2br($LANG->getLL('general.description.message')) . '</div>' ?>
 <?php $gD4 = $this->getDocument();
-echo $gD4->section($LANG->getLL('general.list.configuration.title'), ''); ?>
+echo '<div class="bottomspace5"><h2 class="uppercase">' . $LANG->getLL('general.list.configuration.title') . '</h2></div>'; ?>
 
-<?php $gD5 = $this->getDocument();
-echo $gD5->spacer(5); ?>
-
-<table id="translationObjectList" class="scrollable" border="1">
+<table id="translationObjectList" class="scrollable bottomspace10" border="1">
     <thead>
     <tr class="bgColor5 tableheader">
         <th><?php echo $LANG->getLL('general.list.headline.info.title'); ?></th>
@@ -116,7 +113,5 @@ echo $gD5->spacer(5); ?>
     </tbody>
 </table>
 
-<?php $gD8 = $this->getDocument();
-echo $gD8->spacer(10); ?>
 <?php $gD9 = $this->getDocument();
 echo $gD9->endPage(); ?>

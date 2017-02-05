@@ -87,7 +87,7 @@ class L10nConfigurationDetailView
 					</tr>
 				</table>';
         
-        $content .= $this->module->section($LANG->getLL('general.export.configuration.title'), $configurationSettings);
+        $content .= '<div><h2 class="uppercase">' . $LANG->getLL('general.export.configuration.title') . '</h2>' . $configurationSettings;
         
         return $content;
     }
