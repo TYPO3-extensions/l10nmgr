@@ -99,7 +99,7 @@ class Export extends CommandLineController
      *
      * @param array $argv Command line arguments
      *
-     * @return string
+     * @return void
      */
     public function cli_main($argv)
     {
@@ -311,7 +311,7 @@ class Export extends CommandLineController
      * @param L10nConfiguration $l10nmgrCfgObj L10N Manager configuration object
      * @param integer $tlang ID of the language to translate to
      *
-     * @return string Error message
+     * @return void
      */
     function emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang)
     {

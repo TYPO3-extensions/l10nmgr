@@ -111,9 +111,8 @@ class Cm3 extends BaseScriptClass
      */
     function moduleContent($table, $uid, $cmd)
     {
+        $output = '';
         if ($GLOBALS['TCA'][$table]) {
-            
-            $output = '';
             
             $this->l10nMgrTools = GeneralUtility::makeInstance(Tools::class);
             $this->l10nMgrTools->verbose = false; // Otherwise it will show records which has fields but none editable.
@@ -148,9 +147,8 @@ class Cm3 extends BaseScriptClass
                     header('Location: ' . GeneralUtility::locationHeaderUrl($GLOBALS['BACK_PATH'] . 'db_list.php?id=0&table=tx_l10nmgr_priorities'));
                     break;
             }
-            
-            return $output;
         }
+        return $output;
     }
     
     /**

@@ -122,16 +122,17 @@ class Tcemain
      */
     function stat($p, $pObj)
     {
-        
         if (strcmp($GLOBALS['BE_USER']->groupData['allowed_languages'], '')) {
-            
             return $this->calcStat($p,
                 $GLOBALS['TYPO3_DB']->cleanIntList($GLOBALS['BE_USER']->groupData['allowed_languages']));
+        } else {
+            return '';
         }
     }
     
     function calcStat($p, $languageList, $noLink = false)
     {
+        $output = '';
         //
         if ($p[0] != 'pages') {
             $records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
@@ -178,7 +179,7 @@ class Tcemain
             
             $output = !$noLink ? '<a href="#" onclick="' . htmlspecialchars('parent.list_frame.location.href="' . $GLOBALS['BACK_PATH'] . ExtensionManagementUtility::extRelPath('l10nmgr') . 'cm2/index.php?table=' . $p[0] . '&uid=' . $p[1] . '&languageList=' . rawurlencode($languageList) . '"; return false;') . '" target="listframe">' . $output . '</a>' : $output;
             
-            return $output;
         }
+        return $output;
     }
 }

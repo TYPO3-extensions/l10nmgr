@@ -465,6 +465,8 @@ class LocalizationManager extends BaseScriptClass
 					', $options) . '
 				</select>
 						';
+        } else {
+            return '';
         }
     }
     

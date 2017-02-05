@@ -97,6 +97,7 @@ class CatXmlImportManager
         if ($this->_isIncorrectXMLFile()) {
             return false;
         }
+        return true;
     }
     
     function _setHeaderData($headerInformationNodes)
@@ -163,6 +164,7 @@ class CatXmlImportManager
         if ($this->_isIncorrectXMLString()) {
             return false;
         }
+        return true;
     }
     
     function _isIncorrectXMLString()

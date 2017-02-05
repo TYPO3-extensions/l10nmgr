@@ -138,7 +138,7 @@ class Import extends CommandLineController
      *
      * @param array $argv Command line arguments
      *
-     * @return string
+     * @return void
      */
     public function cli_main($argv)
     {

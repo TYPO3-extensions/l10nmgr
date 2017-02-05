@@ -454,8 +454,8 @@ class Tools
                 ')' .
                 BackendUtility::deleteClause($table) . BackendUtility::versioningPlaceholderClause($table));
             
-            return is_array($allRows) && count($allRows) ? $allRows[0] : false;
         }
+        return is_array($allRows) && count($allRows) ? $allRows[0] : false;
     }
     
     /**
@@ -915,6 +915,8 @@ class Tools
     {
         global $TCA;
         
+        $allRows = array();
+        
         if ($this->t8Tools->isTranslationInOwnTable($table)) {
             
             // Check for disabled field settings
@@ -939,8 +941,8 @@ class Tools
                 ')' .
                 $hiddenClause . BackendUtility::deleteClause($table) . BackendUtility::versioningPlaceholderClause($table));
             
-            return $allRows;
         }
+        return $allRows;
     }
     
     /**

@@ -208,6 +208,8 @@ class TranslationTasks extends BaseScriptClass
             
             return '<table border="0" cellpadding="0" cellspacing="0"><tr>' . implode('</tr><tr>',
                 $tRows) . '</tr></table>';
+        } else {
+            return '';
         }
     }
     

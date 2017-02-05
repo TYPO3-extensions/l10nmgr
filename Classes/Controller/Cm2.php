@@ -120,12 +120,12 @@ class Cm2 extends BaseScriptClass
      */
     function moduleContent($table, $uid)
     {
+        $output = '';
         if ($GLOBALS['TCA'][$table]) {
             
             $this->l10nMgrTools = GeneralUtility::makeInstance(\Localizationteam\L10nmgr\Model\Tools\Tools::class);
             $this->l10nMgrTools->verbose = false; // Otherwise it will show records which has fields but none editable.
             
-            $output = '';
             if (GeneralUtility::_POST('_updateIndex')) {
                 $output .= $this->l10nMgrTools->updateIndexForRecord($table, $uid);
                 t3lib_BEfunc::setUpdateSignal('updatePageTree');
@@ -204,8 +204,8 @@ class Cm2 extends BaseScriptClass
 					';
             }
             
-            return $output;
         }
+        return $output;
     }
     
     /**

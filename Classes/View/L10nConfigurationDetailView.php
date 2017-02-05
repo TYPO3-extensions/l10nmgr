@@ -95,7 +95,7 @@ class L10nConfigurationDetailView
     /**
      * checks if the internal L10nConfiguration object is valid
      *
-     * @return void
+     * @return bool
      **/
     function _hasValidConfig()
     {
