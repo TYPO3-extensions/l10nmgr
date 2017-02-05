@@ -38,7 +38,7 @@ echo '<div class="bottomspace5"><h2 class="uppercase">' . $LANG->getLL('general.
     <?php $allConfigurationElementsStruct = $this->getRegistryData(); ?>
     <?php for (reset($allConfigurationElementsStruct); list(, $configurationElementArray) = each($allConfigurationElementsStruct);) { ?>
         
-        <?php if (!is_array(t3lib_BEfunc::readPageAccess($configurationElementArray['pid'], $pagePermissionClause))) {
+        <?php if (!is_array(BackendUtility::readPageAccess($configurationElementArray['pid'], $pagePermissionClause))) {
             continue;
         } ?>
         

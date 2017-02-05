@@ -68,7 +68,17 @@ if (TYPO3_MODE == "BE") {
             )
         ));
     
+    $GLOBALS["TBE_MODULES_EXT"]["xMOD_alt_clickmenu"]["extendCMclasses"][] = array(
+        "name" => "Localizationteam\\L10nmgr\\ClickMenu",
+        "path" => $extPath . "Classes/ClickMenu.php"
+    );
+    
+    // Add context sensitive help (csh) for the Scheduler tasks
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('_tasks_txl10nmgr',
+        'EXT:l10nmgr/Resources/Private/Language/Task/locallang_csh_tasks.xlf');
+    
 }
+
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages("tx_l10nmgr_cfg");
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_l10nmgr_cfg',
     'EXT:l10nmgr/Resources/Private/Language/locallang_csh_l10nmgr.xlf');
@@ -79,14 +89,3 @@ if (TYPO3_MODE == "BE") {
 //$TCA['tt_content']['columns']['imagecaption']['l10n_mode'] = 'exclude';
 //$TCA['tt_content']['columns']['image']['l10n_mode'] = 'prefixLangTitle';
 //$TCA['tt_content']['columns']['image']['l10n_display'] = 'defaultAsReadonly';
-
-if (TYPO3_MODE == "BE") {
-    $GLOBALS["TBE_MODULES_EXT"]["xMOD_alt_clickmenu"]["extendCMclasses"][] = array(
-        "name" => "Localizationteam\\L10nmgr\\ClickMenu",
-        "path" => $extPath . "Classes/ClickMenu.php"
-    );
-    
-    // Add context sensitive help (csh) for the Scheduler tasks
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('_tasks_txl10nmgr',
-        'EXT:l10nmgr/Resources/Private/Language/Task/locallang_csh_tasks.xlf');
-}

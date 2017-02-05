@@ -37,11 +37,10 @@ namespace Localizationteam\L10nmgr\Controller;
  */
 
 // DEFAULT initialization of a module [BEGIN]
-unset($MCONF);
-require('conf.php');
-require($BACK_PATH . 'init.php');
-$LANG->includeLLFile('EXT:l10nmgr/cm2/locallang.xml');
+use Localizationteam\L10nmgr\Model\Tools\Tools;
+use TYPO3\CMS\Backend\Module\BaseScriptClass;
 use TYPO3\CMS\Backend\Template\DocumentTemplate;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -53,6 +52,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Cm2 extends BaseScriptClass
 {
+    protected $module;
+    protected $l10nMgrTools;
+    protected $sysLanguages;
     
     /**
      * main action to be registered in ext_tables.php
@@ -65,25 +67,13 @@ class Cm2 extends BaseScriptClass
     }
     
     /**
-     * Adds items to the ->MOD_MENU array. Used for the function menu selector.
-     *
-     * @return  void
-     */
-    function menuConfig()
-    {
-        global $LANG;
-        
-        parent::menuConfig();
-    }
-    
-    /**
      * Main function of the module. Write the content to
      *
      * @return  void
      */
     function main()
     {
-        global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA, $CLIENT, $TYPO3_CONF_VARS;
+        global $LANG, $BACK_PATH;
         
         // Draw the header.
         $this->module = GeneralUtility::makeInstance(DocumentTemplate::class);
@@ -107,33 +97,36 @@ class Cm2 extends BaseScriptClass
         $this->content .= '<hr />';
         
         // Render the module content (for all modes):
-        $this->content .= '<div class="bottomspace10">' . $this->moduleContent((string)GeneralUtility::_GP('table'), (int)GeneralUtility::_GP('uid')) . '</div>';
+        $this->content .= '<div class="bottomspace10">' . $this->moduleContent((string)GeneralUtility::_GP('table'),
+                (int)GeneralUtility::_GP('uid')) . '</div>';
     }
     
     /**
      * [Describe function...]
      *
-     * @param   [type]    $table: ...
-     * @param   [type]    $uid: ...
+     * @param $table
+     * @param $uid
+     * @return string [type]    ...
+     * @internal param $ [type]    $table: ...
+     * @internal param $ [type]    $uid: ...
      *
-     * @return  [type]    ...
      */
     function moduleContent($table, $uid)
     {
         $output = '';
         if ($GLOBALS['TCA'][$table]) {
             
-            $this->l10nMgrTools = GeneralUtility::makeInstance(\Localizationteam\L10nmgr\Model\Tools\Tools::class);
+            $this->l10nMgrTools = GeneralUtility::makeInstance(Tools::class);
             $this->l10nMgrTools->verbose = false; // Otherwise it will show records which has fields but none editable.
             
             if (GeneralUtility::_POST('_updateIndex')) {
                 $output .= $this->l10nMgrTools->updateIndexForRecord($table, $uid);
-                t3lib_BEfunc::setUpdateSignal('updatePageTree');
+                BackendUtility::setUpdateSignal('updatePageTree');
             }
             
-            $inputRecord = t3lib_BEfunc::getRecord($table, $uid, 'pid');
+            $inputRecord = BackendUtility::getRecord($table, $uid, 'pid');
             
-            $pathShown = t3lib_BEfunc::getRecordPath($table == 'pages' ? $uid : $inputRecord['pid'], '', 20);
+            $pathShown = BackendUtility::getRecordPath($table == 'pages' ? $uid : $inputRecord['pid'], '', 20);
             
             $this->sysLanguages = $this->l10nMgrTools->t8Tools->getSystemLanguages($table == 'pages' ? $uid : $inputRecord['pid']);
             $languageListArray = explode(',',
@@ -197,18 +190,11 @@ class Cm2 extends BaseScriptClass
             
             // Updating index
             if ($GLOBALS['BE_USER']->isAdmin()) {
-                $output .= '<br /><br />Functions for "' . $table . ':' . $uid . '" : <br />' .
-					'<input type="submit" name="_updateIndex" value="Update Index" /><br />' .
-					'<input type="submit" name="_" value="Flush Translations" onclick="' .
-                    htmlspecialchars('document.location=\'../cm3/index.php?table=' . htmlspecialchars($table) . '&id=' . (int)$uid . '&cmd=flushTranslations\';return false;') .
-                    '" /><br />' .
-					'<input type="submit" name="_" value="Create priority" onclick="' .
-                    htmlspecialchars('document.location=\'' . $GLOBALS['BACK_PATH'] . 'alt_doc.php?returnUrl=' .
-                        rawurlencode('db_list.php?id=0&table=tx_l10nmgr_priorities') . '&edit[tx_l10nmgr_priorities][0]=new&defVals[tx_l10nmgr_priorities][element]=' .
-                        rawurlencode($table . '_' . $uid) .
-                        '\';return false;'
-                    ) .
-                    '" /><br />';
+                $output .= '<br><br>Functions for "' . $table . ':' . $uid . '":<br/>
+					<input type="submit" name="_updateIndex" value="Update Index" /><br>
+					<input type="submit" name="_" value="Flush Translations" onclick="' . htmlspecialchars('document.location="../cm3/index.php?table=' . htmlspecialchars($table) . '&id=' . (int)$uid . '&cmd=flushTranslations";return false;') . '"/><br>
+					<input type="submit" name="_" value="Create priority" onclick="' . htmlspecialchars('document.location="' . $GLOBALS['BACK_PATH'] . 'alt_doc.php?returnUrl=' . rawurlencode('db_list.php?id=0&table=tx_l10nmgr_priorities') . '&edit[tx_l10nmgr_priorities][0]=new&defVals[tx_l10nmgr_priorities][element]=' . rawurlencode($table . '_' . $uid) . '";return false;') . '"/><br>
+					';
             }
             
         }
@@ -218,31 +204,33 @@ class Cm2 extends BaseScriptClass
     /**
      * [Describe function...]
      *
-     * @param   [type]    $rec: ...
+     * @param $rec
+     * @return string [type]    ...
+     * @internal param $ [type]    $rec: ...
      *
-     * @return  [type]    ...
      */
     function makeTableRow($rec)
     {
         
         //Render information for base record:
-        $baseRecord = t3lib_BEfunc::getRecordWSOL($rec['tablename'], $rec['recuid']);
-        $icon = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord($rec['tablename'], $baseRecord);
-        $title = t3lib_BEfunc::getRecordTitle($rec['tablename'], $baseRecord, 1);
+        $baseRecord = BackendUtility::getRecordWSOL($rec['tablename'], $rec['recuid']);
+        $icon = IconUtility::getSpriteIconForRecord($rec['tablename'], $baseRecord);
+        $title = BackendUtility::getRecordTitle($rec['tablename'], $baseRecord, 1);
         $baseRecordFlag = '<img src="' . htmlspecialchars($GLOBALS['BACK_PATH'] . $this->sysLanguages[$rec['sys_language_uid']]['flagIcon']) . '" alt="" title="" />';
         $tFlag = '<img src="' . htmlspecialchars($GLOBALS['BACK_PATH'] . $this->sysLanguages[$rec['translation_lang']]['flagIcon']) . '" alt="' . htmlspecialchars($this->sysLanguages[$rec['translation_lang']]['title']) . '" title="' . htmlspecialchars($this->sysLanguages[$rec['translation_lang']]['title']) . '" />';
-        $baseRecordStr = '<a href="#" onclick="' . htmlspecialchars(t3lib_BEfunc::editOnClick('&edit[' . $rec['tablename'] . '][' . $rec['recuid'] . ']=edit',
+        $baseRecordStr = '<a href="#" onclick="' . htmlspecialchars(BackendUtility::editOnClick('&edit[' . $rec['tablename'] . '][' . $rec['recuid'] . ']=edit',
                 $this->module->backPath)) . '">' . $icon . $title . '</a>';
         
         // Render for translation if any:
+        $translationTable = '';
         $translationRecord = false;
         if ($rec['translation_recuid']) {
             $translationTable = $this->l10nMgrTools->t8Tools->getTranslationTable($rec['tablename']);
-            $translationRecord = t3lib_BEfunc::getRecordWSOL($translationTable, $rec['translation_recuid']);
-            $icon = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord($translationTable,
+            $translationRecord = BackendUtility::getRecordWSOL($translationTable, $rec['translation_recuid']);
+            $icon = IconUtility::getSpriteIconForRecord($translationTable,
                 $translationRecord);
-            $title = t3lib_BEfunc::getRecordTitle($translationTable, $translationRecord, 1);
-            $translationRecStr = '<a href="#" onclick="' . htmlspecialchars(t3lib_BEfunc::editOnClick('&edit[' . $translationTable . '][' . $translationRecord['uid'] . ']=edit',
+            $title = BackendUtility::getRecordTitle($translationTable, $translationRecord, 1);
+            $translationRecStr = '<a href="#" onclick="' . htmlspecialchars(BackendUtility::editOnClick('&edit[' . $translationTable . '][' . $translationRecord['uid'] . ']=edit',
                     $this->module->backPath)) . '">' . $icon . $title . '</a>';
         } else {
             $translationRecStr = '';
@@ -250,10 +238,10 @@ class Cm2 extends BaseScriptClass
         
         // Action:
         if (is_array($translationRecord)) {
-            $action = '<a href="#" onclick="' . htmlspecialchars(t3lib_BEfunc::editOnClick('&edit[' . $translationTable . '][' . $translationRecord['uid'] . ']=edit',
+            $action = '<a href="#" onclick="' . htmlspecialchars(BackendUtility::editOnClick('&edit[' . $translationTable . '][' . $translationRecord['uid'] . ']=edit',
                     $this->module->backPath)) . '"><em>[Edit]</em></a>';
         } elseif ($rec['sys_language_uid'] == -1) {
-            $action = '<a href="#" onclick="' . htmlspecialchars(t3lib_BEfunc::editOnClick('&edit[' . $rec['tablename'] . '][' . $rec['recuid'] . ']=edit',
+            $action = '<a href="#" onclick="' . htmlspecialchars(BackendUtility::editOnClick('&edit[' . $rec['tablename'] . '][' . $rec['recuid'] . ']=edit',
                     $this->module->backPath)) . '"><em>[Edit]</em></a>';
         } else {
             $action = '<a href="' . htmlspecialchars($this->module->issueCommand('&cmd[' . $rec['tablename'] . '][' . $rec['recuid'] . '][localize]=' . $rec['translation_lang'])) . '"><em>[Localize]</em></a>';
@@ -283,6 +271,16 @@ class Cm2 extends BaseScriptClass
         
         $this->content .= $this->module->endPage();
         echo $this->content;
+    }
+    
+    /**
+     * Adds items to the ->MOD_MENU array. Used for the function menu selector.
+     *
+     * @return  void
+     */
+    function menuConfig()
+    {
+        parent::menuConfig();
     }
 }
 

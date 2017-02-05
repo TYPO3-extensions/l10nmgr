@@ -18,6 +18,7 @@ namespace Localizationteam\L10nmgr\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use Exception;
 use Localizationteam\L10nmgr\Model\CatXmlImportManager;
 use Localizationteam\L10nmgr\Model\L10nBaseService;
 use Localizationteam\L10nmgr\Model\L10nConfiguration;
@@ -31,6 +32,7 @@ use Localizationteam\L10nmgr\View\L10nConfigurationDetailView;
 use Localizationteam\L10nmgr\View\L10nHtmlListView;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Swift_Attachment;
 use TYPO3\CMS\Backend\Configuration\TranslationConfigurationProvider;
 use TYPO3\CMS\Backend\Module\BaseScriptClass;
 use TYPO3\CMS\Backend\Routing\Router;
@@ -74,6 +76,12 @@ class LocalizationManager extends BaseScriptClass
      */
     var $previewLanguage = '0'; // Internal
     /**
+     * Document Template Object
+     *
+     * @var \TYPO3\CMS\Backend\Template\DocumentTemplate
+     */
+    public $doc;
+    /**
      * @var array Extension configuration
      */
     protected $lConf = array();
@@ -84,12 +92,6 @@ class LocalizationManager extends BaseScriptClass
      */
     protected $moduleTemplate;
     /**
-     * Document Template Object
-     *
-     * @var \TYPO3\CMS\Backend\Template\DocumentTemplate
-     */
-    public $doc;
-    /**
      * The name of the module
      *
      * @var string
@@ -99,6 +101,7 @@ class LocalizationManager extends BaseScriptClass
      * @var IconFactory
      */
     protected $iconFactory;
+    protected $pageinfo;
     
     /**
      * Constructor
@@ -144,54 +147,6 @@ class LocalizationManager extends BaseScriptClass
     {
         $GLOBALS['BE_USER']->modAccess($this->MCONF, 1);
         parent::init();
-    }
-    
-    /**
-     * Adds items to the ->MOD_MENU array. Used for the function menu selector.
-     *
-     * @return  void
-     */
-    function menuConfig()
-    {
-        $this->loadExtConf();
-        $this->MOD_MENU = Array(
-            'action' => array(
-                '' => $GLOBALS['LANG']->getLL('general.action.blank.title'),
-                'link' => $GLOBALS['LANG']->getLL('general.action.edit.link.title'),
-                'inlineEdit' => $GLOBALS['LANG']->getLL('general.action.edit.inline.title'),
-                'export_excel' => $GLOBALS['LANG']->getLL('general.action.export.excel.title'),
-                'export_xml' => $GLOBALS['LANG']->getLL('general.action.export.xml.title'),
-            ),
-            'lang' => array(),
-            'onlyChangedContent' => '',
-            'check_exports' => 1,
-            'noHidden' => ''
-        );
-        // Load system languages into menu:
-        /** @var $t8Tools TranslationConfigurationProvider */
-        $t8Tools = GeneralUtility::makeInstance(TranslationConfigurationProvider::class);
-        $sysL = $t8Tools->getSystemLanguages();
-        foreach ($sysL as $sL) {
-            if ($sL['uid'] > 0 && $GLOBALS['BE_USER']->checkLanguageAccess($sL['uid'])) {
-                if ($this->lConf['enable_hidden_languages'] == 1) {
-                    $this->MOD_MENU['lang'][$sL['uid']] = $sL['title'];
-                } elseif ($sL['hidden'] == 0) {
-                    $this->MOD_MENU['lang'][$sL['uid']] = $sL['title'];
-                }
-            }
-        }
-        parent::menuConfig();
-    }
-    
-    /**
-     * The function loadExtConf loads the extension configuration.
-     *
-     * @return void
-     */
-    function loadExtConf()
-    {
-        // Load the configuration
-        $this->lConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr']);
     }
     
     /**
@@ -281,15 +236,142 @@ class LocalizationManager extends BaseScriptClass
     }
     
     /**
+     * Returns a selector box "function menu" for a module
+     * Requires the JS function jumpToUrl() to be available
+     * See Inside TYPO3 for details about how to use / make Function menus
+     *
+     * @param mixed $mainParams The "&id=" parameter value to be sent to the module, but it can be also a parameter array which will be passed instead of the &id=...
+     * @param string $elementName The form elements name, probably something like "SET[...]
+     * @param string $currentValue The value to be selected currently.
+     * @param array $menuItems An array with the menu items for the selector box
+     * @param string $script The script to send the &id to, if empty it's automatically found
+     * @param string $addParams Additional parameters to pass to the script.
+     * @param string $label
+     *
+     * @return string HTML code for selector box
+     */
+    public static function getFuncMenu(
+        $mainParams,
+        $elementName,
+        $currentValue,
+        $menuItems,
+        $script = '',
+        $addParams = '',
+        $label = ''
+    ) {
+        if (!is_array($menuItems)) {
+            return '';
+        }
+        $scriptUrl = self::buildScriptUrl($mainParams, $addParams, $script);
+        $options = array();
+        foreach ($menuItems as $value => $text) {
+            $options[] = '<option value="' . htmlspecialchars($value) . '"' . ((string)$currentValue === (string)$value ? ' selected="selected"' : '') . '>' . htmlspecialchars($text,
+                    ENT_COMPAT, 'UTF-8', false) . '</option>';
+        }
+        $label = $label !== '' ?
+            ('<label>' . htmlspecialchars($label) . '</label><br />') :
+            '';
+        if (!empty($options)) {
+            $onChange = 'jumpToUrl(' . GeneralUtility::quoteJSvalue($scriptUrl . '&' . $elementName . '=') . '+this.options[this.selectedIndex].value,this);';
+            return '
+				<!-- Function Menu of module -->
+                <div class="form-group">' .
+                $label .
+                '<select class="form-control clear-both" name="' . $elementName . '" onchange="' . htmlspecialchars($onChange) . '">
+					' . implode('
+					', $options) . '
+				</select>
+				</div>
+						';
+        }
+        return '';
+    }
+    
+    /**
+     * Builds the URL to the current script with given arguments
+     *
+     * @param mixed $mainParams $id is the "&id=" parameter value to be sent to the module, but it can be also a parameter array which will be passed instead of the &id=...
+     * @param string $addParams Additional parameters to pass to the script.
+     * @param string $script The script to send the &id to, if empty it's automatically found
+     * @return string The completes script URL
+     */
+    protected static function buildScriptUrl($mainParams, $addParams, $script = '')
+    {
+        if (!is_array($mainParams)) {
+            $mainParams = array('id' => $mainParams);
+        }
+        if (!$script) {
+            $script = basename(PATH_thisScript);
+        }
+        if (GeneralUtility::_GP('route')) {
+            $router = GeneralUtility::makeInstance(Router::class);
+            $route = $router->match(GeneralUtility::_GP('route'));
+            $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+            $scriptUrl = (string)$uriBuilder->buildUriFromRoute($route->getOption('_identifier'));
+            $scriptUrl .= $addParams;
+        } elseif ($script === 'index.php' && GeneralUtility::_GET('M')) {
+            $scriptUrl = BackendUtility::getModuleUrl(GeneralUtility::_GET('M'), $mainParams) . $addParams;
+        } else {
+            $scriptUrl = $script . '?' . GeneralUtility::implodeArrayForUrl('', $mainParams) . $addParams;
+        }
+        return $scriptUrl;
+    }
+    
+    /**
+     * Checkbox function menu.
+     * Works like ->getFuncMenu() but takes no $menuItem array since this is a simple checkbox.
+     *
+     * @param mixed $mainParams $id is the "&id=" parameter value to be sent to the module, but it can be also a parameter array which will be passed instead of the &id=...
+     * @param string $elementName The form elements name, probably something like "SET[...]
+     * @param string $currentValue The value to be selected currently.
+     * @param string $script The script to send the &id to, if empty it's automatically found
+     * @param string $addParams Additional parameters to pass to the script.
+     * @param string $tagParams Additional attributes for the checkbox input tag
+     * @param string $label
+     *
+     * @return string HTML code for checkbox
+     * @see getFuncMenu()
+     */
+    public static function getFuncCheck(
+        $mainParams,
+        $elementName,
+        $currentValue,
+        $script = '',
+        $addParams = '',
+        $tagParams = '',
+        $label = ''
+    ) {
+        $scriptUrl = self::buildScriptUrl($mainParams, $addParams, $script);
+        $onClick = 'jumpToUrl(' . GeneralUtility::quoteJSvalue($scriptUrl . '&' . $elementName . '=') . '+(this.checked?1:0),this);';
+        return
+            '<div class="form-group">' .
+            '<div class="checkbox">
+            <label>
+            <input' .
+            ' type="checkbox"' .
+            ' name="' . $elementName . '"' .
+            ($currentValue ? ' checked="checked"' : '') .
+            ' onclick="' . htmlspecialchars($onClick) . '"' .
+            ($tagParams ? ' ' . $tagParams : '') .
+            ' value="1"' .
+            ' />&nbsp;' .
+            htmlspecialchars($label) .
+            '</label>
+            </div>
+            </div>';
+    }
+    
+    /**
      * Creating module content
      *
-     * @param   array    Localization Configuration record
+     * @param   array $l10ncfgObj Localization Configuration record
      *
      * @return  void
      */
     function moduleContent($l10ncfgObj)
     {
-        global $LANG, $BE_USER;
+        global $BE_USER;
+        $subheader = '';
         switch ($this->MOD_SETTINGS["action"]) {
             case 'inlineEdit':
             case 'link':
@@ -357,7 +439,6 @@ class LocalizationManager extends BaseScriptClass
     
     function excelExportImportAction($l10ncfgObj)
     {
-        global $LANG, $BACK_PATH;
         /** @var $service L10nBaseService */
         $service = GeneralUtility::makeInstance(L10nBaseService::class);
         if (GeneralUtility::_POST('import_asdefaultlanguage') == '1') {
@@ -796,7 +877,6 @@ class LocalizationManager extends BaseScriptClass
             // Collect mail data
             $fromMail = $this->lConf['email_sender'];
             $fromName = $this->lConf['email_sender_name'];
-            $organisation = $this->lConf['email_sender_organisation'];
             $subject = sprintf($GLOBALS['LANG']->getLL('email.suject.msg'), $sourceLang, $targetLang,
                 $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
             // Assemble message body
@@ -836,6 +916,81 @@ class LocalizationManager extends BaseScriptClass
     }
     
     /**
+     * Adds items to the ->MOD_MENU array. Used for the function menu selector.
+     *
+     * @return  void
+     */
+    function menuConfig()
+    {
+        $this->loadExtConf();
+        $this->MOD_MENU = Array(
+            'action' => array(
+                '' => $GLOBALS['LANG']->getLL('general.action.blank.title'),
+                'link' => $GLOBALS['LANG']->getLL('general.action.edit.link.title'),
+                'inlineEdit' => $GLOBALS['LANG']->getLL('general.action.edit.inline.title'),
+                'export_excel' => $GLOBALS['LANG']->getLL('general.action.export.excel.title'),
+                'export_xml' => $GLOBALS['LANG']->getLL('general.action.export.xml.title'),
+            ),
+            'lang' => array(),
+            'onlyChangedContent' => '',
+            'check_exports' => 1,
+            'noHidden' => ''
+        );
+        // Load system languages into menu:
+        /** @var $t8Tools TranslationConfigurationProvider */
+        $t8Tools = GeneralUtility::makeInstance(TranslationConfigurationProvider::class);
+        $sysL = $t8Tools->getSystemLanguages();
+        foreach ($sysL as $sL) {
+            if ($sL['uid'] > 0 && $GLOBALS['BE_USER']->checkLanguageAccess($sL['uid'])) {
+                if ($this->lConf['enable_hidden_languages'] == 1) {
+                    $this->MOD_MENU['lang'][$sL['uid']] = $sL['title'];
+                } elseif ($sL['hidden'] == 0) {
+                    $this->MOD_MENU['lang'][$sL['uid']] = $sL['title'];
+                }
+            }
+        }
+        parent::menuConfig();
+    }
+    
+    /**
+     * The function loadExtConf loads the extension configuration.
+     *
+     * @return void
+     */
+    function loadExtConf()
+    {
+        // Load the configuration
+        $this->lConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr']);
+    }
+    
+    /**
+     * Printing output content
+     *
+     * @return  void
+     */
+    public function printContent()
+    {
+        //		$this->content .= $this->moduleTemplate->endPage();
+        echo $this->content;
+    }
+    
+    /**
+     * Diff-compare markup
+     *
+     * @param string $old Old content
+     * @param string $new New content
+     *
+     * @return string Marked up string.
+     */
+    function diffCMP($old, $new)
+    {
+        // Create diff-result:
+        /** @var $DiffUtility DiffUtility */
+        $DiffUtility = GeneralUtility::makeInstance(DiffUtility::class);
+        return $DiffUtility->makeDiffDisplay($old, $new);
+    }
+    
+    /**
      * Create the panel of buttons for submitting the form or otherwise perform operations.
      *
      * @return  array  all available buttons as an assoc. array
@@ -853,35 +1008,8 @@ class LocalizationManager extends BaseScriptClass
     }
     
     /**
-     * Printing output content
-     *
-     * @return  void
-     */
-    public function printContent()
-    {
-        //		$this->content .= $this->moduleTemplate->endPage();
-        echo $this->content;
-    }
-    
-    /**
-     * Diff-compare markup
-     *
-     * @param   string    Old content
-     * @param   string    New content
-     *
-     * @return  string    Marked up string.
-     */
-    function diffCMP($old, $new)
-    {
-        // Create diff-result:
-        /** @var $DiffUtility DiffUtility */
-        $DiffUtility = GeneralUtility::makeInstance(DiffUtility::class);
-        return $DiffUtility->makeDiffDisplay($old, $new);
-    }
-    
-    /**
-     * @param string Mime type
-     * @param string Filename
+     * @param string $mimeType Mime type
+     * @param string $filename Filename
      *
      * @return void
      */
@@ -891,131 +1019,6 @@ class LocalizationManager extends BaseScriptClass
         Header('Charset: utf-8');
         Header('Content-Type: ' . $mimeType);
         Header('Content-Disposition: attachment; filename=' . $filename);
-    }
-    
-    /**
-     * Returns a selector box "function menu" for a module
-     * Requires the JS function jumpToUrl() to be available
-     * See Inside TYPO3 for details about how to use / make Function menus
-     *
-     * @param mixed $mainParams The "&id=" parameter value to be sent to the module, but it can be also a parameter array which will be passed instead of the &id=...
-     * @param string $elementName The form elements name, probably something like "SET[...]
-     * @param string $currentValue The value to be selected currently.
-     * @param array $menuItems An array with the menu items for the selector box
-     * @param string $script The script to send the &id to, if empty it's automatically found
-     * @param string $addParams Additional parameters to pass to the script.
-     * @param string $label
-     *
-     * @return string HTML code for selector box
-     */
-    public static function getFuncMenu(
-        $mainParams,
-        $elementName,
-        $currentValue,
-        $menuItems,
-        $script = '',
-        $addParams = '',
-        $label = ''
-    ) {
-        if (!is_array($menuItems)) {
-            return '';
-        }
-        $scriptUrl = self::buildScriptUrl($mainParams, $addParams, $script);
-        $options = array();
-        foreach ($menuItems as $value => $text) {
-            $options[] = '<option value="' . htmlspecialchars($value) . '"' . ((string)$currentValue === (string)$value ? ' selected="selected"' : '') . '>' . htmlspecialchars($text,
-                    ENT_COMPAT, 'UTF-8', false) . '</option>';
-        }
-        $label = $label !== '' ?
-            ('<label>' . htmlspecialchars($label) . '</label><br />') :
-            '';
-        if (!empty($options)) {
-            $onChange = 'jumpToUrl(' . GeneralUtility::quoteJSvalue($scriptUrl . '&' . $elementName . '=') . '+this.options[this.selectedIndex].value,this);';
-            return '
-				<!-- Function Menu of module -->
-                <div class="form-group">' .
-            $label .
-            '<select class="form-control clear-both" name="' . $elementName . '" onchange="' . htmlspecialchars($onChange) . '">' .
-                implode(LF, $options) . '
-				</select>
-				</div>
-						';
-        }
-        return '';
-    }
-    
-    /**
-     * Checkbox function menu.
-     * Works like ->getFuncMenu() but takes no $menuItem array since this is a simple checkbox.
-     *
-     * @param mixed $mainParams $id is the "&id=" parameter value to be sent to the module, but it can be also a parameter array which will be passed instead of the &id=...
-     * @param string $elementName The form elements name, probably something like "SET[...]
-     * @param string $currentValue The value to be selected currently.
-     * @param string $script The script to send the &id to, if empty it's automatically found
-     * @param string $addParams Additional parameters to pass to the script.
-     * @param string $tagParams Additional attributes for the checkbox input tag
-     * @param string $label
-     *
-     * @return string HTML code for checkbox
-     * @see getFuncMenu()
-     */
-    public static function getFuncCheck(
-        $mainParams,
-        $elementName,
-        $currentValue,
-        $script = '',
-        $addParams = '',
-        $tagParams = '',
-        $label = ''
-    ) {
-        $scriptUrl = self::buildScriptUrl($mainParams, $addParams, $script);
-        $onClick = 'jumpToUrl(' . GeneralUtility::quoteJSvalue($scriptUrl . '&' . $elementName . '=') . '+(this.checked?1:0),this);';
-        return
-            '<div class="form-group">' .
-            '<div class="checkbox">
-            <label>
-            <input' .
-            ' type="checkbox"' .
-            ' name="' . $elementName . '" ' .
-            ($currentValue ? 'checked="checked" ' : '') .
-            ' onclick="' . htmlspecialchars($onClick) . '" ' .
-            ($tagParams ? ' ' . $tagParams : '') .
-            ' value="1"' .
-            ' />&nbsp;' .
-            htmlspecialchars($label) .
-            '</label>
-            </div>
-            </div>';
-    }
-    
-    /**
-     * Builds the URL to the current script with given arguments
-     *
-     * @param mixed $mainParams $id is the "&id=" parameter value to be sent to the module, but it can be also a parameter array which will be passed instead of the &id=...
-     * @param string $addParams Additional parameters to pass to the script.
-     * @param string $script The script to send the &id to, if empty it's automatically found
-     * @return string The completes script URL
-     */
-    protected static function buildScriptUrl($mainParams, $addParams, $script = '')
-    {
-        if (!is_array($mainParams)) {
-            $mainParams = array('id' => $mainParams);
-        }
-        if (!$script) {
-            $script = basename(PATH_thisScript);
-        }
-        if (GeneralUtility::_GP('route')) {
-            $router = GeneralUtility::makeInstance(Router::class);
-            $route = $router->match(GeneralUtility::_GP('route'));
-            $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-            $scriptUrl = (string)$uriBuilder->buildUriFromRoute($route->getOption('_identifier'));
-            $scriptUrl .= $addParams;
-        } elseif ($script === 'index.php' && GeneralUtility::_GET('M')) {
-            $scriptUrl = BackendUtility::getModuleUrl(GeneralUtility::_GET('M'), $mainParams) . $addParams;
-        } else {
-            $scriptUrl = $script . '?' . GeneralUtility::implodeArrayForUrl('', $mainParams) . $addParams;
-        }
-        return $scriptUrl;
     }
 }
 

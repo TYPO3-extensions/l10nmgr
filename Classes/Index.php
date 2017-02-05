@@ -1,42 +1,42 @@
 <?php
 namespace Localizationteam\L10nmgr;
-    
-    /***************************************************************
-     *  Copyright notice
-     *  (c) 2007 Kasper Skaarhoj (kasperYYYY@typo3.com)
-     *  All rights reserved
-     *  This script is part of the TYPO3 project. The TYPO3 project is
-     *  free software; you can redistribute it and/or modify
-     *  it under the terms of the GNU General Public License as published by
-     *  the Free Software Foundation; either version 2 of the License, or
-     *  (at your option) any later version.
-     *  The GNU General Public License can be found at
-     *  http://www.gnu.org/copyleft/gpl.html.
-     *  A copy is found in the textfile GPL.txt and important notices to the license
-     *  from the author is found in LICENSE.txt distributed with these scripts.
-     *  This script is distributed in the hope that it will be useful,
-     *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-     *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-     *  GNU General Public License for more details.
-     *  This copyright notice MUST APPEAR in all copies of the script!
-     ***************************************************************/
-    /**
-     * Cleaner module: Building index for translation
-     * User function called from tx_lowlevel_cleaner_core configured in ext_localconf.php
-     * See system extension, lowlevel!
-     *
-     * @author Kasper Skårhøj <kasperYYYY@typo3.com>
-     */
-    /**
-     * [CLASS/FUNCTION INDEX of SCRIPT]
-     *   65: class tx_l10nmgr_index extends tx_lowlevel_cleaner_core
-     *   78:     function tx_l10nmgr_index()
-     *   98:     function main()
-     *  137:     function main_parseTreeCallBack($tableName,$uid,$echoLevel,$versionSwapmode,$rootIsVersion)
-     *  172:     function main_autoFix($resultArray)
-     * TOTAL FUNCTIONS: 4
-     * (This index is automatically created/updated by the extension "extdeveval")
-     */
+
+/***************************************************************
+ *  Copyright notice
+ *  (c) 2007 Kasper Skaarhoj (kasperYYYY@typo3.com)
+ *  All rights reserved
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *  A copy is found in the textfile GPL.txt and important notices to the license
+ *  from the author is found in LICENSE.txt distributed with these scripts.
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
+/**
+ * Cleaner module: Building index for translation
+ * User function called from tx_lowlevel_cleaner_core configured in ext_localconf.php
+ * See system extension, lowlevel!
+ *
+ * @author Kasper Skårhøj <kasperYYYY@typo3.com>
+ */
+/**
+ * [CLASS/FUNCTION INDEX of SCRIPT]
+ *   65: class tx_l10nmgr_index extends tx_lowlevel_cleaner_core
+ *   78:     function tx_l10nmgr_index()
+ *   98:     function main()
+ *  137:     function main_parseTreeCallBack($tableName,$uid,$echoLevel,$versionSwapmode,$rootIsVersion)
+ *  172:     function main_autoFix($resultArray)
+ * TOTAL FUNCTIONS: 4
+ * (This index is automatically created/updated by the extension "extdeveval")
+ */
 
 
 // Include API
@@ -44,6 +44,7 @@ use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Lowlevel\CleanerCommand;
 
 
 /**
@@ -53,7 +54,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
  * @package    TYPO3
  * @subpackage tx_lowlevel
  */
-class Index extends \TYPO3\CMS\Lowlevel\CleanerCommand
+class Index extends CleanerCommand
 {
     
     /**
@@ -76,6 +77,7 @@ class Index extends \TYPO3\CMS\Lowlevel\CleanerCommand
      * @var array Extension's configuration as from the EM
      */
     protected $extensionConfiguration = array();
+    protected $resultArray;
     
     /**
      * Constructor
@@ -129,8 +131,6 @@ Traversing page tree and building an index of translation needs
      */
     function main()
     {
-        global $TYPO3_DB;
-        
         // Initialize result array:
         $resultArray = array(
             'message' => $this->cli_help['name'] . chr(10) . chr(10) . $this->cli_help['description'],
@@ -166,22 +166,18 @@ Traversing page tree and building an index of translation needs
     /**
      * Call back function for page tree traversal!
      *
-     * @param   string    Table name
-     * @param   integer   UID of record in processing
-     * @param   integer   Echo level  (see calling function
-     * @param   string    Version swap mode on that level (see calling function
-     * @param   integer   Is root version (see calling function
+     * @param string $tableName Table name
+     * @param integer $uid UID of record in processing
+     * @param integer $echoLevel Echo level  (see calling function
+     * @param string $versionSwapmode Version swap mode on that level (see calling function
+     * @param integer $rootIsVersion Is root version (see calling function
      *
      * @return  void
      */
     function main_parseTreeCallBack($tableName, $uid, $echoLevel, $versionSwapmode, $rootIsVersion)
     {
-        global $TCA;
-        
         if ($tableName == 'pages' && $uid > 0) {
             $pageId = $uid;
-            $flexFormDiff = array();
-            $sysLang = 1;
             $excludeIndex = array();
             
             if (!$versionSwapmode) {
@@ -212,9 +208,9 @@ Traversing page tree and building an index of translation needs
      * Mandatory autofix function
      * Will run auto-fix on the result array. Echos status during processing.
      *
-     * @param   array    Result array from main() function
+     * @param array $resultArray Result array from main() function
      *
-     * @return  void
+     * @return void
      */
     function main_autoFix($resultArray)
     {

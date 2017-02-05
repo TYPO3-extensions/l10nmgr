@@ -37,6 +37,9 @@ class TranslationTasks extends BaseScriptClass
 {
     
     var $pageinfo;
+    protected $module;
+    protected $l10nMgrTools;
+    protected $sysLanguages;
     
     /**
      * main action to be registered in ext_tables.php
@@ -54,17 +57,6 @@ class TranslationTasks extends BaseScriptClass
         $GLOBALS['BE_USER']->modAccess($this->MCONF, 1);
         $GLOBALS['LANG']->includeLLFile("EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang.xlf");
         parent::init();
-    }
-    
-    /**
-     * Adds items to the ->MOD_MENU array. Used for the function menu selector.
-     *
-     * @return  void
-     */
-    function menuConfig()
-    {
-        global $LANG;
-        parent::menuConfig();
     }
     
     /**
@@ -103,7 +95,8 @@ class TranslationTasks extends BaseScriptClass
         
         // ShortCut
         if ($GLOBALS['BE_USER']->mayMakeShortcut()) {
-            $this->content .= '<hr /><div>' . $this->module->makeShortcutIcon("id", implode(",", array_keys($this->MOD_MENU)), $this->MCONF["name"]) . '</div>';
+            $this->content .= '<hr /><div>' . $this->module->makeShortcutIcon("id",
+                    implode(",", array_keys($this->MOD_MENU)), $this->MCONF["name"]) . '</div>';
         }
         
         $this->content .= '<div class="bottomspace10"></div>';
@@ -169,7 +162,6 @@ class TranslationTasks extends BaseScriptClass
             $tRows[] = $cells;
             
             foreach ($elements as $el) {
-                $cells = '';
                 $rec_on = array();
                 // Get CURRENT online record and icon based on "t3ver_oid":
                 if ($el[0] !== '' && $el[1] > 0) {
@@ -207,7 +199,7 @@ class TranslationTasks extends BaseScriptClass
             }
             
             return '<table border="0" cellpadding="0" cellspacing="0"><tr>' . implode('</tr><tr>',
-                $tRows) . '</tr></table>';
+                    $tRows) . '</tr></table>';
         } else {
             return '';
         }
@@ -248,6 +240,16 @@ class TranslationTasks extends BaseScriptClass
         
         $this->content .= $this->module->endPage();
         echo $this->content;
+    }
+    
+    /**
+     * Adds items to the ->MOD_MENU array. Used for the function menu selector.
+     *
+     * @return  void
+     */
+    function menuConfig()
+    {
+        parent::menuConfig();
     }
 }
 

@@ -19,6 +19,10 @@ namespace Localizationteam\L10nmgr\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+use Localizationteam\L10nmgr\Task\LocalizationmanagerFileGarbageCollection;
+use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /**
  * Additional BE fields for file garbage collection task.
@@ -30,7 +34,7 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
-class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements tx_scheduler_AdditionalFieldProvider
+class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements AdditionalFieldProviderInterface
 {
     
     /**
@@ -48,11 +52,11 @@ class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements
      *
      * @param array $taskInfo Reference to the array containing the info used in the add/edit form
      * @param object $task When editing, reference to the current task object. Null when adding.
-     * @param tx_scheduler_Module $parentObject Reference to the calling object (Scheduler's BE module)
+     * @param SchedulerModuleController $parentObject Reference to the calling object (Scheduler's BE module)
      *
      * @return array Array containing all the information pertaining to the additional fields
      */
-    public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $parentObject)
+    public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $parentObject)
     {
         // Initialize selected fields
         if (!isset($taskInfo['l10nmgr_fileGarbageCollection_age'])) {
@@ -101,11 +105,11 @@ class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements
      * Checks if the given value is an integer
      *
      * @param array $submittedData Reference to the array containing the data submitted by the user
-     * @param tx_scheduler_Module $parentObject Reference to the calling object (Scheduler's BE module)
+     * @param SchedulerModuleController $parentObject Reference to the calling object (Scheduler's BE module)
      *
      * @return boolean TRUE if validation was ok (or selected class is not relevant), FALSE otherwise
      */
-    public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $parentObject)
+    public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $parentObject)
     {
         $result = true;
         // Check if number of days is indeed a number and greater than 0
@@ -123,11 +127,11 @@ class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements
      * Saves given integer value in task object
      *
      * @param array $submittedData Contains data submitted by the user
-     * @param tx_scheduler_Task $task Reference to the current task object
      *
+     * @param LocalizationmanagerFileGarbageCollection|AbstractTask $task
      * @return void
      */
-    public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task)
+    public function saveAdditionalFields(array $submittedData, AbstractTask $task)
     {
         $task->age = (int)$submittedData['l10nmgr_fileGarbageCollection_age'];
     }

@@ -54,9 +54,7 @@ class CatXmlView extends AbstractExportView
     /**
      * Render the simple XML export
      *
-     * @param  array    Translation data for configuration
-     *
-     * @return  string    Filename
+     * @return string Filename
      */
     function render()
     {
@@ -68,27 +66,24 @@ class CatXmlView extends AbstractExportView
             $accumObj->setForcedPreviewLanguage($this->forcedSourceLanguage);
         }
         $accum = $accumObj->getInfoArray();
-        $errorMessage = array();
         /** @var $xmlTool XmlTools */
         $xmlTool = GeneralUtility::makeInstance(XmlTools::class);
         $output = array();
+        $targetIso = '';
         
         // Traverse the structure and generate XML output:
         foreach ($accum as $pId => $page) {
             $output[] = "\t" . '<pageGrp id="' . $pId . '" sourceUrl="' . GeneralUtility::getIndpEnv("TYPO3_SITE_URL") . 'index.php?id=' . $pId . '">' . "\n";
             foreach ($accum[$pId]['items'] as $table => $elements) {
                 foreach ($elements as $elementUid => $data) {
+                    $targetIso = '';
                     if (!empty($data['ISOcode'])) {
                         $targetIso = $data['ISOcode'];
                     }
                     
                     if (is_array($data['fields'])) {
-                        $fieldsForRecord = array();
                         foreach ($data['fields'] as $key => $tData) {
                             if (is_array($tData)) {
-                                list(, $uidString, $fieldName) = explode(':', $key);
-                                list($uidValue) = explode('/', $uidString);
-                                
                                 $noChangeFlag = !strcmp(trim($tData['diffDefaultValue']), trim($tData['defaultValue']));
                                 
                                 if (!$this->modeOnlyChanged || !$noChangeFlag) {
@@ -171,11 +166,10 @@ class CatXmlView extends AbstractExportView
         }
         
         // get ISO2L code for source language
+        $staticLangArr = array();
         if ($this->l10ncfgObj->getData('sourceLangStaticId') && ExtensionManagementUtility::isLoaded('static_info_tables')) {
-            $sourceIso2L = '';
             $staticLangArr = BackendUtility::getRecord('static_languages',
                 $this->l10ncfgObj->getData('sourceLangStaticId'), 'lg_iso_2');
-            $sourceIso2L = ' sourceLang="' . $staticLangArr['lg_iso_2'] . '"';
         }
         
         $XML = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";

@@ -32,7 +32,7 @@ class XmlToolsTestCase extends tx_phpunit_testcase
 {
     
     /**
-     * @var  tx_l10nmgr_xmltools $XMLtools
+     * @var  XmlTools $XMLtools
      */
     protected $XMLtools = null;
     

@@ -55,7 +55,6 @@ class Utf8Tools
             '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .     # plane 16
             '|(.{1}))';                            # invalid byte
         $pos = 0;
-        $badList = array();
         while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
             $bytes = strlen($matches[0]);
             if (isset($matches[2])) {
@@ -161,8 +160,8 @@ class Utf8Tools
      *
      * @see http://www.w3.org/International/questions/qa-forms-utf-8
      *
-     * @param string to search
-     * @param string to replace bad bytes with (defaults to '?') - use ASCII
+     * @param string $str String to search
+     * @param string $replace String to replace bad bytes with (defaults to '?') - use ASCII
      *
      * @return string
      * @package utf8
@@ -220,7 +219,7 @@ class Utf8Tools
      *
      * @author <hsivonen@iki.fi>
      *
-     * @param string UTF-8 encoded string
+     * @param string $str UTF-8 encoded string
      *
      * @return boolean true if valid
      * @see http://hsivonen.iki.fi/php-utf8/
@@ -366,7 +365,7 @@ class Utf8Tools
      * @see utf8_is_valid
      * @see http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php#54805
      *
-     * @param string UTF-8 string to check
+     * @param string $str UTF-8 string to check
      *
      * @return boolean TRUE if string is valid UTF-8
      * @package utf8

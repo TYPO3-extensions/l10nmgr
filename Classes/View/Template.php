@@ -48,8 +48,6 @@ class Template
      */
     function render()
     {
-        $content = '';
-        
         ob_start();
         require($this->templateFile);
         $content = ob_get_contents();

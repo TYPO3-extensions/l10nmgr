@@ -39,6 +39,8 @@ class L10nHtmlListView extends AbstractExportView
     //internal flags:
     var $modeWithInlineEdit = false;
     var $modeShowEditLinks = false;
+    protected $module;
+    protected $l10ncfg;
     
     function __construct($l10ncfgObj, $sysLang)
     {
@@ -61,10 +63,6 @@ class L10nHtmlListView extends AbstractExportView
     /**
      * Render the module content in HTML
      *
-     * @param  array    Translation data for configuration
-     * @param  integer    Sys language uid
-     * @param  array    Configuration record
-     *
      * @return  string    HTML content
      */
     function renderOverview()
@@ -76,13 +74,12 @@ class L10nHtmlListView extends AbstractExportView
         $l10ncfg = $this->l10ncfg;
         $output = '';
         $showSingle = GeneralUtility::_GET('showSingle');
+        $noAnalysis = false;
         if ($l10ncfg['displaymode'] > 0) {
             $showSingle = $showSingle ? $showSingle : 'NONE';
             if ($l10ncfg['displaymode'] == 2) {
                 $noAnalysis = true;
             }
-        } else {
-            $noAnalysis = false;
         }
         // Traverse the structure and generate HTML output:
         foreach ($accum as $pId => $page) {
@@ -98,7 +95,6 @@ class L10nHtmlListView extends AbstractExportView
                                 if (is_array($tData)) {
                                     list(, $uidString, $fieldName) = explode(':', $key);
                                     list($uidValue) = explode('/', $uidString);
-                                    $diff = '';
                                     $edit = true;
                                     $noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),
                                         trim($tData['defaultValue']));
@@ -135,6 +131,7 @@ class L10nHtmlListView extends AbstractExportView
                         if (count($FtableRows) || $noAnalysis) {
                             // Link:
                             if ($this->modeShowEditLinks) {
+                                $uidString = '';
                                 if (is_array($data['fields'])) {
                                     reset($data['fields']);
                                     list(, $uidString) = explode(':', key($data['fields']));

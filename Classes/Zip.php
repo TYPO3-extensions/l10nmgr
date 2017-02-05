@@ -63,9 +63,9 @@ class Zip
     /**
      * Adds "file" to archive
      *
-     * @param  string   file contents
-     * @param  string   name of the file in the archive (may contains the path)
-     * @param  integer  the current timestamp
+     * @param  string   $data file contents
+     * @param  string   $name name of the file in the archive (may contains the path)
+     * @param  integer  $time the current timestamp
      *
      * @access public
      */
@@ -139,7 +139,7 @@ class Zip
      * Converts an Unix timestamp to a four byte DOS date and time format (date
      * in high two bytes, time in low two bytes allowing magnitude comparison).
      *
-     * @param  integer  the current Unix timestamp
+     * @param  integer  $unixtime the current Unix timestamp
      *
      * @return integer  the current date in a four byte DOS format
      * @access private
@@ -172,11 +172,11 @@ class Zip
         $ctrldir = implode('', $this->ctrl_dir);
         
         return $data . $ctrldir . $this->eof_ctrl_dir . pack('v',
-            sizeof($this->ctrl_dir)) . // total # of entries "on this disk"
-        pack('v', sizeof($this->ctrl_dir)) . // total # of entries overall
-        pack('V', strlen($ctrldir)) . // size of central dir
-        pack('V', strlen($data)) . // offset to start of central dir
-        "\x00\x00"; // .zip file comment length
+                sizeof($this->ctrl_dir)) . // total # of entries "on this disk"
+            pack('v', sizeof($this->ctrl_dir)) . // total # of entries overall
+            pack('V', strlen($ctrldir)) . // size of central dir
+            pack('V', strlen($data)) . // offset to start of central dir
+            "\x00\x00"; // .zip file comment length
     } // end of the 'file()' method
     
     /**

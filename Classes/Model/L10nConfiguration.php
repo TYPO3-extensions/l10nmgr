@@ -94,7 +94,7 @@ class L10nConfiguration
      *
      * @param int $sysLang sys_language_uid
      *
-     * @return L10nAccumulatedInformations
+     * @return L10nAccumulatedInformation
      **/
     function getL10nAccumulatedInformationsObjectForLanguage($sysLang)
     {
@@ -113,12 +113,12 @@ class L10nConfiguration
                 $treeStartingPoints = array((int)$l10ncfg['pid']);
             }
         }
+        /** @var $tree PageTreeView */
         if (!empty($treeStartingPoints)) {
             foreach ($treeStartingPoints as $treeStartingPoint) {
                 $treeStartingRecords[] = BackendUtility::getRecordWSOL('pages', $treeStartingPoint);
             }
             // Initialize tree object:
-            /** @var $tree PageTreeView */
             $tree = GeneralUtility::makeInstance(PageTreeView::class);
             $tree->init('AND ' . $GLOBALS['BE_USER']->getPagePermsClause(1));
             $tree->addField('l18n_cfg');

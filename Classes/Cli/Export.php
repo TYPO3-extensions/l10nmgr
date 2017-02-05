@@ -305,76 +305,6 @@ class Export extends CommandLineController
     }
     
     /**
-     * The function emailNotification sends an email with a translation job to the recipient specified in the extension config.
-     *
-     * @param string $xmlFileName Name of the XML file
-     * @param L10nConfiguration $l10nmgrCfgObj L10N Manager configuration object
-     * @param integer $tlang ID of the language to translate to
-     *
-     * @return void
-     */
-    function emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang)
-    {
-        global $LANG;
-        
-        // Get source & target language ISO codes
-        $sourceStaticLangArr = BackendUtility::getRecord('static_languages',
-            $l10nmgrCfgObj->l10ncfg['sourceLangStaticId'], 'lg_iso_2');
-        $targetStaticLang = BackendUtility::getRecord('sys_language', $tlang, 'static_lang_isocode');
-        $targetStaticLangArr = BackendUtility::getRecord('static_languages', $targetStaticLang['static_lang_isocode'],
-            'lg_iso_2');
-        $sourceLang = $sourceStaticLangArr['lg_iso_2'];
-        $targetLang = $targetStaticLangArr['lg_iso_2'];
-        
-        // Construct email message
-        /** @var $email t3lib_htmlmail */
-        $email = GeneralUtility::makeInstance('t3lib_htmlmail');
-        $email->start();
-        $email->useQuotedPrintable();
-        
-        $email->subject = sprintf($LANG->getLL('email.suject.msg'), $sourceLang, $targetLang,
-            $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
-        if (empty($GLOBALS['BE_USER']->user['email']) || empty($GLOBALS['BE_USER']->user['realName'])) {
-            $email->from_email = $this->lConf['email_sender'];
-            $email->from_name = $this->lConf['email_sender_name'];
-            $email->replyto_email = $this->lConf['email_sender'];
-            $email->replyto_name = $this->lConf['email_sender_name'];
-        } else {
-            $email->from_email = $GLOBALS['BE_USER']->user['email'];
-            $email->from_name = $GLOBALS['BE_USER']->user['realName'];
-            $email->replyto_email = $GLOBALS['BE_USER']->user['email'];
-            $email->replyto_name = $GLOBALS['BE_USER']->user['realName'];
-        }
-        $email->organisation = $this->lConf['email_sender_organisation'];
-        
-        $message = array(
-            'msg1' => $LANG->getLL('email.greeting.msg'),
-            'msg2' => '',
-            'msg3' => sprintf($LANG->getLL('email.new_translation_job.msg'), $sourceLang, $targetLang,
-                $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']),
-            'msg4' => $LANG->getLL('email.info.msg'),
-            'msg5' => $LANG->getLL('email.info.import.msg'),
-            'msg6' => '',
-            'msg7' => $LANG->getLL('email.goodbye.msg'),
-            'msg8' => $email->from_name,
-            'msg9' => '--',
-            'msg10' => $LANG->getLL('email.info.exportef_file.msg'),
-            'msg11' => $xmlFileName,
-        );
-        if ($this->lConf['email_attachment']) {
-            $message['msg3'] = sprintf($LANG->getLL('email.new_translation_job_attached.msg'), $sourceLang, $targetLang,
-                $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
-        }
-        $msg = implode(chr(10), $message);
-        
-        $email->addPlain($msg);
-        if ($this->lConf['email_attachment']) {
-            $email->addAttachment($xmlFileName);
-        }
-        $email->send($this->lConf['email_recipient']);
-    }
-    
-    /**
      * The function ftpUpload puts an export on a remote FTP server for further processing
      *
      * @param string $xmlFileName Path to the file to upload
@@ -497,6 +427,76 @@ class Export extends CommandLineController
         }
         
         return ($error);
+    }
+    
+    /**
+     * The function emailNotification sends an email with a translation job to the recipient specified in the extension config.
+     *
+     * @param string $xmlFileName Name of the XML file
+     * @param L10nConfiguration $l10nmgrCfgObj L10N Manager configuration object
+     * @param integer $tlang ID of the language to translate to
+     *
+     * @return void
+     */
+    function emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang)
+    {
+        global $LANG;
+        
+        // Get source & target language ISO codes
+        $sourceStaticLangArr = BackendUtility::getRecord('static_languages',
+            $l10nmgrCfgObj->l10ncfg['sourceLangStaticId'], 'lg_iso_2');
+        $targetStaticLang = BackendUtility::getRecord('sys_language', $tlang, 'static_lang_isocode');
+        $targetStaticLangArr = BackendUtility::getRecord('static_languages', $targetStaticLang['static_lang_isocode'],
+            'lg_iso_2');
+        $sourceLang = $sourceStaticLangArr['lg_iso_2'];
+        $targetLang = $targetStaticLangArr['lg_iso_2'];
+        
+        // Construct email message
+        /** @var $email t3lib_htmlmail */
+        $email = GeneralUtility::makeInstance('t3lib_htmlmail');
+        $email->start();
+        $email->useQuotedPrintable();
+        
+        $email->subject = sprintf($LANG->getLL('email.suject.msg'), $sourceLang, $targetLang,
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
+        if (empty($GLOBALS['BE_USER']->user['email']) || empty($GLOBALS['BE_USER']->user['realName'])) {
+            $email->from_email = $this->lConf['email_sender'];
+            $email->from_name = $this->lConf['email_sender_name'];
+            $email->replyto_email = $this->lConf['email_sender'];
+            $email->replyto_name = $this->lConf['email_sender_name'];
+        } else {
+            $email->from_email = $GLOBALS['BE_USER']->user['email'];
+            $email->from_name = $GLOBALS['BE_USER']->user['realName'];
+            $email->replyto_email = $GLOBALS['BE_USER']->user['email'];
+            $email->replyto_name = $GLOBALS['BE_USER']->user['realName'];
+        }
+        $email->organisation = $this->lConf['email_sender_organisation'];
+        
+        $message = array(
+            'msg1' => $LANG->getLL('email.greeting.msg'),
+            'msg2' => '',
+            'msg3' => sprintf($LANG->getLL('email.new_translation_job.msg'), $sourceLang, $targetLang,
+                $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']),
+            'msg4' => $LANG->getLL('email.info.msg'),
+            'msg5' => $LANG->getLL('email.info.import.msg'),
+            'msg6' => '',
+            'msg7' => $LANG->getLL('email.goodbye.msg'),
+            'msg8' => $email->from_name,
+            'msg9' => '--',
+            'msg10' => $LANG->getLL('email.info.exportef_file.msg'),
+            'msg11' => $xmlFileName,
+        );
+        if ($this->lConf['email_attachment']) {
+            $message['msg3'] = sprintf($LANG->getLL('email.new_translation_job_attached.msg'), $sourceLang, $targetLang,
+                $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
+        }
+        $msg = implode(chr(10), $message);
+        
+        $email->addPlain($msg);
+        if ($this->lConf['email_attachment']) {
+            $email->addAttachment($xmlFileName);
+        }
+        $email->send($this->lConf['email_recipient']);
     }
 }
 

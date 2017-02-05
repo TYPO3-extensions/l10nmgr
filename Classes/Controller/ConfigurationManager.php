@@ -1,23 +1,23 @@
 <?php
 namespace Localizationteam\L10nmgr\Controller;
-    
-    /***************************************************************
-     *  Copyright notice
-     *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
-     *  All rights reserved
-     *  This script is part of the TYPO3 project. The TYPO3 project is
-     *  free software; you can redistribute it and/or modify
-     *  it under the terms of the GNU General Public License as published by
-     *  the Free Software Foundation; either version 2 of the License, or
-     *  (at your option) any later version.
-     *  The GNU General Public License can be found at
-     *  http://www.gnu.org/copyleft/gpl.html.
-     *  This script is distributed in the hope that it will be useful,
-     *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-     *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-     *  GNU General Public License for more details.
-     *  This copyright notice MUST APPEAR in all copies of the script!
-     ***************************************************************/
+
+/***************************************************************
+ *  Copyright notice
+ *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
+ *  All rights reserved
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
 /**
  * Module 'L10N Manager' for the 'l10nmgr' extension.
  *
@@ -45,31 +45,26 @@ class ConfigurationManager extends BaseScriptClass
 {
     
     var $pageinfo;
-    
-    /**
-     * @var array Cache of the page details already fetched from the database
-     */
-    protected $pageDetails = array();
-    
-    /**
-     * @var array Cache of the language records already fetched from the database
-     */
-    protected $languageDetails = array();
-    
-    /**
-     * ModuleTemplate Container
-     *
-     * @var ModuleTemplate
-     */
-    protected $moduleTemplate;
-    
     /**
      * Document Template Object
      *
      * @var \TYPO3\CMS\Backend\Template\DocumentTemplate
      */
     public $doc;
-    
+    /**
+     * @var array Cache of the page details already fetched from the database
+     */
+    protected $pageDetails = array();
+    /**
+     * @var array Cache of the language records already fetched from the database
+     */
+    protected $languageDetails = array();
+    /**
+     * ModuleTemplate Container
+     *
+     * @var ModuleTemplate
+     */
+    protected $moduleTemplate;
     /**
      * The name of the module
      *
@@ -313,6 +308,16 @@ class ConfigurationManager extends BaseScriptClass
     }
     
     /**
+     * Prints out the module HTML
+     *
+     * @return  void
+     */
+    public function printContent()
+    {
+        print $this->content;
+    }
+    
+    /**
      * Create the panel of buttons for submitting the form or otherwise perform operations.
      *
      * @return  array  all available buttons as an assoc. array
@@ -330,16 +335,6 @@ class ConfigurationManager extends BaseScriptClass
         }
         
         return $buttons;
-    }
-    
-    /**
-     * Prints out the module HTML
-     *
-     * @return  void
-     */
-    public function printContent()
-    {
-        print $this->content;
     }
     
     /**

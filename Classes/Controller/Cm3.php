@@ -37,12 +37,11 @@ namespace Localizationteam\L10nmgr\Controller\Cm3;
  */
 
 // DEFAULT initialization of a module [BEGIN]
-unset($MCONF);
-require('conf.php');
-require($BACK_PATH . 'init.php');
-$LANG->includeLLFile('EXT:l10nmgr/cm3/locallang.xml');
 use Localizationteam\L10nmgr\Model\Tools\Tools;
+use TYPO3\CMS\Backend\Module\BaseScriptClass;
 use TYPO3\CMS\Backend\Template\DocumentTemplate;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -54,6 +53,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Cm3 extends BaseScriptClass
 {
+    protected $module;
+    protected $l10nMgrTools;
     
     /**
      * Adds items to the ->MOD_MENU array. Used for the function menu selector.
@@ -62,8 +63,6 @@ class Cm3 extends BaseScriptClass
      */
     function menuConfig()
     {
-        global $LANG;
-        
         parent::menuConfig();
     }
     
@@ -74,7 +73,7 @@ class Cm3 extends BaseScriptClass
      */
     function main()
     {
-        global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA, $CLIENT, $TYPO3_CONF_VARS;
+        global $LANG, $BACK_PATH;
         
         // Draw the header.
         $this->module = GeneralUtility::makeInstance(DocumentTemplate::class);
@@ -98,16 +97,20 @@ class Cm3 extends BaseScriptClass
         $this->content .= '<hr />';
         
         // Render the module content (for all modes):
-        $this->content .= '<div class="bottomspace10">' . $this->moduleContent((string)GeneralUtility::_GP('table'), (int)GeneralUtility::_GP('id'), GeneralUtility::_GP('cmd')) . '</div>';
+        $this->content .= '<div class="bottomspace10">' . $this->moduleContent((string)GeneralUtility::_GP('table'),
+                (int)GeneralUtility::_GP('id'), GeneralUtility::_GP('cmd')) . '</div>';
     }
     
     /**
      * [Describe function...]
      *
-     * @param   [type]    $table: ...
-     * @param   [type]    $uid: ...
+     * @param $table
+     * @param $uid
+     * @param $cmd
+     * @return string [type]    ...
+     * @internal param $ [type]    $table: ...
+     * @internal param $ [type]    $uid: ...
      *
-     * @return  [type]    ...
      */
     function moduleContent($table, $uid, $cmd)
     {
@@ -120,7 +123,7 @@ class Cm3 extends BaseScriptClass
             switch ((string)$cmd) {
                 case 'updateIndex':
                     $output = $this->l10nMgrTools->updateIndexForRecord($table, $uid);
-                    t3lib_BEfunc::setUpdateSignal('updatePageTree');
+                    BackendUtility::setUpdateSignal('updatePageTree');
                     break;
                 case 'flushTranslations':
                     if ($GLOBALS['BE_USER']->isAdmin()) {
@@ -132,11 +135,11 @@ class Cm3 extends BaseScriptClass
                         } else {
                             $output .= 'Translations below were flushed!';
                         }
-                        $output .= t3lib_utility_Debug::viewArray($res[0]);
+                        $output .= DebugUtility::viewArray($res[0]);
                         
                         if (GeneralUtility::_POST('_flush')) {
                             $output .= $this->l10nMgrTools->updateIndexForRecord($table, $uid);
-                            t3lib_BEfunc::setUpdateSignal('updatePageTree');
+                            BackendUtility::setUpdateSignal('updatePageTree');
                         }
                     }
                     break;
@@ -165,7 +168,7 @@ class Cm3 extends BaseScriptClass
 }
 
 // Make instance:
-$SOBE = GeneralUtility::makeInstance(Tx_L10nmgr_Controller_Cm3_Index::class);
+$SOBE = GeneralUtility::makeInstance(Cm3::class);
 $SOBE->init();
 $SOBE->main();
 $SOBE->printContent();

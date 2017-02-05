@@ -80,7 +80,6 @@ class TranslationDataFactory
                 if (is_array($pageGrp['ch']['data'])) {
                     foreach ($pageGrp['ch']['data'] as $row) {
                         $attrs = $row['attrs'];
-                        list(, $uidString, $fieldName) = explode(':', $attrs['key']);
                         if ($attrs['transformations'] == '1') {
                             $translationValue = $xmlTool->XML2RTE($row['XMLvalue']);
                             $translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;
@@ -201,6 +200,7 @@ class TranslationDataFactory
             return false;
         }
         
+        $worksheetIdentifier = '';
         // At least OpenOfficeOrg Calc changes the worksheet identifier. For now we better check for this, otherwise we cannot import translations edited with OpenOfficeOrg Calc.
         if (isset($xmlNodes['Workbook'][0]['ch']['Worksheet'])) {
             $worksheetIdentifier = 'Worksheet';
@@ -278,7 +278,6 @@ class TranslationDataFactory
             foreach ($xmlNodes['TYPO3L10N'][0]['ch']['Data'] as $row) {
                 $attrs = $row['attrs'];
                 
-                list(, $uidString, $fieldName) = explode(':', $attrs['key']);
                 if ($attrs['transformations'] == '1') { //substitute check with rte enabled fields from TCA
                     
                     //$translationValue =$this->_getXMLFromTreeArray($row);

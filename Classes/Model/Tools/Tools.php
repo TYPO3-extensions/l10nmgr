@@ -1,29 +1,29 @@
 <?php
 namespace Localizationteam\L10nmgr\Model\Tools;
-    
-    /***************************************************************
-     *  Copyright notice
-     *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
-     *  All rights reserved
-     *  This script is part of the TYPO3 project. The TYPO3 project is
-     *  free software; you can redistribute it and/or modify
-     *  it under the terms of the GNU General Public License as published by
-     *  the Free Software Foundation; either version 2 of the License, or
-     *  (at your option) any later version.
-     *  The GNU General Public License can be found at
-     *  http://www.gnu.org/copyleft/gpl.html.
-     *  This script is distributed in the hope that it will be useful,
-     *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-     *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-     *  GNU General Public License for more details.
-     *  This copyright notice MUST APPEAR in all copies of the script!
-     ***************************************************************/
-    /**
-     * Contains translation tools
-     * $Id: class.t3lib_loaddbgroup.php 1816 2006-11-26 00:43:24Z mundaun $
-     *
-     * @author  Kasper Skaarhoj <kasperYYYY@typo3.com>
-     */
+
+/***************************************************************
+ *  Copyright notice
+ *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
+ *  All rights reserved
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
+/**
+ * Contains translation tools
+ * $Id: class.t3lib_loaddbgroup.php 1816 2006-11-26 00:43:24Z mundaun $
+ *
+ * @author  Kasper Skaarhoj <kasperYYYY@typo3.com>
+ */
 /**
  * [CLASS/FUNCTION INDEX of SCRIPT]
  *   69: class tx_l10nmgr_tools
@@ -83,6 +83,10 @@ class Tools
     var $indexFilterObjects = array();
     
     var $_callBackParams_translationDiffsourceXMLArray;
+    protected $_callBackParams_translationXMLArray;
+    protected $_callBackParams_previewLanguageXMLArrays;
+    protected $_callBackParams_keyForTranslationDetails;
+    protected $_callBackParams_currentRow;
     
     /**
      * Constructor
@@ -202,9 +206,10 @@ class Tools
                     });
                     $is_HIDE_L10N_SIBLINGS = $GLOBALS['is_HIDE_L10N_SIBLINGS'];
                 } else {
-                    $is_HIDE_L10N_SIBLINGS = GeneralUtility::isFirstPartOfStr($TCEformsCfg['displayCond'], 'HIDE_L10N_SIBLINGS');
+                    $is_HIDE_L10N_SIBLINGS = GeneralUtility::isFirstPartOfStr($TCEformsCfg['displayCond'],
+                        'HIDE_L10N_SIBLINGS');
                 }
-				if (!$is_HIDE_L10N_SIBLINGS) {
+                if (!$is_HIDE_L10N_SIBLINGS) {
                     if (!GeneralUtility::isFirstPartOfStr($kFieldName, 't3ver_')) {
                         if (!$this->filters['l10n_categories'] || GeneralUtility::inList($this->filters['l10n_categories'],
                                 $TCEformsCfg['l10n_cat'])
@@ -411,7 +416,7 @@ class Tools
                     if (is_null($languageID) || $r['uid'] === $languageID) {
                         $items['fullDetails'][$r['uid']] = $this->translationDetails($table, $rec, $r['uid'],
                             $languageID);
-                        $items['indexRecord'][$r['uid']] = $this->compileIndexRecord($table,
+                        $items['indexRecord'][$r['uid']] = $this->compileIndexRecord(
                             $items['fullDetails'][$r['uid']], $r['uid'], $pid);
                     }
                 }
@@ -437,7 +442,7 @@ class Tools
     function getSingleRecordToTranslate($table, $uid, $previewLanguage = 0)
     {
         global $TCA;
-        
+        $allRows = array();
         if ($this->t8Tools->isTranslationInOwnTable($table)) {
             
             // First, select all records that are default language OR international:
@@ -460,6 +465,10 @@ class Tools
     
     /**
      * Returns true if the record can be included in index.
+     * @param $table
+     * @param $uid
+     * @param $pageId
+     * @return bool
      */
     function filterIndex($table, $uid, $pageId)
     {
@@ -490,11 +499,11 @@ class Tools
     /**
      * Generate details about translation
      *
-     * @param   string   Table name
-     * @param   array    Row (one from getRecordsToTranslateFromTable())
-     * @param   integer  sys_language uid
-     * @param   array    FlexForm diff data
-     * @param   integer  previewLanguage
+     * @param string $table Table name
+     * @param array $row Row (one from getRecordsToTranslateFromTable())
+     * @param integer $sysLang sys_language uid
+     * @param array $flexFormDiff FlexForm diff data
+     * @param integer $previewLanguage previewLanguage
      *
      * @return  array    Returns details array
      */
@@ -715,7 +724,7 @@ class Tools
             $translationModes[] = 'flexformInternalTranslation';
             $this->detailsOutput['log'][] = 'Mode: "flexformInternalTranslation" detected because we have page Record';
         }
-        
+        $useOverlay = false;
         if (count($tInfo['translations']) && $tInfo['sys_language_uid'] != -1) {
             $translationModes[] = 'useOverlay';
             $useOverlay = true;
@@ -823,14 +832,13 @@ class Tools
     /**
      * Creates the record to insert in the index table.
      *
-     * @param  string $table Table name
      * @param  array $fullDetails Details as fetched (as gotten by ->translationDetails())
      * @param  integer $sys_lang The language UID for which this record is made
      * @param  integer $pid PID of record
      *
      * @return  array    Record.
      */
-    function compileIndexRecord($table, $fullDetails, $sys_lang, $pid)
+    function compileIndexRecord($fullDetails, $sys_lang, $pid)
     {
         
         $record = array(
@@ -1047,7 +1055,7 @@ class Tools
                 }
             }
         }
-        
+        $errorLog = '';
         if ($exec) {
             // Now, submitting translation data:
             /** @var $tce DataHandler */
@@ -1060,9 +1068,10 @@ class Tools
                 $TCEmain_cmd); // check has been done previously that there is a backend user which is Admin and also in live workspace
             $tce->process_datamap();
             $tce->process_cmdmap();
+            $errorLog = $tce->errorLog;
         }
         
-        return array($remove, $TCEmain_cmd, $TCEmain_data, $tce->errorLog);
+        return array($remove, $TCEmain_cmd, $TCEmain_data, $errorLog);
     }
     
     /**

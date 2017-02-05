@@ -60,6 +60,8 @@ class L10nBaseService
      * @var int
      */
     protected $depthCounter = 0;
+    protected $lastTCEMAINCommandsCount;
+    protected $flexFormDiffArray;
     
     public function __construct()
     {
@@ -90,12 +92,12 @@ class L10nBaseService
                 $processingObject->processBeforeSaving($l10ncfgObj, $translationObj, $this);
             }
         }
-
+        
         // make sure to translate all pages and content elements that are available on these pages
         $this->preTranslateAllContent($l10ncfgObj, $translationObj);
-
+        
         $this->remapInputDataForExistingTranslations($l10ncfgObj, $translationObj);
-
+        
         $sysLang = $translationObj->getLanguage();
         $previewLanguage = $translationObj->getPreviewLanguage();
         $accumObj = $l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
@@ -115,6 +117,168 @@ class L10nBaseService
                 $processingObject->processAfterSaving($l10ncfgObj, $translationObj, $flexFormDiffArray, $this);
             }
         }
+    }
+    
+    /**
+     * Function that iterates over all page records that are given within the import data
+     * and translate all pages and content elements
+     * beforehand so ordering and container elements work just as expected.
+     *
+     * Goes hand in hand with the remapInputDataForExistingTranslations() functionality, which then replaces the elements
+     * which would be expected to be new)
+     *
+     * @param L10nConfiguration $configurationObject
+     * @param TranslationData $translationData
+     */
+    protected function preTranslateAllContent(L10nConfiguration $configurationObject, TranslationData $translationData)
+    {
+        // feature is not enabled
+        if (!$configurationObject->getData('pretranslatecontent')) {
+            return;
+        }
+        
+        $inputArray = $translationData->getTranslationData();
+        $pageUids = array_keys($inputArray['pages']);
+        foreach ($pageUids as $pageUid) {
+            $this->translateContentOnPage($pageUid, (int)$translationData->getLanguage());
+        }
+    }
+    
+    /**
+     * Translates all non-translated content elements on a certain page (and the page itself)
+     *
+     * @param int $pageUid
+     * @param int $targetLanguageUid
+     */
+    protected function translateContentOnPage($pageUid, $targetLanguageUid)
+    {
+        // Check if the page itself was translated already, if not, translate it
+        $translatedPageRecords = BackendUtility::getRecordLocalization('pages', $pageUid, $targetLanguageUid);
+        if ($translatedPageRecords === false) {
+            // translate the page first
+            $commands = array(
+                'pages' => array(
+                    $pageUid => array(
+                        'localize' => $targetLanguageUid
+                    )
+                )
+            );
+            $dataHandler = $this->getDataHandlerInstance();
+            $dataHandler->start(array(), $commands);
+            $dataHandler->process_cmdmap();
+        }
+        
+        $commands = array();
+        
+        $gridElementsInstalled = ExtensionManagementUtility::isLoaded('gridelements');
+        if ($gridElementsInstalled) {
+            // find all tt_content elements in the default language of this page that are NOT inside a grid element
+            $recordsInOriginalLanguage = BackendUtility::getRecordsByField('tt_content', 'pid', $pageUid,
+                'AND sys_language_uid=0 AND tx_gridelements_container=0', '', 'colPos, sorting');
+            foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
+                $translatedContentElements = BackendUtility::getRecordLocalization('tt_content',
+                    $recordInOriginalLanguage['uid'], $targetLanguageUid);
+                if (!is_array($translatedContentElements)) {
+                    $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
+                }
+            }
+            
+            // find all tt_content elements in the default language of this page that ARE inside a grid element
+            $recordsInOriginalLanguage = BackendUtility::getRecordsByField('tt_content', 'pid', $pageUid,
+                'AND sys_language_uid=0 AND tx_gridelements_container!=0', '', 'colPos, sorting');
+            foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
+                $translatedContentElements = BackendUtility::getRecordLocalization('tt_content',
+                    $recordInOriginalLanguage['uid'], $targetLanguageUid);
+                if (!is_array($translatedContentElements)) {
+                    $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
+                }
+            }
+        } else {
+            // find all tt_content elements in the default language of this page
+            $recordsInOriginalLanguage = BackendUtility::getRecordsByField('tt_content', 'pid', $pageUid,
+                'AND sys_language_uid=0', '', 'colPos, sorting');
+            foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
+                $translatedContentElements = BackendUtility::getRecordLocalization('tt_content',
+                    $recordInOriginalLanguage['uid'], $targetLanguageUid);
+                if (!is_array($translatedContentElements)) {
+                    $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
+                }
+            }
+            
+        }
+        
+        if (count($commands)) {
+            // don't do the "prependAtCopy"
+            $GLOBALS['TCA']['tt_content']['ctrl']['prependAtCopy'] = false;
+            $dataHandler = $this->getDataHandlerInstance();
+            $dataHandler->start(array(), $commands);
+            $dataHandler->process_cmdmap();
+        }
+    }
+    
+    /**
+     * @return DataHandler
+     */
+    protected function getDataHandlerInstance()
+    {
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        if ($this->extensionConfiguration['enable_neverHideAtCopy'] == 1) {
+            $dataHandler->neverHideAtCopy = true;
+        }
+        $dataHandler->stripslashes_values = false;
+        $dataHandler->dontProcessTransformations = true;
+        $dataHandler->isImporting = true;
+        return $dataHandler;
+    }
+    
+    /**
+     * If you want to reimport the same file over and over again, by default this can only be done once because the input array
+     * contains "NEW" all over the place in th XML file.
+     * This feature (enabled per configuration record) maps the data of the existing record in the target language
+     * to re-import the data again and again.
+     *
+     * This also allows to import data of records that have been added in TYPO3 in the meantime.
+     *
+     * @param L10nConfiguration $configurationObject
+     * @param TranslationData $translationData
+     */
+    protected function remapInputDataForExistingTranslations(
+        L10nConfiguration $configurationObject,
+        TranslationData $translationData
+    ) {
+        // feature is not enabled
+        if (!$configurationObject->getData('overrideexistingtranslations')) {
+            return;
+        }
+        
+        $inputArray = $translationData->getTranslationData();
+        
+        // clean up input array and replace the "NEW" fields with actual values if they have been translated already
+        $cleanedInputArray = array();
+        foreach ($inputArray as $table => $elementsInTable) {
+            foreach ($elementsInTable as $elementUid => $fields) {
+                foreach ($fields as $fieldKey => $translatedValue) {
+                    // check if the record was marked as "new" but was translated already
+                    list($Ttable, $TuidString, $Tfield, $Tpath) = explode(':', $fieldKey);
+                    list($Tuid, $Tlang, $TdefRecord) = explode('/', $TuidString);
+                    if ($Tuid === 'NEW') {
+                        $translatedRecord = BackendUtility::getRecordLocalization($Ttable, $TdefRecord, $Tlang);
+                        if (!empty($translatedRecord)) {
+                            $translatedRecord = reset($translatedRecord);
+                            if ($translatedRecord['uid'] > 0) {
+                                $fieldKey = $Ttable . ':' . $translatedRecord['uid'] . ':' . $Tfield;
+                                if ($Tpath) {
+                                    $fieldKey .= ':' . $Tpath;
+                                }
+                            }
+                        }
+                    }
+                    $cleanedInputArray[$table][$elementUid][$fieldKey] = $translatedValue;
+                }
+            }
+        }
+        
+        $translationData->setTranslationData($cleanedInputArray);
     }
     
     /**
@@ -253,7 +417,8 @@ class L10nBaseService
             $tce->stripslashes_values = false;
             $tce->dontProcessTransformations = true;
             $tce->isImporting = true;
-            $tce->start($TCEmain_data, array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
+            $tce->start($TCEmain_data,
+                array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
             $tce->process_datamap();
             
             if (count($tce->errorLog)) {
@@ -300,8 +465,10 @@ class L10nBaseService
             $flexToolObj = GeneralUtility::makeInstance(FlexFormTools::class);
             $gridElementsInstalled = ExtensionManagementUtility::isLoaded('gridelements');
             $fluxInstalled = ExtensionManagementUtility::isLoaded('flux');
+            $element = array();
             $TCEmain_data = array();
             $this->TCEmain_cmd = array();
+            $Tlang = '';
             
             $_flexFormDiffArray = array();
             // Traverse:
@@ -354,7 +521,7 @@ class L10nBaseService
                                                 }
                                             }
                                         } elseif ($table === 'sys_file_reference') {
-
+                                            
                                             $element = BackendUtility::getRecordRaw($table,
                                                 'uid = ' . (int)$elementUid . ' AND deleted = 0');
                                             if ($element['uid_foreign'] && $element['tablenames'] && $element['fieldname']) {
@@ -389,7 +556,8 @@ class L10nBaseService
                                                     'data' => $data,
                                                     'TCEmain_cmd' => $this->TCEmain_cmd
                                                 );
-                                                $this->TCEmain_cmd = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
+                                                $this->TCEmain_cmd = GeneralUtility::callUserFunction($hookObj,
+                                                    $parameters, $this);
                                             }
                                         }
                                     }
@@ -502,7 +670,8 @@ class L10nBaseService
             $tce->stripslashes_values = false;
             $tce->dontProcessTransformations = true;
             $tce->isImporting = true;
-            $tce->start($TCEmain_data, array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
+            $tce->start($TCEmain_data,
+                array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
             $tce->process_datamap();
             
             self::$targetLanguageID = null;
@@ -555,6 +724,7 @@ class L10nBaseService
         $this->depthCounter++;
         if ($this->depthCounter < 100 && !isset($this->checkedParentRecords[$parentField][$element['uid']])) {
             $this->checkedParentRecords[$parentField][$element['uid']] = true;
+            $translatedParent = array();
             if ($element[$parentField] > 0) {
                 $translatedParent = BackendUtility::getRecordRaw('tt_content',
                     $TCA['tt_content']['ctrl']['transOrigPointerField'] . ' = ' . (int)$element[$parentField] . '
@@ -573,163 +743,5 @@ class L10nBaseService
                 }
             }
         }
-    }
-
-
-    /**
-     * Function that iterates over all page records that are given within the import data
-     * and translate all pages and content elements
-     * beforehand so ordering and container elements work just as expected.
-     *
-     * Goes hand in hand with the remapInputDataForExistingTranslations() functionality, which then replaces the elements
-     * which would be expected to be new)
-     *
-     * @param L10nConfiguration $configurationObject
-     * @param TranslationData $translationData
-     */
-    protected function preTranslateAllContent(L10nConfiguration $configurationObject, TranslationData $translationData)
-    {
-        // feature is not enabled
-        if (!$configurationObject->getData('pretranslatecontent')) {
-            return;
-        }
-
-        $inputArray = $translationData->getTranslationData();
-        $pageUids = array_keys($inputArray['pages']);
-        foreach ($pageUids as $pageUid) {
-            $this->translateContentOnPage($pageUid, (int)$translationData->getLanguage());
-        }
-    }
-
-
-    /**
-     * Translates all non-translated content elements on a certain page (and the page itself)
-     *
-     * @param int $pageUid
-     * @param int $targetLanguageUid
-     */
-    protected function translateContentOnPage($pageUid, $targetLanguageUid)
-    {
-        // Check if the page itself was translated already, if not, translate it
-        $translatedPageRecords = BackendUtility::getRecordLocalization('pages', $pageUid, $targetLanguageUid);
-        if ($translatedPageRecords === false) {
-            // translate the page first
-            $commands = array(
-                'pages' => array(
-                    $pageUid => array(
-                        'localize' => $targetLanguageUid
-                    )
-                )
-            );
-            $dataHandler = $this->getDataHandlerInstance();
-            $dataHandler->start(array(), $commands);
-            $dataHandler->process_cmdmap();
-        }
-
-        $commands = array();
-
-        $gridElementsInstalled = ExtensionManagementUtility::isLoaded('gridelements');
-        if ($gridElementsInstalled) {
-            // find all tt_content elements in the default language of this page that are NOT inside a grid element
-            $recordsInOriginalLanguage = BackendUtility::getRecordsByField('tt_content', 'pid', $pageUid, 'AND sys_language_uid=0 AND tx_gridelements_container=0', '', 'colPos, sorting');
-            foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
-                $translatedContentElements = BackendUtility::getRecordLocalization('tt_content', $recordInOriginalLanguage['uid'], $targetLanguageUid);
-                if (!is_array($translatedContentElements)) {
-                    $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
-                }
-            }
-
-            // find all tt_content elements in the default language of this page that ARE inside a grid element
-            $recordsInOriginalLanguage = BackendUtility::getRecordsByField('tt_content', 'pid', $pageUid, 'AND sys_language_uid=0 AND tx_gridelements_container!=0', '', 'colPos, sorting');
-            foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
-                $translatedContentElements = BackendUtility::getRecordLocalization('tt_content', $recordInOriginalLanguage['uid'], $targetLanguageUid);
-                if (!is_array($translatedContentElements)) {
-                    $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
-                }
-            }
-        } else {
-            // find all tt_content elements in the default language of this page
-            $recordsInOriginalLanguage = BackendUtility::getRecordsByField('tt_content', 'pid', $pageUid, 'AND sys_language_uid=0', '', 'colPos, sorting');
-            foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
-                $translatedContentElements = BackendUtility::getRecordLocalization('tt_content', $recordInOriginalLanguage['uid'], $targetLanguageUid);
-                if (!is_array($translatedContentElements)) {
-                    $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
-                }
-            }
-
-        }
-
-        if (count($commands)) {
-            // don't do the "prependAtCopy"
-            $GLOBALS['TCA']['tt_content']['ctrl']['prependAtCopy'] = false;
-            $dataHandler = $this->getDataHandlerInstance();
-            $dataHandler->start(array(), $commands);
-            $dataHandler->process_cmdmap();
-        }
-    }
-
-
-    /**
-     * If you want to reimport the same file over and over again, by default this can only be done once because the input array
-     * contains "NEW" all over the place in th XML file.
-     * This feature (enabled per configuration record) maps the data of the existing record in the target language
-     * to re-import the data again and again.
-     *
-     * This also allows to import data of records that have been added in TYPO3 in the meantime.
-     *
-     * @param L10nConfiguration $configurationObject
-     * @param TranslationData $translationData
-     */
-    protected function remapInputDataForExistingTranslations(L10nConfiguration $configurationObject, TranslationData $translationData)
-    {
-        // feature is not enabled
-        if (!$configurationObject->getData('overrideexistingtranslations')) {
-            return;
-        }
-
-        $inputArray = $translationData->getTranslationData();
-
-        // clean up input array and replace the "NEW" fields with actual values if they have been translated already
-        $cleanedInputArray = array();
-        foreach ($inputArray as $table => $elementsInTable) {
-            foreach ($elementsInTable as $elementUid => $fields) {
-                foreach ($fields as $fieldKey => $translatedValue) {
-                    // check if the record was marked as "new" but was translated already
-                    list($Ttable, $TuidString, $Tfield, $Tpath) = explode(':', $fieldKey);
-                    list($Tuid, $Tlang, $TdefRecord) = explode('/', $TuidString);
-                    if ($Tuid === 'NEW') {
-                        $translatedRecord = BackendUtility::getRecordLocalization($Ttable, $TdefRecord, $Tlang);
-                        if (!empty($translatedRecord)) {
-                            $translatedRecord = reset($translatedRecord);
-                            if ($translatedRecord['uid'] > 0) {
-                                $fieldKey = $Ttable . ':' . $translatedRecord['uid'] . ':' . $Tfield;
-                                if ($Tpath) {
-                                    $fieldKey .= ':' .  $Tpath;
-                                }
-                            }
-                        }
-                    }
-                    $cleanedInputArray[$table][$elementUid][$fieldKey] = $translatedValue;
-                }
-            }
-        }
-
-        $translationData->setTranslationData($cleanedInputArray);
-    }
-
-
-    /**
-     * @return DataHandler
-     */
-    protected function getDataHandlerInstance()
-    {
-        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        if ($this->extensionConfiguration['enable_neverHideAtCopy'] == 1) {
-            $dataHandler->neverHideAtCopy = true;
-        }
-        $dataHandler->stripslashes_values = false;
-        $dataHandler->dontProcessTransformations = true;
-        $dataHandler->isImporting = true;
-        return $dataHandler;
     }
 }

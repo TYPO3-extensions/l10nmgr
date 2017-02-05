@@ -1,23 +1,23 @@
 <?php
 namespace Localizationteam\L10nmgr\Model\Tools;
-    
-    /***************************************************************
-     *  Copyright notice
-     *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
-     *  All rights reserved
-     *  This script is part of the TYPO3 project. The TYPO3 project is
-     *  free software; you can redistribute it and/or modify
-     *  it under the terms of the GNU General Public License as published by
-     *  the Free Software Foundation; either version 2 of the License, or
-     *  (at your option) any later version.
-     *  The GNU General Public License can be found at
-     *  http://www.gnu.org/copyleft/gpl.html.
-     *  This script is distributed in the hope that it will be useful,
-     *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-     *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-     *  GNU General Public License for more details.
-     *  This copyright notice MUST APPEAR in all copies of the script!
-     ***************************************************************/
+
+/***************************************************************
+ *  Copyright notice
+ *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
+ *  All rights reserved
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
 /**
  * Contains xml tools
  * $Id$
@@ -43,9 +43,10 @@ class XmlTools
     /**
      * Transforms a RTE Field to valid XML
      *
-     * @param  string    HTML String which should be transformed
+     * @param string §content HTML String which should be transformed
      *
-     * @return  mixed    false if transformation failed, string with XML if all fine
+     * @param int $withStripBadUTF8
+     * @return mixed false if transformation failed, string with XML if all fine
      */
     function RTE2XML($content, $withStripBadUTF8 = 0)
     {
@@ -54,7 +55,6 @@ class XmlTools
         //	$withStripBadUTF8 = $GLOBALS['BE_USER']->getModuleData('l10nmgr/cm1/checkUTF8', '');
         //}
         //echo '###'.$withStripBadUTF8;
-        $content_org = $content;
         // First call special transformations (registered using hooks)
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['transformation'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['transformation'] as $classReference) {
@@ -66,7 +66,7 @@ class XmlTools
         $pageTsConf = BackendUtility::getPagesTSconfig(0);
         $rteConfiguration = $pageTsConf['RTE.']['default.'];
         $content = $this->parseHTML->RTE_transform($content, array(), 'rte', $rteConfiguration);
-
+        
         //substitute & with &amp;
         //$content=str_replace('&','&amp;',$content); Changed by DZ 2011-05-11
         $content = str_replace('<hr>', '<hr />', $content);
@@ -107,9 +107,9 @@ class XmlTools
     /**
      * Transforms a XML back to RTE / reverse function of RTE2XML
      *
-     * @param  string    XMLString which should be transformed
+     * @param string $xmlstring XMLString which should be transformed
      *
-     * @return  string    string with HTML
+     * @return string string with HTML
      */
     function XML2RTE($xmlstring)
     {
@@ -129,7 +129,7 @@ class XmlTools
         $pageTsConf = BackendUtility::getPagesTSconfig(0);
         $rteConf = $pageTsConf['RTE.']['default.'];
         $content = $this->parseHTML->RTE_transform($xmlstring, array(), 'db', $rteConf);
-
+        
         // Last call special transformations (registered using hooks)
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['transformation'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['transformation'] as $classReference) {

@@ -48,13 +48,11 @@ class ExcelXmlView extends AbstractExportView
     /**
      * Render the excel XML export
      *
-     * @param    array        Translation data for configuration
-     *
      * @return    string        HTML content
      */
     function render()
     {
-        global $LANG, $BE_USER;
+        global $LANG;
         $sysLang = $this->sysLang;
         $accumObj = $this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
         if ($this->forcedSourceLanguage) {
@@ -86,13 +84,17 @@ class ExcelXmlView extends AbstractExportView
 		    <Cell ss:StyleID="s38"><Data ss:Type="String">Translation:</Data></Cell>
 		    <Cell ss:StyleID="s38"><Data ss:Type="String">Difference since last tr.:</Data></Cell>
 		   </Row>';
-            
+    
+            $sourceColState = '';
+            $altSourceColState = '';
             foreach ($accum[$pId]['items'] as $table => $elements) {
                 foreach ($elements as $elementUid => $data) {
                     if (is_array($data['fields'])) {
                         
                         $fieldsForRecord = array();
                         foreach ($data['fields'] as $key => $tData) {
+                            $sourceColState = '';
+                            $altSourceColState = '';
                             if (is_array($tData)) {
                                 list(, $uidString, $fieldName) = explode(':', $key);
                                 list($uidValue) = explode('/', $uidString);
@@ -101,16 +103,13 @@ class ExcelXmlView extends AbstractExportView
                                 if (($this->forcedSourceLanguage && isset($tData['previewLanguageValues'][$this->forcedSourceLanguage])) || $this->forcedSourceLanguage === false) {
                                     //DZ
                                     if ($this->forcedSourceLanguage) {
-                                        $dataForTranslation = $tData['previewLanguageValues'][$this->forcedSourceLanguage];
                                         $sourceColState = 'ss:Hidden="1" ss:AutoFitWidth="0"';
                                         $altSourceColState = 'ss:AutoFitWidth="0" ss:Width="233.0"';
                                     } else {
-                                        $dataForTranslation = $tData['defaultValue'];
                                         $sourceColState = 'ss:AutoFitWidth="0" ss:Width="233.0"';
                                         $altSourceColState = 'ss:Hidden="1" ss:AutoFitWidth="0"';
                                     }
                                     
-                                    $diff = '';
                                     $noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),
                                         trim($tData['defaultValue']));
                                     if ($uidValue === 'NEW') {

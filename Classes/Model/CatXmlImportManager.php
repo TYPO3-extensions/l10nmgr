@@ -208,9 +208,9 @@ class CatXmlImportManager
     /**
      * Get pageGrp IDs for preview link generation
      *
-     * @param   array    XML nodes from CATXML
+     * @param array $xmlNodes XML nodes from CATXML
      *
-     * @return  array    Page IDs for preview
+     * @return array Page IDs for preview
      */
     function getPidsFromCATXMLNodes(&$xmlNodes)
     {
@@ -218,7 +218,7 @@ class CatXmlImportManager
         
         if (is_array($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'])) {
             foreach ($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'] as $pageGrp) {
-                $pids[] = $pageGrp[attrs][id];
+                $pids[] = $pageGrp['attrs']['id'];
             }
         }
         
@@ -228,9 +228,9 @@ class CatXmlImportManager
     /**
      * Get uids for which localizations shall be removed on 2nd import if option checked
      *
-     * @param   array    XML nodes from CATXML
+     * @param array $xmlNodes XML nodes from CATXML
      *
-     * @return  array    Uids for which localizations shall be removed
+     * @return array Uids for which localizations shall be removed
      */
     function getDelL10NDataFromCATXMLNodes(&$xmlNodes)
     {
@@ -255,9 +255,9 @@ class CatXmlImportManager
     /**
      * Delete previous localisations
      *
-     * @param   array    table:id combinations to be deleted
+     * @param array $delL10NData table:id combinations to be deleted
      *
-     * @return  int    Number of deleted elements
+     * @return int Number of deleted elements
      */
     function delL10N($delL10NData)
     {
@@ -270,7 +270,7 @@ class CatXmlImportManager
             list($table, $elementUid) = explode(':', $element);
             if ($table == 'pages') {
                 $table = 'pages_language_overlay';
-                $where = 'pid = ' . (int)$elementUid  . ' AND sys_language_uid = ' . (int)$this->headerData['t3_sysLang'] . ' AND t3ver_wsid = ' . (int)$this->headerData['t3_workspaceId'];
+                $where = 'pid = ' . (int)$elementUid . ' AND sys_language_uid = ' . (int)$this->headerData['t3_sysLang'] . ' AND t3ver_wsid = ' . (int)$this->headerData['t3_workspaceId'];
             } else {
                 $languageField = $GLOBALS['TCA'][$table]['ctrl']['languageField'];
                 $l18nPointerField = $GLOBALS['TCA'][$table]['ctrl']['transOrigPointerField'];

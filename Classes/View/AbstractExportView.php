@@ -26,6 +26,7 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\DiffUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Localizationteam\L10nmgr\Model\L10nConfiguration;
 
 /**
  * Abstract class for all export views
@@ -60,6 +61,7 @@ abstract class AbstractExportView
      * @var  array List of messages issued during rendering
      */
     protected $internalMessages = array();
+    protected $forcedSourceLanguage;
     
     function __construct($l10ncfgObj, $sysLang)
     {
@@ -116,7 +118,7 @@ abstract class AbstractExportView
         $res = $this->getDatabaseConnection()->exec_INSERTquery(
             'tx_l10nmgr_exportdata',
             $field_values,
-            array('source_lang','translation_lang','crdate','tstamp','l10ncfg_id','pid','cruser_id','exportType')
+            array('source_lang', 'translation_lang', 'crdate', 'tstamp', 'l10ncfg_id', 'pid', 'cruser_id', 'exportType')
         );
         
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['exportView'])) {
@@ -165,10 +167,8 @@ abstract class AbstractExportView
         }
         
         if ($this->l10ncfgObj->getData('sourceLangStaticId') && ExtensionManagementUtility::isLoaded('static_info_tables')) {
-            $sourceIso2L = '';
             $staticLangArr = BackendUtility::getRecord('static_languages',
                 $this->l10ncfgObj->getData('sourceLangStaticId'), 'lg_iso_2');
-            $sourceIso2L = ' sourceLang = "' . $staticLangArr['lg_iso_2'] . '"';
         }
         
         if ($this->sysLang && ExtensionManagementUtility::isLoaded('static_info_tables')) {
@@ -198,14 +198,20 @@ abstract class AbstractExportView
     }
     
     /**
+     * @return DatabaseConnection
+     */
+    protected function getDatabaseConnection()
+    {
+        return $GLOBALS['TYPO3_DB'];
+    }
+    
+    /**
      * Checks if an export exists
      *
      * @return boolean
      */
     function checkExports()
     {
-        $ret = false;
-        
         $res = $this->getDatabaseConnection()->exec_SELECTquery('l10ncfg_id,exportType,translation_lang',
             'tx_l10nmgr_exportdata',
             'l10ncfg_id =' . (int)$this->l10ncfgObj->getData('uid') . ' AND exportType = ' . $this->exportType . ' AND translation_lang = ' . $this->sysLang);
@@ -232,7 +238,6 @@ abstract class AbstractExportView
     function renderExports()
     {
         global $LANG;
-        $out = '';
         $content = array();
         $exports = $this->fetchExports();
         
@@ -300,7 +305,6 @@ abstract class AbstractExportView
     function renderExportsCli()
     {
         global $LANG;
-        $out = '';
         $content = array();
         $exports = $this->fetchExports();
         
@@ -404,13 +408,5 @@ abstract class AbstractExportView
             'message' => $message,
             'key' => $key
         );
-    }
-    
-    /**
-     * @return DatabaseConnection
-     */
-    protected function getDatabaseConnection()
-    {
-        return $GLOBALS['TYPO3_DB'];
     }
 }

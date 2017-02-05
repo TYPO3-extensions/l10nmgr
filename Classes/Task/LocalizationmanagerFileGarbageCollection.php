@@ -18,7 +18,12 @@ namespace Localizationteam\L10nmgr\Task;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use DirectoryIterator;
+use Exception;
+use RuntimeException;
+use SplFileInfo;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /**
  * L10N Manager file garbage collection task
@@ -30,7 +35,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
-class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
+class LocalizationmanagerFileGarbageCollection extends AbstractTask
 {
     
     /**
@@ -52,8 +57,8 @@ class LocalizationmanagerFileGarbageCollection extends tx_scheduler_Task
     
     /**
      * Removes old files, called by the Scheduler.
-     *
-     * @return boolean TRUE if task run was successful
+     * @return bool TRUE if task run was successful
+     * @throws Exception
      */
     public function execute()
     {
