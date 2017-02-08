@@ -60,7 +60,7 @@ class L10nBaseService
      * @var int
      */
     protected $depthCounter = 0;
-    protected $lastTCEMAINCommandsCount;
+    public $lastTCEMAINCommandsCount;
     protected $flexFormDiffArray;
     
     public function __construct()
