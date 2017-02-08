@@ -20,6 +20,7 @@ namespace Localizationteam\L10nmgr\Model;
  ***************************************************************/
 
 use Localizationteam\L10nmgr\Model\Tools\Tools;
+use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -43,9 +44,9 @@ class L10nAccumulatedInformation
      */
     var $objectStatus = 'new';
     /**
-     * @var array Page tree
+     * @var PageTreeView
      */
-    var $tree = array();
+    var $tree;
     /**
      * @var array Selected l10nmgr configuration
      */
@@ -160,7 +161,7 @@ class L10nAccumulatedInformation
         }
         
         // Traverse tree elements:
-        foreach ($tree as $treeElement) {
+        foreach ($tree->tree as $treeElement) {
             
             $pageId = $treeElement['row']['uid'];
             if (!isset($excludeIndex['pages:' . $pageId]) && !in_array($treeElement['row']['doktype'],
