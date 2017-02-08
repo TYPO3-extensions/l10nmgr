@@ -103,7 +103,7 @@ class L10nBaseService
         $accumObj = $l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
         $accumObj->setForcedPreviewLanguage($previewLanguage);
         
-        $flexFormDiffArray = $this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray($sysLang),
+        $flexFormDiffArray = $this->_submitContentAndGetFlexFormDiff($accumObj->getInfoArray(),
             $translationObj->getTranslationData());
         
         if ($flexFormDiffArray !== false) {

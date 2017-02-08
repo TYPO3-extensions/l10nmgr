@@ -42,6 +42,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessageRendererResolver;
 use TYPO3\CMS\Core\Utility\DiffUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -505,7 +506,9 @@ class LocalizationManager extends BaseScriptClass
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class,
                     $GLOBALS['LANG']->getLL('export.process.duplicate.message'),
                     $GLOBALS['LANG']->getLL('export.process.duplicate.title'), FlashMessage::INFO);
-                $info .= $flashMessage->render();
+                $info .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                    ->resolve()
+                    ->render([$flashMessage]);
                 $info .= $viewClass->renderExports();
             } else {
                 try {
@@ -524,7 +527,9 @@ class LocalizationManager extends BaseScriptClass
                 }
                 /** @var $flashMessage FlashMessage */
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
-                $info .= $flashMessage->render();
+                $info .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                    ->resolve()
+                    ->render([$flashMessage]);
                 $info .= $viewClass->renderInternalMessagesAsFlashMessage($status);
                 $viewClass->saveExportInformation();
             }
@@ -670,7 +675,9 @@ class LocalizationManager extends BaseScriptClass
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class,
                     $GLOBALS['LANG']->getLL('export.process.duplicate.message'),
                     $GLOBALS['LANG']->getLL('export.process.duplicate.title'), FlashMessage::INFO);
-                $actionInfo .= $flashMessage->render();
+                $actionInfo .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                    ->resolve()
+                    ->render([$flashMessage]);
                 $actionInfo .= $viewClass->renderExports();
             } else {
                 // Upload to FTP
@@ -692,7 +699,9 @@ class LocalizationManager extends BaseScriptClass
                     }
                     /** @var $flashMessage FlashMessage */
                     $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
-                    $actionInfo .= $flashMessage->render();
+                    $actionInfo .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                        ->resolve()
+                        ->render([$flashMessage]);
                     $actionInfo .= $viewClass->renderInternalMessagesAsFlashMessage($status);
                     // Download the XML file
                 } else {
@@ -712,7 +721,9 @@ class LocalizationManager extends BaseScriptClass
                     }
                     /** @var $flashMessage FlashMessage */
                     $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
-                    $actionInfo .= $flashMessage->render();
+                    $actionInfo .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                        ->resolve()
+                        ->render([$flashMessage]);
                     $actionInfo .= $viewClass->renderInternalMessagesAsFlashMessage($status);
                 }
                 $viewClass->saveExportInformation();

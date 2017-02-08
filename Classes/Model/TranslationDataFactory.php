@@ -298,8 +298,7 @@ class TranslationDataFactory
                     //$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
                     $parseHTML->procOptions['dontRemoveUnknownTags_db'] = true;
                     
-                    $translationValue = $parseHTML->TS_transform_db($translationValue,
-                        $css = 1); // removes links from content if not called first!
+                    $translationValue = $parseHTML->TS_transform_db($translationValue); // removes links from content if not called first!
                     //print_r($translationValue);
                     $translationValue = $parseHTML->TS_images_db($translationValue);
                     //print_r($translationValue);

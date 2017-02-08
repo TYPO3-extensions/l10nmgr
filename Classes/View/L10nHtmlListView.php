@@ -39,6 +39,9 @@ class L10nHtmlListView extends AbstractExportView
     //internal flags:
     var $modeWithInlineEdit = false;
     var $modeShowEditLinks = false;
+    /**7
+     * @var DocumentTemplate
+     */
     protected $module;
     protected $l10ncfg;
     
@@ -141,7 +144,7 @@ class L10nHtmlListView extends AbstractExportView
                                     $editLink = ' - <a href="#" onclick="' . htmlspecialchars(BackendUtility::editOnClick('&edit[' . $data['translationInfo']['translation_table'] . '][' . $editId . ']=edit',
                                             $this->module->backPath)) . '"><em>[' . $LANG->getLL('render_overview.clickedit.message') . ']</em></a>';
                                 } else {
-                                    $editLink = ' - <a href="' . htmlspecialchars($this->module->issueCommand('&cmd[' . $table . '][' . $data['translationInfo']['uid'] . '][localize]=' . $sysLang)) . '"><em>[' . $LANG->getLL('render_overview.clicklocalize.message') . ']</em></a>';
+                                    $editLink = ' - <a href="' . htmlspecialchars(BackendUtility::getLinkToDataHandlerAction('&cmd[' . $table . '][' . $data['translationInfo']['uid'] . '][localize]=' . $sysLang)) . '"><em>[' . $LANG->getLL('render_overview.clicklocalize.message') . ']</em></a>';
                                 }
                             } else {
                                 $editLink = '';

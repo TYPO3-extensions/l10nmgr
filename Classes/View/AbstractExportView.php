@@ -23,6 +23,7 @@ namespace Localizationteam\L10nmgr\View;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessageRendererResolver;
 use TYPO3\CMS\Core\Utility\DiffUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -376,7 +377,9 @@ abstract class AbstractExportView
                 /** @var $flashMessage FlashMessage */
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $messageBody,
                     $GLOBALS['LANG']->getLL('export.ftp.warnings'), FlashMessage::WARNING);
-                $ret .= $flashMessage->render();
+                $ret .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                    ->resolve()
+                    ->render([$flashMessage]);
             }
         }
         
