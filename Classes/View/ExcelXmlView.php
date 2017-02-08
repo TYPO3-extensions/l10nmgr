@@ -61,7 +61,10 @@ class ExcelXmlView extends AbstractExportView
         $accum = $accumObj->getInfoArray();
         
         $output = array();
-        
+    
+        $sourceColState = '';
+        $altSourceColState = '';
+
         // Traverse the structure and generate HTML output:
         foreach ($accum as $pId => $page) {
             
@@ -85,8 +88,6 @@ class ExcelXmlView extends AbstractExportView
 		    <Cell ss:StyleID="s38"><Data ss:Type="String">Difference since last tr.:</Data></Cell>
 		   </Row>';
     
-            $sourceColState = '';
-            $altSourceColState = '';
             foreach ($accum[$pId]['items'] as $table => $elements) {
                 foreach ($elements as $elementUid => $data) {
                     if (is_array($data['fields'])) {

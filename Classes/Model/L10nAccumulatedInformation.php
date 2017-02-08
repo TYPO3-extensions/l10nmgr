@@ -160,7 +160,7 @@ class L10nAccumulatedInformation
         }
         
         // Traverse tree elements:
-        foreach ($tree->tree as $treeElement) {
+        foreach ($tree as $treeElement) {
             
             $pageId = $treeElement['row']['uid'];
             if (!isset($excludeIndex['pages:' . $pageId]) && !in_array($treeElement['row']['doktype'],

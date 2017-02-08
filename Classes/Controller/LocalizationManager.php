@@ -438,6 +438,10 @@ class LocalizationManager extends BaseScriptClass
         return $info;
     }
     
+    /**
+     * @param L10nConfiguration $l10ncfgObj
+     * @return string
+     */
     function excelExportImportAction($l10ncfgObj)
     {
         /** @var $service L10nBaseService */

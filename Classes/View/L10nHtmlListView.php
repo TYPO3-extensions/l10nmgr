@@ -18,6 +18,8 @@ namespace Localizationteam\L10nmgr\View;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use Localizationteam\L10nmgr\Model\L10nAccumulatedInformation;
+use Localizationteam\L10nmgr\Model\L10nConfiguration;
 use TYPO3\CMS\Backend\Template\DocumentTemplate;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -34,6 +36,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class L10nHtmlListView extends AbstractExportView
 {
+    /**
+     * @var L10nConfiguration
+     */
     var $l10ncfgObj; //
     var $sysLang; // Internal array (=datarow of config record)
     //internal flags:
@@ -72,6 +77,7 @@ class L10nHtmlListView extends AbstractExportView
     {
         global $LANG;
         $sysLang = $this->sysLang;
+        /** @var $accumObj L10nAccumulatedInformation */
         $accumObj = $this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
         $accum = $accumObj->getInfoArray();
         $l10ncfg = $this->l10ncfg;

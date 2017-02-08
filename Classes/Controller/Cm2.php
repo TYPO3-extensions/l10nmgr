@@ -52,6 +52,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Cm2 extends BaseScriptClass
 {
+    /**
+     * @var DocumentTemplate
+     */
     protected $module;
     protected $l10nMgrTools;
     protected $sysLanguages;
@@ -244,7 +247,7 @@ class Cm2 extends BaseScriptClass
             $action = '<a href="#" onclick="' . htmlspecialchars(BackendUtility::editOnClick('&edit[' . $rec['tablename'] . '][' . $rec['recuid'] . ']=edit',
                     $this->module->backPath)) . '"><em>[Edit]</em></a>';
         } else {
-            $action = '<a href="' . htmlspecialchars($this->module->issueCommand('&cmd[' . $rec['tablename'] . '][' . $rec['recuid'] . '][localize]=' . $rec['translation_lang'])) . '"><em>[Localize]</em></a>';
+            $action = '<a href="' . htmlspecialchars(BackendUtility::getLinkToDataHandlerAction('&cmd[' . $rec['tablename'] . '][' . $rec['recuid'] . '][localize]=' . $rec['translation_lang'])) . '"><em>[Localize]</em></a>';
         }
         
         return '<tr class="bgColor4-20">

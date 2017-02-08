@@ -575,6 +575,7 @@ class Tools
                                         $row);
                                     if ($dataStructArray['meta']['langDisable'] && $dataStructArray['meta']['langDatabaseOverlay'] == 1 || $table === 'tt_content' && $row['CType'] === 'fluidcontent_content') {
                                         // Create and call iterator object:
+                                        /** @var $flexObj FlexFormTools */
                                         $flexObj = GeneralUtility::makeInstance(FlexFormTools::class);
                                         $this->_callBackParams_keyForTranslationDetails = $key;
                                         $this->_callBackParams_translationXMLArray = GeneralUtility::xml2array($translationRecord[$field]);
@@ -1060,9 +1061,7 @@ class Tools
             // Now, submitting translation data:
             /** @var $tce DataHandler */
             $tce = GeneralUtility::makeInstance(DataHandler::class);
-            $tce->stripslashes_values = false;
             $tce->dontProcessTransformations = true;
-            $tce->clear_flexFormData_vDEFbase = true;
             $tce->isImporting = true;
             $tce->start($TCEmain_data,
                 $TCEmain_cmd); // check has been done previously that there is a backend user which is Admin and also in live workspace

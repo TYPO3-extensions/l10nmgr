@@ -53,6 +53,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Cm3 extends BaseScriptClass
 {
+    /**
+     * @var DocumentTemplate
+     */
     protected $module;
     protected $l10nMgrTools;
     

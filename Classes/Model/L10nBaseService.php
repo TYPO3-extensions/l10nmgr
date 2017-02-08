@@ -613,7 +613,6 @@ class L10nBaseService
             if ($this->extensionConfiguration['enable_neverHideAtCopy'] == 1) {
                 $tce->neverHideAtCopy = true;
             }
-            $tce->stripslashes_values = false;
             $tce->isImporting = true;
             if (count($this->TCEmain_cmd)) {
                 $tce->start(array(), $this->TCEmain_cmd);
@@ -667,7 +666,6 @@ class L10nBaseService
             if ($this->extensionConfiguration['enable_neverHideAtCopy'] == 1) {
                 $tce->neverHideAtCopy = true;
             }
-            $tce->stripslashes_values = false;
             $tce->dontProcessTransformations = true;
             $tce->isImporting = true;
             $tce->start($TCEmain_data,
