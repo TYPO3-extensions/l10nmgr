@@ -508,11 +508,15 @@ class LocalizationManager extends BaseScriptClass
             if ($this->MOD_SETTINGS['check_exports'] && !$viewClass->checkExports()) {
                 /** @var $flashMessage FlashMessage */
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class,
-                    $GLOBALS['LANG']->getLL('export.process.duplicate.message'),
+                    '###MESSAGE###',
                     $GLOBALS['LANG']->getLL('export.process.duplicate.title'), FlashMessage::INFO);
-                $info .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                $info .= str_replace(
+                    '###MESSAGE###',
+                    $GLOBALS['LANG']->getLL('export.process.duplicate.message'),
+                    GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
                     ->resolve()
-                    ->render([$flashMessage]);
+                    ->render([$flashMessage])
+                );
                 $info .= $viewClass->renderExports();
             } else {
                 try {
@@ -521,19 +525,31 @@ class LocalizationManager extends BaseScriptClass
                     $link = sprintf('<a href="%s" target="_blank">%s</a>',
                         GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $filename, $filename);
                     $title = $GLOBALS['LANG']->getLL('export.download.success');
-                    $message = sprintf($GLOBALS['LANG']->getLL('export.download.success.detail'), $link);
+                    $message = '###MESSAGE###';
                     $status = FlashMessage::OK;
+                    $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
+                    $info .= str_replace(
+                        '###MESSAGE###',
+                        sprintf($GLOBALS['LANG']->getLL('export.download.success.detail'), $link),
+                        GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                            ->resolve()
+                            ->render([$flashMessage])
+                    );
                 } catch (Exception $e) {
                     // Prepare an error message for display
                     $title = $GLOBALS['LANG']->getLL('export.download.error');
-                    $message = $e->getMessage() . ' (' . $e->getCode() . ')';
+                    $message = '###MESSAGE###';
                     $status = FlashMessage::ERROR;
+                    $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
+                    $info .= str_replace(
+                        '###MESSAGE###',
+                        $e->getMessage() . ' (' . $e->getCode() . ')',
+                        GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                            ->resolve()
+                            ->render([$flashMessage])
+                    );
                 }
                 /** @var $flashMessage FlashMessage */
-                $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
-                $info .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
-                    ->resolve()
-                    ->render([$flashMessage]);
                 $info .= $viewClass->renderInternalMessagesAsFlashMessage($status);
                 $viewClass->saveExportInformation();
             }
@@ -677,11 +693,15 @@ class LocalizationManager extends BaseScriptClass
             if ($this->MOD_SETTINGS['check_exports'] && !$viewClass->checkExports()) {
                 /** @var $flashMessage FlashMessage */
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class,
-                    $GLOBALS['LANG']->getLL('export.process.duplicate.message'),
+                    '###MESSAGE###',
                     $GLOBALS['LANG']->getLL('export.process.duplicate.title'), FlashMessage::INFO);
-                $actionInfo .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                $actionInfo .= str_replace(
+                    '###MESSAGE###',
+                    $GLOBALS['LANG']->getLL('export.process.duplicate.message'),
+                    GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
                     ->resolve()
-                    ->render([$flashMessage]);
+                    ->render([$flashMessage])
+                );
                 $actionInfo .= $viewClass->renderExports();
             } else {
                 // Upload to FTP
@@ -692,20 +712,32 @@ class LocalizationManager extends BaseScriptClass
                         $this->emailNotification($filename, $l10ncfgObj, $this->sysLanguage);
                         // Prepare a success message for display
                         $title = $GLOBALS['LANG']->getLL('export.ftp.success');
-                        $message = sprintf($GLOBALS['LANG']->getLL('export.ftp.success.detail'),
-                            $this->lConf['ftp_server_path'] . $filename);
+                        $message = '###MESSAGE###';
                         $status = FlashMessage::OK;
+                        $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
+                        $actionInfo .= str_replace(
+                            '###MESSAGE###',
+                            sprintf($GLOBALS['LANG']->getLL('export.ftp.success.detail'),
+                                $this->lConf['ftp_server_path'] . $filename),
+                            GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                                ->resolve()
+                                ->render([$flashMessage])
+                        );
                     } catch (Exception $e) {
                         // Prepare an error message for display
                         $title = $GLOBALS['LANG']->getLL('export.ftp.error');
-                        $message = $e->getMessage() . ' (' . $e->getCode() . ')';
+                        $message = '###MESSAGE###';
                         $status = FlashMessage::ERROR;
+                        $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
+                        $actionInfo .= str_replace(
+                            '###MESSAGE###',
+                            $e->getMessage() . ' (' . $e->getCode() . ')',
+                            GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                                ->resolve()
+                                ->render([$flashMessage])
+                        );
                     }
                     /** @var $flashMessage FlashMessage */
-                    $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
-                    $actionInfo .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
-                        ->resolve()
-                        ->render([$flashMessage]);
                     $actionInfo .= $viewClass->renderInternalMessagesAsFlashMessage($status);
                     // Download the XML file
                 } else {
@@ -715,19 +747,31 @@ class LocalizationManager extends BaseScriptClass
                         $link = sprintf('<a href="%s" target="_blank">%s</a>',
                             GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $filename, $filename);
                         $title = $GLOBALS['LANG']->getLL('export.download.success');
-                        $message = sprintf($GLOBALS['LANG']->getLL('export.download.success.detail'), $link);
+                        $message = '###MESSAGE###';
                         $status = FlashMessage::OK;
+                        $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
+                        $actionInfo .= str_replace(
+                            '###MESSAGE###',
+                            sprintf($GLOBALS['LANG']->getLL('export.download.success.detail'), $link),
+                            GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                                ->resolve()
+                                ->render([$flashMessage])
+                        );
                     } catch (Exception $e) {
                         // Prepare an error message for display
                         $title = $GLOBALS['LANG']->getLL('export.download.error');
-                        $message = $e->getMessage() . ' (' . $e->getCode() . ')';
+                        $message = '###MESSAGE###';
                         $status = FlashMessage::ERROR;
+                        $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
+                        $actionInfo .= str_replace(
+                            '###MESSAGE###',
+                            $e->getMessage() . ' (' . $e->getCode() . ')',
+                            GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
+                                ->resolve()
+                                ->render([$flashMessage])
+                        );
                     }
                     /** @var $flashMessage FlashMessage */
-                    $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
-                    $actionInfo .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
-                        ->resolve()
-                        ->render([$flashMessage]);
                     $actionInfo .= $viewClass->renderInternalMessagesAsFlashMessage($status);
                 }
                 $viewClass->saveExportInformation();
