@@ -72,7 +72,7 @@ class XmlTools
         $content = str_replace('<hr>', '<hr />', $content);
         $content = str_replace('<br>', '<br />', $content);
         
-        $content = GeneralUtility::deHSCentities($content);
+        $content = preg_replace('/&amp;([#[:alnum:]]*;)/', '&\\1', $content);
         if ($withStripBadUTF8 == 1) {
             $content = Utf8Tools::utf8_bad_strip($content);
         }

@@ -100,7 +100,7 @@ echo '<div class="bottomspace5"><h2 class="uppercase">' . $LANG->getLL('general.
                     </table>
                 </div>
             </td>
-            <td><?php echo '<a href="' . \TYPO3\CMS\Core\Utility\GeneralUtility::resolveBackPath($BACK_PATH . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' . \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($this->getPageId()) . '">' . $configurationElementArray['title'] . '</a>'; ?></td>
+            <td><?php echo '<a href="' . \TYPO3\CMS\Core\Utility\GeneralUtility::resolveBackPath($BACK_PATH . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('l10nmgr')) . 'cm1/index.php?id=' . $configurationElementArray['uid'] . '&srcPID=' . \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($this->getPageId()) . '">' . $configurationElementArray['title'] . '</a>'; ?></td>
             <td><?php echo current(BackendUtility::getRecordPath($configurationElementArray['pid'], '1', 20,
                     50)); ?></td>
             <td><?php echo $configurationElementArray['depth']; ?></td>

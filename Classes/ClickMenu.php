@@ -33,6 +33,7 @@ namespace Localizationteam\L10nmgr;
  */
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 
 /**
  * Context menu processing
@@ -71,9 +72,9 @@ class ClickMenu
                 
                 // Repeat this (below) for as many items you want to add!
                 // Remember to add entries in the localconf.php file for additional titles.
-                $url = ExtensionManagementUtility::extRelPath("l10nmgr") . "cm1/index.php?id=" . $uid;
+                $url = ExtensionManagementUtility::siteRelPath("l10nmgr") . "cm1/index.php?id=" . $uid;
                 $localItems[] = $backRef->linkItem($GLOBALS["LANG"]->getLLL("cm1_title", $LL),
-                    $backRef->excludeIcon('<img src="' . ExtensionManagementUtility::extRelPath("l10nmgr") . 'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
+                    $backRef->excludeIcon('<img src="' . ExtensionManagementUtility::siteRelPath("l10nmgr") . 'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
                     $backRef->urlRefForCM($url),
                     1 // Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
                 );
@@ -87,7 +88,7 @@ class ClickMenu
             $menuItems = array_merge($menuItems, $localItems);
         } elseif (GeneralUtility::_GET('subname') == 'moreoptions_tx_l10nmgrXX_cm3') {
             
-            $url = ExtensionManagementUtility::extRelPath("l10nmgr") . "cm3/index.php?id=" . $uid . '&table=' . $table;
+            $url = ExtensionManagementUtility::siteRelPath("l10nmgr") . "cm3/index.php?id=" . $uid . '&table=' . $table;
             $localItems[] = $backRef->linkItem('Create priority', '',
                 $backRef->urlRefForCM($url . '&cmd=createPriority'), 1);
             $localItems[] = $backRef->linkItem('Manage priorities', '',

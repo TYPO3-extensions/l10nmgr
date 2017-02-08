@@ -15,7 +15,7 @@ return array(
         'enablecolumns' => array(
             'disabled' => 'hidden',
         ),
-        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('l10nmgr') . 'Resources/Public/Icons/icon_tx_l10nmgr_priorities.gif',
+        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('l10nmgr') . 'Resources/Public/Icons/icon_tx_l10nmgr_priorities.gif',
     ),
     'feInterface' => array(
         'fe_admin_fieldList' => 'hidden, title, description, languages, element',

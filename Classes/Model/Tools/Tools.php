@@ -47,6 +47,7 @@ use TYPO3\CMS\Backend\Configuration\TranslationConfigurationProvider;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\DiffUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -776,8 +777,8 @@ class Tools
      */
     protected function _getFlexFormMetaDataForContentElement($table, $field, $row)
     {
-        $conf = $GLOBALS['TCA'][$table]['columns'][$field]['config'];
-        $dataStructArray = BackendUtility::getFlexFormDS($conf, $row, $table, $field);
+        $conf = $GLOBALS['TCA'][$table]['columns'][$field];
+        $dataStructArray = GeneralUtility::makeInstance(FlexFormTools::class)->getDataStructureIdentifier($conf, $table, $field, $row);
         if (is_array($dataStructArray)) {
             return $dataStructArray;
         }
@@ -796,15 +797,13 @@ class Tools
     function _lookForFlexFormFieldAndAddToInternalTranslationDetails($table, $row)
     {
         global $TCA;
-        foreach ($TCA[$table]['columns'] as $field => $cfg) {
-            $conf = $cfg['config'];
-            
+        foreach ($TCA[$table]['columns'] as $field => $conf) {
             // For "flex" fieldtypes we need to traverse the structure looking for file and db references of course!
-            if ($conf['type'] == 'flex') {
+            if ($conf['config']['type'] == 'flex') {
                 // We might like to add the filter that detects if record is tt_content/CType is "tx_flex...:" since otherwise we would translate flexform content that might be hidden if say the record had a DS set but was later changed back to "Text w/Image" or so... But probably this is a rare case.
                 
                 // Get current data structure to see if translation is needed:
-                $dataStructArray = BackendUtility::getFlexFormDS($conf, $row, $table);
+                $dataStructArray = GeneralUtility::makeInstance(FlexFormTools::class)->getDataStructureIdentifier($conf, $table, '', $row);
                 
                 $this->detailsOutput['log'][] = 'FlexForm field "' . $field . '": DataStructure status: ' . (is_array($dataStructArray) ? 'OK' : 'Error: ' . $dataStructArray);
                 

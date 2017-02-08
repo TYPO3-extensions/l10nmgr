@@ -9,7 +9,7 @@ return array(
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
         'default_sortby' => 'ORDER BY title',
-        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('l10nmgr') . 'Resources/Public/Icons/icon_tx_l10nmgr_cfg.gif',
+        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('l10nmgr') . 'Resources/Public/Icons/icon_tx_l10nmgr_cfg.gif',
         'requestUpdate' => 'depth',
     ),
     'feInterface' => array(

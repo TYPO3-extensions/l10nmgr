@@ -128,7 +128,6 @@ class CatXmlView extends AbstractExportView
                                             $dataForTranslation = str_replace(' > ', ' &gt; ', $dataForTranslation);
                                             $dataForTranslation = str_replace('<br>', '<br/>', $dataForTranslation);
                                             $dataForTranslation = str_replace('<hr>', '<hr/>', $dataForTranslation);
-                                            //$dataForTranslation = \TYPO3\CMS\Core\Utility\GeneralUtility::deHSCentities($dataForTranslation);
                                             
                                             $params = $BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');
                                             if ($params['utf8'] == '1') {

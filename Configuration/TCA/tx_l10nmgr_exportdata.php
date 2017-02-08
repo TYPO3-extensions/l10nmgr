@@ -14,7 +14,7 @@ return array(
         'translation_lang' => 'translation_lang',
         'default_sortby' => 'ORDER BY title',
         'delete' => 'deleted',
-        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('l10nmgr') . 'Resources/Public/Icons/icon_tx_l10nmgr_cfg.gif',
+        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('l10nmgr') . 'Resources/Public/Icons/icon_tx_l10nmgr_cfg.gif',
     ),
     'feInterface' => array(
         'fe_admin_fieldList' => 'title, source_lang, l10ncfg_id, crdate, delete, exclude',

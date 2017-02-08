@@ -13,12 +13,8 @@ if (TYPO3_MODE == "BE") {
         'routeTarget' => \Localizationteam\L10nmgr\Controller\ConfigurationManager::class . '::mainAction',
         'access' => 'user,group',
         'name' => 'web_ConfigurationManager',
-        'labels' => array(
-            'tabs_images' => array(
-                'tab' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',
-            ),
-            'll_ref' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/ConfigurationManager/locallang_mod.xlf'
-        )
+        'icon' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',
+        'labels' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/ConfigurationManager/locallang_mod.xlf'
     ));
     
     /**
@@ -29,12 +25,8 @@ if (TYPO3_MODE == "BE") {
             'routeTarget' => \Localizationteam\L10nmgr\Controller\LocalizationManager::class . '::mainAction',
             'access' => 'user,group',
             'name' => 'ConfigurationManager_LocalizationManager',
-            'labels' => array(
-                'tabs_images' => array(
-                    'tab' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',
-                ),
-                'll_ref' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/ConfigurationManager/locallang_mod.xlf'
-            )
+            'icon' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',
+            'labels' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/ConfigurationManager/locallang_mod.xlf'
         ));
     
     /**
@@ -44,12 +36,8 @@ if (TYPO3_MODE == "BE") {
         'routeTarget' => \Localizationteam\L10nmgr\Controller\Module2::class . '::main',
         'access' => 'user,group',
         'name' => 'user_txl10nmgrM2',
-        'labels' => array(
-            'tabs_images' => array(
-                'tab' => 'EXT:l10nmgr/Resources/Public/Icons/module2_icon.gif',
-            ),
-            'll_ref' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang_mod.xlf'
-        )
+        'icon' => 'EXT:l10nmgr/Resources/Public/Icons/module2_icon.gif',
+        'labels' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang_mod.xlf'
     ));
     
     /**
@@ -60,12 +48,8 @@ if (TYPO3_MODE == "BE") {
             'routeTarget' => \Localizationteam\L10nmgr\Controller\TranslationTasks::class . '::mainAction',
             'access' => 'user,group',
             'name' => 'ConfigurationManager_TranslationTasks',
-            'labels' => array(
-                'tabs_images' => array(
-                    'tab' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',
-                ),
-                'll_ref' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang_mod.xlf'
-            )
+            'licon' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',
+            'll_ref' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang_mod.xlf'
         ));
     
     $GLOBALS["TBE_MODULES_EXT"]["xMOD_alt_clickmenu"]["extendCMclasses"][] = array(

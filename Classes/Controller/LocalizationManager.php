@@ -546,7 +546,7 @@ class LocalizationManager extends BaseScriptClass
         $options = array();
         foreach ($menuItems as $value => $label) {
             $options[] = '<option value="' . htmlspecialchars($value) . '"' . (!strcmp($currentValue,
-                    $value) ? ' selected="selected"' : '') . '>' . GeneralUtility::deHSCentities(htmlspecialchars($label)) . '</option>';
+                    $value) ? ' selected="selected"' : '') . '>' . htmlspecialchars($label, ENT_COMPAT, 'UTF-8', false) . '</option>';
         }
         if (count($options) > 0) {
             return '
@@ -818,10 +818,10 @@ class LocalizationManager extends BaseScriptClass
         $tabContentXmlDownloads = '<h4>' . $GLOBALS['LANG']->getLL('file.settings.available.title') . '</h4><ul>';
         foreach ($allowedSettingFiles as $settingId => $settingFileName) {
             $absoluteFileName = GeneralUtility::getFileAbsFileName('EXT:l10nmgr/Configuration/Settings/' . $settingFileName);
-            $currentFile = GeneralUtility::resolveBackPath($BACK_PATH . ExtensionManagementUtility::extRelPath('l10nmgr') . 'Configuration/Settings/' . $settingFileName);
+            $currentFile = GeneralUtility::resolveBackPath($BACK_PATH . ExtensionManagementUtility::siteRelPath('l10nmgr') . 'Configuration/Settings/' . $settingFileName);
             if (is_file($absoluteFileName) && is_readable($absoluteFileName)) {
                 $size = GeneralUtility::formatSize((int)filesize($absoluteFileName), ' Bytes| KB| MB| GB');
-                $tabContentXmlDownloads .= '<li><a class="t3-link" href="' . GeneralUtility::rawUrlEncodeFP($currentFile) . '" title="' . $GLOBALS['LANG']->getLL('file.settings.download.title') . '" target="_blank">' . $GLOBALS['LANG']->getLL('file.settings.' . $settingId . '.title') . ' (' . $size . ')' . '</a></li>';
+                $tabContentXmlDownloads .= '<li><a class="t3-link" href="' . str_replace('%2F', '/', rawurlencode($currentFile)) . '" title="' . $GLOBALS['LANG']->getLL('file.settings.download.title') . '" target="_blank">' . $GLOBALS['LANG']->getLL('file.settings.' . $settingId . '.title') . ' (' . $size . ')' . '</a></li>';
             }
         }
         $tabContentXmlDownloads .= '</ul>';
