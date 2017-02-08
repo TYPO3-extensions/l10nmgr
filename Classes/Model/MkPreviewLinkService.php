@@ -19,7 +19,7 @@ namespace Localizationteam\L10nmgr\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Version\Hook\PreviewHook;
+use TYPO3\CMS\Workspaces\Hook\PreviewHook;
 
 /**
  * Function for generating preview links during import

@@ -41,6 +41,7 @@ use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Module\BaseScriptClass;
 use TYPO3\CMS\Backend\Template\DocumentTemplate;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -217,7 +218,7 @@ class Cm2 extends BaseScriptClass
         
         //Render information for base record:
         $baseRecord = BackendUtility::getRecordWSOL($rec['tablename'], $rec['recuid']);
-        $icon = IconUtility::getSpriteIconForRecord($rec['tablename'], $baseRecord);
+        $icon = IconFactory::getIconForRecord($rec['tablename'], $baseRecord);
         $title = BackendUtility::getRecordTitle($rec['tablename'], $baseRecord, 1);
         $baseRecordFlag = '<img src="' . htmlspecialchars($GLOBALS['BACK_PATH'] . $this->sysLanguages[$rec['sys_language_uid']]['flagIcon']) . '" alt="" title="" />';
         $tFlag = '<img src="' . htmlspecialchars($GLOBALS['BACK_PATH'] . $this->sysLanguages[$rec['translation_lang']]['flagIcon']) . '" alt="' . htmlspecialchars($this->sysLanguages[$rec['translation_lang']]['title']) . '" title="' . htmlspecialchars($this->sysLanguages[$rec['translation_lang']]['title']) . '" />';
@@ -230,7 +231,7 @@ class Cm2 extends BaseScriptClass
         if ($rec['translation_recuid']) {
             $translationTable = $this->l10nMgrTools->t8Tools->getTranslationTable($rec['tablename']);
             $translationRecord = BackendUtility::getRecordWSOL($translationTable, $rec['translation_recuid']);
-            $icon = IconUtility::getSpriteIconForRecord($translationTable,
+            $icon = IconFactory::getIconForRecord($translationTable,
                 $translationRecord);
             $title = BackendUtility::getRecordTitle($translationTable, $translationRecord, 1);
             $translationRecStr = '<a href="#" onclick="' . htmlspecialchars(BackendUtility::editOnClick('&edit[' . $translationTable . '][' . $translationRecord['uid'] . ']=edit',

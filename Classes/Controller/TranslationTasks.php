@@ -29,7 +29,7 @@ use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Module\BaseScriptClass;
 use TYPO3\CMS\Backend\Template\DocumentTemplate;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Backend\Utility\IconUtility;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -170,7 +170,7 @@ class TranslationTasks extends BaseScriptClass
                 if ($el[0] !== '' && $el[1] > 0) {
                     $rec_on = BackendUtility::getRecord($el[0], $el[1]);
                 }
-                $icon = IconUtility::getSpriteIconForRecord($el[0], $rec_on);
+                $icon = IconFactory::getIconForRecord($el[0], $rec_on);
                 $icon = BackendUtility::wrapClickMenuOnIcon($icon, $el[0], $rec_on['uid'], 2);
                 
                 $linkToIt = '<a href="#" onclick="' . htmlspecialchars('parent.list_frame.location.href="' . $GLOBALS['BACK_PATH'] . ExtensionManagementUtility::extRelPath('l10nmgr') . 'cm2/index.php?table=' . $el[0] . '&uid=' . $el[1] . '"; return false;') . '" target="listframe">

@@ -43,7 +43,7 @@ class XmlTools
     /**
      * Transforms a RTE Field to valid XML
      *
-     * @param string §content HTML String which should be transformed
+     * @param string $content HTML String which should be transformed
      *
      * @param int $withStripBadUTF8
      * @return mixed false if transformation failed, string with XML if all fine
