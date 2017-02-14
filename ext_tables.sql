@@ -11,7 +11,7 @@ CREATE TABLE tx_l10nmgr_cfg (
 	depth int(11) DEFAULT '0' NOT NULL,
 	pages text,
 	displaymode int(11) DEFAULT '0' NOT NULL,
-	tablelist text,
+	tablelist mediumtext,
 	exclude mediumtext,
 	include mediumtext,
 	flexformdiff mediumtext,
