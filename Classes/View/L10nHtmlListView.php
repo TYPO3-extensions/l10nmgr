@@ -75,7 +75,6 @@ class L10nHtmlListView extends AbstractExportView
      */
     function renderOverview()
     {
-        global $LANG;
         $sysLang = $this->sysLang;
         /** @var $accumObj L10nAccumulatedInformation */
         $accumObj = $this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
@@ -108,13 +107,13 @@ class L10nHtmlListView extends AbstractExportView
                                     $noChangeFlag = !strcmp(trim($tData['diffDefaultValue']),
                                         trim($tData['defaultValue']));
                                     if ($uidValue === 'NEW') {
-                                        $diff = '<em>' . $LANG->getLL('render_overview.new.message') . '</em>';
+                                        $diff = '<em>' . $this->getLanguageService()->getLL('render_overview.new.message') . '</em>';
                                         $flags['new']++;
                                     } elseif (!isset($tData['diffDefaultValue'])) {
-                                        $diff = '<em>' . $LANG->getLL('render_overview.nodiff.message') . '</em>';
+                                        $diff = '<em>' . $this->getLanguageService()->getLL('render_overview.nodiff.message') . '</em>';
                                         $flags['unknown']++;
                                     } elseif ($noChangeFlag) {
-                                        $diff = $LANG->getLL('render_overview.nochange.message');
+                                        $diff = $this->getLanguageService()->getLL('render_overview.nochange.message');
                                         $edit = true;
                                         $flags['noChange']++;
                                     } else {
@@ -148,9 +147,9 @@ class L10nHtmlListView extends AbstractExportView
                                 if (substr($uidString, 0, 3) !== 'NEW') {
                                     $editId = is_array($data['translationInfo']['translations'][$sysLang]) ? $data['translationInfo']['translations'][$sysLang]['uid'] : $data['translationInfo']['uid'];
                                     $editLink = ' - <a href="#" onclick="' . htmlspecialchars(BackendUtility::editOnClick('&edit[' . $data['translationInfo']['translation_table'] . '][' . $editId . ']=edit',
-                                            $this->module->backPath)) . '"><em>[' . $LANG->getLL('render_overview.clickedit.message') . ']</em></a>';
+                                            $this->module->backPath)) . '"><em>[' . $this->getLanguageService()->getLL('render_overview.clickedit.message') . ']</em></a>';
                                 } else {
-                                    $editLink = ' - <a href="' . htmlspecialchars(BackendUtility::getLinkToDataHandlerAction('&cmd[' . $table . '][' . $data['translationInfo']['uid'] . '][localize]=' . $sysLang)) . '"><em>[' . $LANG->getLL('render_overview.clicklocalize.message') . ']</em></a>';
+                                    $editLink = ' - <a href="' . htmlspecialchars(BackendUtility::getLinkToDataHandlerAction('&cmd[' . $table . '][' . $data['translationInfo']['uid'] . '][localize]=' . $sysLang)) . '"><em>[' . $this->getLanguageService()->getLL('render_overview.clicklocalize.message') . ']</em></a>';
                                 }
                             } else {
                                 $editLink = '';

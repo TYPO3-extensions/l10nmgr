@@ -76,7 +76,7 @@ class Cm3 extends BaseScriptClass
      */
     function main()
     {
-        global $LANG, $BACK_PATH;
+        global $BACK_PATH;
         
         // Draw the header.
         $this->module = GeneralUtility::makeInstance(DocumentTemplate::class);
@@ -94,8 +94,8 @@ class Cm3 extends BaseScriptClass
 		';
         
         // Header:
-        $this->content .= $this->module->startPage($LANG->getLL('title'));
-        $this->content .= $this->module->header($LANG->getLL('title'));
+        $this->content .= $this->module->startPage($this->getLanguageService()->getLL('title'));
+        $this->content .= $this->module->header($this->getLanguageService()->getLL('title'));
         
         $this->content .= '<hr />';
         

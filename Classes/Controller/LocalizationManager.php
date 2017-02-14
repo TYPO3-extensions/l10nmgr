@@ -182,13 +182,13 @@ class LocalizationManager extends BaseScriptClass
             $access = is_array($this->pageinfo) ? 1 : 0;
             if ($this->id && $access) {
                 // Header:
-                //				$this->content.=$this->moduleTemplate->startPage($GLOBALS['LANG']->getLL('general.title'));
-                $this->content .= $this->moduleTemplate->header($GLOBALS['LANG']->getLL('general.title'));
+                //				$this->content.=$this->moduleTemplate->startPage($this->getLanguageService()->getLL('general.title'));
+                $this->content .= $this->moduleTemplate->header($this->getLanguageService()->getLL('general.title'));
                 // Create and render view to show details for the current l10nmgrcfg
                 /** @var $l10nmgrconfigurationView L10nConfigurationDetailView */
                 $l10nmgrconfigurationView = GeneralUtility::makeInstance(L10nConfigurationDetailView::class,
                     $l10ncfgObj, $this->moduleTemplate);
-                $this->content .= '<div><h2 class="uppercase">' . $GLOBALS['LANG']->getLL('general.manager') . '</h2>' .
+                $this->content .= '<div><h2 class="uppercase">' . $this->getLanguageService()->getLL('general.manager') . '</h2>' .
                     $l10nmgrconfigurationView->render() . '</div>';
                 $this->content .= '<hr />';
                 $title = $this->MOD_MENU["action"][$this->MOD_SETTINGS["action"]];
@@ -200,12 +200,12 @@ class LocalizationManager extends BaseScriptClass
                     $this->getFuncMenu($this->id,
                         "SET[action]", $this->MOD_SETTINGS["action"], $this->MOD_MENU["action"], '',
                         '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
-                        $GLOBALS['LANG']->getLL('general.export.choose.action.title')) .
+                        $this->getLanguageService()->getLL('general.export.choose.action.title')) .
                     '<br />' .
                     $this->getFuncMenu($this->id,
                         "SET[lang]", $this->sysLanguage, $this->MOD_MENU["lang"], '',
                         '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
-                        $GLOBALS['LANG']->getLL('export.overview.targetlanguage.label')) .
+                        $this->getLanguageService()->getLL('export.overview.targetlanguage.label')) .
                     '<br /><br /></div><div class="form-section">' .
                     $this->getFuncCheck(
                         $this->id,
@@ -214,7 +214,7 @@ class LocalizationManager extends BaseScriptClass
                         '',
                         '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
                         '',
-                        $GLOBALS['LANG']->getLL('export.xml.new.title')
+                        $this->getLanguageService()->getLL('export.xml.new.title')
                     ) . '<br />' .
                     $this->getFuncCheck(
                         $this->id,
@@ -223,12 +223,12 @@ class LocalizationManager extends BaseScriptClass
                         '',
                         '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
                         '',
-                        $GLOBALS['LANG']->getLL('export.xml.noHidden.title')
+                        $this->getLanguageService()->getLL('export.xml.noHidden.title')
                     ) .
                     '<br /><br ></div></div></div></div>';
                 // Render content:
                 if (!count($this->MOD_MENU['lang'])) {
-                    $this->content .= '<div><h2>ERROR<h2>' . $GLOBALS['LANG']->getLL('general.access.error.title') . '</div>';
+                    $this->content .= '<div><h2>ERROR<h2>' . $this->getLanguageService()->getLL('general.access.error.title') . '</div>';
                 } else {
                     $this->moduleContent($l10ncfgObj);
                 }
@@ -378,10 +378,10 @@ class LocalizationManager extends BaseScriptClass
             case 'link':
                 /** @var $htmlListView L10nHTMLListView */
                 $htmlListView = GeneralUtility::makeInstance(L10nHtmlListView::class, $l10ncfgObj, $this->sysLanguage);
-                $subheader = $GLOBALS['LANG']->getLL('inlineEdit');
+                $subheader = $this->getLanguageService()->getLL('inlineEdit');
                 $subcontent = '';
                 if ($this->MOD_SETTINGS["action"] == 'inlineEdit') {
-                    $subheader = $GLOBALS['LANG']->getLL('link');
+                    $subheader = $this->getLanguageService()->getLL('link');
                     $subcontent = $this->inlineEditAction($l10ncfgObj);
                     $htmlListView->setModeWithInlineEdit();
                 }
@@ -399,18 +399,18 @@ class LocalizationManager extends BaseScriptClass
                 $subcontent .= '</div></div><div class="col-md-12">' . $htmlListView->renderOverview();
                 break;
             case 'export_excel':
-                $subheader = $GLOBALS['LANG']->getLL('export_excel');
+                $subheader = $this->getLanguageService()->getLL('export_excel');
                 $subcontent = $this->excelExportImportAction($l10ncfgObj);
                 break;
             case 'export_xml': // XML import/export
                 $prefs['utf8'] = GeneralUtility::_POST('check_utf8');
                 $prefs['noxmlcheck'] = GeneralUtility::_POST('no_check_xml');
                 $BE_USER->pushModuleData('l10nmgr/cm1/prefs', $prefs);
-                $subheader = $GLOBALS['LANG']->getLL('export_xml');
+                $subheader = $this->getLanguageService()->getLL('export_xml');
                 $subcontent = $this->catXMLExportImportAction($l10ncfgObj);
                 break;
             DEFAULT: // Default display:
-                $subcontent = '<input class="btn btn-default" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" />';
+                $subcontent = '<input class="btn btn-default" type="submit" value="' . $this->getLanguageService()->getLL('general.action.refresh.button.title') . '" name="_" />';
                 break;
         } //switch block
         $this->content .= '<div><h3 class="uppercase">' . $subheader . '</h3>' .
@@ -423,8 +423,8 @@ class LocalizationManager extends BaseScriptClass
         $service = GeneralUtility::makeInstance(L10nBaseService::class);
         $info = '';
         // Buttons:
-        $info .= '<input class="btn btn-success" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.save.button.title') . '" name="saveInline" onclick="return confirm(\'' . $GLOBALS['LANG']->getLL('inlineedit.save.alert.title') . '\');" />&nbsp;';
-        $info .= '<input class="btn btn-danger" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.cancel.button.title') . '" name="_" onclick="return confirm(\'' . $GLOBALS['LANG']->getLL('inlineedit.cancel.alert.title') . '\');" />';
+        $info .= '<input class="btn btn-success" type="submit" value="' . $this->getLanguageService()->getLL('general.action.save.button.title') . '" name="saveInline" onclick="return confirm(\'' . $this->getLanguageService()->getLL('inlineedit.save.alert.title') . '\');" />&nbsp;';
+        $info .= '<input class="btn btn-danger" type="submit" value="' . $this->getLanguageService()->getLL('general.action.cancel.button.title') . '" name="_" onclick="return confirm(\'' . $this->getLanguageService()->getLL('inlineedit.cancel.alert.title') . '\');" />';
         //simple init of translation object:
         /** @var $translationData TranslationData */
         $translationData = GeneralUtility::makeInstance(TranslationData::class);
@@ -460,21 +460,21 @@ class LocalizationManager extends BaseScriptClass
                 '',
                 '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUid=' . $l10ncfgObj->getId(),
                 '',
-                $GLOBALS['LANG']->getLL('export.xml.check_exports.title')
+                $this->getLanguageService()->getLL('export.xml.check_exports.title')
             ) . '<br />' .
             '<div class="form-group"><div class="checkbox"><label>' .
-            '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $GLOBALS['LANG']->getLL('import.xml.asdefaultlanguage.title') .
+            '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $this->getLanguageService()->getLL('import.xml.asdefaultlanguage.title') .
             '</label></div></div><br /><br />' .
             '</div><div class="form-section"><div class="form-group">
-                    <label>' . $GLOBALS['LANG']->getLL('export.xml.source-language.title') . '</label><br />' .
+                    <label>' . $this->getLanguageService()->getLL('export.xml.source-language.title') . '</label><br />' .
             $this->_getSelectField("export_xml_forcepreviewlanguage", '0', $_selectOptions) .
             '<br /><br /></div></div><div class="form-section">
-                <label>' . $GLOBALS['LANG']->getLL('general.action.import.upload.title') . '</label><br />' .
+                <label>' . $this->getLanguageService()->getLL('general.action.import.upload.title') . '</label><br />' .
             '<input type="file" size="60" name="uploaded_import_file" />' .
             '<br /></div><div class="form-section">' .
-            '<input class="btn btn-default btn-info" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
-            '<input class="btn btn-default btn-success" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.export.xml.button.title') . '" name="export_excel" /> ' .
-            '<input class="btn btn-default btn-warning" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.import.xml.button.title') . '" name="import_excel" />
+            '<input class="btn btn-default btn-info" type="submit" value="' . $this->getLanguageService()->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
+            '<input class="btn btn-default btn-success" type="submit" value="' . $this->getLanguageService()->getLL('general.action.export.xml.button.title') . '" name="export_excel" /> ' .
+            '<input class="btn btn-default btn-warning" type="submit" value="' . $this->getLanguageService()->getLL('general.action.import.xml.button.title') . '" name="import_excel" />
                 <br /><br /></div></div>';
         // Read uploaded file:
         if (GeneralUtility::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name'])) {
@@ -487,7 +487,7 @@ class LocalizationManager extends BaseScriptClass
             $translationData->setPreviewLanguage($this->previewLanguage);
             GeneralUtility::unlink_tempfile($uploadedTempFile);
             $service->saveTranslation($l10ncfgObj, $translationData);
-            $info .= '<br/><br/>' . $this->moduleTemplate->icons(1) . $GLOBALS['LANG']->getLL('import.success.message') . '<br/><br/>';
+            $info .= '<br/><br/>' . $this->moduleTemplate->icons(1) . $this->getLanguageService()->getLL('import.success.message') . '<br/><br/>';
         }
         // If export of XML is asked for, do that (this will exit and push a file for download)
         if (GeneralUtility::_POST('export_excel')) {
@@ -509,10 +509,10 @@ class LocalizationManager extends BaseScriptClass
                 /** @var $flashMessage FlashMessage */
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class,
                     '###MESSAGE###',
-                    $GLOBALS['LANG']->getLL('export.process.duplicate.title'), FlashMessage::INFO);
+                    $this->getLanguageService()->getLL('export.process.duplicate.title'), FlashMessage::INFO);
                 $info .= str_replace(
                     '###MESSAGE###',
-                    $GLOBALS['LANG']->getLL('export.process.duplicate.message'),
+                    $this->getLanguageService()->getLL('export.process.duplicate.message'),
                     GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
                     ->resolve()
                     ->render([$flashMessage])
@@ -524,20 +524,20 @@ class LocalizationManager extends BaseScriptClass
                     // Prepare a success message for display
                     $link = sprintf('<a href="%s" target="_blank">%s</a>',
                         GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $filename, $filename);
-                    $title = $GLOBALS['LANG']->getLL('export.download.success');
+                    $title = $this->getLanguageService()->getLL('export.download.success');
                     $message = '###MESSAGE###';
                     $status = FlashMessage::OK;
                     $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
                     $info .= str_replace(
                         '###MESSAGE###',
-                        sprintf($GLOBALS['LANG']->getLL('export.download.success.detail'), $link),
+                        sprintf($this->getLanguageService()->getLL('export.download.success.detail'), $link),
                         GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
                             ->resolve()
                             ->render([$flashMessage])
                     );
                 } catch (Exception $e) {
                     // Prepare an error message for display
-                    $title = $GLOBALS['LANG']->getLL('export.download.error');
+                    $title = $this->getLanguageService()->getLL('export.download.error');
                     $message = '###MESSAGE###';
                     $status = FlashMessage::ERROR;
                     $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
@@ -598,19 +598,19 @@ class LocalizationManager extends BaseScriptClass
         $service = GeneralUtility::makeInstance(L10nBaseService::class);
         $menuItems = array(
             '0' => array(
-                'label' => $GLOBALS['LANG']->getLL('export.xml.headline.title'),
+                'label' => $this->getLanguageService()->getLL('export.xml.headline.title'),
                 'content' => $this->getTabContentXmlExport()
             ),
             '1' => array(
-                'label' => $GLOBALS['LANG']->getLL('import.xml.headline.title'),
+                'label' => $this->getLanguageService()->getLL('import.xml.headline.title'),
                 'content' => $this->getTabContentXmlImport()
             ),
             '2' => array(
-                'label' => $GLOBALS['LANG']->getLL('file.settings.downloads.title'),
+                'label' => $this->getLanguageService()->getLL('file.settings.downloads.title'),
                 'content' => $this->getTabContentXmlDownloads()
             ),
             '3' => array(
-                'label' => $GLOBALS['LANG']->getLL('l10nmgr.documentation.title'),
+                'label' => $this->getLanguageService()->getLL('l10nmgr.documentation.title'),
                 'content' => '<a class="btn btn-success" href="/' . ExtensionManagementUtility::siteRelPath('l10nmgr') . 'Documentation/manual.sxw" target="_new">Download</a>'
             )
         );
@@ -629,7 +629,7 @@ class LocalizationManager extends BaseScriptClass
             }
             if (GeneralUtility::_POST('import_oldformat') == '1') {
                 //Support for the old Format of XML Import (without pageGrp element)
-                $actionInfo .= $GLOBALS['LANG']->getLL('import.xml.old-format.message');
+                $actionInfo .= $this->getLanguageService()->getLL('import.xml.old-format.message');
                 $translationData = $factory->getTranslationDataFromOldFormatCATXMLFile($uploadedTempFile);
                 $translationData->setLanguage($this->sysLanguage);
                 $translationData->setPreviewLanguage($this->previewLanguage);
@@ -641,17 +641,17 @@ class LocalizationManager extends BaseScriptClass
                 $importManager = GeneralUtility::makeInstance(CatXmlImportManager::class, $uploadedTempFile,
                     $this->sysLanguage, $xmlString = "");
                 if ($importManager->parseAndCheckXMLFile() === false) {
-                    $actionInfo .= '<br/><br/>' . $this->moduleTemplate->header($GLOBALS['LANG']->getLL('import.error.title')) . $importManager->getErrorMessages();
+                    $actionInfo .= '<br/><br/>' . $this->moduleTemplate->header($this->getLanguageService()->getLL('import.error.title')) . $importManager->getErrorMessages();
                 } else {
                     if (GeneralUtility::_POST('import_delL10N') == '1') {
-                        $actionInfo .= $GLOBALS['LANG']->getLL('import.xml.delL10N.message') . '<br/>';
+                        $actionInfo .= $this->getLanguageService()->getLL('import.xml.delL10N.message') . '<br/>';
                         $delCount = $importManager->delL10N($importManager->getDelL10NDataFromCATXMLNodes($importManager->xmlNodes));
-                        $actionInfo .= sprintf($GLOBALS['LANG']->getLL('import.xml.delL10N.count.message'),
+                        $actionInfo .= sprintf($this->getLanguageService()->getLL('import.xml.delL10N.count.message'),
                                 $delCount) . '<br/><br/>';
                     }
                     if (GeneralUtility::_POST('make_preview_link') == '1') {
                         $pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
-                        $actionInfo .= '<b>' . $GLOBALS['LANG']->getLL('import.xml.preview_links.title') . '</b><br/>';
+                        $actionInfo .= '<b>' . $this->getLanguageService()->getLL('import.xml.preview_links.title') . '</b><br/>';
                         /** @var $mkPreviewLinks MkPreviewLinkService */
                         $mkPreviewLinks = GeneralUtility::makeInstance(MkPreviewLinkService::class,
                             $t3_workspaceId = $importManager->headerData['t3_workspaceId'],
@@ -667,7 +667,7 @@ class LocalizationManager extends BaseScriptClass
                     //$actionInfo.="<pre>".var_export($GLOBALS['BE_USER'],true)."</pre>";
                     unset($importManager);
                     $service->saveTranslation($l10ncfgObj, $translationData);
-                    $actionInfo .= '<br/>' . $this->moduleTemplate->icons(-1) . $GLOBALS['LANG']->getLL('import.xml.done.message') . '<br/><br/>(Command count:' . $service->lastTCEMAINCommandsCount . ')';
+                    $actionInfo .= '<br/>' . $this->moduleTemplate->icons(-1) . $this->getLanguageService()->getLL('import.xml.done.message') . '<br/><br/>(Command count:' . $service->lastTCEMAINCommandsCount . ')';
                 }
             }
             GeneralUtility::unlink_tempfile($uploadedTempFile);
@@ -694,10 +694,10 @@ class LocalizationManager extends BaseScriptClass
                 /** @var $flashMessage FlashMessage */
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class,
                     '###MESSAGE###',
-                    $GLOBALS['LANG']->getLL('export.process.duplicate.title'), FlashMessage::INFO);
+                    $this->getLanguageService()->getLL('export.process.duplicate.title'), FlashMessage::INFO);
                 $actionInfo .= str_replace(
                     '###MESSAGE###',
-                    $GLOBALS['LANG']->getLL('export.process.duplicate.message'),
+                    $this->getLanguageService()->getLL('export.process.duplicate.message'),
                     GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
                     ->resolve()
                     ->render([$flashMessage])
@@ -711,13 +711,13 @@ class LocalizationManager extends BaseScriptClass
                         // Send a mail notification
                         $this->emailNotification($filename, $l10ncfgObj, $this->sysLanguage);
                         // Prepare a success message for display
-                        $title = $GLOBALS['LANG']->getLL('export.ftp.success');
+                        $title = $this->getLanguageService()->getLL('export.ftp.success');
                         $message = '###MESSAGE###';
                         $status = FlashMessage::OK;
                         $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
                         $actionInfo .= str_replace(
                             '###MESSAGE###',
-                            sprintf($GLOBALS['LANG']->getLL('export.ftp.success.detail'),
+                            sprintf($this->getLanguageService()->getLL('export.ftp.success.detail'),
                                 $this->lConf['ftp_server_path'] . $filename),
                             GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
                                 ->resolve()
@@ -725,7 +725,7 @@ class LocalizationManager extends BaseScriptClass
                         );
                     } catch (Exception $e) {
                         // Prepare an error message for display
-                        $title = $GLOBALS['LANG']->getLL('export.ftp.error');
+                        $title = $this->getLanguageService()->getLL('export.ftp.error');
                         $message = '###MESSAGE###';
                         $status = FlashMessage::ERROR;
                         $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
@@ -746,20 +746,20 @@ class LocalizationManager extends BaseScriptClass
                         // Prepare a success message for display
                         $link = sprintf('<a href="%s" target="_blank">%s</a>',
                             GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $filename, $filename);
-                        $title = $GLOBALS['LANG']->getLL('export.download.success');
+                        $title = $this->getLanguageService()->getLL('export.download.success');
                         $message = '###MESSAGE###';
                         $status = FlashMessage::OK;
                         $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
                         $actionInfo .= str_replace(
                             '###MESSAGE###',
-                            sprintf($GLOBALS['LANG']->getLL('export.download.success.detail'), $link),
+                            sprintf($this->getLanguageService()->getLL('export.download.success.detail'), $link),
                             GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
                                 ->resolve()
                                 ->render([$flashMessage])
                         );
                     } catch (Exception $e) {
                         // Prepare an error message for display
-                        $title = $GLOBALS['LANG']->getLL('export.download.error');
+                        $title = $this->getLanguageService()->getLL('export.download.error');
                         $message = '###MESSAGE###';
                         $status = FlashMessage::ERROR;
                         $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $message, $title, $status);
@@ -778,7 +778,7 @@ class LocalizationManager extends BaseScriptClass
             }
         }
         if (!empty($actionInfo)) {
-            $info .= $this->moduleTemplate->header($GLOBALS['LANG']->getLL('misc.messages.title'));
+            $info .= $this->moduleTemplate->header($this->getLanguageService()->getLL('misc.messages.title'));
             $info .= $actionInfo;
         }
         // $info .= '</div>';
@@ -794,25 +794,25 @@ class LocalizationManager extends BaseScriptClass
         $_selectOptions = $_selectOptions + $this->MOD_MENU["lang"];
         $tabContentXmlExport = '<div class="form-section">' .
             '<div class="form-group"><div class="checkbox"><label>' .
-            '<input type="checkbox" value="1" name="check_exports" /> ' . $GLOBALS['LANG']->getLL('export.xml.check_exports.title') .
+            '<input type="checkbox" value="1" name="check_exports" /> ' . $this->getLanguageService()->getLL('export.xml.check_exports.title') .
             '</label></div></div><br />' .
             '<div class="form-group"><div class="checkbox"><label>' .
-            '<input type="checkbox" value="1" checked="checked" name="no_check_xml" /> ' . $GLOBALS['LANG']->getLL('export.xml.no_check_xml.title') .
+            '<input type="checkbox" value="1" checked="checked" name="no_check_xml" /> ' . $this->getLanguageService()->getLL('export.xml.no_check_xml.title') .
             '</label></div></div><br />' .
             '<div class="form-group"><div class="checkbox"><label>' .
-            '<input type="checkbox" value="1" name="check_utf8" /> ' . $GLOBALS['LANG']->getLL('export.xml.checkUtf8.title') .
+            '<input type="checkbox" value="1" name="check_utf8" /> ' . $this->getLanguageService()->getLL('export.xml.checkUtf8.title') .
             '</label></div></div><br /><br />' .
             '</div><div class="form-section">' .
             '<div class="form-group">' .
-            '<label>' . $GLOBALS['LANG']->getLL('export.xml.source-language.title') . '</label><br />' .
+            '<label>' . $this->getLanguageService()->getLL('export.xml.source-language.title') . '</label><br />' .
             $this->_getSelectField("export_xml_forcepreviewlanguage", '0', $_selectOptions) .
             '<br /><br /></div></div>';
         // Add the option to send to FTP server, if FTP information is defined
         if (!empty($this->lConf['ftp_server']) && !empty($this->lConf['ftp_server_username']) && !empty($this->lConf['ftp_server_password'])) {
             $tabContentXmlExport .= '<input type="checkbox" value="1" name="ftp_upload" id="tx_l10nmgr_ftp_upload" />
-                <label for="tx_l10nmgr_ftp_upload">' . $GLOBALS['LANG']->getLL('export.xml.ftp.title') . '</label>';
+                <label for="tx_l10nmgr_ftp_upload">' . $this->getLanguageService()->getLL('export.xml.ftp.title') . '</label>';
         }
-        $tabContentXmlExport .= '<div class="form-section"><input class="btn btn-default btn-info" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
+        $tabContentXmlExport .= '<div class="form-section"><input class="btn btn-default btn-info" type="submit" value="' . $this->getLanguageService()->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
             '<input class="btn btn-default btn-success" type="submit" value="Export" name="export_xml" /><br class="clearfix">&nbsp;</div>';
         return $tabContentXmlExport;
     }
@@ -824,19 +824,19 @@ class LocalizationManager extends BaseScriptClass
     {
         $tabContentXmlImport = '<div class="form-section">' .
             '<div class="form-group"><div class="checkbox"><label>' .
-            '<input type="checkbox" value="1" name="make_preview_link" /> ' . $GLOBALS['LANG']->getLL('import.xml.make_preview_link.title') .
+            '<input type="checkbox" value="1" name="make_preview_link" /> ' . $this->getLanguageService()->getLL('import.xml.make_preview_link.title') .
             '</label></div></div><br />' .
             '<div class="form-group"><div class="checkbox"><label>' .
-            '<input type="checkbox" value="1" name="import_delL10N" /> ' . $GLOBALS['LANG']->getLL('import.xml.delL10N.title') .
+            '<input type="checkbox" value="1" name="import_delL10N" /> ' . $this->getLanguageService()->getLL('import.xml.delL10N.title') .
             '</label></div></div><br />' .
             '<div class="form-group"><div class="checkbox"><label>' .
-            '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $GLOBALS['LANG']->getLL('import.xml.asdefaultlanguage.title') .
+            '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $this->getLanguageService()->getLL('import.xml.asdefaultlanguage.title') .
             '</label></div></div><br /><br /></div>' .
             '<div class="form-section">' .
             '<input type="file" size="60" name="uploaded_import_file" /><br />' .
             '</div>' .
             '<div class="form-section">' .
-            '<input class="btn btn-info" type="submit" value="' . $GLOBALS['LANG']->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
+            '<input class="btn btn-info" type="submit" value="' . $this->getLanguageService()->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
             '<input class="btn btn-warning" type="submit" value="Import" name="import_xml" />' .
             '<br class="clearfix">&nbsp;</div>';
         return $tabContentXmlImport;
@@ -859,13 +859,13 @@ class LocalizationManager extends BaseScriptClass
             'sdltrados2011-2014' => 'TYPO3_ConfigurationManager_v3.6.free.sdlftsettings',
             'sdlpassolo' => 'SDLPassolo.xfg',
         );
-        $tabContentXmlDownloads = '<h4>' . $GLOBALS['LANG']->getLL('file.settings.available.title') . '</h4><ul>';
+        $tabContentXmlDownloads = '<h4>' . $this->getLanguageService()->getLL('file.settings.available.title') . '</h4><ul>';
         foreach ($allowedSettingFiles as $settingId => $settingFileName) {
             $absoluteFileName = GeneralUtility::getFileAbsFileName('EXT:l10nmgr/Configuration/Settings/' . $settingFileName);
             $currentFile = GeneralUtility::resolveBackPath($BACK_PATH . ExtensionManagementUtility::siteRelPath('l10nmgr') . 'Configuration/Settings/' . $settingFileName);
             if (is_file($absoluteFileName) && is_readable($absoluteFileName)) {
                 $size = GeneralUtility::formatSize((int)filesize($absoluteFileName), ' Bytes| KB| MB| GB');
-                $tabContentXmlDownloads .= '<li><a class="t3-link" href="' . str_replace('%2F', '/', rawurlencode($currentFile)) . '" title="' . $GLOBALS['LANG']->getLL('file.settings.download.title') . '" target="_blank">' . $GLOBALS['LANG']->getLL('file.settings.' . $settingId . '.title') . ' (' . $size . ')' . '</a></li>';
+                $tabContentXmlDownloads .= '<li><a class="t3-link" href="' . str_replace('%2F', '/', rawurlencode($currentFile)) . '" title="' . $this->getLanguageService()->getLL('file.settings.download.title') . '" target="_blank">' . $this->getLanguageService()->getLL('file.settings.' . $settingId . '.title') . ' (' . $size . ')' . '</a></li>';
             }
         }
         $tabContentXmlDownloads .= '</ul>';
@@ -895,16 +895,16 @@ class LocalizationManager extends BaseScriptClass
                     ftp_close($connection);
                 } else {
                     ftp_close($connection);
-                    throw new Exception(sprintf($GLOBALS['LANG']->getLL('export.ftp.upload_failed'), $filename,
+                    throw new Exception(sprintf($this->getLanguageService()->getLL('export.ftp.upload_failed'), $filename,
                         $this->lConf['ftp_server_path']), 1326906926);
                 }
             } else {
                 ftp_close($connection);
-                throw new Exception(sprintf($GLOBALS['LANG']->getLL('export.ftp.login_failed'),
+                throw new Exception(sprintf($this->getLanguageService()->getLL('export.ftp.login_failed'),
                     $this->lConf['ftp_server_username']), 1326906772);
             }
         } else {
-            throw new Exception($GLOBALS['LANG']->getLL('export.ftp.connection_failed'), 1326906675);
+            throw new Exception($this->getLanguageService()->getLL('export.ftp.connection_failed'), 1326906675);
         }
         // If everything went well, return the file's base name
         return $xmlFileName;
@@ -936,25 +936,25 @@ class LocalizationManager extends BaseScriptClass
             // Collect mail data
             $fromMail = $this->lConf['email_sender'];
             $fromName = $this->lConf['email_sender_name'];
-            $subject = sprintf($GLOBALS['LANG']->getLL('email.suject.msg'), $sourceLang, $targetLang,
+            $subject = sprintf($this->getLanguageService()->getLL('email.suject.msg'), $sourceLang, $targetLang,
                 $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
             // Assemble message body
             $message = array(
-                'msg1' => $GLOBALS['LANG']->getLL('email.greeting.msg'),
+                'msg1' => $this->getLanguageService()->getLL('email.greeting.msg'),
                 'msg2' => '',
-                'msg3' => sprintf($GLOBALS['LANG']->getLL('email.new_translation_job.msg'), $sourceLang, $targetLang,
+                'msg3' => sprintf($this->getLanguageService()->getLL('email.new_translation_job.msg'), $sourceLang, $targetLang,
                     $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']),
-                'msg4' => $GLOBALS['LANG']->getLL('email.info.msg'),
-                'msg5' => $GLOBALS['LANG']->getLL('email.info.import.msg'),
+                'msg4' => $this->getLanguageService()->getLL('email.info.msg'),
+                'msg5' => $this->getLanguageService()->getLL('email.info.import.msg'),
                 'msg6' => '',
-                'msg7' => $GLOBALS['LANG']->getLL('email.goodbye.msg'),
+                'msg7' => $this->getLanguageService()->getLL('email.goodbye.msg'),
                 'msg8' => $fromName,
                 'msg9' => '--',
-                'msg10' => $GLOBALS['LANG']->getLL('email.info.exportef_file.msg'),
+                'msg10' => $this->getLanguageService()->getLL('email.info.exportef_file.msg'),
                 'msg11' => $xmlFileName,
             );
             if ($this->lConf['email_attachment']) {
-                $message['msg3'] = sprintf($GLOBALS['LANG']->getLL('email.new_translation_job_attached.msg'),
+                $message['msg3'] = sprintf($this->getLanguageService()->getLL('email.new_translation_job_attached.msg'),
                     $sourceLang, $targetLang, $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
             }
             $msg = implode(chr(10), $message);
@@ -984,11 +984,11 @@ class LocalizationManager extends BaseScriptClass
         $this->loadExtConf();
         $this->MOD_MENU = Array(
             'action' => array(
-                '' => $GLOBALS['LANG']->getLL('general.action.blank.title'),
-                'link' => $GLOBALS['LANG']->getLL('general.action.edit.link.title'),
-                'inlineEdit' => $GLOBALS['LANG']->getLL('general.action.edit.inline.title'),
-                'export_excel' => $GLOBALS['LANG']->getLL('general.action.export.excel.title'),
-                'export_xml' => $GLOBALS['LANG']->getLL('general.action.export.xml.title'),
+                '' => $this->getLanguageService()->getLL('general.action.blank.title'),
+                'link' => $this->getLanguageService()->getLL('general.action.edit.link.title'),
+                'inlineEdit' => $this->getLanguageService()->getLL('general.action.edit.inline.title'),
+                'export_excel' => $this->getLanguageService()->getLL('general.action.export.excel.title'),
+                'export_xml' => $this->getLanguageService()->getLL('general.action.export.xml.title'),
             ),
             'lang' => array(),
             'onlyChangedContent' => '',
@@ -1057,7 +1057,7 @@ class LocalizationManager extends BaseScriptClass
     protected function getButtons()
     {
         $buttons = array();
-        $buttons['reload'] = '<a href="' . $GLOBALS['MCONF']['_'] . '" title="' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xml:labels.reload',
+        $buttons['reload'] = '<a href="' . $GLOBALS['MCONF']['_'] . '" title="' . $this->getLanguageService()->sL('LLL:EXT:lang/locallang_core.xml:labels.reload',
                 true) . '">' . $this->iconFactory->getIcon('actions-system-refresh') . '</a>';
         // Shortcut
         if ($GLOBALS['BE_USER']->mayMakeShortcut()) {

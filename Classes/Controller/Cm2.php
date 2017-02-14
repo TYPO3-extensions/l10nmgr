@@ -41,8 +41,10 @@ use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Module\BaseScriptClass;
 use TYPO3\CMS\Backend\Template\DocumentTemplate;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Translation management tool
@@ -53,6 +55,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Cm2 extends BaseScriptClass
 {
+    /**
+     * @var LanguageService
+     */
+    protected $languageService;
+    
     /**
      * @var DocumentTemplate
      */
@@ -77,7 +84,7 @@ class Cm2 extends BaseScriptClass
      */
     function main()
     {
-        global $LANG, $BACK_PATH;
+        global $BACK_PATH;
         
         // Draw the header.
         $this->module = GeneralUtility::makeInstance(DocumentTemplate::class);
@@ -95,8 +102,8 @@ class Cm2 extends BaseScriptClass
 		';
         
         // Header:
-        $this->content .= $this->module->startPage($LANG->getLL('title'));
-        $this->content .= $this->module->header($LANG->getLL('title'));
+        $this->content .= $this->module->startPage($this->getLanguageService()->getLL('title'));
+        $this->content .= $this->module->header($this->getLanguageService()->getLL('title'));
         
         $this->content .= '<hr />';
         
@@ -286,6 +293,7 @@ class Cm2 extends BaseScriptClass
     {
         parent::menuConfig();
     }
+    
 }
 
 ?>

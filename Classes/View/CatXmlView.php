@@ -58,7 +58,7 @@ class CatXmlView extends AbstractExportView
      */
     function render()
     {
-        global $LANG, $BE_USER;
+        global $BE_USER;
         
         $sysLang = $this->sysLang;
         $accumObj = $this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
@@ -139,13 +139,13 @@ class CatXmlView extends AbstractExportView
                                                 if ($params['noxmlcheck'] == '1') {
                                                     $output[] = "\t\t" . '<data table="' . $table . '" elementUid="' . $elementUid . '" key="' . $key . '"><![CDATA[' . $dataForTranslation . ']]></data>' . "\n";
                                                 } else {
-                                                    $this->setInternalMessage($LANG->getLL('export.process.error.invalid.message'),
+                                                    $this->setInternalMessage($this->getLanguageService()->getLL('export.process.error.invalid.message'),
                                                         $elementUid . '/' . $table . '/' . $key);
                                                 }
                                             }
                                         }
                                     } else {
-                                        $this->setInternalMessage($LANG->getLL('export.process.error.empty.message'),
+                                        $this->setInternalMessage($this->getLanguageService()->getLL('export.process.error.empty.message'),
                                             $elementUid . '/' . $table . '/' . $key);
                                     }
                                 }

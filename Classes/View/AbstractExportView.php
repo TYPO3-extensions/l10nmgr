@@ -21,6 +21,7 @@ namespace Localizationteam\L10nmgr\View;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageRendererResolver;
@@ -28,6 +29,7 @@ use TYPO3\CMS\Core\Utility\DiffUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Localizationteam\L10nmgr\Model\L10nConfiguration;
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Abstract class for all export views
@@ -38,6 +40,11 @@ use Localizationteam\L10nmgr\Model\L10nConfiguration;
  **/
 abstract class AbstractExportView
 {
+    
+    /**
+     * @var LanguageService
+     */
+    protected $languageService;
     
     /**
      * @var  L10nConfiguration The language configuration object
@@ -238,7 +245,6 @@ abstract class AbstractExportView
      */
     function renderExports()
     {
-        global $LANG;
         $content = array();
         $exports = $this->fetchExports();
         
@@ -269,9 +275,9 @@ abstract class AbstractExportView
 	<tbody>
 %s
 	</tbody>
-</table>', $LANG->getLL('export.overview.date.label'), $LANG->getLL('export.overview.configuration.label'),
-            $LANG->getLL('export.overview.type.label'), $LANG->getLL('export.overview.targetlanguage.label'),
-            $LANG->getLL('export.overview.filename.label'), implode(chr(10), $content));
+</table>', $this->getLanguageService()->getLL('export.overview.date.label'), $this->getLanguageService()->getLL('export.overview.configuration.label'),
+            $this->getLanguageService()->getLL('export.overview.type.label'), $this->getLanguageService()->getLL('export.overview.targetlanguage.label'),
+            $this->getLanguageService()->getLL('export.overview.filename.label'), implode(chr(10), $content));
         
         return $out;
     }
@@ -305,7 +311,6 @@ abstract class AbstractExportView
      */
     function renderExportsCli()
     {
-        global $LANG;
         $content = array();
         $exports = $this->fetchExports();
         
@@ -315,9 +320,9 @@ abstract class AbstractExportView
                 sprintf('%suploads/tx_l10nmgr/jobs/out/%s', PATH_site, $exportData['filename']));
         }
         
-        $out = sprintf('%-15s%-15s%-15s%-15s%s%s%s', $LANG->getLL('export.overview.date.label'),
-            $LANG->getLL('export.overview.configuration.label'), $LANG->getLL('export.overview.type.label'),
-            $LANG->getLL('export.overview.targetlanguage.label'), $LANG->getLL('export.overview.filename.label'), LF,
+        $out = sprintf('%-15s%-15s%-15s%-15s%s%s%s', $this->getLanguageService()->getLL('export.overview.date.label'),
+            $this->getLanguageService()->getLL('export.overview.configuration.label'), $this->getLanguageService()->getLL('export.overview.type.label'),
+            $this->getLanguageService()->getLL('export.overview.targetlanguage.label'), $this->getLanguageService()->getLL('export.overview.filename.label'), LF,
             implode(LF, $content));
         
         return $out;
@@ -376,7 +381,7 @@ abstract class AbstractExportView
                 }
                 /** @var $flashMessage FlashMessage */
                 $flashMessage = GeneralUtility::makeInstance(FlashMessage::class, $messageBody,
-                    $GLOBALS['LANG']->getLL('export.ftp.warnings'), FlashMessage::WARNING);
+                    $this->getLanguageService()->getLL('export.ftp.warnings'), FlashMessage::WARNING);
                 $ret .= GeneralUtility::makeInstance(FlashMessageRendererResolver::class)
                     ->resolve()
                     ->render([$flashMessage]);
@@ -412,4 +417,31 @@ abstract class AbstractExportView
             'key' => $key
         );
     }
+    
+    /**
+     * getter/setter for LanguageService object
+     *
+     * @return LanguageService $languageService
+     */
+    protected function getLanguageService()
+    {
+        if (!$this->languageService instanceof LanguageService) {
+            $this->languageService = GeneralUtility::makeInstance(LanguageService::class);
+        }
+        if ($this->getBackendUser()) {
+            $this->languageService->init($this->getBackendUser()->uc['lang']);
+        }
+        
+        return $this->languageService;
+    }
+    
+    /**
+     * Returns the Backend User
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+
 }

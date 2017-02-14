@@ -58,7 +58,7 @@ class TranslationTasks extends BaseScriptClass
     {
         $this->MCONF['name'] = 'ConfigurationManager_TranslationTasks';
         $GLOBALS['BE_USER']->modAccess($this->MCONF, 1);
-        $GLOBALS['LANG']->includeLLFile("EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang.xlf");
+        $this->getLanguageService()->includeLLFile("EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang.xlf");
         parent::init();
     }
     
@@ -89,8 +89,8 @@ class TranslationTasks extends BaseScriptClass
         $this->module->bodyTagAdditions = $CMparts[1];
         $this->module->postCode .= $CMparts[2];
         
-        $this->content .= $this->module->startPage($GLOBALS['LANG']->getLL("title"));
-        $this->content .= $this->module->header($GLOBALS['LANG']->getLL("title"));
+        $this->content .= $this->module->startPage($this->getLanguageService()->getLL("title"));
+        $this->content .= $this->module->header($this->getLanguageService()->getLL("title"));
         $this->content .= '<div class="topspace5"></div>';
         
         // Render content:

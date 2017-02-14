@@ -20,6 +20,9 @@ namespace Localizationteam\L10nmgr\View;
  ***************************************************************/
 use Localizationteam\L10nmgr\Model\L10nConfiguration;
 use TYPO3\CMS\Backend\Template\DocumentTemplate;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * l10nmgr detail view:
@@ -32,6 +35,11 @@ use TYPO3\CMS\Backend\Template\DocumentTemplate;
  */
 class L10nConfigurationDetailView
 {
+    
+    /**
+     * @var LanguageService
+     */
+    protected $languageService;
     
     /**
      * @var L10nConfiguration
@@ -63,11 +71,10 @@ class L10nConfigurationDetailView
      **/
     function render()
     {
-        global $LANG;
         $content = '';
         
         if (!$this->_hasValidConfig()) {
-            return $LANG->getLL('general.export.configuration.error.title');
+            return $this->getLanguageService()->getLL('general.export.configuration.error.title');
         }
         
         $configurationSettings = '
@@ -76,20 +83,20 @@ class L10nConfigurationDetailView
 						<th colspan="4">' . htmlspecialchars($this->l10ncfgObj->getData('title')) . ' [' . $this->l10ncfgObj->getData('uid') . ']</th>
 					</tr>
 					<tr class="db_list_normal">
-						<th>' . $LANG->getLL('general.list.headline.depth.title') . ':</h>
+						<th>' . $this->getLanguageService()->getLL('general.list.headline.depth.title') . ':</h>
 						<td>' . htmlspecialchars($this->l10ncfgObj->getData('depth')) . '&nbsp;</td>
-						<th>' . $LANG->getLL('general.list.headline.tables') . ':</th>
+						<th>' . $this->getLanguageService()->getLL('general.list.headline.tables') . ':</th>
 						<td>' . htmlspecialchars($this->l10ncfgObj->getData('tablelist')) . '&nbsp;</td>
 					</tr>
 					<tr class="db_list_normal">
-						<th>' . $LANG->getLL('general.list.headline.exclude.title') . ':</th>
+						<th>' . $this->getLanguageService()->getLL('general.list.headline.exclude.title') . ':</th>
 						<td>' . htmlspecialchars($this->l10ncfgObj->getData('exclude')) . '&nbsp;</td>
-						<th>' . $LANG->getLL('general.list.headline.include.title') . ':</th>
+						<th>' . $this->getLanguageService()->getLL('general.list.headline.include.title') . ':</th>
 						<td>' . htmlspecialchars($this->l10ncfgObj->getData('include')) . '&nbsp;</td>
 					</tr>
 				</table>';
         
-        $content .= '<div><h2 class="uppercase">' . $LANG->getLL('general.export.configuration.title') . '</h2>' . $configurationSettings;
+        $content .= '<div><h2 class="uppercase">' . $this->getLanguageService()->getLL('general.export.configuration.title') . '</h2>' . $configurationSettings;
         
         return $content;
     }
@@ -107,4 +114,31 @@ class L10nConfigurationDetailView
             return false;
         }
     }
+    
+    /**
+     * getter/setter for LanguageService object
+     *
+     * @return LanguageService $languageService
+     */
+    protected function getLanguageService()
+    {
+        if (!$this->languageService instanceof LanguageService) {
+            $this->languageService = GeneralUtility::makeInstance(LanguageService::class);
+        }
+        if ($this->getBackendUser()) {
+            $this->languageService->init($this->getBackendUser()->uc['lang']);
+        }
+        
+        return $this->languageService;
+    }
+    
+    /**
+     * Returns the Backend User
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+    
 }

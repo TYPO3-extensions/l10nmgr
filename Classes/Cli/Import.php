@@ -31,17 +31,12 @@ use Localizationteam\L10nmgr\Model\MkPreviewLinkService;
 use Localizationteam\L10nmgr\Model\TranslationData;
 use Localizationteam\L10nmgr\Model\TranslationDataFactory;
 use Localizationteam\L10nmgr\Zip;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Controller\CommandLineController;
 use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Lang\LanguageService;
-
-// Load language support
-/* @var $lang LanguageService */
-$lang = GeneralUtility::makeInstance(LanguageService::class);
-$fileRef = 'EXT:l10nmgr/Resources/Private/Language/Cli/locallang.xml';
-$lang->includeLLFile($fileRef);
 
 /**
  * Class for handling import of translations from the command-line
@@ -53,6 +48,11 @@ $lang->includeLLFile($fileRef);
  */
 class Import extends CommandLineController
 {
+    
+    /**
+     * @var LanguageService
+     */
+    protected $languageService;
     
     /**
      * @var array Extension's configuration as from the EM
@@ -142,7 +142,6 @@ class Import extends CommandLineController
      */
     public function cli_main($argv)
     {
-        global $LANG;
         // Parse the command-line arguments
         $this->initializeCallParameters();
         
@@ -191,7 +190,7 @@ class Import extends CommandLineController
         $end = microtime(true);
         $time = $end - $start;
         $this->cli_echo($msg . LF);
-        $this->cli_echo(sprintf($LANG->getLL('import.process.duration.message'), $time) . LF);
+        $this->cli_echo(sprintf($this->getLanguageService()->getLL('import.process.duration.message'), $time) . LF);
         
         // Send reporting mail
         $this->sendMailNotification();
@@ -302,7 +301,6 @@ class Import extends CommandLineController
     protected function importCATXML()
     {
         
-        global $LANG;
         $out = '';
         $error = '';
         
@@ -323,7 +321,7 @@ class Import extends CommandLineController
             $tmp = var_export($importManager->headerData, true);
             $tmp = str_replace("\n", '', $tmp);
             $error .= $tmp;
-            $error .= $LANG->getLL('import.manager.error.parsing.xmlstring.message');
+            $error .= $this->getLanguageService()->getLL('import.manager.error.parsing.xmlstring.message');
             $this->cli_echo($error);
             exit;
         } else {
@@ -385,7 +383,6 @@ class Import extends CommandLineController
     protected function previewSource()
     {
         
-        global $LANG;
         $out = '';
         $error = '';
         
@@ -398,7 +395,7 @@ class Import extends CommandLineController
             $tmp = var_export($importManager->headerData, true);
             $tmp = str_replace("\n", '', $tmp);
             $error .= $tmp;
-            $error .= $LANG->getLL('import.manager.error.parsing.xmlstring.message');
+            $error .= $this->getLanguageService()->getLL('import.manager.error.parsing.xmlstring.message');
             $this->cli_echo($error);
         } else {
             $pageIds = $importManager->getPidsFromCATXMLNodes($importManager->xmlNodes);
@@ -522,7 +519,7 @@ class Import extends CommandLineController
         
         // Report non-fatal errors that happened
         if (count($this->errors) > 0) {
-            $out .= "\n\n" . $GLOBALS['LANG']->getLL('import.nonfatal.errors') . "\n";
+            $out .= "\n\n" . $this->getLanguageService()->getLL('import.nonfatal.errors') . "\n";
             foreach ($this->errors as $error) {
                 $out .= "\t" . $error . "\n";
             }
@@ -697,13 +694,13 @@ class Import extends CommandLineController
         $xmlNodes = GeneralUtility::xml2tree(str_replace('&nbsp;', '&#160;', $fileContent), 3);
         
         if (!is_array($xmlNodes)) {
-            throw new Exception($GLOBALS['LANG']->getLL('import.manager.error.parsing.xml2tree.message') . $xmlNodes,
+            throw new Exception($this->getLanguageService()->getLL('import.manager.error.parsing.xml2tree.message') . $xmlNodes,
                 1322480030);
         }
         
         $headerInformationNodes = $xmlNodes['TYPO3L10N'][0]['ch']['head'][0]['ch'];
         if (!is_array($headerInformationNodes)) {
-            throw new Exception($GLOBALS['LANG']->getLL('import.manager.error.missing.head.message'), 1322480056);
+            throw new Exception($this->getLanguageService()->getLL('import.manager.error.missing.head.message'), 1322480056);
         }
         
         return $headerInformationNodes;
@@ -743,19 +740,19 @@ class Import extends CommandLineController
                     '', '', 'uid');
                 
                 // Start assembling the mail message
-                $message = sprintf($GLOBALS['LANG']->getLL('import.mail.intro'),
+                $message = sprintf($this->getLanguageService()->getLL('import.mail.intro'),
                         date('d.m.Y H:i:s', $GLOBALS['EXEC_TIME']),
                         $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']) . "\n\n";
                 foreach ($this->filesImported as $file => $fileInformation) {
                     if (isset($fileInformation['error'])) {
-                        $status = $GLOBALS['LANG']->getLL('import.mail.error');
-                        $message .= '[' . $status . '] ' . sprintf($GLOBALS['LANG']->getLL('import.mail.file'),
+                        $status = $this->getLanguageService()->getLL('import.mail.error');
+                        $message .= '[' . $status . '] ' . sprintf($this->getLanguageService()->getLL('import.mail.file'),
                                 $file) . "\n";
-                        $message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.import.failed'),
+                        $message .= "\t" . sprintf($this->getLanguageService()->getLL('import.mail.import.failed'),
                                 $fileInformation['error']) . "\n";
                     } else {
-                        $status = $GLOBALS['LANG']->getLL('import.mail.ok');
-                        $message .= '[' . $status . '] ' . sprintf($GLOBALS['LANG']->getLL('import.mail.file'),
+                        $status = $this->getLanguageService()->getLL('import.mail.ok');
+                        $message .= '[' . $status . '] ' . sprintf($this->getLanguageService()->getLL('import.mail.file'),
                                 $file) . "\n";
                         // Get the workspace's name and add workspace information
                         if ($fileInformation['workspace'] == 0) {
@@ -764,21 +761,21 @@ class Import extends CommandLineController
                             if (isset($workspaces[$fileInformation['workspace']])) {
                                 $workspaceName = $workspaces[$fileInformation['workspace']]['title'];
                             } else {
-                                $workspaceName = $GLOBALS['LANG']->getLL('import.mail.workspace.unknown');
+                                $workspaceName = $this->getLanguageService()->getLL('import.mail.workspace.unknown');
                             }
                         }
-                        $message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.workspace'), $workspaceName,
+                        $message .= "\t" . sprintf($this->getLanguageService()->getLL('import.mail.workspace'), $workspaceName,
                                 $fileInformation['workspace']) . "\n";
                         // Add language information
-                        $message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.language'),
+                        $message .= "\t" . sprintf($this->getLanguageService()->getLL('import.mail.language'),
                                 $fileInformation['language']) . "\n";
                         // Get configuration's name and add configuration information
                         if (isset($l10nConfigurations[$fileInformation['configuration']])) {
                             $configurationName = $l10nConfigurations[$fileInformation['configuration']]['title'];
                         } else {
-                            $configurationName = $GLOBALS['LANG']->getLL('import.mail.l10nconfig.unknown');
+                            $configurationName = $this->getLanguageService()->getLL('import.mail.l10nconfig.unknown');
                         }
-                        $message .= "\t" . sprintf($GLOBALS['LANG']->getLL('import.mail.l10nconfig'),
+                        $message .= "\t" . sprintf($this->getLanguageService()->getLL('import.mail.l10nconfig'),
                                 $configurationName, $fileInformation['configuration']) . "\n";
                     }
                 }
@@ -786,7 +783,7 @@ class Import extends CommandLineController
                 // Report non-fatal errors that happened
                 if (count($this->errors) > 0) {
                     $message .= "\n\n----------------------------------------\n";
-                    $message .= $GLOBALS['LANG']->getLL('import.nonfatal.errors') . "\n";
+                    $message .= $this->getLanguageService()->getLL('import.nonfatal.errors') . "\n";
                     foreach ($this->errors as $error) {
                         $message .= "\t" . $error . "\n";
                     }
@@ -794,9 +791,9 @@ class Import extends CommandLineController
                 }
                 
                 // Add signature
-                $message .= "\n\n" . $GLOBALS['LANG']->getLL('email.goodbye.msg');
+                $message .= "\n\n" . $this->getLanguageService()->getLL('email.goodbye.msg');
                 $message .= "\n" . $this->extensionConfiguration['email_sender_name'];
-                $subject = sprintf($GLOBALS['LANG']->getLL('import.mail.subject'),
+                $subject = sprintf($this->getLanguageService()->getLL('import.mail.subject'),
                     $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
                 
                 // Instantiate the mail object, set all necessary properties and send the mail
@@ -811,6 +808,38 @@ class Import extends CommandLineController
             }
         }
     }
+    
+    /**
+     * getter/setter for LanguageService object
+     *
+     * @return LanguageService $languageService
+     */
+    protected function getLanguageService()
+    {
+        if (!$this->languageService instanceof LanguageService) {
+            $this->languageService = GeneralUtility::makeInstance(LanguageService::class);
+        }
+        
+        $fileRef = 'EXT:l10nmgr/Resources/Private/Language/Cli/locallang.xml';
+        $this->languageService->includeLLFile($fileRef);
+        
+        if ($this->getBackendUser()) {
+            $this->languageService->init($this->getBackendUser()->uc['lang']);
+        }
+        
+        return $this->languageService;
+    }
+    
+    /**
+     * Gets the current backend user.
+     *
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+    
 }
 
 // Call the functionality

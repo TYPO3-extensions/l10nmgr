@@ -32,6 +32,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Translation management tool
@@ -159,28 +160,28 @@ class ConfigurationManager extends BaseScriptClass
     protected function moduleContent()
     {
         $content = '';
-        $content .= $this->moduleTemplate->header($GLOBALS['LANG']->getLL('general.title'));
+        $content .= $this->moduleTemplate->header($this->getLanguageService()->getLL('general.title'));
         // Get the available configurations
         $l10nConfigurations = $this->getAllConfigurations();
         // No configurations, issue a simple message
         if (count($l10nConfigurations) == 0) {
-            $content .= '<div>' . nl2br($GLOBALS['LANG']->getLL('general.no_date')) . '</div>';
+            $content .= '<div>' . nl2br($this->getLanguageService()->getLL('general.no_date')) . '</div>';
             // List all configurations
         } else {
-            $content .= '<div><h2 class="uppercase">' . $GLOBALS['LANG']->getLL('general.list.configuration.manager') . '</h2>' . nl2br($GLOBALS['LANG']->getLL('general.description.message')) . '</div>';
-            $content .= '<div><h2 class="uppercase">' . $GLOBALS['LANG']->getLL('general.list.configuration.title') . '</h2></div>';
+            $content .= '<div><h2 class="uppercase">' . $this->getLanguageService()->getLL('general.list.configuration.manager') . '</h2>' . nl2br($this->getLanguageService()->getLL('general.description.message')) . '</div>';
+            $content .= '<div><h2 class="uppercase">' . $this->getLanguageService()->getLL('general.list.configuration.title') . '</h2></div>';
             $content .= '<div class="table-fit"><table class="table table-striped table-hover">';
             // Assemble the header row
             $content .= '<thead>';
             $content .= '<tr>';
-            $content .= '<th nowrap="nowrap" class="col-info">' . $GLOBALS['LANG']->getLL('general.list.headline.info.title') . '</th>';
-            $content .= '<th nowrap="nowrap" class="col-title">' . $GLOBALS['LANG']->getLL('general.list.headline.title.title') . '</th>';
-            $content .= '<th nowrap="nowrap" class="col-path">' . $GLOBALS['LANG']->getLL('general.list.headline.path.title') . '</th>';
-            $content .= '<th nowrap="nowrap" class="col-depth">' . $GLOBALS['LANG']->getLL('general.list.headline.depth.title') . '</th>';
-            $content .= '<th class="col-tables">' . $GLOBALS['LANG']->getLL('general.list.headline.tables.title') . '</th>';
-            $content .= '<th class="col-exclude">' . $GLOBALS['LANG']->getLL('general.list.headline.exclude.title') . '</th>';
-            $content .= '<th class="col-include">' . $GLOBALS['LANG']->getLL('general.list.headline.include.title') . '</th>';
-            $content .= '<th class="col-incfcewithdefaultlanguage">' . $GLOBALS['LANG']->getLL('general.list.headline.incfcewithdefaultlanguage.title') . '</th>';
+            $content .= '<th nowrap="nowrap" class="col-info">' . $this->getLanguageService()->getLL('general.list.headline.info.title') . '</th>';
+            $content .= '<th nowrap="nowrap" class="col-title">' . $this->getLanguageService()->getLL('general.list.headline.title.title') . '</th>';
+            $content .= '<th nowrap="nowrap" class="col-path">' . $this->getLanguageService()->getLL('general.list.headline.path.title') . '</th>';
+            $content .= '<th nowrap="nowrap" class="col-depth">' . $this->getLanguageService()->getLL('general.list.headline.depth.title') . '</th>';
+            $content .= '<th class="col-tables">' . $this->getLanguageService()->getLL('general.list.headline.tables.title') . '</th>';
+            $content .= '<th class="col-exclude">' . $this->getLanguageService()->getLL('general.list.headline.exclude.title') . '</th>';
+            $content .= '<th class="col-include">' . $this->getLanguageService()->getLL('general.list.headline.include.title') . '</th>';
+            $content .= '<th class="col-incfcewithdefaultlanguage">' . $this->getLanguageService()->getLL('general.list.headline.incfcewithdefaultlanguage.title') . '</th>';
             $content .= '</tr>';
             $content .= '</thead>';
             $content .= '<tbody>';
@@ -252,34 +253,34 @@ class ConfigurationManager extends BaseScriptClass
         $details = '';
         $details .= '<table class="table table-striped table-hover" border="0" cellspacing="0" cellpadding="0">';
         $details .= '<tr>';
-        $details .= '<td>' . $GLOBALS['LANG']->getLL('general.list.infodetail.pid.title') . '</td>';
+        $details .= '<td>' . $this->getLanguageService()->getLL('general.list.infodetail.pid.title') . '</td>';
         $details .= '<td>' . $parentPageArray['title'] . ' (' . $parentPageArray['uid'] . ')</td>';
         $details .= '</tr><tr class="db_list_normal">';
-        $details .= '<td>' . $GLOBALS['LANG']->getLL('general.list.infodetail.title.title') . '</td>';
+        $details .= '<td>' . $this->getLanguageService()->getLL('general.list.infodetail.title.title') . '</td>';
         $details .= '<td>' . $configuration['title'] . '</td>';
         $details .= '</tr><tr class="db_list_normal">';
-        $details .= '<td>' . $GLOBALS['LANG']->getLL('general.list.infodetail.filenameprefix.title') . '</td>';
+        $details .= '<td>' . $this->getLanguageService()->getLL('general.list.infodetail.filenameprefix.title') . '</td>';
         $details .= '<td>' . $configuration['filenameprefix'] . '</td>';
         $details .= '</tr><tr class="db_list_normal">';
-        $details .= '<td>' . $GLOBALS['LANG']->getLL('general.list.infodetail.depth.title') . '</td>';
+        $details .= '<td>' . $this->getLanguageService()->getLL('general.list.infodetail.depth.title') . '</td>';
         $details .= '<td>' . $configuration['depth'] . '</td>';
         $details .= '</tr><tr class="db_list_normal">';
-        $details .= '<td>' . $GLOBALS['LANG']->getLL('general.list.infodetail.sourceLangStaticId.title') . '</td>';
-        $details .= '<td>' . ((empty($languageArray['lg_name_en'])) ? $GLOBALS['LANG']->getLL('general.list.infodetail.default') : $languageArray['lg_name_en']) . '</td>';
+        $details .= '<td>' . $this->getLanguageService()->getLL('general.list.infodetail.sourceLangStaticId.title') . '</td>';
+        $details .= '<td>' . ((empty($languageArray['lg_name_en'])) ? $this->getLanguageService()->getLL('general.list.infodetail.default') : $languageArray['lg_name_en']) . '</td>';
         $details .= '</tr><tr class="db_list_normal">';
-        $details .= '<td>' . $GLOBALS['LANG']->getLL('general.list.infodetail.tablelist.title') . '</td>';
+        $details .= '<td>' . $this->getLanguageService()->getLL('general.list.infodetail.tablelist.title') . '</td>';
         $details .= '<td>' . $configuration['tablelist'] . '</td>';
         $details .= '</tr><tr class="db_list_normal">';
-        $details .= '<td>' . $GLOBALS['LANG']->getLL('general.list.infodetail.exclude.title') . '</td>';
+        $details .= '<td>' . $this->getLanguageService()->getLL('general.list.infodetail.exclude.title') . '</td>';
         $details .= '<td>' . $configuration['exclude'] . '</td>';
         $details .= '</tr><tr class="db_list_normal">';
-        $details .= '<td>' . $GLOBALS['LANG']->getLL('general.list.infodetail.include.title') . '</td>';
+        $details .= '<td>' . $this->getLanguageService()->getLL('general.list.infodetail.include.title') . '</td>';
         $details .= '<td>' . $configuration['include'] . '</td>';
         $details .= '</tr><tr class="db_list_normal">';
-        $details .= '<td>' . $GLOBALS['LANG']->getLL('general.list.infodetail.displaymode.title') . '</td>';
+        $details .= '<td>' . $this->getLanguageService()->getLL('general.list.infodetail.displaymode.title') . '</td>';
         $details .= '<td>' . $configuration['displaymode'] . '</td>';
         $details .= '</tr><tr class="db_list_normal">';
-        $details .= '<td>' . $GLOBALS['LANG']->getLL('general.list.infodetail.incfcewithdefaultlanguage.title') . '</td>';
+        $details .= '<td>' . $this->getLanguageService()->getLL('general.list.infodetail.incfcewithdefaultlanguage.title') . '</td>';
         $details .= '<td>' . $configuration['incfcewithdefaultlanguage'] . '</td>';
         $details .= '</tr>';
         $details .= '</table>';
@@ -326,7 +327,7 @@ class ConfigurationManager extends BaseScriptClass
     {
         $buttons = array();
         
-        $buttons['reload'] = '<a href="' . $GLOBALS['MCONF']['_'] . '" title="' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xml:labels.reload',
+        $buttons['reload'] = '<a href="' . $GLOBALS['MCONF']['_'] . '" title="' . $this->getLanguageService()->sL('LLL:EXT:lang/locallang_core.xml:labels.reload',
                 true) . '">' . $this->iconFactory->getIcon('actions-system-refresh') . '</a>';
         
         // Shortcut

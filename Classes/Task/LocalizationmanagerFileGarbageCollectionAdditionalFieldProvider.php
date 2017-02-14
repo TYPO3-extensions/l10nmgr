@@ -115,7 +115,7 @@ class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements
         // If not, fail validation and issue error message
         if (!is_numeric($submittedData['l10nmgr_fileGarbageCollection_age']) || (int)$submittedData['l10nmgr_fileGarbageCollection_age'] <= 0) {
             $result = false;
-            $parentObject->addMessage($GLOBALS['LANG']->sL('LLL:EXT:l10nmgr/tasks/locallang.xml:fileGarbageCollection.invalidAge'),
+            $parentObject->addMessage($this->getLanguageService()->sL('LLL:EXT:l10nmgr/tasks/locallang.xml:fileGarbageCollection.invalidAge'),
                 FlashMessage::ERROR);
         }
         

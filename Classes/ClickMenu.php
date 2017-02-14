@@ -31,9 +31,10 @@ namespace Localizationteam\L10nmgr;
  * TOTAL FUNCTIONS: 2
  * (This index is automatically created/updated by the extension "extdeveval")
  */
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Lang\LanguageService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
 
 /**
  * Context menu processing
@@ -44,6 +45,11 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  */
 class ClickMenu
 {
+    
+    /**
+     * @var LanguageService
+     */
+    protected $languageService;
     
     /**
      * Main function
@@ -73,7 +79,7 @@ class ClickMenu
                 // Repeat this (below) for as many items you want to add!
                 // Remember to add entries in the localconf.php file for additional titles.
                 $url = ExtensionManagementUtility::siteRelPath("l10nmgr") . "cm1/index.php?id=" . $uid;
-                $localItems[] = $backRef->linkItem($GLOBALS["LANG"]->getLLL("cm1_title", $LL),
+                $localItems[] = $backRef->linkItem($this->getLanguageService()->getLLL("cm1_title", $LL),
                     $backRef->excludeIcon('<img src="' . ExtensionManagementUtility::siteRelPath("l10nmgr") . 'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
                     $backRef->urlRefForCM($url),
                     1 // Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
@@ -108,12 +114,36 @@ class ClickMenu
      *
      * @return  array    Local lang value.
      */
-    function includeLL()
+    private function includeLL()
     {
-        global $LANG;
-        
-        $LOCAL_LANG = $LANG->includeLLFile('EXT:l10nmgr/Resources/Private/Language/locallang.xml', false);
-        
+        $LOCAL_LANG = $this->getLanguageService()->includeLLFile('EXT:l10nmgr/Resources/Private/Language/locallang.xml', false);
         return $LOCAL_LANG;
     }
+    
+    /**
+     * setter for databaseConnection object
+     *
+     * @return LanguageService $languageService
+     */
+    private function getLanguageService()
+    {
+        if (!$this->languageService instanceof LanguageService) {
+            $this->languageService = GeneralUtility::makeInstance(LanguageService::class);
+        }
+        if ($this->getBackendUser()) {
+            $this->languageService->init($this->getBackendUser()->uc['lang']);
+        }
+        return $this->languageService;
+    }
+    
+    /**
+     * Gets the current backend user.
+     *
+     * @return BackendUserAuthentication
+     */
+    private function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+
 }

@@ -52,7 +52,6 @@ class ExcelXmlView extends AbstractExportView
      */
     function render()
     {
-        global $LANG;
         $sysLang = $this->sysLang;
         $accumObj = $this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
         if ($this->forcedSourceLanguage) {
@@ -156,7 +155,7 @@ class ExcelXmlView extends AbstractExportView
                                 <Row ss:StyleID="s25">
                                 <Cell><Data ss:Type="String">' . htmlspecialchars('translation[' . $table . '][' . $elementUid . '][' . $key . ']') . '</Data></Cell>
                                 <Cell ss:StyleID="s26"><Data ss:Type="String">' . htmlspecialchars($fieldName) . '</Data></Cell>
-                                <Cell ss:StyleID="s40"><Data ss:Type="String">' . $LANG->getLL('export.process.error.empty.message') . '!</Data></Cell>
+                                <Cell ss:StyleID="s40"><Data ss:Type="String">' . $this->getLanguageService()->getLL('export.process.error.empty.message') . '!</Data></Cell>
                                 <Cell ss:StyleID="s39"><Data ss:Type="String"></Data></Cell>
                                 <Cell ss:StyleID="s27"><Data ss:Type="String"></Data></Cell>
                                 ' . ($page['header']['prevLang'] ? '<Cell ss:StyleID="s27"><Data ss:Type="String">' . str_replace(chr(10),
