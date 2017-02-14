@@ -58,8 +58,6 @@ class CatXmlView extends AbstractExportView
      */
     function render()
     {
-        global $BE_USER;
-        
         $sysLang = $this->sysLang;
         $accumObj = $this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
         if ($this->forcedSourceLanguage) {
@@ -129,7 +127,7 @@ class CatXmlView extends AbstractExportView
                                             $dataForTranslation = str_replace('<br>', '<br/>', $dataForTranslation);
                                             $dataForTranslation = str_replace('<hr>', '<hr/>', $dataForTranslation);
                                             
-                                            $params = $BE_USER->getModuleData('l10nmgr/cm1/prefs', 'prefs');
+                                            $params = $this->getBackendUser()->getModuleData('l10nmgr/cm1/prefs', 'prefs');
                                             if ($params['utf8'] == '1') {
                                                 $dataForTranslation = Utf8Tools::utf8_bad_strip($dataForTranslation);
                                             }

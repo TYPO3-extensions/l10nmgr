@@ -25,7 +25,6 @@ use Localizationteam\L10nmgr\Model\L10nConfiguration;
 use Localizationteam\L10nmgr\Model\MkPreviewLinkService;
 use Localizationteam\L10nmgr\Model\TranslationData;
 use Localizationteam\L10nmgr\Model\TranslationDataFactory;
-use Localizationteam\L10nmgr\View\AbstractExportView;
 use Localizationteam\L10nmgr\View\CatXmlView;
 use Localizationteam\L10nmgr\View\ExcelXmlView;
 use Localizationteam\L10nmgr\View\L10nConfigurationDetailView;
@@ -305,6 +304,7 @@ class LocalizationManager extends BaseScriptClass
             $script = basename(PATH_thisScript);
         }
         if (GeneralUtility::_GP('route')) {
+            /** @var  $router Router */
             $router = GeneralUtility::makeInstance(Router::class);
             $route = $router->match(GeneralUtility::_GP('route'));
             $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
@@ -371,7 +371,6 @@ class LocalizationManager extends BaseScriptClass
      */
     function moduleContent($l10ncfgObj)
     {
-        global $BE_USER;
         $subheader = '';
         switch ($this->MOD_SETTINGS["action"]) {
             case 'inlineEdit':
@@ -405,7 +404,7 @@ class LocalizationManager extends BaseScriptClass
             case 'export_xml': // XML import/export
                 $prefs['utf8'] = GeneralUtility::_POST('check_utf8');
                 $prefs['noxmlcheck'] = GeneralUtility::_POST('no_check_xml');
-                $BE_USER->pushModuleData('l10nmgr/cm1/prefs', $prefs);
+                $this->getBackendUser()->pushModuleData('l10nmgr/cm1/prefs', $prefs);
                 $subheader = $this->getLanguageService()->getLL('export_xml');
                 $subcontent = $this->catXMLExportImportAction($l10ncfgObj);
                 break;
@@ -580,11 +579,11 @@ class LocalizationManager extends BaseScriptClass
      * Sends download header and calls render method of the view.
      * Used for excelXML and CATXML.
      *
-     * @param AbstractExportView $xmlView Object for generating the XML export
+     * @param CatXmlView | ExcelXmlView $xmlView Object for generating the XML export
      *
      * @return string $filename
      */
-    protected function downloadXML(AbstractExportView $xmlView)
+    protected function downloadXML($xmlView)
     {
         // Save content to the disk and get the file name
         $filename = $xmlView->render();
@@ -593,7 +592,6 @@ class LocalizationManager extends BaseScriptClass
     
     function catXMLExportImportAction($l10ncfgObj)
     {
-        global $BE_USER;
         /** @var $service L10nBaseService */
         $service = GeneralUtility::makeInstance(L10nBaseService::class);
         $menuItems = array(
@@ -675,7 +673,7 @@ class LocalizationManager extends BaseScriptClass
         // If export of XML is asked for, do that (this will exit and push a file for download, or upload to FTP is option is checked)
         if (GeneralUtility::_POST('export_xml')) {
             // Save user prefs
-            $BE_USER->pushModuleData('l10nmgr/cm1/checkUTF8', GeneralUtility::_POST('check_utf8'));
+            $this->getBackendUser()->pushModuleData('l10nmgr/cm1/checkUTF8', GeneralUtility::_POST('check_utf8'));
             // Render the XML
             /** @var $viewClass CatXmlView */
             $viewClass = GeneralUtility::makeInstance(CatXmlView::class, $l10ncfgObj, $this->sysLanguage);
