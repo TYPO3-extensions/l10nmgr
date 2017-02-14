@@ -18,6 +18,7 @@ namespace Localizationteam\L10nmgr\Model;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Workspaces\Hook\PreviewHook;
 
@@ -47,11 +48,11 @@ class MkPreviewLinkService
     function mkSingleSrcPreviewLink($baseUrl, $srcLang)
     {
         
-        $ttlHours = (int)$GLOBALS['BE_USER']->getTSConfigVal('options.workspaces.previewLinkTTLHours');
+        $ttlHours = (int)$this->getBackendUser()->getTSConfigVal('options.workspaces.previewLinkTTLHours');
         $ttlHours = ($ttlHours ? $ttlHours : 24 * 2);
         $params = 'id=' . $this->pageIds[0] . '&L=' . $srcLang . '&ADMCMD_previewWS=' . $this->workspaceId;
         $previewUrl = $baseUrl . 'index.php?ADMCMD_prev=' . $this->previewHook->compilePreviewKeyword($params,
-                $GLOBALS['BE_USER']->user['uid'], 60 * 60 * $ttlHours);
+                $this->getBackendUser()->user['uid'], 60 * 60 * $ttlHours);
         
         return $previewUrl;
     }
@@ -60,12 +61,12 @@ class MkPreviewLinkService
     function mkSinglePreviewLink($baseUrl, $serverlink)
     {
         
-        $ttlHours = (int)$GLOBALS['BE_USER']->getTSConfigVal('options.workspaces.previewLinkTTLHours');
+        $ttlHours = (int)$this->getBackendUser()->getTSConfigVal('options.workspaces.previewLinkTTLHours');
         $ttlHours = ($ttlHours ? $ttlHours : 24 * 2);
         //no_cache=1 ???
         $params = 'id=' . $this->pageIds[0] . '&L=' . $this->sysLang . '&ADMCMD_previewWS=' . $this->workspaceId . '&serverlink=' . $serverlink;
         $previewUrl = $baseUrl . 'index.php?ADMCMD_prev=' . $this->previewHook->compilePreviewKeyword($params,
-                $GLOBALS['BE_USER']->user['uid'], 60 * 60 * $ttlHours);
+                $this->getBackendUser()->user['uid'], 60 * 60 * $ttlHours);
         
         return $previewUrl;
     }
@@ -76,11 +77,11 @@ class MkPreviewLinkService
         
         $previewUrls = array();
         foreach ($this->pageIds as $pageId) {
-            $ttlHours = (int)$GLOBALS['BE_USER']->getTSConfigVal('options.workspaces.previewLinkTTLHours');
+            $ttlHours = (int)$this->getBackendUser()->getTSConfigVal('options.workspaces.previewLinkTTLHours');
             $ttlHours = ($ttlHours ? $ttlHours : 24 * 2);
             $params = 'id=' . $pageId . '&L=' . $this->sysLang . '&ADMCMD_previewWS=' . $this->workspaceId;
             $previewUrls[$pageId] = GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'index.php?ADMCMD_prev=' . $this->previewHook->compilePreviewKeyword($params,
-                    $GLOBALS['BE_USER']->user['uid'], 60 * 60 * $ttlHours);
+                    $this->getBackendUser()->user['uid'], 60 * 60 * $ttlHours);
         }
         
         return $previewUrls;
@@ -96,4 +97,14 @@ class MkPreviewLinkService
         
         return $out;
     }
+    
+    /**
+     * Returns the Backend User
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+    
 }

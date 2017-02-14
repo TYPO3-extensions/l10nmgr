@@ -57,7 +57,7 @@ class TranslationTasks extends BaseScriptClass
     function init()
     {
         $this->MCONF['name'] = 'ConfigurationManager_TranslationTasks';
-        $GLOBALS['BE_USER']->modAccess($this->MCONF, 1);
+        $this->getBackendUser()->modAccess($this->MCONF, 1);
         $this->getLanguageService()->includeLLFile("EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang.xlf");
         parent::init();
     }
@@ -97,7 +97,7 @@ class TranslationTasks extends BaseScriptClass
         $this->moduleContent();
         
         // ShortCut
-        if ($GLOBALS['BE_USER']->mayMakeShortcut()) {
+        if ($this->getBackendUser()->mayMakeShortcut()) {
             $this->content .= '<hr /><div>' . $this->module->makeShortcutIcon("id",
                     implode(",", array_keys($this->MOD_MENU)), $this->MCONF["name"]) . '</div>';
         }
@@ -179,7 +179,7 @@ class TranslationTasks extends BaseScriptClass
                 
                 if ($el[0] == 'pages') {
                     // If another page module was specified, replace the default Page module with the new one
-                    $newPageModule = trim($GLOBALS['BE_USER']->getTSConfigVal('options.overridePageModule'));
+                    $newPageModule = trim($this->getBackendUser()->getTSConfigVal('options.overridePageModule'));
                     $pageModule = BackendUtility::isModuleSetInTBE_MODULES($newPageModule) ? $newPageModule : 'web_layout';
                     
                     $path_module_path = GeneralUtility::resolveBackPath($GLOBALS['BACK_PATH'] . '../' . substr($GLOBALS['TBE_MODULES']['_PATHS'][$pageModule],
@@ -221,7 +221,7 @@ class TranslationTasks extends BaseScriptClass
     function getLanguages($limitLanguageList, $sysLanguages)
     {
         $languageListArray = explode(',',
-            $GLOBALS['BE_USER']->groupData['allowed_languages'] ? $GLOBALS['BE_USER']->groupData['allowed_languages'] : implode(',',
+            $this->getBackendUser()->groupData['allowed_languages'] ? $this->getBackendUser()->groupData['allowed_languages'] : implode(',',
                 array_keys($sysLanguages)));
         
         foreach ($languageListArray as $kkk => $val) {

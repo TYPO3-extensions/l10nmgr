@@ -22,6 +22,7 @@ namespace Localizationteam\L10nmgr\Model;
 use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -154,7 +155,7 @@ class L10nAccumulatedInformation
             $previewLanguage = $this->forcedPreviewLanguage;
         } else {
             $previewLanguage = current(GeneralUtility::intExplode(',',
-                $GLOBALS['BE_USER']->getTSConfigVal('options.additionalPreviewLanguages')));
+                $this->getBackendUser()->getTSConfigVal('options.additionalPreviewLanguages')));
         }
         if ($previewLanguage) {
             $t8Tools->previewLanguages = array($previewLanguage);
@@ -250,4 +251,14 @@ class L10nAccumulatedInformation
     {
         return $this->_wordCount;
     }
+    
+    /**
+     * Returns the Backend User
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+    
 }

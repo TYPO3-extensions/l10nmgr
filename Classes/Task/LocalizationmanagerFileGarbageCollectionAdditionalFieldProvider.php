@@ -18,7 +18,10 @@ namespace Localizationteam\L10nmgr\Task;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Lang\LanguageService;
 use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
 use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
@@ -35,6 +38,11 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  */
 class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements AdditionalFieldProviderInterface
 {
+    
+    /**
+     * @var LanguageService
+     */
+    protected $languageService;
     
     /**
      * @var integer Default age
@@ -134,4 +142,31 @@ class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements
     {
         $task->age = (int)$submittedData['l10nmgr_fileGarbageCollection_age'];
     }
+    
+    /**
+     * getter/setter for LanguageService object
+     *
+     * @return LanguageService $languageService
+     */
+    protected function getLanguageService()
+    {
+        if (!$this->languageService instanceof LanguageService) {
+            $this->languageService = GeneralUtility::makeInstance(LanguageService::class);
+        }
+        if ($this->getBackendUser()) {
+            $this->languageService->init($this->getBackendUser()->uc['lang']);
+        }
+        
+        return $this->languageService;
+    }
+    
+    /**
+     * Returns the Backend User
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+    
 }

@@ -45,6 +45,7 @@ namespace Localizationteam\L10nmgr\Model\Tools;
  */
 use TYPO3\CMS\Backend\Configuration\TranslationConfigurationProvider;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\DebugUtility;
@@ -850,7 +851,7 @@ class Tools
             // can be zero (default) or -1 (international)
             'translation_lang' => $sys_lang,
             'translation_recuid' => (int)$fullDetails['translationInfo']['translations'][$sys_lang]['uid'],
-            'workspace' => $GLOBALS['BE_USER']->workspace,
+            'workspace' => $this->getBackendUser()->workspace,
             'serializedDiff' => array(),
             'flag_new' => 0,
             // Something awaits to get translated => Put to TODO list as a new element
@@ -928,8 +929,8 @@ class Tools
         if ($this->t8Tools->isTranslationInOwnTable($table)) {
             
             // Check for disabled field settings
-            //print "###".$GLOBALS['BE_USER']->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden']."---";
-            if (!empty($GLOBALS['BE_USER']->uc['moduleData']['ConfigurationManager_LocalizationManager']['noHidden'])) {
+            //print "###".$this->getBackendUser()->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden']."---";
+            if (!empty($this->getBackendUser()->uc['moduleData']['ConfigurationManager_LocalizationManager']['noHidden'])) {
                 $hiddenClause = BackendUtility::BEenableFields($table, $inv = 0);
             } else {
                 $hiddenClause = "";
@@ -1083,4 +1084,14 @@ class Tools
     {
         $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_l10nmgr_index', 'workspace=' . intval($ws));
     }
+    
+    /**
+     * Returns the Backend User
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }    
+    
 }

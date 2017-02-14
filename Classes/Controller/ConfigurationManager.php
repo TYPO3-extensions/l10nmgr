@@ -124,7 +124,7 @@ class ConfigurationManager extends BaseScriptClass
      */
     public function init()
     {
-        $GLOBALS['BE_USER']->modAccess($this->MCONF, 1);
+        $this->getBackendUser()->modAccess($this->MCONF, 1);
         parent::init();
     }
     
@@ -228,7 +228,7 @@ class ConfigurationManager extends BaseScriptClass
         $configurations = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_cfg',
             '1=1' . BackendUtility::deleteClause('tx_l10nmgr_cfg'), '', 'title');
         // Filter out the configurations which the user is allowed to see, base on the page access rights
-        $pagePermissionsClause = $GLOBALS['BE_USER']->getPagePermsClause(1);
+        $pagePermissionsClause = $this->getBackendUser()->getPagePermsClause(1);
         $allowedConfigurations = array();
         foreach ($configurations as $row) {
             if (BackendUtility::readPageAccess($row['pid'], $pagePermissionsClause) !== false) {
@@ -331,7 +331,7 @@ class ConfigurationManager extends BaseScriptClass
                 true) . '">' . $this->iconFactory->getIcon('actions-system-refresh') . '</a>';
         
         // Shortcut
-        if ($GLOBALS['BE_USER']->mayMakeShortcut()) {
+        if ($this->getBackendUser()->mayMakeShortcut()) {
             $buttons['shortcut'] = $this->moduleTemplate->makeShortcutIcon('', 'function', $this->MCONF['name']);
         }
         

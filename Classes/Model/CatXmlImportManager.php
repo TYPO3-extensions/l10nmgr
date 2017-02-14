@@ -124,9 +124,9 @@ class CatXmlImportManager
             $error[] = sprintf($this->getLanguageService()->getLL('import.manager.error.version.message'),
                 $this->headerData['t3_formatVersion'], L10NMGR_FILEVERSION);
         }
-        if (!isset($this->headerData['t3_workspaceId']) || $this->headerData['t3_workspaceId'] != $GLOBALS['BE_USER']->workspace) {
-            $GLOBALS['BE_USER']->workspace = $this->headerData['t3_workspaceId'];
-            $error[] = sprintf($this->getLanguageService()->getLL('import.manager.error.workspace.message'), $GLOBALS['BE_USER']->workspace,
+        if (!isset($this->headerData['t3_workspaceId']) || $this->headerData['t3_workspaceId'] != $this->getBackendUser()->workspace) {
+            $this->getBackendUser()->workspace = $this->headerData['t3_workspaceId'];
+            $error[] = sprintf($this->getLanguageService()->getLL('import.manager.error.workspace.message'), $this->getBackendUser()->workspace,
                 $this->headerData['t3_workspaceId']);
         }
         if (!isset($this->headerData['t3_sysLang']) || $this->headerData['t3_sysLang'] != $this->sysLang) {
@@ -177,8 +177,8 @@ class CatXmlImportManager
             $error[] = sprintf($this->getLanguageService()->getLL('import.manager.error.version.message'),
                 $this->headerData['t3_formatVersion'], L10NMGR_FILEVERSION);
         }
-        if (!isset($this->headerData['t3_workspaceId']) || $this->headerData['t3_workspaceId'] != $GLOBALS['BE_USER']->workspace) {
-            $error[] = sprintf($this->getLanguageService()->getLL('import.manager.error.workspace.message'), $GLOBALS['BE_USER']->workspace,
+        if (!isset($this->headerData['t3_workspaceId']) || $this->headerData['t3_workspaceId'] != $this->getBackendUser()->workspace) {
+            $error[] = sprintf($this->getLanguageService()->getLL('import.manager.error.workspace.message'), $this->getBackendUser()->workspace,
                 $this->headerData['t3_workspaceId']);
         }
         if (!isset($this->headerData['t3_sysLang'])) {

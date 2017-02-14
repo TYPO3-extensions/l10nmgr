@@ -21,6 +21,7 @@ namespace Localizationteam\L10nmgr\Model;
 
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -120,7 +121,7 @@ class L10nConfiguration
             }
             // Initialize tree object:
             $tree = GeneralUtility::makeInstance(PageTreeView::class);
-            $tree->init('AND ' . $GLOBALS['BE_USER']->getPagePermsClause(1));
+            $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(1));
             $tree->addField('l18n_cfg');
             
             $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
@@ -172,4 +173,14 @@ class L10nConfiguration
         $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg', 'uid=' . (int)$l10ncfg['uid'],
             array('flexformdiff' => $l10ncfg['flexformdiff']));
     }
+    
+    /**
+     * Returns the Backend User
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+    
 }

@@ -158,10 +158,10 @@ class Export extends CommandLineController
         $msg = '';
         
         // Force user to admin state
-        $GLOBALS['BE_USER']->user['admin'] = 1;
+        $this->getBackendUser()->user['admin'] = 1;
         
         // Set workspace to the required workspace ID from CATXML:
-        $GLOBALS['BE_USER']->setWorkspace($wsId);
+        $this->getBackendUser()->setWorkspace($wsId);
         
         if ($format == 'CATXML') {
             foreach ($l10ncfgs as $l10ncfg) {
@@ -251,7 +251,7 @@ class Export extends CommandLineController
             }
             $hidden = isset($this->cli_args['--hidden']) ? $this->cli_args['--hidden'][0] : 'FALSE';
             if ($hidden === 'TRUE') {
-                $GLOBALS['BE_USER']->uc['moduleData']['tx_l10_nmgr_M1_tx_l10nmgr_cm1']['noHidden'] = true;
+                $this->getBackendUser()->uc['moduleData']['tx_l10_nmgr_M1_tx_l10nmgr_cm1']['noHidden'] = true;
                 $l10nmgrGetXML->setModeNoHidden();
             }
             
@@ -376,7 +376,7 @@ class Export extends CommandLineController
             }
             $hidden = isset($this->cli_args['--hidden']) ? $this->cli_args['--hidden'][0] : 'FALSE';
             if ($hidden === 'TRUE') {
-                $GLOBALS['BE_USER']->uc['moduleData']['tx_l10nmgr_M1_tx_l10nmgr_cm1']['noHidden'] = true;
+                $this->getBackendUser()->uc['moduleData']['tx_l10nmgr_M1_tx_l10nmgr_cm1']['noHidden'] = true;
                 $l10nmgrGetXML->setModeNoHidden();
             }
             
@@ -453,16 +453,16 @@ class Export extends CommandLineController
         
         $email->subject = sprintf($this->getLanguageService()->getLL('email.suject.msg'), $sourceLang, $targetLang,
             $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
-        if (empty($GLOBALS['BE_USER']->user['email']) || empty($GLOBALS['BE_USER']->user['realName'])) {
+        if (empty($this->getBackendUser()->user['email']) || empty($this->getBackendUser()->user['realName'])) {
             $email->from_email = $this->lConf['email_sender'];
             $email->from_name = $this->lConf['email_sender_name'];
             $email->replyto_email = $this->lConf['email_sender'];
             $email->replyto_name = $this->lConf['email_sender_name'];
         } else {
-            $email->from_email = $GLOBALS['BE_USER']->user['email'];
-            $email->from_name = $GLOBALS['BE_USER']->user['realName'];
-            $email->replyto_email = $GLOBALS['BE_USER']->user['email'];
-            $email->replyto_name = $GLOBALS['BE_USER']->user['realName'];
+            $email->from_email = $this->getBackendUser()->user['email'];
+            $email->from_name = $this->getBackendUser()->user['realName'];
+            $email->replyto_email = $this->getBackendUser()->user['email'];
+            $email->replyto_name = $this->getBackendUser()->user['realName'];
         }
         $email->organisation = $this->lConf['email_sender_organisation'];
         

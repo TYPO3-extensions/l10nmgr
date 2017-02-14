@@ -42,6 +42,7 @@ namespace Localizationteam\L10nmgr;
 // Include API
 use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Lowlevel\CleanerCommand;
@@ -147,8 +148,8 @@ Traversing page tree and building an index of translation needs
             0) : 1000;
         
         if ($workspaceID != 0) {
-            $GLOBALS['BE_USER']->setWorkspace($workspaceID);
-            if ($GLOBALS['BE_USER']->workspace != $workspaceID) {
+            $this->getBackendUser()->setWorkspace($workspaceID);
+            if ($this->getBackendUser()->workspace != $workspaceID) {
                 die('Workspace ' . $workspaceID . ' did not exist!' . chr(10));
             }
         }
@@ -219,10 +220,10 @@ Traversing page tree and building an index of translation needs
         $t8Tools->verbose = false; // Otherwise it will show records which has fields but none editable.
         
         if (!$this->cli_isArg('--noFlush')) {
-            echo 'Flushing translation index for workspace ' . $GLOBALS['BE_USER']->workspace . chr(10);
-            $t8Tools->flushIndexOfWorkspace($GLOBALS['BE_USER']->workspace);
+            echo 'Flushing translation index for workspace ' . $this->getBackendUser()->workspace . chr(10);
+            $t8Tools->flushIndexOfWorkspace($this->getBackendUser()->workspace);
         } else {
-            echo 'Did NOT flush translation index for workspace ' . $GLOBALS['BE_USER']->workspace . ' since it was disabled by --noFlush' . chr(10);
+            echo 'Did NOT flush translation index for workspace ' . $this->getBackendUser()->workspace . ' since it was disabled by --noFlush' . chr(10);
         }
         
         foreach ($this->resultArray['index'] as $pageId => $accum) {
@@ -236,4 +237,14 @@ Traversing page tree and building an index of translation needs
             }
         }
     }
+    
+    /**
+     * Returns the Backend User
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+    
 }

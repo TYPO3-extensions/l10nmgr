@@ -129,7 +129,7 @@ class Cm3 extends BaseScriptClass
                     BackendUtility::setUpdateSignal('updatePageTree');
                     break;
                 case 'flushTranslations':
-                    if ($GLOBALS['BE_USER']->isAdmin()) {
+                    if ($this->getBackendUser()->isAdmin()) {
                         $res = $this->l10nMgrTools->flushTranslations($table, $uid,
                             GeneralUtility::_POST('_flush') ? true : false);
                         

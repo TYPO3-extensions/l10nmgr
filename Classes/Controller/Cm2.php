@@ -141,7 +141,7 @@ class Cm2 extends BaseScriptClass
             
             $this->sysLanguages = $this->l10nMgrTools->t8Tools->getSystemLanguages($table == 'pages' ? $uid : $inputRecord['pid']);
             $languageListArray = explode(',',
-                $GLOBALS['BE_USER']->groupData['allowed_languages'] ? $GLOBALS['BE_USER']->groupData['allowed_languages'] : implode(',',
+                $this->getBackendUser()->groupData['allowed_languages'] ? $this->getBackendUser()->groupData['allowed_languages'] : implode(',',
                     array_keys($this->sysLanguages)));
             $limitLanguageList = trim(GeneralUtility::_GP('languageList'));
             
@@ -159,11 +159,11 @@ class Cm2 extends BaseScriptClass
             if ($table != 'pages') {
                 $records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
                     'tablename=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($table,
-                        'tx_l10nmgr_index') . ' AND recuid=' . (int)$uid . ' AND translation_lang IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($languageList) . ')' . ' AND workspace=' . (int)$GLOBALS['BE_USER']->workspace . ' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
+                        'tx_l10nmgr_index') . ' AND recuid=' . (int)$uid . ' AND translation_lang IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($languageList) . ')' . ' AND workspace=' . (int)$this->getBackendUser()->workspace . ' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
                     '', 'translation_lang, tablename, recuid');
             } else {
                 $records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
-                    'recpid=' . (int)$uid . ' AND translation_lang IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($languageList) . ')' . ' AND workspace=' . (int)$GLOBALS['BE_USER']->workspace . ' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
+                    'recpid=' . (int)$uid . ' AND translation_lang IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($languageList) . ')' . ' AND workspace=' . (int)$this->getBackendUser()->workspace . ' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
                     '', 'translation_lang, tablename, recuid');
             }
             
@@ -200,7 +200,7 @@ class Cm2 extends BaseScriptClass
                     $tRows) . '</table>';
             
             // Updating index
-            if ($GLOBALS['BE_USER']->isAdmin()) {
+            if ($this->getBackendUser()->isAdmin()) {
                 $output .= '<br><br>Functions for "' . $table . ':' . $uid . '":<br/>
 					<input type="submit" name="_updateIndex" value="Update Index" /><br>
 					<input type="submit" name="_" value="Flush Translations" onclick="' . htmlspecialchars('document.location="../cm3/index.php?table=' . htmlspecialchars($table) . '&id=' . (int)$uid . '&cmd=flushTranslations";return false;') . '"/><br>

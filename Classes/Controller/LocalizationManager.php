@@ -146,7 +146,7 @@ class LocalizationManager extends BaseScriptClass
      */
     public function init()
     {
-        $GLOBALS['BE_USER']->modAccess($this->MCONF, 1);
+        $this->getBackendUser()->modAccess($this->MCONF, 1);
         parent::init();
     }
     
@@ -177,7 +177,7 @@ class LocalizationManager extends BaseScriptClass
         if ($l10ncfgObj->isLoaded()) {
             // Setting page id
             $this->id = $l10ncfgObj->getData('pid');
-            $this->perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
+            $this->perms_clause = $this->getBackendUser()->getPagePermsClause(1);
             $this->pageinfo = BackendUtility::readPageAccess($this->id, $this->perms_clause);
             $access = is_array($this->pageinfo) ? 1 : 0;
             if ($this->id && $access) {
@@ -622,7 +622,7 @@ class LocalizationManager extends BaseScriptClass
             /** @var $factory TranslationDataFactory */
             $factory = GeneralUtility::makeInstance(TranslationDataFactory::class);
             //print "<pre>";
-            //var_dump($GLOBALS['BE_USER']->user);
+            //var_dump($this->getBackendUser()->user);
             //print "</pre>";
             if (GeneralUtility::_POST('import_asdefaultlanguage') == '1') {
                 $service->setImportAsDefaultLanguage(true);
@@ -1000,7 +1000,7 @@ class LocalizationManager extends BaseScriptClass
         $t8Tools = GeneralUtility::makeInstance(TranslationConfigurationProvider::class);
         $sysL = $t8Tools->getSystemLanguages();
         foreach ($sysL as $sL) {
-            if ($sL['uid'] > 0 && $GLOBALS['BE_USER']->checkLanguageAccess($sL['uid'])) {
+            if ($sL['uid'] > 0 && $this->getBackendUser()->checkLanguageAccess($sL['uid'])) {
                 if ($this->lConf['enable_hidden_languages'] == 1) {
                     $this->MOD_MENU['lang'][$sL['uid']] = $sL['title'];
                 } elseif ($sL['hidden'] == 0) {
@@ -1060,7 +1060,7 @@ class LocalizationManager extends BaseScriptClass
         $buttons['reload'] = '<a href="' . $GLOBALS['MCONF']['_'] . '" title="' . $this->getLanguageService()->sL('LLL:EXT:lang/locallang_core.xml:labels.reload',
                 true) . '">' . $this->iconFactory->getIcon('actions-system-refresh') . '</a>';
         // Shortcut
-        if ($GLOBALS['BE_USER']->mayMakeShortcut()) {
+        if ($this->getBackendUser()->mayMakeShortcut()) {
             $buttons['shortcut'] = $this->moduleTemplate->makeShortcutIcon('', 'function', $this->MCONF['name']);
         }
         return $buttons;

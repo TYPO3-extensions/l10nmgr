@@ -50,9 +50,9 @@ class XmlTools
      */
     function RTE2XML($content, $withStripBadUTF8 = 0)
     {
-        //function RTE2XML($content,$withStripBadUTF8=$GLOBALS['BE_USER']->getModuleData('l10nmgr/cm1/checkUTF8', '')) {
+        //function RTE2XML($content,$withStripBadUTF8=$this->getBackendUser()->getModuleData('l10nmgr/cm1/checkUTF8', '')) {
         //if (!$withStripBadUTF8) {
-        //	$withStripBadUTF8 = $GLOBALS['BE_USER']->getModuleData('l10nmgr/cm1/checkUTF8', '');
+        //	$withStripBadUTF8 = $this->getBackendUser()->getModuleData('l10nmgr/cm1/checkUTF8', '');
         //}
         //echo '###'.$withStripBadUTF8;
         // First call special transformations (registered using hooks)

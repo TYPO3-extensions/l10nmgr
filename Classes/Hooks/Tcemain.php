@@ -39,6 +39,7 @@ use Localizationteam\L10nmgr\Model\L10nBaseService;
 use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Configuration\TranslationConfigurationProvider;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -122,9 +123,9 @@ class Tcemain
      */
     function stat($p, $pObj)
     {
-        if (strcmp($GLOBALS['BE_USER']->groupData['allowed_languages'], '')) {
+        if (strcmp($this->getBackendUser()->groupData['allowed_languages'], '')) {
             return $this->calcStat($p,
-                $GLOBALS['TYPO3_DB']->cleanIntList($GLOBALS['BE_USER']->groupData['allowed_languages']));
+                $GLOBALS['TYPO3_DB']->cleanIntList($this->getBackendUser()->groupData['allowed_languages']));
         } else {
             return '';
         }
@@ -137,10 +138,10 @@ class Tcemain
         if ($p[0] != 'pages') {
             $records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
                 'tablename=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($p[0],
-                    'tx_l10nmgr_index') . ' AND recuid=' . (int)$p[1] . ' AND translation_lang IN (' . $languageList . ')' . ' AND workspace=' . (int)$GLOBALS['BE_USER']->workspace);
+                    'tx_l10nmgr_index') . ' AND recuid=' . (int)$p[1] . ' AND translation_lang IN (' . $languageList . ')' . ' AND workspace=' . (int)$this->getBackendUser()->workspace);
         } else {
             $records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
-                'recpid=' . (int)$p[1] . ' AND translation_lang IN (' . $languageList . ')' . ' AND workspace=' . (int)$GLOBALS['BE_USER']->workspace);
+                'recpid=' . (int)$p[1] . ' AND translation_lang IN (' . $languageList . ')' . ' AND workspace=' . (int)$this->getBackendUser()->workspace);
         }
         
         $flags = array();
@@ -182,4 +183,14 @@ class Tcemain
         }
         return $output;
     }
+    
+    /**
+     * Returns the Backend User
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+    
 }

@@ -155,8 +155,8 @@ class Import extends CommandLineController
         }
         
         // Force user to admin state
-        $formerAdminState = $GLOBALS['BE_USER']->user['admin'];
-        $GLOBALS['BE_USER']->user['admin'] = 1;
+        $formerAdminState = $this->getBackendUser()->user['admin'];
+        $this->getBackendUser()->user['admin'] = 1;
         
         // Handle the task
         $msg = '';
@@ -169,7 +169,7 @@ class Import extends CommandLineController
                     $wsId = $this->getWsIdFromCATXML($this->callParameters['string']);
                     
                     // Set workspace to the required workspace ID from CATXML:
-                    $GLOBALS['BE_USER']->setWorkspace($wsId);
+                    $this->getBackendUser()->setWorkspace($wsId);
                     
                     if ($this->callParameters['task'] == 'importString') {
                         $msg .= $this->importCATXML();
@@ -197,7 +197,7 @@ class Import extends CommandLineController
         
         // Restore user's former admin state
         // May not be absolutely necessary, but cleaner in case anything gets executed after this script
-        $GLOBALS['BE_USER']->user['admin'] = $formerAdminState;
+        $this->getBackendUser()->user['admin'] = $formerAdminState;
     }
     
     /**
@@ -432,7 +432,7 @@ class Import extends CommandLineController
                 try {
                     $xmlFileHead = $this->getXMLFileHead($xmlFile);
                     // Set workspace to the required workspace ID from CATXML:
-                    $GLOBALS['BE_USER']->setWorkspace($xmlFileHead['t3_workspaceId'][0]['XMLvalue']);
+                    $this->getBackendUser()->setWorkspace($xmlFileHead['t3_workspaceId'][0]['XMLvalue']);
                     // Set import language to t3_sysLang from XML
                     $this->sysLanguage = $xmlFileHead['t3_sysLang'][0]['XMLvalue'];
                     if ($xmlFileHead['t3_sourceLang'][0]['XMLvalue'] === $xmlFileHead['t3_targetLang'][0]['XMLvalue']) {
