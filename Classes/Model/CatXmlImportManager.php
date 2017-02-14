@@ -20,6 +20,7 @@ namespace Localizationteam\L10nmgr\Model;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Lang\LanguageService;
 
@@ -277,7 +278,7 @@ class CatXmlImportManager
                 $l18nPointerField = $GLOBALS['TCA'][$table]['ctrl']['transOrigPointerField'];
                 $where = $l18nPointerField . " = $elementUid AND " . $languageField . " = " . $this->headerData['t3_sysLang'] . " AND t3ver_wsid = " . $this->headerData['t3_workspaceId'];
             }
-            $delDataQuery = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid', $table, $where, '', '', '', 'uid');
+            $delDataQuery = $this->getDatabaseConnection()->exec_SELECTgetRows('uid', $table, $where, '', '', '', 'uid');
             if (!empty($delDataQuery)) {
                 foreach ($delDataQuery as $uid => $item) {
                     $dataHandler->deleteAction($table, $uid);
@@ -287,6 +288,21 @@ class CatXmlImportManager
         }
         
         return $cmdCount;
+    }
+    
+    /**
+     * Get DatabaseConnection instance - $GLOBALS['TYPO3_DB']
+     *
+     * This method should be used instead of direct access to
+     * $GLOBALS['TYPO3_DB'] for easy IDE auto completion.
+     *
+     * @return DatabaseConnection
+     * @deprecated since TYPO3 v8, will be removed in TYPO3 v9
+     */
+    protected function getDatabaseConnection()
+    {
+        GeneralUtility::logDeprecatedFunction();
+        return $GLOBALS['TYPO3_DB'];
     }
     
     /**

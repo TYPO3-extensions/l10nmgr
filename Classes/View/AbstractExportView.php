@@ -206,10 +206,17 @@ abstract class AbstractExportView
     }
     
     /**
+     * Get DatabaseConnection instance - $GLOBALS['TYPO3_DB']
+     *
+     * This method should be used instead of direct access to
+     * $GLOBALS['TYPO3_DB'] for easy IDE auto completion.
+     *
      * @return DatabaseConnection
+     * @deprecated since TYPO3 v8, will be removed in TYPO3 v9
      */
     protected function getDatabaseConnection()
     {
+        GeneralUtility::logDeprecatedFunction();
         return $GLOBALS['TYPO3_DB'];
     }
     

@@ -47,6 +47,7 @@ use TYPO3\CMS\Backend\Configuration\TranslationConfigurationProvider;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\DiffUtility;
@@ -100,7 +101,7 @@ class Tools
         $this->t8Tools = GeneralUtility::makeInstance(TranslationConfigurationProvider::class);
         
         // Find all system languages:
-        $this->sys_languages = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'sys_language', '');
+        $this->sys_languages = $this->getDatabaseConnection()->exec_SELECTgetRows('*', 'sys_language', '');
     }
     
     /**
@@ -448,7 +449,7 @@ class Tools
         if ($this->t8Tools->isTranslationInOwnTable($table)) {
             
             // First, select all records that are default language OR international:
-            $allRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table,
+            $allRows = $this->getDatabaseConnection()->exec_SELECTgetRows('*', $table,
                 'uid=' . intval($uid) .
                 ' AND (' .
                 $TCA[$table]['ctrl']['languageField'] . '<=0' .
@@ -651,7 +652,7 @@ class Tools
                     if ($trTable !== $table || $row[$GLOBALS['TCA'][$table]['ctrl']['languageField']] <= 0 || $row[$GLOBALS['TCA'][$table]['ctrl']['languageField']] == $previewLanguage) {
                         if ($trTable !== $table || $row[$GLOBALS['TCA'][$table]['ctrl']['transOrigPointerField']] == 0) {
                             // Look for translations of this record, index by language field value:
-                            $translationsTemp = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+                            $translationsTemp = $this->getDatabaseConnection()->exec_SELECTgetRows(
                                 $selFieldList ? $selFieldList : 'uid,' . $GLOBALS['TCA'][$trTable]['ctrl']['languageField'],
                                 $trTable,
                                 '((' . $GLOBALS['TCA'][$trTable]['ctrl']['transOrigPointerField'] . '=' . (int)$uid .
@@ -937,7 +938,7 @@ class Tools
             }
             
             // First, select all records that are default language OR international:
-            $allRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table,
+            $allRows = $this->getDatabaseConnection()->exec_SELECTgetRows('*', $table,
                 'pid=' . intval($pageId) .
                 ' AND (' .
                 $TCA[$table]['ctrl']['languageField'] . '<=0' .
@@ -984,9 +985,9 @@ class Tools
      */
     function updateIndexTable($record)
     {
-        $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_l10nmgr_index',
-            'hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($record['hash'], 'tx_l10nmgr_index'));
-        $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_l10nmgr_index', $record);
+        $this->getDatabaseConnection()->exec_DELETEquery('tx_l10nmgr_index',
+            'hash=' . $this->getDatabaseConnection()->fullQuoteStr($record['hash'], 'tx_l10nmgr_index'));
+        $this->getDatabaseConnection()->exec_INSERTquery('tx_l10nmgr_index', $record);
     }
     
     /**
@@ -1082,7 +1083,22 @@ class Tools
      */
     function flushIndexOfWorkspace($ws)
     {
-        $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_l10nmgr_index', 'workspace=' . intval($ws));
+        $this->getDatabaseConnection()->exec_DELETEquery('tx_l10nmgr_index', 'workspace=' . intval($ws));
+    }
+    
+    /**
+     * Get DatabaseConnection instance - $GLOBALS['TYPO3_DB']
+     *
+     * This method should be used instead of direct access to
+     * $GLOBALS['TYPO3_DB'] for easy IDE auto completion.
+     *
+     * @return DatabaseConnection
+     * @deprecated since TYPO3 v8, will be removed in TYPO3 v9
+     */
+    protected function getDatabaseConnection()
+    {
+        GeneralUtility::logDeprecatedFunction();
+        return $GLOBALS['TYPO3_DB'];
     }
     
     /**

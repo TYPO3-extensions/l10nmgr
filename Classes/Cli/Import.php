@@ -33,6 +33,7 @@ use Localizationteam\L10nmgr\Model\TranslationDataFactory;
 use Localizationteam\L10nmgr\Zip;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Controller\CommandLineController;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -734,9 +735,9 @@ class Import extends CommandLineController
             $recipients = GeneralUtility::trimExplode(',', $this->extensionConfiguration['email_recipient_import']);
             if (count($recipients) > 0) {
                 // First of all get a list of all workspaces and all l10nmgr configurations to use in the reporting
-                $workspaces = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,title', 'sys_workspace', '', '', '', '',
+                $workspaces = $this->getDatabaseConnection()->exec_SELECTgetRows('uid,title', 'sys_workspace', '', '', '', '',
                     'uid');
-                $l10nConfigurations = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,title', 'tx_l10nmgr_cfg', '', '',
+                $l10nConfigurations = $this->getDatabaseConnection()->exec_SELECTgetRows('uid,title', 'tx_l10nmgr_cfg', '', '',
                     '', '', 'uid');
                 
                 // Start assembling the mail message
@@ -807,6 +808,21 @@ class Import extends CommandLineController
                 $mailObject->send();
             }
         }
+    }
+    
+    /**
+     * Get DatabaseConnection instance - $GLOBALS['TYPO3_DB']
+     *
+     * This method should be used instead of direct access to
+     * $GLOBALS['TYPO3_DB'] for easy IDE auto completion.
+     *
+     * @return DatabaseConnection
+     * @deprecated since TYPO3 v8, will be removed in TYPO3 v9
+     */
+    protected function getDatabaseConnection()
+    {
+        GeneralUtility::logDeprecatedFunction();
+        return $GLOBALS['TYPO3_DB'];
     }
     
     /**

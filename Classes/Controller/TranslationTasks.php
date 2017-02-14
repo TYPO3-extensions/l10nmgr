@@ -114,7 +114,7 @@ class TranslationTasks extends BaseScriptClass
     {
         
         // Selecting priorities:
-        $priorities = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_priorities',
+        $priorities = $this->getDatabaseConnection()->exec_SELECTgetRows('*', 'tx_l10nmgr_priorities',
             '1=1' . BackendUtility::deleteClause('tx_l10nmgr_priorities'), '', 'sorting');
         $tRows = array();
         $c = 0;

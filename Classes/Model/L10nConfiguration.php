@@ -22,6 +22,7 @@ namespace Localizationteam\L10nmgr\Model;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -170,8 +171,23 @@ class L10nConfiguration
         
         // Serialize back and save it to record:
         $l10ncfg['flexformdiff'] = serialize($flexFormDiffForAllLanguages);
-        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_l10nmgr_cfg', 'uid=' . (int)$l10ncfg['uid'],
+        $this->getDatabaseConnection()->exec_UPDATEquery('tx_l10nmgr_cfg', 'uid=' . (int)$l10ncfg['uid'],
             array('flexformdiff' => $l10ncfg['flexformdiff']));
+    }
+    
+    /**
+     * Get DatabaseConnection instance - $GLOBALS['TYPO3_DB']
+     *
+     * This method should be used instead of direct access to
+     * $GLOBALS['TYPO3_DB'] for easy IDE auto completion.
+     *
+     * @return DatabaseConnection
+     * @deprecated since TYPO3 v8, will be removed in TYPO3 v9
+     */
+    protected function getDatabaseConnection()
+    {
+        GeneralUtility::logDeprecatedFunction();
+        return $GLOBALS['TYPO3_DB'];
     }
     
     /**

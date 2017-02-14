@@ -157,13 +157,13 @@ class Cm2 extends BaseScriptClass
             
             // Fetch translation index records:
             if ($table != 'pages') {
-                $records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
-                    'tablename=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($table,
-                        'tx_l10nmgr_index') . ' AND recuid=' . (int)$uid . ' AND translation_lang IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($languageList) . ')' . ' AND workspace=' . (int)$this->getBackendUser()->workspace . ' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
+                $records = $this->getDatabaseConnection()->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
+                    'tablename=' . $this->getDatabaseConnection()->fullQuoteStr($table,
+                        'tx_l10nmgr_index') . ' AND recuid=' . (int)$uid . ' AND translation_lang IN (' . $this->getDatabaseConnection()->cleanIntList($languageList) . ')' . ' AND workspace=' . (int)$this->getBackendUser()->workspace . ' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
                     '', 'translation_lang, tablename, recuid');
             } else {
-                $records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
-                    'recpid=' . (int)$uid . ' AND translation_lang IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($languageList) . ')' . ' AND workspace=' . (int)$this->getBackendUser()->workspace . ' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
+                $records = $this->getDatabaseConnection()->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
+                    'recpid=' . (int)$uid . ' AND translation_lang IN (' . $this->getDatabaseConnection()->cleanIntList($languageList) . ')' . ' AND workspace=' . (int)$this->getBackendUser()->workspace . ' AND (flag_new>0 OR flag_update>0 OR flag_noChange>0 OR flag_unknown>0)',
                     '', 'translation_lang, tablename, recuid');
             }
             

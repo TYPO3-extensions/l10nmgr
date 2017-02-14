@@ -40,6 +40,7 @@ use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Configuration\TranslationConfigurationProvider;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -125,7 +126,7 @@ class Tcemain
     {
         if (strcmp($this->getBackendUser()->groupData['allowed_languages'], '')) {
             return $this->calcStat($p,
-                $GLOBALS['TYPO3_DB']->cleanIntList($this->getBackendUser()->groupData['allowed_languages']));
+                $this->getDatabaseConnection()->cleanIntList($this->getBackendUser()->groupData['allowed_languages']));
         } else {
             return '';
         }
@@ -136,11 +137,11 @@ class Tcemain
         $output = '';
         //
         if ($p[0] != 'pages') {
-            $records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
-                'tablename=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($p[0],
+            $records = $this->getDatabaseConnection()->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
+                'tablename=' . $this->getDatabaseConnection()->fullQuoteStr($p[0],
                     'tx_l10nmgr_index') . ' AND recuid=' . (int)$p[1] . ' AND translation_lang IN (' . $languageList . ')' . ' AND workspace=' . (int)$this->getBackendUser()->workspace);
         } else {
-            $records = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
+            $records = $this->getDatabaseConnection()->exec_SELECTgetRows('*', 'tx_l10nmgr_index',
                 'recpid=' . (int)$p[1] . ' AND translation_lang IN (' . $languageList . ')' . ' AND workspace=' . (int)$this->getBackendUser()->workspace);
         }
         
@@ -184,6 +185,21 @@ class Tcemain
         return $output;
     }
     
+    /**
+     * Get DatabaseConnection instance - $GLOBALS['TYPO3_DB']
+     *
+     * This method should be used instead of direct access to
+     * $GLOBALS['TYPO3_DB'] for easy IDE auto completion.
+     *
+     * @return DatabaseConnection
+     * @deprecated since TYPO3 v8, will be removed in TYPO3 v9
+     */
+    protected function getDatabaseConnection()
+    {
+        GeneralUtility::logDeprecatedFunction();
+        return $GLOBALS['TYPO3_DB'];
+    }
+
     /**
      * Returns the Backend User
      * @return BackendUserAuthentication

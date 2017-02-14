@@ -225,7 +225,7 @@ class ConfigurationManager extends BaseScriptClass
     protected function getAllConfigurations()
     {
         // Read all l10nmgr configurations from the database
-        $configurations = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_l10nmgr_cfg',
+        $configurations = $this->getDatabaseConnection()->exec_SELECTgetRows('*', 'tx_l10nmgr_cfg',
             '1=1' . BackendUtility::deleteClause('tx_l10nmgr_cfg'), '', 'title');
         // Filter out the configurations which the user is allowed to see, base on the page access rights
         $pagePermissionsClause = $this->getBackendUser()->getPagePermsClause(1);
