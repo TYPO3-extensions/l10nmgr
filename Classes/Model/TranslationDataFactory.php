@@ -2,23 +2,22 @@
 namespace Localizationteam\L10nmgr\Model;
 
 /***************************************************************
- *  Copyright notice
- *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
- *  All rights reserved
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  This copyright notice MUST APPEAR in all copies of the script!
+ * Copyright notice
+ * (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
+ * All rights reserved
+ * This script is part of the TYPO3 project. The TYPO3 project is
+ * free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * The GNU General Public License can be found at
+ * http://www.gnu.org/copyleft/gpl.html.
+ * This script is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
 use Localizationteam\L10nmgr\Model\Tools\XmlTools;
 use TYPO3\CMS\Core\Html\RteHtmlParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -27,19 +26,18 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Returns initialised TranslationData Objects
  * This is used to get TranslationData out of the import files for example
  *
- * @author  Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @author  Daniel Pötzinger <ext@aoemedia.de>
+ * @author Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author Daniel Pötzinger <ext@aoemedia.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
 class TranslationDataFactory
 {
-    
     /**
      * @var string List of error messages
      */
     protected $_errorMsg;
-    
+
     /**
      * public Factory method to get initialised tranlationData Object from the passed XMLNodes Array
      * see tx_l10nmgr_CATXMLImportManager
@@ -48,17 +46,15 @@ class TranslationDataFactory
      *
      * @return TranslationData Object with data
      **/
-    function getTranslationDataFromCATXMLNodes(&$xmlNodes)
+    public function getTranslationDataFromCATXMLNodes(&$xmlNodes)
     {
         $data = $this->_getParsedCATXMLFromXMLNodes($xmlNodes);
-        
-        /** @var $translationData TranslationData */
+        /** @var TranslationData $translationData */
         $translationData = GeneralUtility::makeInstance(TranslationData::class);
         $translationData->setTranslationData($data);
-        
         return $translationData;
     }
-    
+
     /**
      * Parses XML String and returns translationData
      *
@@ -66,15 +62,13 @@ class TranslationDataFactory
      *
      * @return array with translated information
      **/
-    function _getParsedCATXMLFromXMLNodes(&$xmlNodes)
+    protected function _getParsedCATXMLFromXMLNodes(&$xmlNodes)
     {
-        /** @var $xmlTool XmlTools */
+        /** @var XmlTools $xmlTool */
         $xmlTool = GeneralUtility::makeInstance(XmlTools::class);
-        
-        //print_r($xmlNodes); exit;
+//print_r($xmlNodes); exit;
         $translation = array();
-        
-        // OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
+// OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
         if (is_array($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'])) {
             foreach ($xmlNodes['TYPO3L10N'][0]['ch']['pageGrp'] as $pageGrp) {
                 if (is_array($pageGrp['ch']['data'])) {
@@ -84,20 +78,19 @@ class TranslationDataFactory
                             $translationValue = $xmlTool->XML2RTE($row['XMLvalue']);
                             $translation[$attrs['table']][$attrs['elementUid']][$attrs['key']] = $translationValue;
                         } else {
-                            //Substitute &amp; with & and <br/> with <br>
-                            //$row['XMLvalue'] = htmlspecialchars($row['XMLvalue'],ENT_COMPAT|ENT_IGNORE|ENT_XHTML,'UTF-8',false);
-                            //$row['XMLvalue'] = str_replace('&amp;', '&', $row['XMLvalue']);
-                            //$row['XMLvalue'] = str_replace('<br/>', '<br>', $row['XMLvalue']);
-                            //$row['XMLvalue'] = str_replace('<br />', '<br>', $row['XMLvalue']);
+//Substitute &amp; with & and <br/> with <br>
+//$row['XMLvalue'] = htmlspecialchars($row['XMLvalue'],ENT_COMPAT|ENT_IGNORE|ENT_XHTML,'UTF-8',false);
+//$row['XMLvalue'] = str_replace('&amp;', '&', $row['XMLvalue']);
+//$row['XMLvalue'] = str_replace('<br/>', '<br>', $row['XMLvalue']);
+//$row['XMLvalue'] = str_replace('<br />', '<br>', $row['XMLvalue']);
                             $row['values'][0] = preg_replace('/&(?!(amp|nbsp|quot|apos|lt|gt);)/', '&amp;',
                                 $row['values'][0]);
                             $row['values'][0] = preg_replace('/\xc2\xa0/', '&nbsp;', $row['values'][0]);
                             $row['values'][0] = htmlspecialchars($row['values'][0], ENT_COMPAT | ENT_IGNORE | ENT_XHTML,
                                 'UTF-8', false);
-                            //$row['values'][0] = str_replace('<br/>', '<br>', $row['values'][0]);
-                            //$row['values'][0] = str_replace('<br />', '<br>', $row['values'][0]);
-                            
-                            //check if $row['values'][0] is beginning of $row['XMLvalue']
+//$row['values'][0] = str_replace('<br/>', '<br>', $row['values'][0]);
+//$row['values'][0] = str_replace('<br />', '<br>', $row['values'][0]);
+//check if $row['values'][0] is beginning of $row['XMLvalue']
                             if (TYPO3_DLOG) {
                                 GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': V0: ' . $row['values'][0],
                                     'l10nmgr');
@@ -151,10 +144,9 @@ class TranslationDataFactory
                 }
             }
         }
-        
         return $translation;
     }
-    
+
     /**
      * public Factory method to get initialized translationData Object from the passed XML
      *
@@ -162,44 +154,38 @@ class TranslationDataFactory
      *
      * @return TranslationData Object with data
      **/
-    function getTranslationDataFromExcelXMLFile($xmlFile)
+    public function getTranslationDataFromExcelXMLFile($xmlFile)
     {
         $fileContent = GeneralUtility::getUrl($xmlFile);
-        
         $data = $this->_getParsedExcelXML($fileContent);
         if ($data === false) {
             die($this->_errorMsg);
         }
-        
-        /** @var $translationData TranslationData */
+        /** @var TranslationData $translationData */
         $translationData = GeneralUtility::makeInstance(TranslationData::class);
         $translationData->setTranslationData($data);
-        
         return $translationData;
     }
-    
+
     /**
      * Private internal function to parse the excel import XML format.
      * TODO: possibly make separate class for this.
      *
      * @param string $fileContent String with XML
      *
-     * @return array with translated information
+     * @return array | bool with translated information
      **/
-    function _getParsedExcelXML($fileContent)
+    protected function _getParsedExcelXML($fileContent)
     {
         // Parse XML in a rude fashion:
         // Check if &nbsp; has to be substituted -> DOCTYPE -> entity?
         $xmlNodes = GeneralUtility::xml2tree(str_replace('&nbsp;', '&#160;',
             $fileContent)); // For some reason PHP chokes on incoming &nbsp; in XML!
         $translation = array();
-        
         if (!is_array($xmlNodes)) {
             $this->_errorMsg .= $xmlNodes;
-            
             return false;
         }
-        
         $worksheetIdentifier = '';
         // At least OpenOfficeOrg Calc changes the worksheet identifier. For now we better check for this, otherwise we cannot import translations edited with OpenOfficeOrg Calc.
         if (isset($xmlNodes['Workbook'][0]['ch']['Worksheet'])) {
@@ -208,7 +194,6 @@ class TranslationDataFactory
         if (isset($xmlNodes['Workbook'][0]['ch']['ss:Worksheet'])) {
             $worksheetIdentifier = 'ss:Worksheet';
         }
-        
         // OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
         if (is_array($xmlNodes['Workbook'][0]['ch'][$worksheetIdentifier][0]['ch']['Table'][0]['ch']['Row'])) {
             foreach ($xmlNodes['Workbook'][0]['ch'][$worksheetIdentifier][0]['ch']['Table'][0]['ch']['Row'] as $row) {
@@ -225,64 +210,55 @@ class TranslationDataFactory
                 }
             }
         }
-        
         return $translation;
     }
-    
+
     /**
      * For supporting older Format (without pagegrp element)
-     *    public Factory method to get initialised tranlationData Object from the passed XML
+     *public Factory method to get initialised tranlationData Object from the passed XML
      *
      * @param string $xmlFile Path to the XML file
      *
      * @return TranslationData Object with data
      **/
-    function getTranslationDataFromOldFormatCATXMLFile($xmlFile)
+    public function getTranslationDataFromOldFormatCATXMLFile($xmlFile)
     {
         $fileContent = GeneralUtility::getUrl($xmlFile);
         $data = $this->_getParsedCATXMLFromOldFormat($fileContent);
         if ($data === false) {
             die($this->_errorMsg);
         }
-        
-        /** @var $translationData TranslationData */
+        /** @var TranslationData $translationData */
         $translationData = GeneralUtility::makeInstance(TranslationData::class);
         $translationData->setTranslationData($data);
-        
         return $translationData;
     }
-    
+
     /**
      * For supporting older Format (without pagegrp element)
      *
      * @param string $fileContent String with XML
      *
-     * @return array with translated information
+     * @return array | bool with translated information
      **/
-    function _getParsedCATXMLFromOldFormat($fileContent)
+    protected function _getParsedCATXMLFromOldFormat($fileContent)
     {
-        /** @var $parseHTML RteHtmlParser */
+        /** @var RteHtmlParser $parseHTML */
         $parseHTML = GeneralUtility::makeInstance(RteHtmlParser::class);
         $xmlNodes = GeneralUtility::xml2tree(str_replace('&nbsp;', '&#160;', $fileContent),
             2); // For some reason PHP chokes on incoming &nbsp; in XML!
-        
         if (!is_array($xmlNodes)) {
             $this->_errorMsg .= $xmlNodes;
-            
             return false;
         }
         $translation = array();
-        
         // OK, this method of parsing the XML really sucks, but it was 4:04 in the night and ... I have no clue to make it better on PHP4. Anyway, this will work for now. But is probably unstable in case a user puts formatting in the content of the translation! (since only the first CData chunk will be found!)
         if (is_array($xmlNodes['TYPO3L10N'][0]['ch']['Data'])) {
             foreach ($xmlNodes['TYPO3L10N'][0]['ch']['Data'] as $row) {
                 $attrs = $row['attrs'];
-                
                 if ($attrs['transformations'] == '1') { //substitute check with rte enabled fields from TCA
-                    
                     //$translationValue =$this->_getXMLFromTreeArray($row);
                     $translationValue = $row['XMLvalue'];
-                    
                     //fixed setting of Parser (TO-DO set it via typoscript)
                     $parseHTML->procOptions['typolist'] = false;
                     $parseHTML->procOptions['typohead'] = false;
@@ -297,7 +273,6 @@ class TranslationDataFactory
                     $parseHTML->procOptions['denyTags'] = 'strong';
                     //$parseHTML->procOptions['disableUnifyLineBreaks']=TRUE;
                     $parseHTML->procOptions['dontRemoveUnknownTags_db'] = true;
-                    
                     $translationValue = $parseHTML->TS_transform_db($translationValue); // removes links from content if not called first!
                     //print_r($translationValue);
                     $translationValue = $parseHTML->TS_images_db($translationValue);
@@ -313,7 +288,6 @@ class TranslationDataFactory
                 }
             }
         }
-        
         return $translation;
     }
 }

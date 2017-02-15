@@ -2,28 +2,27 @@
 namespace Localizationteam\L10nmgr\Controller;
 
 /***************************************************************
- *  Copyright notice
- *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
- *  All rights reserved
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  This copyright notice MUST APPEAR in all copies of the script!
+ * Copyright notice
+ * (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
+ * All rights reserved
+ * This script is part of the TYPO3 project. The TYPO3 project is
+ * free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * The GNU General Public License can be found at
+ * http://www.gnu.org/copyleft/gpl.html.
+ * This script is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 /**
  * Module 'L10N Manager' for the 'l10nmgr' extension.
  *
- * @author  Kasper Skårhøj <kasperYYYY@typo3.com>
+ * @author Kasper Skårhøj <kasperYYYY@typo3.com>
  */
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Module\BaseScriptClass;
@@ -32,19 +31,17 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Translation management tool
  *
- * @author     Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @author     Jo Hasenau <info@cybercraft.de>
- * @package    TYPO3
+ * @authorKasper Skaarhoj <kasperYYYY@typo3.com>
+ * @authorJo Hasenau <info@cybercraft.de>
+ * @packageTYPO3
  * @subpackage tx_l10nmgr
  */
 class ConfigurationManager extends BaseScriptClass
 {
-    
     var $pageinfo;
     /**
      * Document Template Object
@@ -72,12 +69,11 @@ class ConfigurationManager extends BaseScriptClass
      * @var string
      */
     protected $moduleName = 'web_ConfigurationManager';
-    
     /**
      * @var IconFactory
      */
     protected $iconFactory;
-    
+
     /**
      * Constructor
      */
@@ -90,7 +86,7 @@ class ConfigurationManager extends BaseScriptClass
             'name' => $this->moduleName,
         );
     }
-    
+
     /**
      * Injects the request object for the current request or subrequest
      * Then checks for module functions that have hooked in, and renders menu etc.
@@ -103,41 +99,36 @@ class ConfigurationManager extends BaseScriptClass
     {
         $GLOBALS['SOBE'] = $this;
         $this->init();
-        
         // Checking for first level external objects
         $this->checkExtObj();
-        
         // Checking second level external objects
         $this->checkSubExtObj();
         $this->main();
-        
         $this->moduleTemplate->setContent($this->content);
-        
         $response->getBody()->write($this->moduleTemplate->renderContent());
         return $response;
     }
-    
+
     /**
      * Initializes the Module
      *
-     * @return  void
+     * @return void
      */
     public function init()
     {
         $this->getBackendUser()->modAccess($this->MCONF, 1);
         parent::init();
     }
-    
+
     /**
      * Main function of the module. Write the content to $this->content
      * If you chose "web" as main module, you will need to consider the $this->id parameter which will contain the uid-number of the page clicked in the page tree
      *
-     * @return  void
+     * @return void
      */
     public function main()
     {
         $siteRelPath = ExtensionManagementUtility::siteRelPath('l10nmgr');
-        
         // Get a template instance and load the template
         $this->moduleTemplate->backPath = $GLOBALS['BACK_PATH'];
         // NOTE: this module uses the same template as the CM1 module
@@ -146,12 +137,10 @@ class ConfigurationManager extends BaseScriptClass
         $this->moduleTemplate->loadJavascriptLib($siteRelPath . 'Resources/Public/Contrib/jquery-1.2.3.js');
         $this->moduleTemplate->loadJavascriptLib($siteRelPath . 'Resources/Public/Contrib/jquery.tooltip.js');
         $this->moduleTemplate->loadJavascriptLib($siteRelPath . 'Resources/Private/Templates/mod1_list.js');
-        
         // Get the actual content
         $this->content = $this->moduleContent();
-        
     }
-    
+
     /**
      * Generates and returns the content of the module
      *
@@ -213,10 +202,9 @@ class ConfigurationManager extends BaseScriptClass
             }
             $content .= '</tbody></table></div>';
         }
-        
         return $content;
     }
-    
+
     /**
      * Returns all l10nmgr configurations to which the current user has access, based on page permissions
      *
@@ -235,10 +223,9 @@ class ConfigurationManager extends BaseScriptClass
                 $allowedConfigurations[] = $row;
             }
         }
-        
         return $allowedConfigurations;
     }
-    
+
     /**
      * Renders a detailed view of a l10nmgr configuration
      *
@@ -284,10 +271,9 @@ class ConfigurationManager extends BaseScriptClass
         $details .= '<td>' . $configuration['incfcewithdefaultlanguage'] . '</td>';
         $details .= '</tr>';
         $details .= '</table>';
-        
         return $details;
     }
-    
+
     /**
      * Returns the details of a given page record, possibly from cache if already fetched earlier
      *
@@ -304,60 +290,6 @@ class ConfigurationManager extends BaseScriptClass
             $record = BackendUtility::getRecord('pages', $uid);
             $this->pageDetails[$uid] = $record;
         }
-        
-        return $record;
-    }
-    
-    /**
-     * Prints out the module HTML
-     *
-     * @return  void
-     */
-    public function printContent()
-    {
-        print $this->content;
-    }
-    
-    /**
-     * Create the panel of buttons for submitting the form or otherwise perform operations.
-     *
-     * @return  array  all available buttons as an assoc. array
-     */
-    protected function getButtons()
-    {
-        $buttons = array();
-        
-        $buttons['reload'] = '<a href="' . $GLOBALS['MCONF']['_'] . '" title="' . $this->getLanguageService()->sL('LLL:EXT:lang/locallang_core.xml:labels.reload',
-                true) . '">' . $this->iconFactory->getIcon('actions-system-refresh') . '</a>';
-        
-        // Shortcut
-        if ($this->getBackendUser()->mayMakeShortcut()) {
-            $buttons['shortcut'] = $this->moduleTemplate->makeShortcutIcon('', 'function', $this->MCONF['name']);
-        }
-        
-        return $buttons;
-    }
-    
-    /**
-     * Returns the details of a given static language record, possibly from cache if already fetched earlier
-     *
-     * @param int $uid Id of a language
-     *
-     * @return array Language record from the database
-     */
-    protected function getLanguageDetails($uid)
-    {
-        $record = array();
-        $uid = (int)$uid;
-        if ($uid > 0) {
-            if (isset($this->languageDetails[$uid])) {
-                $record = $this->languageDetails[$uid];
-            } else {
-                $record = BackendUtility::getRecord('static_languages', $uid);
-                $this->languageDetails[$uid] = $record;
-            }
-        }
-        
         return $record;
     }
 }

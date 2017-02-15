@@ -2,14 +2,13 @@
 namespace Localizationteam\L10nmgr\Cli;
 
 /***************************************************************
- *  Copyright notice
- *  (c) 2009 Daniel Zielinski (d.zielinski
+ * Copyright notice
+ * (c) 2009 Daniel Zielinski (d.zielinski
  *
  * @l10ntech.de)
- *  All rights reserved
- *  [...]
+ * All rights reserved
+ * [...]
  */
-
 use Localizationteam\L10nmgr\Model\L10nConfiguration;
 use Localizationteam\L10nmgr\View\CatXmlView;
 use Localizationteam\L10nmgr\View\ExcelXmlView;
@@ -27,31 +26,27 @@ if (!defined('TYPO3_cliMode')) {
 
 class Export extends CommandLineController
 {
-    
+    /**
+     * @var array $lConf Extension configuration
+     */
+    protected $lConf;
     /**
      * @var LanguageService
      */
     protected $languageService;
-    
-    /**
-     * @var array $lConf Extension configuration
-     */
-    var $lConf;
-    
+
     /**
      * Constructor
      */
-    function Export()
+    public function Export()
     {
-        
         // Running parent class constructor
         parent::__construct();
-        
         // Adding options to help archive:
         $this->cli_options[] = array(
             '--format',
             'Format for export of translatable data',
-            "The value can be:\n  CATXML = XML for translation tools (default)\n  EXCEL = Microsoft XML format \n"
+            "The value can be:\n CATXML = XML for translation tools (default)\n EXCEL = Microsoft XML format \n"
         );
         $this->cli_options[] = array(
             '--config',
@@ -85,7 +80,6 @@ class Export extends CommandLineController
         );
         $this->cli_options[] = array('--help', 'Show help', "");
         $this->cli_options[] = array('-h', 'Same as --help', "");
-        
         // Setting help texts:
         $this->cli_help['name'] = 'Localization Manager exporter';
         $this->cli_help['synopsis'] = '###OPTIONS###';
@@ -93,7 +87,7 @@ class Export extends CommandLineController
         $this->cli_help['examples'] = '/.../cli_dispatch.phpsh l10nmgr_export --format=CATXML --config=l10ncfg --target=tlangs --workspace=wsid --hidden=TRUE --updated=FALSE';
         $this->cli_help['author'] = 'Daniel Zielinski - L10Ntech.de, (c) 2009';
     }
-    
+
     /**
      * CLI engine
      *
@@ -103,23 +97,18 @@ class Export extends CommandLineController
      */
     public function cli_main($argv)
     {
-        
         // Performance measuring
         $time_start = microtime(true);
-        
         // Load the configuration
         $this->loadExtConf();
-        
         if (isset($this->cli_args['--help']) || isset($this->cli_args['-h'])) {
             $this->cli_validateArgs();
             $this->cli_help();
             exit;
         }
-        
         // get format (CATXML,EXCEL)
         //$format = (string)$this->cli_args['_DEFAULT'][1];
         $format = isset($this->cli_args['--format']) ? $this->cli_args['--format'][0] : 'CATXML';
-        
         // get l10ncfg command line takes precedence over extConf
         //$l10ncfg = (string)$this->cli_args['_DEFAULT'][2];
         $l10ncfg = isset($this->cli_args['--config']) ? $this->cli_args['--config'][0] : 'EXTCONF';
@@ -133,7 +122,6 @@ class Export extends CommandLineController
             $this->cli_echo($this->getLanguageService()->getLL('error.no_l10ncfg.msg') . "\n");
             exit;
         }
-        
         // get target languages
         //$tlang = (string)$this->cli_args['_DEFAULT'][3]; //extend to list of target languages!
         $tlang = isset($this->cli_args['--target']) ? $this->cli_args['--target'][0] : '0';
@@ -147,7 +135,6 @@ class Export extends CommandLineController
             $this->cli_echo($this->getLanguageService()->getLL('error.target_language_id.msg') . "\n");
             exit;
         }
-        
         // get workspace ID
         //$wsId = (string)$this->cli_args['_DEFAULT'][4];
         $wsId = isset($this->cli_args['--workspace']) ? $this->cli_args['--workspace'][0] : '0';
@@ -156,13 +143,10 @@ class Export extends CommandLineController
             exit;
         }
         $msg = '';
-        
         // Force user to admin state
         $this->getBackendUser()->user['admin'] = 1;
-        
         // Set workspace to the required workspace ID from CATXML:
         $this->getBackendUser()->setWorkspace($wsId);
-        
         if ($format == 'CATXML') {
             foreach ($l10ncfgs as $l10ncfg) {
                 if (MathUtility::canBeInterpretedAsInteger($l10ncfg) === false) {
@@ -193,24 +177,51 @@ class Export extends CommandLineController
             }
         }
         // Send email notification if set
-        
         $time_end = microtime(true);
         $time = $time_end - $time_start;
         $this->cli_echo($msg . LF);
         $this->cli_echo(sprintf($this->getLanguageService()->getLL('export.process.duration.message'), $time) . LF);
     }
-    
+
     /**
      * The function loadExtConf loads the extension configuration.
      *
      * @return void
      */
-    function loadExtConf()
+    protected function loadExtConf()
     {
         // Load the configuration
         $this->lConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr']);
     }
-    
+
+    /**
+     * getter/setter for LanguageService object
+     *
+     * @return LanguageService $languageService
+     */
+    protected function getLanguageService()
+    {
+        if (!$this->languageService instanceof LanguageService) {
+            $this->languageService = GeneralUtility::makeInstance(LanguageService::class);
+        }
+        $fileRef = 'EXT:l10nmgr/Resources/Private/Language/Cli/locallang.xml';
+        $this->languageService->includeLLFile($fileRef);
+        if ($this->getBackendUser()) {
+            $this->languageService->init($this->getBackendUser()->uc['lang']);
+        }
+        return $this->languageService;
+    }
+
+    /**
+     * Gets the current backend user.
+     *
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+
     /**
      * exportCATXML which is called over cli
      *
@@ -219,23 +230,18 @@ class Export extends CommandLineController
      *
      * @return string An error message in case of failure
      */
-    function exportCATXML($l10ncfg, $tlang)
+    protected function exportCATXML($l10ncfg, $tlang)
     {
-        
         $error = '';
-        
         // Load the configuration
         $this->loadExtConf();
-        
-        /** @var $l10nmgrCfgObj L10nConfiguration */
+        /** @var L10nConfiguration $l10nmgrCfgObj */
         $l10nmgrCfgObj = GeneralUtility::makeInstance(L10nConfiguration::class);
         $l10nmgrCfgObj->load($l10ncfg);
         if ($l10nmgrCfgObj->isLoaded()) {
-            
-            /** @var $l10nmgrGetXML CatXmlView */
+            /** @var CatXmlView $l10nmgrGetXML */
             $l10nmgrGetXML = GeneralUtility::makeInstance(CatXmlView::class, $l10nmgrCfgObj, $tlang);
-            
-            // Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
+            // Check  if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
             if ($l10nmgrCfgObj->getData('sourceLangStaticId') && ExtensionManagementUtility::isLoaded('static_info_tables')) {
                 $staticLangArr = BackendUtility::getRecordRaw('sys_language',
                     'static_lang_isocode = ' . $l10nmgrCfgObj->getData('sourceLangStaticId'), 'uid');
@@ -244,7 +250,6 @@ class Export extends CommandLineController
                     $l10nmgrGetXML->setForcedSourceLanguage($forceLanguage);
                 }
             }
-            
             $onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';
             if ($onlyChanged === 'TRUE') {
                 $l10nmgrGetXML->setModeOnlyChanged();
@@ -254,7 +259,6 @@ class Export extends CommandLineController
                 $this->getBackendUser()->uc['moduleData']['tx_l10_nmgr_M1_tx_l10nmgr_cm1']['noHidden'] = true;
                 $l10nmgrGetXML->setModeNoHidden();
             }
-            
             // If the check for already exported content is enabled, run the ckeck.
             $checkExportsCli = isset($this->cli_args['--check-exports']) ? (bool)$this->cli_args['--check-exports'][0] : false;
             $checkExports = $l10nmgrGetXML->checkExports();
@@ -265,7 +269,6 @@ class Export extends CommandLineController
                 // Save export to XML file
                 $xmlFileName = PATH_site . $l10nmgrGetXML->render();
                 $l10nmgrGetXML->saveExportInformation();
-                
                 // If email notification is set send export files to responsible translator
                 if ($this->lConf['enable_notification'] == 1) {
                     if (empty($this->lConf['email_recipient'])) {
@@ -277,7 +280,6 @@ class Export extends CommandLineController
                 } else {
                     $this->cli_echo($this->getLanguageService()->getLL('error.email.notification_disabled.msg') . "\n");
                 }
-                
                 // If FTP option is set upload files to remote server
                 if ($this->lConf['enable_ftp'] == 1) {
                     if (file_exists($xmlFileName)) {
@@ -288,7 +290,6 @@ class Export extends CommandLineController
                 } else {
                     $this->cli_echo($this->getLanguageService()->getLL('error.ftp.disabled.msg') . "\n");
                 }
-                
                 if ($this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
                     $this->cli_echo(sprintf($this->getLanguageService()->getLL('export.file_saved.msg'),
                             $xmlFileName) . "\n");
@@ -297,10 +298,9 @@ class Export extends CommandLineController
         } else {
             $error .= $this->getLanguageService()->getLL('error.l10nmgr.object_not_loaded.msg') . "\n";
         }
-        
         return ($error);
     }
-    
+
     /**
      * The function ftpUpload puts an export on a remote FTP server for further processing
      *
@@ -309,11 +309,9 @@ class Export extends CommandLineController
      *
      * @return string Error message
      */
-    function ftpUpload($xmlFileName, $filename)
+    protected function ftpUpload($xmlFileName, $filename)
     {
-        
         $error = '';
-        
         $connection = ftp_connect($this->lConf['ftp_server']) or die("Connection failed");
         if ($connection) {
             if (@ftp_login($connection, $this->lConf['ftp_server_username'], $this->lConf['ftp_server_password'])) {
@@ -332,10 +330,9 @@ class Export extends CommandLineController
         } else {
             $error .= $this->getLanguageService()->getLL('error.ftp.connection_failed.msg');
         }
-        
         return $error;
     }
-    
+
     /**
      * exportEXCELXML which is called over cli
      *
@@ -344,22 +341,17 @@ class Export extends CommandLineController
      *
      * @return string An error message in case of failure
      */
-    function exportEXCELXML($l10ncfg, $tlang)
+    protected function exportEXCELXML($l10ncfg, $tlang)
     {
-        
         $error = '';
-        
         // Load the configuration
         $this->loadExtConf();
-        
-        /** @var $l10nmgrCfgObj L10nConfiguration */
+        /** @var L10nConfiguration $l10nmgrCfgObj */
         $l10nmgrCfgObj = GeneralUtility::makeInstance(L10nConfiguration::class);
         $l10nmgrCfgObj->load($l10ncfg);
         if ($l10nmgrCfgObj->isLoaded()) {
-            
-            /** @var $l10nmgrGetXML ExcelXmlView */
+            /** @var ExcelXmlView $l10nmgrGetXML */
             $l10nmgrGetXML = GeneralUtility::makeInstance(ExcelXmlView::class, $l10nmgrCfgObj, $tlang);
-            
             // Check if sourceLangStaticId is set in configuration and set setForcedSourceLanguage to this value
             if ($l10nmgrCfgObj->getData('sourceLangStaticId') && ExtensionManagementUtility::isLoaded('static_info_tables')) {
                 $staticLangArr = BackendUtility::getRecordRaw('sys_language',
@@ -369,7 +361,6 @@ class Export extends CommandLineController
                     $l10nmgrGetXML->setForcedSourceLanguage($forceLanguage);
                 }
             }
-            
             $onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';
             if ($onlyChanged === 'TRUE') {
                 $l10nmgrGetXML->setModeOnlyChanged();
@@ -379,7 +370,6 @@ class Export extends CommandLineController
                 $this->getBackendUser()->uc['moduleData']['tx_l10nmgr_M1_tx_l10nmgr_cm1']['noHidden'] = true;
                 $l10nmgrGetXML->setModeNoHidden();
             }
-            
             // If the check for already exported content is enabled, run the ckeck.
             $checkExportsCli = isset($this->cli_args['--check-exports']) ? (bool)$this->cli_args['--check-exports'][0] : false;
             $checkExports = $l10nmgrGetXML->checkExports();
@@ -390,7 +380,6 @@ class Export extends CommandLineController
                 // Save export to XML file
                 $xmlFileName = $l10nmgrGetXML->render();
                 $l10nmgrGetXML->saveExportInformation();
-                
                 // If email notification is set send export files to responsible translator
                 if ($this->lConf['enable_notification'] == 1) {
                     if (empty($this->lConf['email_recipient'])) {
@@ -401,7 +390,6 @@ class Export extends CommandLineController
                 } else {
                     $this->cli_echo($this->getLanguageService()->getLL('error.email.notification_disabled.msg') . "\n");
                 }
-                
                 // If FTP option is set upload files to remote server
                 if ($this->lConf['enable_ftp'] == 1) {
                     if (file_exists($xmlFileName)) {
@@ -412,7 +400,6 @@ class Export extends CommandLineController
                 } else {
                     $this->cli_echo($this->getLanguageService()->getLL('error.ftp.disabled.msg') . "\n");
                 }
-                
                 if ($this->lConf['enable_notification'] == 0 && $this->lConf['enable_ftp'] == 0) {
                     $this->cli_echo(sprintf($this->getLanguageService()->getLL('export.file_saved.msg'),
                             $xmlFileName) . "\n");
@@ -421,10 +408,9 @@ class Export extends CommandLineController
         } else {
             $error .= $this->getLanguageService()->getLL('error.l10nmgr.object_not_loaded.msg') . "\n";
         }
-        
         return ($error);
     }
-    
+
     /**
      * The function emailNotification sends an email with a translation job to the recipient specified in the extension config.
      *
@@ -434,7 +420,7 @@ class Export extends CommandLineController
      *
      * @return void
      */
-    function emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang)
+    protected function emailNotification($xmlFileName, $l10nmgrCfgObj, $tlang)
     {
         // Get source & target language ISO codes
         $sourceStaticLangArr = BackendUtility::getRecord('static_languages',
@@ -444,13 +430,11 @@ class Export extends CommandLineController
             'lg_iso_2');
         $sourceLang = $sourceStaticLangArr['lg_iso_2'];
         $targetLang = $targetStaticLangArr['lg_iso_2'];
-        
         // Construct email message
-        /** @var $email t3lib_htmlmail */
+        /** @var t3lib_htmlmail $email */
         $email = GeneralUtility::makeInstance('t3lib_htmlmail');
         $email->start();
         $email->useQuotedPrintable();
-        
         $email->subject = sprintf($this->getLanguageService()->getLL('email.suject.msg'), $sourceLang, $targetLang,
             $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
         if (empty($this->getBackendUser()->user['email']) || empty($this->getBackendUser()->user['realName'])) {
@@ -465,7 +449,6 @@ class Export extends CommandLineController
             $email->replyto_name = $this->getBackendUser()->user['realName'];
         }
         $email->organisation = $this->lConf['email_sender_organisation'];
-        
         $message = array(
             'msg1' => $this->getLanguageService()->getLL('email.greeting.msg'),
             'msg2' => '',
@@ -487,48 +470,15 @@ class Export extends CommandLineController
                 $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
         }
         $msg = implode(chr(10), $message);
-        
         $email->addPlain($msg);
         if ($this->lConf['email_attachment']) {
             $email->addAttachment($xmlFileName);
         }
         $email->send($this->lConf['email_recipient']);
     }
-    
-    /**
-     * getter/setter for LanguageService object
-     *
-     * @return LanguageService $languageService
-     */
-    protected function getLanguageService()
-    {
-        if (!$this->languageService instanceof LanguageService) {
-            $this->languageService = GeneralUtility::makeInstance(LanguageService::class);
-        }
-
-        $fileRef = 'EXT:l10nmgr/Resources/Private/Language/Cli/locallang.xml';
-        $this->languageService->includeLLFile($fileRef);
-
-        if ($this->getBackendUser()) {
-            $this->languageService->init($this->getBackendUser()->uc['lang']);
-        }
-    
-        return $this->languageService;
-    }
-    
-    /**
-     * Gets the current backend user.
-     *
-     * @return BackendUserAuthentication
-     */
-    protected function getBackendUser()
-    {
-        return $GLOBALS['BE_USER'];
-    }
-    
 }
 
 // Call the functionality
-/** @var $cleanerObj Export */
+/** @var Export $cleanerObj */
 $cleanerObj = GeneralUtility::makeInstance(Export::class);
 $cleanerObj->cli_main($_SERVER['argv']);

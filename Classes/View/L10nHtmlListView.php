@@ -2,21 +2,21 @@
 namespace Localizationteam\L10nmgr\View;
 
 /***************************************************************
- *  Copyright notice
- *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
- *  All rights reserved
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  This copyright notice MUST APPEAR in all copies of the script!
+ * Copyright notice
+ * (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
+ * All rights reserved
+ * This script is part of the TYPO3 project. The TYPO3 project is
+ * free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * The GNU General Public License can be found at
+ * http://www.gnu.org/copyleft/gpl.html.
+ * This script is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Localizationteam\L10nmgr\Model\L10nAccumulatedInformation;
 use Localizationteam\L10nmgr\Model\L10nConfiguration;
@@ -26,11 +26,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * l10nHTMLListView:
- *  renders accumulated informations for the browser:
- *  - Table with inline editing / links  etc...
+ * renders accumulated informations for the browser:
+ * - Table with inline editing / links etc...
  *
- * @author  Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @author  Daniel Pötzinger <development@aoemedia.de>
+ * @author Kasper Skaarhoj <kasperYYYY@typo3.com>
+ * @author Daniel Pötzinger <development@aoemedia.de>
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
@@ -39,44 +39,67 @@ class L10nHtmlListView extends AbstractExportView
     /**
      * @var L10nConfiguration
      */
-    var $l10ncfgObj; //
-    var $sysLang; // Internal array (=datarow of config record)
-    //internal flags:
-    var $modeWithInlineEdit = false;
-    var $modeShowEditLinks = false;
-    /**7
+    protected $l10ncfgObj; //
+    /**
      * @var DocumentTemplate
      */
     protected $module;
+    /**
+     * @var array
+     */
     protected $l10ncfg;
-    
-    function __construct($l10ncfgObj, $sysLang)
+    /**
+     * @var int
+     */
+    protected $sysLang;
+    //internal flags:
+    /**
+     * @var bool
+     */
+    protected $modeWithInlineEdit = false;
+    /**
+     * @var bool
+     */
+    protected $modeShowEditLinks = false;
+
+    /**
+     * L10nHtmlListView constructor.
+     * @param L10nConfiguration $l10ncfgObj
+     * @param int $sysLang
+     */
+    public function __construct($l10ncfgObj, $sysLang)
     {
         global $BACK_PATH;
         $this->module = GeneralUtility::makeInstance(DocumentTemplate::class);
         $this->module->backPath = $BACK_PATH;
         parent::__construct($l10ncfgObj, $sysLang);
     }
-    
-    function setModeWithInlineEdit()
+
+    /**
+     * @return void
+     */
+    public function setModeWithInlineEdit()
     {
         $this->modeWithInlineEdit = true;
     }
-    
-    function setModeShowEditLinks()
+
+    /**
+     * @return void
+     */
+    public function setModeShowEditLinks()
     {
         $this->modeShowEditLinks = true;
     }
-    
+
     /**
      * Render the module content in HTML
      *
-     * @return  string    HTML content
+     * @return string HTML content
      */
-    function renderOverview()
+    public function renderOverview()
     {
         $sysLang = $this->sysLang;
-        /** @var $accumObj L10nAccumulatedInformation */
+        /** @var L10nAccumulatedInformation $accumObj */
         $accumObj = $this->l10ncfgObj->getL10nAccumulatedInformationsObjectForLanguage($sysLang);
         $accum = $accumObj->getInfoArray();
         $l10ncfg = $this->l10ncfg;
@@ -155,17 +178,17 @@ class L10nHtmlListView extends AbstractExportView
                                 $editLink = '';
                             }
                             $tableRows[] = '<tr class="info">
-								<th colspan="2"><a href="' . htmlspecialchars('index.php?id=' . GeneralUtility::_GET('id') . '&showSingle=' . rawurlencode($table . ':' . $elementUid)) . '">' . htmlspecialchars($table . ':' . $elementUid) . '</a>' . $editLink . '</th>
-								<th colspan="3">' . htmlspecialchars(GeneralUtility::arrayToLogString($flags)) . '</th>
-							</tr>';
+	<th colspan="2"><a href="' . htmlspecialchars('index.php?id=' . GeneralUtility::_GET('id') . '&showSingle=' . rawurlencode($table . ':' . $elementUid)) . '">' . htmlspecialchars($table . ':' . $elementUid) . '</a>' . $editLink . '</th>
+	<th colspan="3">' . htmlspecialchars(GeneralUtility::arrayToLogString($flags)) . '</th>
+	</tr>';
                             if (!$showSingle || $showSingle === $table . ':' . $elementUid) {
                                 $tableRows[] = '<tr>
-									<th>Fieldname</th>
-									<th width="25%">Default</th>
-									<th width="25%">Translation</th>
-									<th width="25%">Diff</th>
-									' . ($page['header']['prevLang'] ? '<th width="25%">PrevLang</th>' : '') . '
-								</tr>';
+	<th>Fieldname</th>
+	<th width="25%">Default</th>
+	<th width="25%">Translation</th>
+	<th width="25%">Diff</th>
+	' . ($page['header']['prevLang'] ? '<th width="25%">PrevLang</th>' : '') . '
+	</tr>';
                                 $tableRows = array_merge($tableRows, $FtableRows);
                             }
                         }

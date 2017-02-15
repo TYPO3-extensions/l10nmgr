@@ -4,11 +4,10 @@ namespace Localizationteam\L10nmgr\Model\Tools;
 /**
  * Contains utf8 tools (taken from sourceforge phputf8 project)
  *
- * @author  Daniel Pötzinger <development@aoemedia.de>
+ * @author Daniel Pötzinger <development@aoemedia.de>
  */
 class Utf8Tools
 {
-    
     /**
      * @version $Id: bad.php,v 1.2 2006/02/26 13:20:44 harryf Exp $
      * Tools for locating / replacing bad bytes in UTF-8 strings
@@ -26,8 +25,7 @@ class Utf8Tools
      * @subpackage bad
      * @see utf8_is_valid
      */
-    
-    //--------------------------------------------------------------------
+
     /**
      * Locates the first bad byte in a UTF-8 string returning it's
      * byte index in the string
@@ -45,15 +43,15 @@ class Utf8Tools
      */
     static public function utf8_bad_find($str)
     {
-        $UTF8_BAD = '([\x00-\x7F]' .                       # ASCII (including control chars)
-            '|[\xC2-\xDF][\x80-\xBF]' .            # non-overlong 2-byte
-            '|\xE0[\xA0-\xBF][\x80-\xBF]' .        # excluding overlongs
+        $UTF8_BAD = '([\x00-\x7F]' .# ASCII (including control chars)
+            '|[\xC2-\xDF][\x80-\xBF]' .# non-overlong 2-byte
+            '|\xE0[\xA0-\xBF][\x80-\xBF]' .# excluding overlongs
             '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' . # straight 3-byte
-            '|\xED[\x80-\x9F][\x80-\xBF]' .        # excluding surrogates
-            '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .     # planes 1-3
-            '|[\xF1-\xF3][\x80-\xBF]{3}' .         # planes 4-15
-            '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .     # plane 16
-            '|(.{1}))';                            # invalid byte
+            '|\xED[\x80-\x9F][\x80-\xBF]' .# excluding surrogates
+            '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .# planes 1-3
+            '|[\xF1-\xF3][\x80-\xBF]{3}' .# planes 4-15
+            '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .# plane 16
+            '|(.{1}))';# invalid byte
         $pos = 0;
         while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
             $bytes = strlen($matches[0]);
@@ -63,11 +61,9 @@ class Utf8Tools
             $pos += $bytes;
             $str = substr($str, $bytes);
         }
-        
         return false;
     }
-    
-    //--------------------------------------------------------------------
+
     /**
      * Locates all bad bytes in a UTF-8 string and returns a list of their
      * byte index in the string
@@ -85,15 +81,15 @@ class Utf8Tools
      */
     static public function utf8_bad_findall($str)
     {
-        $UTF8_BAD = '([\x00-\x7F]' .                       # ASCII (including control chars)
-            '|[\xC2-\xDF][\x80-\xBF]' .            # non-overlong 2-byte
-            '|\xE0[\xA0-\xBF][\x80-\xBF]' .        # excluding overlongs
+        $UTF8_BAD = '([\x00-\x7F]' .# ASCII (including control chars)
+            '|[\xC2-\xDF][\x80-\xBF]' .# non-overlong 2-byte
+            '|\xE0[\xA0-\xBF][\x80-\xBF]' .# excluding overlongs
             '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' . # straight 3-byte
-            '|\xED[\x80-\x9F][\x80-\xBF]' .        # excluding surrogates
-            '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .     # planes 1-3
-            '|[\xF1-\xF3][\x80-\xBF]{3}' .         # planes 4-15
-            '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .     # plane 16
-            '|(.{1}))';                            # invalid byte
+            '|\xED[\x80-\x9F][\x80-\xBF]' .# excluding surrogates
+            '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .# planes 1-3
+            '|[\xF1-\xF3][\x80-\xBF]{3}' .# planes 4-15
+            '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .# plane 16
+            '|(.{1}))';# invalid byte
         $pos = 0;
         $badList = array();
         while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
@@ -107,11 +103,9 @@ class Utf8Tools
         if (count($badList) > 0) {
             return $badList;
         }
-        
         return false;
     }
-    
-    //--------------------------------------------------------------------
+
     /**
      * Strips out any bad bytes from a UTF-8 string and returns the rest
      * PCRE Pattern to locate bad bytes in a UTF-8 string
@@ -128,15 +122,15 @@ class Utf8Tools
      */
     static public function utf8_bad_strip($str)
     {
-        $UTF8_BAD = '([\x00-\x7F]' .                       # ASCII (including control chars)
-            '|[\xC2-\xDF][\x80-\xBF]' .            # non-overlong 2-byte
-            '|\xE0[\xA0-\xBF][\x80-\xBF]' .        # excluding overlongs
+        $UTF8_BAD = '([\x00-\x7F]' .# ASCII (including control chars)
+            '|[\xC2-\xDF][\x80-\xBF]' .# non-overlong 2-byte
+            '|\xE0[\xA0-\xBF][\x80-\xBF]' .# excluding overlongs
             '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' . # straight 3-byte
-            '|\xED[\x80-\x9F][\x80-\xBF]' .        # excluding surrogates
-            '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .     # planes 1-3
-            '|[\xF1-\xF3][\x80-\xBF]{3}' .         # planes 4-15
-            '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .     # plane 16
-            '|(.{1}))';                            # invalid byte
+            '|\xED[\x80-\x9F][\x80-\xBF]' .# excluding surrogates
+            '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .# planes 1-3
+            '|[\xF1-\xF3][\x80-\xBF]{3}' .# planes 4-15
+            '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .# plane 16
+            '|(.{1}))';# invalid byte
         ob_start();
         while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
             if (!isset($matches[2])) {
@@ -146,11 +140,9 @@ class Utf8Tools
         }
         $result = ob_get_contents();
         ob_end_clean();
-        
         return $result;
     }
-    
-    //--------------------------------------------------------------------
+
     /**
      * Replace bad bytes with an alternative character - ASCII character
      * recommended is replacement char
@@ -169,15 +161,15 @@ class Utf8Tools
      */
     static public function utf8_bad_replace($str, $replace = '?')
     {
-        $UTF8_BAD = '([\x00-\x7F]' .                       # ASCII (including control chars)
-            '|[\xC2-\xDF][\x80-\xBF]' .            # non-overlong 2-byte
-            '|\xE0[\xA0-\xBF][\x80-\xBF]' .        # excluding overlongs
+        $UTF8_BAD = '([\x00-\x7F]' .# ASCII (including control chars)
+            '|[\xC2-\xDF][\x80-\xBF]' .# non-overlong 2-byte
+            '|\xE0[\xA0-\xBF][\x80-\xBF]' .# excluding overlongs
             '|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}' . # straight 3-byte
-            '|\xED[\x80-\x9F][\x80-\xBF]' .        # excluding surrogates
-            '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .     # planes 1-3
-            '|[\xF1-\xF3][\x80-\xBF]{3}' .         # planes 4-15
-            '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .     # plane 16
-            '|(.{1}))';                            # invalid byte
+            '|\xED[\x80-\x9F][\x80-\xBF]' .# excluding surrogates
+            '|\xF0[\x90-\xBF][\x80-\xBF]{2}' .# planes 1-3
+            '|[\xF1-\xF3][\x80-\xBF]{3}' .# planes 4-15
+            '|\xF4[\x80-\x8F][\x80-\xBF]{2}' .# plane 16
+            '|(.{1}))';# invalid byte
         ob_start();
         while (preg_match('/' . $UTF8_BAD . '/S', $str, $matches)) {
             if (!isset($matches[2])) {
@@ -189,11 +181,8 @@ class Utf8Tools
         }
         $result = ob_get_contents();
         ob_end_clean();
-        
         return $result;
     }
-    
-    
     /**
      * @version $Id: validation.php,v 1.2 2006/02/26 13:20:44 harryf Exp $
      * Tools for validing a UTF-8 string is well formed.
@@ -210,8 +199,7 @@ class Utf8Tools
      * @package utf8
      * @subpackage validation
      */
-    
-    //--------------------------------------------------------------------
+
     /**
      * Tests a string as to whether it's valid UTF-8 and supported by the
      * Unicode standard
@@ -229,20 +217,14 @@ class Utf8Tools
      */
     static public function utf8_is_valid($str)
     {
-        
-        $mState = 0;  // cached expected number of octets after the current octet
+        $mState = 0; // cached expected number of octets after the current octet
         // until the beginning of the next UTF8 character sequence
-        $mUcs4 = 0;   // cached Unicode character
-        $mBytes = 1;  // cached expected number of octets in the current sequence
-        
+        $mUcs4 = 0; // cached Unicode character
+        $mBytes = 1; // cached expected number of octets in the current sequence
         $len = strlen($str);
-        
         for ($i = 0; $i < $len; $i++) {
-            
             $in = ord($str{$i});
-            
             if ($mState == 0) {
-                
                 // When mState is zero we expect either a US-ASCII character or a
                 // multi-octet sequence.
                 if (0 == (0x80 & ($in))) {
@@ -292,8 +274,8 @@ class Utf8Tools
                                         $mBytes = 6;
                                     } else {
                                         /* Current octet is neither in the US-ASCII range nor a legal first
-                                         * octet of a multi-octet sequence.
-                                         */
+                                        * octet of a multi-octet sequence.
+                                        */
                                         return false;
                                     }
                                 }
@@ -302,23 +284,19 @@ class Utf8Tools
                     }
                 }
             } else {
-                
                 // When mState is non-zero, we expect a continuation of the multi-octet
                 // sequence
                 if (0x80 == (0xC0 & ($in))) {
-                    
                     // Legal continuation.
                     $shift = ($mState - 1) * 6;
                     $tmp = $in;
                     $tmp = ($tmp & 0x0000003F) << $shift;
                     $mUcs4 |= $tmp;
-                    
                     /**
                      * End of the multi-octet sequence. mUcs4 now contains the final
                      * Unicode codepoint to be output
                      */
                     if (0 == --$mState) {
-                        
                         /*
                         * Check for illegal sequences and codepoints.
                         */
@@ -327,11 +305,9 @@ class Utf8Tools
                             (($mUcs4 & 0xFFFFF800) == 0xD800) || // Codepoints outside the Unicode range are illegal
                             ($mUcs4 > 0x10FFFF)
                         ) {
-                            
                             return false;
                         }
-                        
-                        //initialize UTF8 cache
+                        // initialize UTF8 cache
                         $mState = 0;
                         $mUcs4 = 0;
                         $mBytes = 1;
@@ -341,16 +317,13 @@ class Utf8Tools
                      *((0xC0 & (*in) != 0x80) && (mState != 0))
                      * Incomplete multi-octet sequence.
                      */
-                    
                     return false;
                 }
             }
         }
-        
         return true;
     }
-    
-    //--------------------------------------------------------------------
+
     /**
      * Tests whether a string complies as UTF-8. This will be much
      * faster than utf8_is_valid but will pass five and six octet

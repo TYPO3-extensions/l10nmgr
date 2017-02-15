@@ -2,23 +2,23 @@
 namespace Localizationteam\L10nmgr;
 
 /***************************************************************
- *  Copyright notice
- *  (c) 2007 Kasper Skaarhoj (kasperYYYY@typo3.com)
- *  All rights reserved
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *  A copy is found in the textfile GPL.txt and important notices to the license
- *  from the author is found in LICENSE.txt distributed with these scripts.
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  This copyright notice MUST APPEAR in all copies of the script!
+ * Copyright notice
+ * (c) 2007 Kasper Skaarhoj (kasperYYYY@typo3.com)
+ * All rights reserved
+ * This script is part of the TYPO3 project. The TYPO3 project is
+ * free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * The GNU General Public License can be found at
+ * http://www.gnu.org/copyleft/gpl.html.
+ * A copy is found in the textfile GPL.txt and important notices to the license
+ * from the author is found in LICENSE.txt distributed with these scripts.
+ * This script is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 /**
  * Cleaner module: Building index for translation
@@ -27,19 +27,6 @@ namespace Localizationteam\L10nmgr;
  *
  * @author Kasper Skårhøj <kasperYYYY@typo3.com>
  */
-/**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *   65: class tx_l10nmgr_index extends tx_lowlevel_cleaner_core
- *   78:     function tx_l10nmgr_index()
- *   98:     function main()
- *  137:     function main_parseTreeCallBack($tableName,$uid,$echoLevel,$versionSwapmode,$rootIsVersion)
- *  172:     function main_autoFix($resultArray)
- * TOTAL FUNCTIONS: 4
- * (This index is automatically created/updated by the extension "extdeveval")
- */
-
-
-// Include API
 use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -47,52 +34,51 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Lowlevel\CleanerCommand;
 
-
 /**
  * Finding unused content elements
  *
- * @author     Kasper Skårhøj <kasperYYYY@typo3.com>
- * @package    TYPO3
+ * @authorKasper Skårhøj <kasperYYYY@typo3.com>
+ * @packageTYPO3
  * @subpackage tx_lowlevel
  */
 class Index extends CleanerCommand
 {
-    
     /**
      * @var array List of not allowed doktypes
      */
-    var $disallowDoktypes = array('--div--', '255');
+    protected $disallowDoktypes = array('--div--', '255');
     /**
      * @var bool Check reference index
      */
-    var $checkRefIndex = false;
+    protected $checkRefIndex = false;
     /**
      * @var bool
      */
-    var $genTree_traverseDeleted = false;
+    protected $genTree_traverseDeleted = false;
     /**
      * @var bool
      */
-    var $genTree_traverseVersions = false;
+    protected $genTree_traverseVersions = false;
     /**
      * @var array Extension's configuration as from the EM
      */
     protected $extensionConfiguration = array();
+    /**
+     * @var array
+     */
     protected $resultArray;
-    
+
     /**
      * Constructor
      *
-     * @return  void
+     * @return void
      */
-    function Index()
+    public function Index()
     {
         // Load the extension's configuration
         $this->extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['l10nmgr']);
         $this->disallowDoktypes = GeneralUtility::trimExplode(',', $this->extensionConfiguration['disallowDoktypes']);
-        
         parent::__construct();
-        
         // Setting up help:
         $this->cli_options[] = array(
             '--echotree level',
@@ -118,19 +104,17 @@ class Index extends CleanerCommand
             '--bypassFilter',
             'If set, the external filter will not be called. The external filter allows other extensions to block certain records from getting processed. For instance TemplaVoila provides such a filter than will make sure records which are not used on a page are not indexed.'
         );
-        
         $this->cli_help['name'] = 'tx_l10nmgr_index -- Building translation index';
         $this->cli_help['description'] = trim('
 Traversing page tree and building an index of translation needs
 ');
-        
         $this->cli_help['examples'] = '';
     }
-    
+
     /**
-     * @return  array
+     * @return array
      */
-    function main()
+    public function main()
     {
         // Initialize result array:
         $resultArray = array(
@@ -140,61 +124,63 @@ Traversing page tree and building an index of translation needs
             ),
             'index' => array(),
         );
-        
         $startingPoints = GeneralUtility::intExplode(',', $this->cli_argValue('--pid'));
         $workspaceID = $this->cli_isArg('--workspace') ? MathUtility::forceIntegerInRange($this->cli_argValue('--workspace'),
             -1) : 0;
         $depth = $this->cli_isArg('--depth') ? MathUtility::forceIntegerInRange($this->cli_argValue('--depth'),
             0) : 1000;
-        
         if ($workspaceID != 0) {
             $this->getBackendUser()->setWorkspace($workspaceID);
             if ($this->getBackendUser()->workspace != $workspaceID) {
                 die('Workspace ' . $workspaceID . ' did not exist!' . chr(10));
             }
         }
-        
         $this->resultArray = &$resultArray;
         foreach ($startingPoints as $pidPoint) {
             if ($pidPoint >= 0) {
                 $this->genTree($pidPoint, $depth, (int)$this->cli_argValue('--echotree'), 'main_parseTreeCallBack');
             }
         }
-        
         return $resultArray;
     }
-    
+
+    /**
+     * Returns the Backend User
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
+    }
+
     /**
      * Call back function for page tree traversal!
      *
      * @param string $tableName Table name
      * @param integer $uid UID of record in processing
-     * @param integer $echoLevel Echo level  (see calling function
+     * @param integer $echoLevel Echo level (see calling function
      * @param string $versionSwapmode Version swap mode on that level (see calling function
      * @param integer $rootIsVersion Is root version (see calling function
      *
-     * @return  void
+     * @return void
      */
-    function main_parseTreeCallBack($tableName, $uid, $echoLevel, $versionSwapmode, $rootIsVersion)
+    public function main_parseTreeCallBack($tableName, $uid, $echoLevel, $versionSwapmode, $rootIsVersion)
     {
         if ($tableName == 'pages' && $uid > 0) {
             $pageId = $uid;
             $excludeIndex = array();
-            
             if (!$versionSwapmode) {
                 // Init:
+                /** @var Tools $t8Tools */
                 $t8Tools = GeneralUtility::makeInstance(Tools::class);
                 $t8Tools->verbose = false; // Otherwise it will show records which has fields but none editable.
                 $t8Tools->bypassFilter = $this->cli_isArg('--bypassFilter') ? true : false;
-                
                 $pageRecord = BackendUtility::getRecord('pages', $uid);
                 if (!in_array($pageRecord['doktype'],
                         $this->disallowDoktypes) && !isset($excludeIndex['pages:' . $pageId])
                 ) {
-                    
                     $accum['header']['title'] = $pageRecord['title'];
                     $accum['items'] = $t8Tools->indexDetailsPage($pageId);
-                    
                     $this->resultArray['index'][$uid] = $accum;
                 }
             } else {
@@ -204,7 +190,7 @@ Traversing page tree and building an index of translation needs
             }
         }
     }
-    
+
     /**
      * Mandatory autofix function
      * Will run auto-fix on the result array. Echos status during processing.
@@ -213,19 +199,18 @@ Traversing page tree and building an index of translation needs
      *
      * @return void
      */
-    function main_autoFix($resultArray)
+    public function main_autoFix($resultArray)
     {
         // Init:
+        /** @var Tools $t8Tools */
         $t8Tools = GeneralUtility::makeInstance(Tools::class);
         $t8Tools->verbose = false; // Otherwise it will show records which has fields but none editable.
-        
         if (!$this->cli_isArg('--noFlush')) {
             echo 'Flushing translation index for workspace ' . $this->getBackendUser()->workspace . chr(10);
             $t8Tools->flushIndexOfWorkspace($this->getBackendUser()->workspace);
         } else {
             echo 'Did NOT flush translation index for workspace ' . $this->getBackendUser()->workspace . ' since it was disabled by --noFlush' . chr(10);
         }
-        
         foreach ($this->resultArray['index'] as $pageId => $accum) {
             echo 'Adding entries for page ' . $pageId . ' "' . $accum['header']['title'] . '":' . chr(10);
             if (is_array($accum['items'])) {
@@ -237,14 +222,4 @@ Traversing page tree and building an index of translation needs
             }
         }
     }
-    
-    /**
-     * Returns the Backend User
-     * @return BackendUserAuthentication
-     */
-    protected function getBackendUser()
-    {
-        return $GLOBALS['BE_USER'];
-    }
-    
 }

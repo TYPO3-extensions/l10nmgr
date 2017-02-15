@@ -2,55 +2,46 @@
 namespace Localizationteam\L10nmgr;
 
 /***************************************************************
- *  Copyright notice
- *  (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
- *  All rights reserved
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  This copyright notice MUST APPEAR in all copies of the script!
+ * Copyright notice
+ * (c) 2006 Kasper Skårhøj <kasperYYYY@typo3.com>
+ * All rights reserved
+ * This script is part of the TYPO3 project. The TYPO3 project is
+ * free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * The GNU General Public License can be found at
+ * http://www.gnu.org/copyleft/gpl.html.
+ * This script is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 /**
  * Addition of an item to the clickmenu
  *
  * @author Kasper Skårhøj <kasperYYYY@typo3.com>
  */
-/**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *   55: class tx_l10nmgr_cm1
- *   66:     function main(&$backRef,$menuItems,$table,$uid)
- *  101:     function includeLL()
- * TOTAL FUNCTIONS: 2
- * (This index is automatically created/updated by the extension "extdeveval")
- */
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Lang\LanguageService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Context menu processing
  *
- * @author     Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @package    TYPO3
+ * @authorKasper Skaarhoj <kasperYYYY@typo3.com>
+ * @packageTYPO3
  * @subpackage tx_l10nmgr
  */
 class ClickMenu
 {
-    
     /**
      * @var LanguageService
      */
     protected $languageService;
-    
+
     /**
      * Main function
      *
@@ -58,24 +49,21 @@ class ClickMenu
      * @param $menuItems
      * @param $table
      * @param $uid
-     * @return array [type]    ...
-     * @internal param $ [type]    $$backRef: ...
-     * @internal param $ [type]    $menuItems: ...
-     * @internal param $ [type]    $table: ...
-     * @internal param $ [type]    $uid: ...
+     * @return array [type]...
+     * @internal param $ [type]$$backRef: ...
+     * @internal param $ [type]$menuItems: ...
+     * @internal param $ [type]$table: ...
+     * @internal param $ [type]$uid: ...
      *
      */
-    function main(&$backRef, $menuItems, $table, $uid)
+    public function main(&$backRef, $menuItems, $table, $uid)
     {
         $localItems = Array();
         if (!$backRef->cmLevel) {
-            
             // Returns directly, because the clicked item was not from the pages table
             if ($table == "tx_l10nmgr_cfg") {
-                
                 // Adds the regular item:
                 $LL = $this->includeLL();
-                
                 // Repeat this (below) for as many items you want to add!
                 // Remember to add entries in the localconf.php file for additional titles.
                 $url = ExtensionManagementUtility::siteRelPath("l10nmgr") . "cm1/index.php?id=" . $uid;
@@ -85,15 +73,12 @@ class ClickMenu
                     1 // Disables the item in the top-bar. Set this to zero if you with the item to appear in the top bar!
                 );
             }
-            
             $localItems["moreoptions_tx_l10nmgr_cm3"] = $backRef->linkItem('L10Nmgr tools', '',
                 "top.loadTopMenu('" . GeneralUtility::linkThisScript() . "&cmLevel=1&subname=moreoptions_tx_l10nmgrXX_cm3');return false;",
                 0, 1);
-            
             // Simply merges the two arrays together and returns ...
             $menuItems = array_merge($menuItems, $localItems);
         } elseif (GeneralUtility::_GET('subname') == 'moreoptions_tx_l10nmgrXX_cm3') {
-            
             $url = ExtensionManagementUtility::siteRelPath("l10nmgr") . "cm3/index.php?id=" . $uid . '&table=' . $table;
             $localItems[] = $backRef->linkItem('Create priority', '',
                 $backRef->urlRefForCM($url . '&cmd=createPriority'), 1);
@@ -102,30 +87,29 @@ class ClickMenu
             $localItems[] = $backRef->linkItem('Update Index', '', $backRef->urlRefForCM($url . '&cmd=updateIndex'), 1);
             $localItems[] = $backRef->linkItem('Flush Translations', '',
                 $backRef->urlRefForCM($url . '&cmd=flushTranslations'), 1);
-            
             $menuItems = array_merge($menuItems, $localItems);
         }
-        
         return $menuItems;
     }
-    
+
     /**
      * Reads the [extDir]/locallang.xml and returns the $LOCAL_LANG array found in that file.
      *
-     * @return  array    Local lang value.
+     * @return array Local lang value.
      */
-    private function includeLL()
+    protected function includeLL()
     {
-        $LOCAL_LANG = $this->getLanguageService()->includeLLFile('EXT:l10nmgr/Resources/Private/Language/locallang.xml', false);
+        $LOCAL_LANG = $this->getLanguageService()->includeLLFile('EXT:l10nmgr/Resources/Private/Language/locallang.xml',
+            false);
         return $LOCAL_LANG;
     }
-    
+
     /**
      * setter for databaseConnection object
      *
      * @return LanguageService $languageService
      */
-    private function getLanguageService()
+    protected function getLanguageService()
     {
         if (!$this->languageService instanceof LanguageService) {
             $this->languageService = GeneralUtility::makeInstance(LanguageService::class);
@@ -135,15 +119,14 @@ class ClickMenu
         }
         return $this->languageService;
     }
-    
+
     /**
      * Gets the current backend user.
      *
      * @return BackendUserAuthentication
      */
-    private function getBackendUser()
+    protected function getBackendUser()
     {
         return $GLOBALS['BE_USER'];
     }
-
 }
