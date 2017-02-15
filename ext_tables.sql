@@ -11,7 +11,7 @@ CREATE TABLE tx_l10nmgr_cfg (
 	depth int(11) DEFAULT '0' NOT NULL,
 	pages text,
 	displaymode int(11) DEFAULT '0' NOT NULL,
-	tablelist mediumtext,
+	tablelist text,
 	exclude mediumtext,
 	include mediumtext,
 	flexformdiff mediumtext,
@@ -85,7 +85,7 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	title tinytext,
 	source_lang blob,
 	translation_lang blob,
-	tablelist varchar(80) DEFAULT '' NOT NULL,
+	tablelist text,
 	exportType blob,
 	filename text,
 	
