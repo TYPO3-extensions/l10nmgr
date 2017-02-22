@@ -39,7 +39,7 @@ if (TYPO3_MODE == "BE") {
     'icon' => 'EXT:l10nmgr/Resources/Public/Icons/module2_icon.gif',
     'labels' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang_mod.xlf'
   ));
-  
+
   /**
    * Registers a Backend Module
    */
@@ -48,8 +48,8 @@ if (TYPO3_MODE == "BE") {
       'routeTarget' => \Localizationteam\L10nmgr\Controller\TranslationTasks::class . '::mainAction',
       'access' => 'user,group',
       'name' => 'ConfigurationManager_TranslationTasks',
-      'licon' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',
-      'll_ref' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang_mod.xlf'
+      'icon' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',
+      'labels' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang_mod.xlf'
     ));
   
   $GLOBALS["TBE_MODULES_EXT"]["xMOD_alt_clickmenu"]["extendCMclasses"][] = array(
