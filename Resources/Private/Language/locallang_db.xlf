@@ -76,6 +76,9 @@
 			<trans-unit id="tx_l10nmgr_cfg.include" xml:space="preserve">
 				<source>Include elements (comma list of &quot;table:uid&quot; pairs):</source>
 			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.metadata" xml:space="preserve">
+				<source>Additional Metadata (JSON formatted key value pairs):</source>
+			</trans-unit>
 			<trans-unit id="tx_l10nmgr_cfg.sourceLang" xml:space="preserve">
 				<source>Source language:</source>
 			</trans-unit>

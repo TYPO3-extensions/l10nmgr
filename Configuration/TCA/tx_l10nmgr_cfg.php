@@ -111,6 +111,16 @@ return array(
         'rows' => '3',
       )
     ),
+    'metadata' => array(
+      'exclude' => 1,
+      'label' => $l10n . ':tx_l10nmgr_cfg.metadata',
+      'config' => array(
+        'readOnly' => 1,
+        'type' => 'text',
+        'cols' => '48',
+        'rows' => '3',
+      )
+    ),
     'sourceLangStaticId' => array(
       'exclude' => 1,
       'label' => $l10n . ':tx_l10nmgr_cfg.sourceLang',
@@ -152,7 +162,7 @@ return array(
     )
   ),
   'types' => array(
-    '0' => array('showitem' => 'title,filenameprefix;;;;2-2-2, depth;;;;3-3-3, pages, sourceLangStaticId, tablelist, exclude, include, displaymode, incfcewithdefaultlanguage, pretranslatecontent, overrideexistingtranslations')
+    '0' => array('showitem' => 'title,filenameprefix;;;;2-2-2, depth;;;;3-3-3, pages, sourceLangStaticId, tablelist, exclude, include, metadata, displaymode, incfcewithdefaultlanguage, pretranslatecontent, overrideexistingtranslations')
   ),
   'palettes' => array(
     '1' => array('showitem' => '')

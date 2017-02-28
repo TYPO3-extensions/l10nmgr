@@ -19,9 +19,6 @@ namespace Localizationteam\L10nmgr\Cli;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-if (!defined('TYPO3_cliMode')) {
-    die('You cannot run this script directly!');
-}
 use Localizationteam\L10nmgr\Model\CatXmlImportManager;
 use Localizationteam\L10nmgr\Model\L10nBaseService;
 use Localizationteam\L10nmgr\Model\L10nConfiguration;
@@ -36,6 +33,10 @@ use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Lang\LanguageService;
+
+if (!defined('TYPO3_REQUESTTYPE_CLI')) {
+    die('You cannot run this script directly!');
+}
 
 /**
  * Class for handling import of translations from the command-line

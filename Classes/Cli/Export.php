@@ -20,7 +20,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Lang\LanguageService;
 
-if (!defined('TYPO3_cliMode')) {
+if (!defined('TYPO3_REQUESTTYPE_CLI')) {
     die('You cannot run this script directly!');
 }
 

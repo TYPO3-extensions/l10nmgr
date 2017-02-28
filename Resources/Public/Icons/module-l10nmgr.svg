@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW X6 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="21cm" height="21cm" version="1.1" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd"
+viewBox="0 0 2100 2100"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <g id="Ebene_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <polygon fill="#632F5F" points="0,0 2100,0 2100,2100 0,2100 "/>
+  <g id="_240618240">
+   <rect fill="black" transform="matrix(3.31193E-015 0.124989 -0.375154 9.93086E-015 1903.91 195.247)" width="2100" height="2100"/>
+   <rect fill="red" transform="matrix(-3.31193E-015 -0.124989 -0.375154 9.93086E-015 1903.91 720.203)" width="2100" height="2100"/>
+   <rect fill="#FFAA00" transform="matrix(3.31193E-015 0.124989 -0.375154 9.93086E-015 1903.91 720.203)" width="2100" height="2100"/>
+  </g>
+  <g id="_240626624">
+   <rect fill="#006633" x="1116" y="1114" width="263" height="787"/>
+   <rect fill="white" x="1379" y="1114" width="263" height="787"/>
+   <rect fill="red" x="1641" y="1114" width="263" height="787"/>
+  </g>
+  <rect fill="white" x="197" y="1114" width="788" height="789"/>
+  <rect fill="blue" x="197" y="195" width="263" height="787"/>
+  <rect fill="white" x="460" y="195" width="263" height="787"/>
+  <rect fill="red" x="722" y="195" width="263" height="787"/>
+  <rect fill="red" x="197" y="1114" width="328" height="329"/>
+  <rect fill="red" x="657" y="1114" width="328" height="329"/>
+  <rect fill="red" x="197" y="1574" width="328" height="329"/>
+  <rect fill="red" x="657" y="1574" width="328" height="329"/>
+ </g>
+</svg>

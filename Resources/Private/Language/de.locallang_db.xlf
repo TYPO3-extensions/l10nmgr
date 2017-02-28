@@ -93,8 +93,11 @@
 			<trans-unit id="tx_l10nmgr_cfg.include" xml:space="preserve" approved="yes">
 				<source>Include elements (comma list of &quot;table:uid&quot; pairs):</source>
 				<target>Einzuschließende Elemente (kommagetrennte Werte: &quot;Tabelle:uid,
-				Tabelle:uid&quot;):
-			</target>
+				Tabelle:uid&quot;):</target>
+			</trans-unit>
+			<trans-unit id="tx_l10nmgr_cfg.metadata" xml:space="preserve">
+				<source>Additional Metadata (JSON formatted key value pairs):</source>
+				<target>Zusätzliche Metadaten (JSON-formatierte Wertepaare):</target>
 			</trans-unit>
 			<trans-unit id="tx_l10nmgr_cfg.sourceLang" xml:space="preserve" approved="yes">
 				<source>Source language:</source>
