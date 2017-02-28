@@ -181,10 +181,29 @@ class CatXmlView extends AbstractExportView
         $XML .= "\t\t" . '<t3_internal>' . "\r\t" . $this->renderInternalMessage() . "\t\t" . '</t3_internal>' . "\n";
         $XML .= "\t\t" . '<t3_formatVersion>' . L10NMGR_FILEVERSION . '</t3_formatVersion>' . "\n";
         $XML .= "\t\t" . '<t3_l10nmgrVersion>' . L10NMGR_VERSION . '</t3_l10nmgrVersion>' . "\n";
+        $XML .= $this->additionalHeaderData();
         $XML .= "\t" . '</head>' . "\n";
         $XML .= implode('', $output) . "\n";
         $XML .= "</TYPO3L10N>";
         return $this->saveExportFile($XML);
+    }
+
+    /**
+     * Adds keys and values of the JSON encoded meta data field to the XML head section
+     *
+     * @return string The XML to add to the head section
+     */
+    protected function additionalHeaderData() {
+        $additionalHeaderData = '';
+        if (!empty($this->l10ncfgObj->getData('metadata'))) {
+            $additionalHeaderDataArray = json_decode($this->l10ncfgObj->getData('metadata'));
+            if (is_array($additionalHeaderDataArray) && !empty($additionalHeaderDataArray)) {
+                foreach ($additionalHeaderDataArray as $key => $value) {
+                    $additionalHeaderData .= "\t\t" . '<' . $key . '>' . (string)$value . '</' . $key . '>' . "\n";
+                }
+            }
+        }
+        return $additionalHeaderData;
     }
 
     /**
