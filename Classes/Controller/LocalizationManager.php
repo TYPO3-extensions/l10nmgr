@@ -193,25 +193,29 @@ return false;
                 /** @var L10nConfigurationDetailView $l10nmgrconfigurationView */
                 $l10nmgrconfigurationView = GeneralUtility::makeInstance(L10nConfigurationDetailView::class,
                     $l10ncfgObj, $this->moduleTemplate);
-                $this->content .= '<div><h2 class="uppercase">' . $this->getLanguageService()->getLL('general.manager') . '</h2>' .
-                    $l10nmgrconfigurationView->render() . '</div>';
-                $this->content .= '<hr />';
                 $title = $this->MOD_MENU["action"][$this->MOD_SETTINGS["action"]];
-                $this->content .= '<div> 
-<h2 class="uppercase">' . $title . '</h2>
-<div class="col-md-6">
-<div class="form-inline form-inline-spaced">
-<div class="form-section">' .
+                $this->content .= '<div class="panel panel-default expanded">
+    <div class="panel-heading" role="tab" id="headingL10nmgrPanel">
+        <h2 class="panel-title">' . $title . '
+            <a role="button" data-toggle="collapse" href="#l10nmgrPanel" aria-expanded="true" aria-controls="l10nmgrPanel" class="pull-right"><span class="caret"></span></a>
+        </h2>
+    </div>
+    <div id="l10nmgrPanel" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingL10nmgrPanel">
+        <div class="panel-body">
+            <div class="row">';
+                $this->content .= '
+    <div class="col-md-6"> 
+        <div class="form">
+            <div class="form-section">' .
                     $this->getFuncMenu($this->id,
                         "SET[action]", $this->MOD_SETTINGS["action"], $this->MOD_MENU["action"], '',
                         '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
                         $this->getLanguageService()->getLL('general.export.choose.action.title')) .
-                    '<br />' .
                     $this->getFuncMenu($this->id,
                         "SET[lang]", $this->sysLanguage, $this->MOD_MENU["lang"], '',
                         '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
                         $this->getLanguageService()->getLL('export.overview.targetlanguage.label')) .
-                    '<br /><br /></div><div class="form-section">' .
+                    '</div><div class="form-section">' .
                     $this->getFuncCheck(
                         $this->id,
                         "SET[onlyChangedContent]",
@@ -220,7 +224,7 @@ return false;
                         '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUID=' . $l10ncfgObj->getId(),
                         '',
                         $this->getLanguageService()->getLL('export.xml.new.title')
-                    ) . '<br />' .
+                    ) .
                     $this->getFuncCheck(
                         $this->id,
                         "SET[noHidden]",
@@ -230,13 +234,14 @@ return false;
                         '',
                         $this->getLanguageService()->getLL('export.xml.noHidden.title')
                     ) .
-                    '<br /><br ></div></div></div></div>';
+                    '</div></div></div>';
                 // Render content:
                 if (!count($this->MOD_MENU['lang'])) {
                     $this->content .= '<div><h2>ERROR<h2>' . $this->getLanguageService()->getLL('general.access.error.title') . '</div>';
                 } else {
                     $this->moduleContent($l10ncfgObj);
                 }
+                $this->content .= '<div class="col-md-12">' . $l10nmgrconfigurationView->render() . '</div></div>';
             }
         }
     }
@@ -281,7 +286,7 @@ return false;
             $onChange = 'jumpToUrl(' . GeneralUtility::quoteJSvalue($scriptUrl . '&' . $elementName . '=') . '+this.options[this.selectedIndex].value,this);';
             return '
 	<!-- Function Menu of module -->
-<div class="form-group">' .
+<div class="form-group form-inline">' .
                 $label .
                 '<select class="form-control clear-both" name="' . $elementName . '" onchange="' . htmlspecialchars($onChange) . '">
 	' . implode('
@@ -384,10 +389,9 @@ return false;
             case 'link':
                 /** @var L10nHTMLListView $htmlListView */
                 $htmlListView = GeneralUtility::makeInstance(L10nHtmlListView::class, $l10ncfgObj, $this->sysLanguage);
-                $subheader = $this->getLanguageService()->getLL('inlineEdit');
+                $this->content .= '</div></div></div></div><div class="row">';
                 $subcontent = '';
                 if ($this->MOD_SETTINGS["action"] == 'inlineEdit') {
-                    $subheader = $this->getLanguageService()->getLL('link');
                     $subcontent = $this->inlineEditAction($l10ncfgObj);
                     $htmlListView->setModeWithInlineEdit();
                 }
@@ -402,25 +406,22 @@ return false;
                 if ($this->MOD_SETTINGS["action"] == 'link') {
                     $htmlListView->setModeShowEditLinks();
                 }
-                $subcontent .= '</div></div><div class="col-md-12">' . $htmlListView->renderOverview();
+                $subcontent .= '</div></div><div class="col-md-12">' . $htmlListView->renderOverview() . '</div>';
                 break;
             case 'export_excel':
-                $subheader = $this->getLanguageService()->getLL('export_excel');
-                $subcontent = $this->excelExportImportAction($l10ncfgObj);
+                $subcontent = $this->excelExportImportAction($l10ncfgObj) . '</div></div></div></div></div><div class="row">';
                 break;
             case 'export_xml': // XML import/export
                 $prefs['utf8'] = GeneralUtility::_POST('check_utf8');
                 $prefs['noxmlcheck'] = GeneralUtility::_POST('no_check_xml');
                 $this->getBackendUser()->pushModuleData('l10nmgr/cm1/prefs', $prefs);
-                $subheader = $this->getLanguageService()->getLL('export_xml');
-                $subcontent = $this->catXMLExportImportAction($l10ncfgObj);
+                $subcontent = $this->catXMLExportImportAction($l10ncfgObj) . '</div></div></div></div>';
                 break;
             DEFAULT: // Default display:
                 $subcontent = '<input class="btn btn-default" type="submit" value="' . $this->getLanguageService()->getLL('general.action.refresh.button.title') . '" name="_" />';
                 break;
         } //switch block
-        $this->content .= '<div><h3 class="uppercase">' . $subheader . '</h3>' .
-            '<div class="col-md-6"><div class="form-inline form-inline-spaced">' . $subcontent . '</div></div></div>';
+        $this->content .= '<div class="col-md-6"><div class="form">' . $subcontent;
     }
 
     /**
@@ -471,21 +472,21 @@ return false;
                 '&srcPID=' . rawurlencode(GeneralUtility::_GET('srcPID')) . '&exportUid=' . $l10ncfgObj->getId(),
                 '',
                 $this->getLanguageService()->getLL('export.xml.check_exports.title')
-            ) . '<br />' .
+            ) .
             '<div class="form-group"><div class="checkbox"><label>' .
             '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $this->getLanguageService()->getLL('import.xml.asdefaultlanguage.title') .
-            '</label></div></div><br /><br />' .
-            '</div><div class="form-section"><div class="form-group">
+            '</label></div></div>' .
+            '</div><div class="form-section"><div class="form-group form-inline">
 <label>' . $this->getLanguageService()->getLL('export.xml.source-language.title') . '</label><br />' .
             $this->_getSelectField("export_xml_forcepreviewlanguage", '0', $_selectOptions) .
-            '<br /><br /></div></div><div class="form-section">
+            '</div></div><div class="form-section"><div class="form-group">
 <label>' . $this->getLanguageService()->getLL('general.action.import.upload.title') . '</label><br />' .
             '<input type="file" size="60" name="uploaded_import_file" />' .
-            '<br /></div><div class="form-section">' .
+            '</div></div><div class="form-section"><div class="form-group">' .
             '<input class="btn btn-default btn-info" type="submit" value="' . $this->getLanguageService()->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
             '<input class="btn btn-default btn-success" type="submit" value="' . $this->getLanguageService()->getLL('general.action.export.xml.button.title') . '" name="export_excel" /> ' .
             '<input class="btn btn-default btn-warning" type="submit" value="' . $this->getLanguageService()->getLL('general.action.import.xml.button.title') . '" name="import_excel" />
-<br /><br /></div></div>';
+</div></div></div>';
         // Read uploaded file:
         if (GeneralUtility::_POST('import_excel') && $_FILES['uploaded_import_file']['tmp_name'] && is_uploaded_file($_FILES['uploaded_import_file']['tmp_name'])) {
             $uploadedTempFile = GeneralUtility::upload_to_tempfile($_FILES['uploaded_import_file']['tmp_name']);
@@ -821,22 +822,22 @@ return false;
         $tabContentXmlExport = '<div class="form-section">' .
             '<div class="form-group"><div class="checkbox"><label>' .
             '<input type="checkbox" value="1" name="check_exports" /> ' . $this->getLanguageService()->getLL('export.xml.check_exports.title') .
-            '</label></div></div><br />' .
+            '</label></div></div>' .
             '<div class="form-group"><div class="checkbox"><label>' .
             '<input type="checkbox" value="1" checked="checked" name="no_check_xml" /> ' . $this->getLanguageService()->getLL('export.xml.no_check_xml.title') .
-            '</label></div></div><br />' .
+            '</label></div></div>' .
             '<div class="form-group"><div class="checkbox"><label>' .
             '<input type="checkbox" value="1" name="check_utf8" /> ' . $this->getLanguageService()->getLL('export.xml.checkUtf8.title') .
-            '</label></div></div><br /><br />' .
+            '</label></div></div>' .
             '</div><div class="form-section">' .
-            '<div class="form-group">' .
+            '<div class="form-group form-inline">' .
             '<label>' . $this->getLanguageService()->getLL('export.xml.source-language.title') . '</label><br />' .
             $this->_getSelectField("export_xml_forcepreviewlanguage", '0', $_selectOptions) .
-            '<br /><br /></div></div>';
+            '</div></div>';
         // Add the option to send to FTP server, if FTP information is defined
         if (!empty($this->lConf['ftp_server']) && !empty($this->lConf['ftp_server_username']) && !empty($this->lConf['ftp_server_password'])) {
             $tabContentXmlExport .= '<input type="checkbox" value="1" name="ftp_upload" id="tx_l10nmgr_ftp_upload" />
-<label for="tx_l10nmgr_ftp_upload">' . $this->getLanguageService()->getLL('export.xml.ftp.title') . '</label>';
+<label for="tx_l10nmgr_ftp_upload">' . $this->getLanguageService()->getLL('export.xml.ftp.title') . '</label><br />';
         }
         $tabContentXmlExport .= '<div class="form-section"><input class="btn btn-default btn-info" type="submit" value="' . $this->getLanguageService()->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
             '<input class="btn btn-default btn-success" type="submit" value="Export" name="export_xml" /><br class="clearfix">&nbsp;</div>';
@@ -851,16 +852,16 @@ return false;
         $tabContentXmlImport = '<div class="form-section">' .
             '<div class="form-group"><div class="checkbox"><label>' .
             '<input type="checkbox" value="1" name="make_preview_link" /> ' . $this->getLanguageService()->getLL('import.xml.make_preview_link.title') .
-            '</label></div></div><br />' .
+            '</label></div></div>' .
             '<div class="form-group"><div class="checkbox"><label>' .
             '<input type="checkbox" value="1" name="import_delL10N" /> ' . $this->getLanguageService()->getLL('import.xml.delL10N.title') .
-            '</label></div></div><br />' .
+            '</label></div></div>' .
             '<div class="form-group"><div class="checkbox"><label>' .
             '<input type="checkbox" value="1" name="import_asdefaultlanguage" /> ' . $this->getLanguageService()->getLL('import.xml.asdefaultlanguage.title') .
-            '</label></div></div><br /><br /></div>' .
-            '<div class="form-section">' .
-            '<input type="file" size="60" name="uploaded_import_file" /><br />' .
-            '</div>' .
+            '</label></div></div></div>' .
+            '<div class="form-section"><div class="form-group">' .
+            '<input type="file" size="60" name="uploaded_import_file" />' .
+            '</div></div>' .
             '<div class="form-section">' .
             '<input class="btn btn-info" type="submit" value="' . $this->getLanguageService()->getLL('general.action.refresh.button.title') . '" name="_" /> ' .
             '<input class="btn btn-warning" type="submit" value="Import" name="import_xml" />' .

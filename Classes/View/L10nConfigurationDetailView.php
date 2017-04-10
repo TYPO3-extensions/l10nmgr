@@ -90,7 +90,7 @@ class L10nConfigurationDetailView
 	<td>' . htmlspecialchars($this->l10ncfgObj->getData('include')) . '&nbsp;</td>
 	</tr>
 	</table>';
-        $content .= '<div><h2 class="uppercase">' . $this->getLanguageService()->getLL('general.export.configuration.title') . '</h2>' . $configurationSettings;
+        $content .= '<div><h2 class="uppercase">' . $this->getLanguageService()->getLL('general.export.configuration.title') . '</h2>' . str_replace(',', ', ', $configurationSettings);
         return $content;
     }
 

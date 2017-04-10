@@ -131,8 +131,11 @@ class CatXmlImportManager
             return;
         }
         foreach ($headerInformationNodes as $k => $v) {
-            $this->headerData[$k] = $v[0]['values'][0];
-        }
+            $this->headerData[$k] = '';
+            if (is_array($v) && is_array($v[0]) && is_array($v[0]['values'])) {
+                $this->headerData[$k] = $v[0]['values'][0];
+            }
+       }
     }
 
     /**
