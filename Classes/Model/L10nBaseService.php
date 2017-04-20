@@ -632,28 +632,34 @@ class L10nBaseService
         if ($gridElementsInstalled) {
             // find all tt_content elements in the default language of this page that are NOT inside a grid element
             $recordsInOriginalLanguage = BackendUtility::getRecordsByField('tt_content', 'pid', $pageUid, 'AND sys_language_uid=0 AND tx_gridelements_container=0', '', 'colPos, sorting');
-            foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
-                $translatedContentElements = BackendUtility::getRecordLocalization('tt_content', $recordInOriginalLanguage['uid'], $targetLanguageUid);
-                if (!is_array($translatedContentElements)) {
-                    $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
+            if (is_array($recordsInOriginalLanguage)) {
+                foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
+                    $translatedContentElements = BackendUtility::getRecordLocalization('tt_content', $recordInOriginalLanguage['uid'], $targetLanguageUid);
+                    if (!is_array($translatedContentElements)) {
+                        $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
+                    }
                 }
             }
 
             // find all tt_content elements in the default language of this page that ARE inside a grid element
             $recordsInOriginalLanguage = BackendUtility::getRecordsByField('tt_content', 'pid', $pageUid, 'AND sys_language_uid=0 AND tx_gridelements_container!=0', '', 'colPos, sorting');
-            foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
-                $translatedContentElements = BackendUtility::getRecordLocalization('tt_content', $recordInOriginalLanguage['uid'], $targetLanguageUid);
-                if (!is_array($translatedContentElements)) {
-                    $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
+            if (is_array($recordsInOriginalLanguage)) {
+                foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
+                    $translatedContentElements = BackendUtility::getRecordLocalization('tt_content', $recordInOriginalLanguage['uid'], $targetLanguageUid);
+                    if (!is_array($translatedContentElements)) {
+                        $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
+                    }
                 }
             }
         } else {
             // find all tt_content elements in the default language of this page
             $recordsInOriginalLanguage = BackendUtility::getRecordsByField('tt_content', 'pid', $pageUid, 'AND sys_language_uid=0', '', 'colPos, sorting');
-            foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
-                $translatedContentElements = BackendUtility::getRecordLocalization('tt_content', $recordInOriginalLanguage['uid'], $targetLanguageUid);
-                if (!is_array($translatedContentElements)) {
-                    $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
+            if (is_array($recordsInOriginalLanguage)) {
+                foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
+                    $translatedContentElements = BackendUtility::getRecordLocalization('tt_content', $recordInOriginalLanguage['uid'], $targetLanguageUid);
+                    if (!is_array($translatedContentElements)) {
+                        $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
+                    }
                 }
             }
 
