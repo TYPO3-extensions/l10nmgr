@@ -206,7 +206,7 @@ class TranslationDataFactory
                     } else {
                         $translatedData = $row['ch']['Cell'][4]['ch']['Data'][0]['values'][0];
                     }
-                    $translation[$Ttable][$Tuid][$Tkey] = $translatedData;
+                    $translation[$Ttable][$Tuid][$Tkey] = (string)$translatedData;
                 }
             }
         }
