@@ -140,17 +140,10 @@ class ConfigurationManager extends BaseScriptClass
      */
     public function main()
     {
-        $extRelPath = ExtensionManagementUtility::extRelPath('l10nmgr');
-        
         // Get a template instance and load the template
         $this->moduleTemplate->backPath = $GLOBALS['BACK_PATH'];
         // NOTE: this module uses the same template as the CM1 module
         $this->moduleTemplate->form = '<form action="" method="POST">';
-        // Load the styles and JavaScript for the tooltips
-        $this->moduleTemplate->loadJavascriptLib($extRelPath . 'Resources/Public/Contrib/jquery-1.2.3.js');
-        $this->moduleTemplate->loadJavascriptLib($extRelPath . 'Resources/Public/Contrib/jquery.tooltip.js');
-        $this->moduleTemplate->loadJavascriptLib($extRelPath . 'Resources/Private/Templates/mod1_list.js');
-        
         // Get the actual content
         $this->content = $this->moduleContent();
         
