@@ -92,7 +92,7 @@ class Import extends CommandLineController
     /**
      * Constructor
      */
-    function Import()
+    function __construct()
     {
         
         // Running parent class constructor

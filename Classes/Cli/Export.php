@@ -41,7 +41,7 @@ class Export extends CommandLineController
     /**
      * Constructor
      */
-    function Export()
+    function __construct()
     {
         
         // Running parent class constructor
