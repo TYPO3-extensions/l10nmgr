@@ -1,11 +1,16 @@
 {
   "name": "localizationteam/l10nmgr",
   "type": "typo3-cms-extension",
-  "description": "",
-  "homepage": "http://typo3.org",
+  "version" : "5.2.0",
+  "description": "Module for managing localization import and export",
+  "homepage": "https://docs.typo3.org/typo3cms/extensions/l10nmgr/",
   "license": ["GPL-2.0+"],
+  "keywords": ["TYPO3 CMS", "L10N", "I18N", "T9N", "localization", "translation", "internationalization", "language"],
+  "support": {
+    "issues": "https://forge.typo3.org/projects/extension-l10nmgr/issues"
+  },
   "require": {
-    "typo3/cms-core": ">=6.2.0,<7.0"
+    "typo3/cms-core": "^6.2.0"
   },
   "autoload": {
     "psr-4": {
@@ -13,6 +18,7 @@
     }
   },
   "replace": {
-    "l10nmgr": "*"
+    "l10nmgr": "self.version",
+    "typo3-ter/l10nmgr": "self.version"
   }
 }
