@@ -10,32 +10,20 @@ $EM_CONF[$_EXTKEY] = array(
   'title' => 'Localization Manager',
   'description' => 'Module for managing localization import and export',
   'category' => 'module',
-  'shy' => 0,
   'version' => '8.0.0',
-  'dependencies' => '',
-  'conflicts' => '',
-  'priority' => '',
-  'loadOrder' => '',
-  'module' => 'translate,export,import,cm1,cm2,cm3,mod1,mod2',
   'state' => 'beta',
   'uploadfolder' => false,
   'createDirs' => 'uploads/tx_l10nmgr/settings,uploads/tx_l10nmgr/saved_files,uploads/tx_l10nmgr/jobs,uploads/tx_l10nmgr/jobs/out,uploads/tx_l10nmgr/jobs/in,uploads/tx_l10nmgr/jobs/done,uploads/tx_l10nmgr/jobs/_cmd',
-  'modify_tables' => '',
-  'clearcacheonload' => true,
-  'lockType' => '',
+  'clearCacheOnLoad' => true,
   'author' => 'Kasper Skaarhoej, Daniel Zielinski, Daniel Poetzinger, Fabian Seltmann, Andreas Otto, Jo Hasenau, Peter Russ',
   'author_email' => 'kasperYYYY@typo3.com, info@loctimize.com, info@cybercraft.de, pruss@uon.li',
   'author_company' => 'Localization Manager Team',
-  'CGLcompliance' => '',
-  'CGLcompliance_note' => '',
   'constraints' => array(
     'depends' => array(
-      'php' => '7.0.0-0.0.0',
-      'typo3' => '8.5.0-8.99.99',
+      'typo3' => '8.7.0-8.99.99',
       'static_info_tables' => '6.4.2-0.0.0'
     ),
     'conflicts' => array(),
-    'suggests' => array(),
-  ),
-  'suggests' => array()
+    'suggests' => array()
+  )
 );
