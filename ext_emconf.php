@@ -13,7 +13,7 @@ $EM_CONF[$_EXTKEY] = array(
     'description' => 'Module for managing localization import and export',
     'category' => 'module',
     'shy' => 0,
-    'version' => '7.0.1',
+    'version' => '7.1.0',
     'dependencies' => '',
     'conflicts' => '',
     'priority' => '',
@@ -41,4 +41,3 @@ $EM_CONF[$_EXTKEY] = array(
     ),
     'suggests' => array()
 );
-
