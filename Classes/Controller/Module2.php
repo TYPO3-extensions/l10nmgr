@@ -56,7 +56,7 @@ class Module2
         $width = $this->defaultWidth;
         $this->content .= '
 	<frameset cols="' . $width . ',*">
-	<frame name="nav_frame" src="' . BackendUtility::getModuleUrl('ConfigurationManager_TranslationTasks') . '" marginwidth="0" marginheight="0" scrolling="auto" />
+	<frame name="nav_frame" src="' . BackendUtility::getModuleUrl('LocalizationManager_TranslationTasks') . '" marginwidth="0" marginheight="0" scrolling="auto" />
 	<frame name="list_frame" src="" marginwidth="0" marginheight="0" scrolling="auto" />
 	</frameset>
 	</html>

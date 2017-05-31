@@ -58,7 +58,7 @@ class TranslationTasks extends BaseScriptClass
 
     public function init()
     {
-        $this->MCONF['name'] = 'ConfigurationManager_TranslationTasks';
+        $this->MCONF['name'] = 'LocalizationManager_TranslationTasks';
         $this->getBackendUser()->modAccess($this->MCONF, 1);
         $this->getLanguageService()->includeLLFile("EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang.xlf");
         parent::init();

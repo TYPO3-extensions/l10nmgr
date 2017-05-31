@@ -177,7 +177,7 @@ class ConfigurationManager extends BaseScriptClass
                 $configurationDetails .= '</div>';
                 $content .= '<tr class="db_list_normal">';
                 $content .= '<td>' . $configurationDetails . '</td>';
-                $content .= '<td><a href="' . BackendUtility::getModuleUrl('ConfigurationManager_LocalizationManager',
+                $content .= '<td><a href="' . BackendUtility::getModuleUrl('LocalizationManager',
                         array(
                             'id' => $record['pid'],
                             'srcPID' => $record['pid'],

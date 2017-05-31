@@ -919,7 +919,7 @@ class Tools
         if ($this->t8Tools->isTranslationInOwnTable($table)) {
             // Check for disabled field settings
             // print "###".$this->getBackendUser()->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden']."---";
-            if (!empty($this->getBackendUser()->uc['moduleData']['ConfigurationManager_LocalizationManager']['noHidden'])) {
+            if (!empty($this->getBackendUser()->uc['moduleData']['LocalizationManager']['noHidden'])) {
                 $hiddenClause = BackendUtility::BEenableFields($table, $inv = 0);
             } else {
                 $hiddenClause = "";
