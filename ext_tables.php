@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 if (TYPO3_MODE == "BE") {
     
     $extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('l10nmgr');
-    
+
     /**
      * Registers a Backend Module
      */
@@ -20,23 +20,22 @@ if (TYPO3_MODE == "BE") {
             'll_ref' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/ConfigurationManager/locallang_mod.xlf'
         )
     ));
-    
+
     /**
      * Registers a Backend Module
      */
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule('ConfigurationManager', 'LocalizationManager', '', '',
-        array(
-            'routeTarget' => \Localizationteam\L10nmgr\Controller\LocalizationManager::class . '::mainAction',
-            'access' => 'user,group',
-            'name' => 'ConfigurationManager_LocalizationManager',
-            'labels' => array(
-                'tabs_images' => array(
-                    'tab' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',
-                ),
-                'll_ref' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/ConfigurationManager/locallang_mod.xlf'
-            )
-        ));
-    
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule('LocalizationManager', '', '', '', array(
+        'routeTarget' => \Localizationteam\L10nmgr\Controller\LocalizationManager::class . '::mainAction',
+        'access' => 'user,group',
+        'name' => 'LocalizationManager',
+        'labels' => array(
+            'tabs_images' => array(
+                'tab' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',
+            ),
+            'll_ref' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/ConfigurationManager/locallang_mod.xlf'
+        )
+    ));
+
     /**
      * Registers a Backend Module
      */
@@ -51,15 +50,15 @@ if (TYPO3_MODE == "BE") {
             'll_ref' => 'LLL:EXT:l10nmgr/Resources/Private/Language/Modules/Module2/locallang_mod.xlf'
         )
     ));
-    
+
     /**
      * Registers a Backend Module
      */
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule('ConfigurationManager', 'TranslationTasks', '', '',
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule('LocalizationManager', 'TranslationTasks', '', '',
         array(
             'routeTarget' => \Localizationteam\L10nmgr\Controller\TranslationTasks::class . '::mainAction',
             'access' => 'user,group',
-            'name' => 'ConfigurationManager_TranslationTasks',
+            'name' => 'LocalizationManager_TranslationTasks',
             'labels' => array(
                 'tabs_images' => array(
                     'tab' => 'EXT:l10nmgr/Resources/Public/Icons/module1_icon.gif',

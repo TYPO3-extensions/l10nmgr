@@ -919,7 +919,7 @@ class Tools
             
             // Check for disabled field settings
             //print "###".$GLOBALS['BE_USER']->uc['moduleData']['xMOD_tx_l10nmgr_cm1']['noHidden']."---";
-            if (!empty($GLOBALS['BE_USER']->uc['moduleData']['ConfigurationManager_LocalizationManager']['noHidden'])) {
+            if (!empty($GLOBALS['BE_USER']->uc['moduleData']['LocalizationManager']['noHidden'])) {
                 $hiddenClause = BackendUtility::BEenableFields($table, $inv = 0);
             } else {
                 $hiddenClause = "";

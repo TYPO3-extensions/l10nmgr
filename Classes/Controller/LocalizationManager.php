@@ -94,7 +94,7 @@ class LocalizationManager extends BaseScriptClass
      *
      * @var string
      */
-    protected $moduleName = 'ConfigurationManager_LocalizationManager';
+    protected $moduleName = 'LocalizationManager';
     /**
      * @var IconFactory
      */
