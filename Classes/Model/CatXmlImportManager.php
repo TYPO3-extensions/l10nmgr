@@ -85,7 +85,7 @@ class CatXmlImportManager
             
             return false;
         }
-        
+
         $headerInformationNodes = $this->xmlNodes['TYPO3L10N'][0]['ch']['head'][0]['ch'];
         if (!is_array($headerInformationNodes)) {
             $this->_errorMsg[] = $LANG->getLL('import.manager.error.missing.head.message');
@@ -106,7 +106,9 @@ class CatXmlImportManager
             return;
         }
         foreach ($headerInformationNodes as $k => $v) {
-            $this->headerData[$k] = $v[0]['values'][0];
+            if (is_array($v) && is_array($v[0]) && is_array($v[0]['values'])) {
+                $this->headerData[$k] = $v[0]['values'][0];
+            }
         }
     }
     
