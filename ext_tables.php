@@ -65,6 +65,7 @@ if (TYPO3_MODE == "BE") {
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages("tx_l10nmgr_cfg");
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_l10nmgr_cfg',
   'EXT:l10nmgr/Resources/Private/Language/locallang_csh_l10nmgr.xlf');
+
 // Example for disabling localization of specific fields in tables like tt_content
 // Add as many fields as you need
 //$TCA['tt_content']['columns']['imagecaption']['l10n_mode'] = 'exclude';
