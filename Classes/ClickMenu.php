@@ -23,6 +23,7 @@ namespace Localizationteam\L10nmgr;
  *
  * @author Kasper Skårhøj <kasperYYYY@typo3.com>
  */
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -66,7 +67,14 @@ class ClickMenu
                 $LL = $this->includeLL();
                 // Repeat this (below) for as many items you want to add!
                 // Remember to add entries in the localconf.php file for additional titles.
-                $url = ExtensionManagementUtility::siteRelPath("l10nmgr") . "cm1/index.php?id=" . $uid;
+                $url = BackendUtility::getModuleUrl(
+                    'ConfigurationManager_LocalizationManager',
+                    array(
+                        'id' => $backRef->rec['pid'],
+                        'srcPID' => $backRef->rec['pid'],
+                        'exportUID' => $uid,
+                    )
+                );
                 $localItems[] = $backRef->linkItem($this->getLanguageService()->getLLL("cm1_title", $LL),
                     $backRef->excludeIcon('<img src="' . ExtensionManagementUtility::siteRelPath("l10nmgr") . 'cm1/cm_icon.gif" width="15" height="12" border="0" align="top" />'),
                     $backRef->urlRefForCM($url),
@@ -79,7 +87,12 @@ class ClickMenu
             // Simply merges the two arrays together and returns ...
             $menuItems = array_merge($menuItems, $localItems);
         } elseif (GeneralUtility::_GET('subname') == 'moreoptions_tx_l10nmgrXX_cm3') {
-            $url = ExtensionManagementUtility::siteRelPath("l10nmgr") . "cm3/index.php?id=" . $uid . '&table=' . $table;
+            $url = BackendUtility::getModuleUrl('LocalizationManager_TranslationTasks',
+                array(
+                    'id' => $backRef->rec['pid'],
+                    'table' => $table,
+                )
+            );
             $localItems[] = $backRef->linkItem('Create priority', '',
                 $backRef->urlRefForCM($url . '&cmd=createPriority'), 1);
             $localItems[] = $backRef->linkItem('Manage priorities', '',
