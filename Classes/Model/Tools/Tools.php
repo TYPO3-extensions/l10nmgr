@@ -571,6 +571,9 @@ class Tools
                             if (!empty($prevLangInfo) && $prevLangInfo['translations'][$prevSysUid]) {
                                 $prevLangRec[$prevSysUid] = BackendUtility::getRecordWSOL($prevLangInfo['translation_table'],
                                     $prevLangInfo['translations'][$prevSysUid]['uid']);
+                            } else {
+                                $prevLangRec[$prevSysUid] = BackendUtility::getRecordWSOL($prevLangInfo['translation_table'],
+                                    $row['uid']);
                             }
                         }
                         foreach ($TCA[$tInfo['translation_table']]['columns'] as $field => $cfg) {
