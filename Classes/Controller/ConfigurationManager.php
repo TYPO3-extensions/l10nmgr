@@ -180,7 +180,7 @@ class ConfigurationManager extends BaseScriptClass
                 $content .= '<td><a href="' . BackendUtility::getModuleUrl('LocalizationManager',
                         array(
                             'id' => $record['pid'],
-                            'srcPID' => $record['pid'],
+                            'srcPID' => $this->id,
                             'exportUID' => $record['uid'],
                         )) . '">' . $record['title'] . '</a>' . '</td>';
                 // Get the full page path
