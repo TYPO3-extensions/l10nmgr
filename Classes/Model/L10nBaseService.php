@@ -171,7 +171,7 @@ class L10nBaseService
             foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
                 $translatedContentElements = BackendUtility::getRecordLocalization('tt_content',
                     $recordInOriginalLanguage['uid'], $targetLanguageUid);
-                if (!is_array($translatedContentElements)) {
+                if (empty($translatedContentElements)) {
                     $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
                 }
             }
@@ -181,7 +181,7 @@ class L10nBaseService
             foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
                 $translatedContentElements = BackendUtility::getRecordLocalization('tt_content',
                     $recordInOriginalLanguage['uid'], $targetLanguageUid);
-                if (!is_array($translatedContentElements)) {
+                if (empty($translatedContentElements)) {
                     $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
                 }
             }
@@ -192,7 +192,7 @@ class L10nBaseService
             foreach ($recordsInOriginalLanguage as $recordInOriginalLanguage) {
                 $translatedContentElements = BackendUtility::getRecordLocalization('tt_content',
                     $recordInOriginalLanguage['uid'], $targetLanguageUid);
-                if (!is_array($translatedContentElements)) {
+                if (empty($translatedContentElements)) {
                     $commands['tt_content'][$recordInOriginalLanguage['uid']]['localize'] = $targetLanguageUid;
                 }
             }
