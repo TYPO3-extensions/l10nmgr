@@ -1,4 +1,5 @@
 <?php
+
 namespace Localizationteam\L10nmgr\Model\Tools;
 
 /***************************************************************
@@ -149,10 +150,10 @@ class Tools
     /**
      * FlexForm call back function, see translationDetails
      *
-     * @paramarray $dsArr Data Structure
-     * @paramstring $dataValue Data value
-     * @paramarray $PA Various stuff in an array
-     * @paramstring $structurePath Path to location in flexform
+     * @param array $dsArr Data Structure
+     * @param string $dataValue Data value
+     * @param array $PA Various stuff in an array
+     * @param string $structurePath Path to location in flexform
      * @param FlexFormTools $pObj parent object
      *
      * @return void
@@ -201,13 +202,13 @@ class Tools
     /**
      * Add field to detailsOutput array. First, a lot of checks are done...
      *
-     * @paramstring $key Key is a combination of table, uid, field and structure path, identifying the field
-     * @paramarray $TCEformsCfg TCA configuration for field
-     * @paramstring $dataValue Default value (current)
-     * @paramstring $translationValue Translated value (current)
-     * @paramstring $diffDefaultValue Default value of time of current translated value (used for diff'ing with $dataValue)
-     * @paramarray $previewLanguageValues Array of preview language values identified by keys (which are sys_language uids)
-     * @paramarray $contentRow Content row
+     * @param string $key Key is a combination of table, uid, field and structure path, identifying the field
+     * @param array $TCEformsCfg TCA configuration for field
+     * @param string $dataValue Default value (current)
+     * @param string $translationValue Translated value (current)
+     * @param string $diffDefaultValue Default value of time of current translated value (used for diff'ing with $dataValue)
+     * @param array $previewLanguageValues Array of preview language values identified by keys (which are sys_language uids)
+     * @param array $contentRow Content row
      *
      * @return void
      */
@@ -253,8 +254,8 @@ class Tools
                             if (!$this->filters['fieldTypes'] || GeneralUtility::inList($this->filters['fieldTypes'],
                                     $TCEformsCfg['config']['type']) || $this->bypassFilter
                             ) {
-                                if (!$this->filters['noEmptyValues'] || !(!$dataValue && !$translationValue)) { // Checking that no translation value exists either; if a translation value is found it is considered that it should be translated even if the default value is empty for some reason.
-                                    if (!$this->filters['noIntegers'] || !MathUtility::canBeInterpretedAsInteger($dataValue) || $this->bypassFilter) {
+                                if (!$this->filters['noEmptyValues'] || !(!$dataValue && !$translationValue) || !empty($previewLanguageValues[key($previewLanguageValues)]) || $TCEformsCfg['labelField'] === $kFieldName) { // Checking that no translation value exists either; if a translation value is found it is considered that it should be translated even if the default value is empty for some reason.
+                                    if ($this->filters['noIntegers'] || !MathUtility::canBeInterpretedAsInteger($dataValue) || $this->bypassFilter) {
                                         $this->detailsOutput['fields'][$key] = array(
                                             'defaultValue' => $dataValue,
                                             'translationValue' => $translationValue,
@@ -269,7 +270,7 @@ class Tools
                                         $this->detailsOutput['fields'][$key] = 'Bypassing; ->filters[noIntegers] was set and dataValue "' . $dataValue . '" was an integer';
                                     }
                                 } elseif ($this->verbose) {
-                                    $this->detailsOutput['fields'][$key] = 'Bypassing; ->filters[noEmptyValues] was set and dataValue "' . $dataValue . '" was empty and no translation found either.';
+                                    $this->detailsOutput['fields'][$key] = 'Bypassing; ->filters[noEmptyValues] was set and dataValue "' . $dataValue . '" was empty an field was no label field and no translation or alternative source language value found either.';
                                 }
                             } elseif ($this->verbose) {
                                 $this->detailsOutput['fields'][$key] = 'Bypassing; fields of type "' . $TCEformsCfg['config']['type'] . '" was filtered out in ->filters[fieldTypes]';
@@ -324,10 +325,10 @@ class Tools
      * $this->_callBackParams_translationXMLArray
      * $this->_callBackParams_keyForTranslationDetails
      *
-     * @paramarray $dsArr Data Structure
-     * @paramstring $dataValue Data value
-     * @paramarray $PA Various stuff in an array
-     * @paramstring $structurePath Path to location in flexform
+     * @param array $dsArr Data Structure
+     * @param string $dataValue Data value
+     * @param array $PA Various stuff in an array
+     * @param string $structurePath Path to location in flexform
      * @param FlexFormTools $pObj parent object
      *
      * @return void
@@ -454,9 +455,9 @@ class Tools
     /**
      * Selecting single record from a table filtering whether it is a default language / international element.
      *
-     * @paramstring $table Table name
-     * @paraminteger $uid Record uid
-     * @paraminteger $previewLanguage
+     * @param string $table Table name
+     * @param integer $uid Record uid
+     * @param integer $previewLanguage
      *
      * @return array | bool Record array if found, otherwise FALSE
      */
@@ -577,6 +578,7 @@ class Tools
                             }
                         }
                         foreach ($TCA[$tInfo['translation_table']]['columns'] as $field => $cfg) {
+                            $cfg['labelField'] = trim($TCA[$tInfo['translation_table']]['ctrl']['label']);
                             if ($TCA[$tInfo['translation_table']]['ctrl']['languageField'] !== $field && $TCA[$tInfo['translation_table']]['ctrl']['transOrigPointerField'] !== $field && $TCA[$tInfo['translation_table']]['ctrl']['transOrigDiffSourceField'] !== $field) {
                                 $key = $tInfo['translation_table'] . ':' . BackendUtility::wsMapId($tInfo['translation_table'],
                                         $translationUID) . ':' . $field;
@@ -843,15 +845,20 @@ class Tools
             'tablename' => $fullDetails['translationInfo']['table'],
             'recuid' => (int)$fullDetails['translationInfo']['uid'],
             'recpid' => $pid,
-            'sys_language_uid' => (int)$fullDetails['translationInfo']['sys_language_uid'], // can be zero (default) or -1 (international)
+            'sys_language_uid' => (int)$fullDetails['translationInfo']['sys_language_uid'],
+            // can be zero (default) or -1 (international)
             'translation_lang' => $sys_lang,
             'translation_recuid' => (int)$fullDetails['translationInfo']['translations'][$sys_lang]['uid'],
             'workspace' => $this->getBackendUser()->workspace,
             'serializedDiff' => array(),
-            'flag_new' => 0, // Something awaits to get translated => Put to TODO list as a new element
-            'flag_unknown' => 0, // Status of this is unknown, probably because it has been "localized" but not yet translated from the default language => Put to TODO LIST as a priority
-            'flag_noChange' => 0, // If only "noChange" is set for the record, all is well!
-            'flag_update' => 0, // This indicates something to update
+            'flag_new' => 0,
+            // Something awaits to get translated => Put to TODO list as a new element
+            'flag_unknown' => 0,
+            // Status of this is unknown, probably because it has been "localized" but not yet translated from the default language => Put to TODO LIST as a priority
+            'flag_noChange' => 0,
+            // If only "noChange" is set for the record, all is well!
+            'flag_update' => 0,
+            // This indicates something to update
         );
         if (is_array($fullDetails['fields'])) {
             foreach ($fullDetails['fields'] as $key => $tData) {
