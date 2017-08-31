@@ -120,12 +120,12 @@ class ExcelXmlView extends AbstractExportView
                                     } elseif ($noChangeFlag) {
                                         $diff = htmlspecialchars('[No change]');
                                     } else {
-                                        $diff = $this->diffCMP($tData['diffDefaultValue'], $tData['defaultValue']);
+                                        $diff = html_entity_decode($this->diffCMP($tData['diffDefaultValue'], $tData['defaultValue']));
                                         $diff = str_replace('<del>',
-                                            '<Font html:Color="#FF0000" xmlns="http://www.w3.org/TR/REC-html40">',
+                                            '<Font ss:Color="#FF0000" xmlns="http://www.w3.org/TR/REC-html40">',
                                             $diff);
                                         $diff = str_replace('<ins>',
-                                            '<Font html:Color="#00FF00" xmlns="http://www.w3.org/TR/REC-html40">',
+                                            '<Font ss:Color="#00FF00" xmlns="http://www.w3.org/TR/REC-html40">',
                                             $diff);
                                         $diff = str_replace(['</del>', '</ins>'], ['</Font>', '</Font>'], $diff);
                                     }
