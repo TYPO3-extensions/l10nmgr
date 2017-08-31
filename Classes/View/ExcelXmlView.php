@@ -121,13 +121,13 @@ class ExcelXmlView extends AbstractExportView
                                         $diff = htmlspecialchars('[No change]');
                                     } else {
                                         $diff = $this->diffCMP($tData['diffDefaultValue'], $tData['defaultValue']);
-                                        $diff = str_replace('<span class="diff-r">',
+                                        $diff = str_replace('<del>',
                                             '<Font html:Color="#FF0000" xmlns="http://www.w3.org/TR/REC-html40">',
                                             $diff);
-                                        $diff = str_replace('<span class="diff-g">',
+                                        $diff = str_replace('<ins>',
                                             '<Font html:Color="#00FF00" xmlns="http://www.w3.org/TR/REC-html40">',
                                             $diff);
-                                        $diff = str_replace('</span>', '</Font>', $diff);
+                                        $diff = str_replace(['</del>', '</ins>'], ['</Font>', '</Font>'], $diff);
                                     }
                                     $diff .= ($tData['msg'] ? '[NOTE: ' . htmlspecialchars($tData['msg']) . ']' : '');
                                     if (!$this->modeOnlyChanged || !$noChangeFlag) {
