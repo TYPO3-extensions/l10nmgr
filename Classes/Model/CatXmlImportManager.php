@@ -34,9 +34,9 @@ use TYPO3\CMS\Lang\LanguageService;
 class CatXmlImportManager
 {
     /**
-     * @var string $headerData headerData of the XML
+     * @var array $headerData headerData of the XML
      */
-    public $headerData = '';
+    public $headerData = array();
     /**
      * @var string $file filepath with XML
      */
