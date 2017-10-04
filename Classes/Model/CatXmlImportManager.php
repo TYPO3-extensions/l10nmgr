@@ -47,9 +47,9 @@ class CatXmlImportManager
     var $xmlNodes = '';
     
     /**
-     * @var  string $headerData headerData of the XML
+     * @var  array $headerData headerData of the XML
      */
-    var $headerData = '';
+    var $headerData = array();
     
     /**
      * @var  integer $sysLang selected import language (for check purposes - sys_language_uid)
