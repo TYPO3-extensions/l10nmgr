@@ -786,6 +786,11 @@ class Tools
             $field, $row);
         if (is_array($dataStructArray)) {
             return $dataStructArray;
+        } else {
+            $dataStructArray = BackendUtility::getFlexFormDS($conf, $row, $table, $field);
+            if (is_array($dataStructArray)) {
+                return $dataStructArray;
+            }
         }
         return false;
     }
