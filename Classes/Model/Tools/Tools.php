@@ -782,9 +782,13 @@ class Tools
     protected function _getFlexFormMetaDataForContentElement($table, $field, $row)
     {
         $conf = $GLOBALS['TCA'][$table]['columns'][$field];
-        $dataStructArray = GeneralUtility::makeInstance(FlexFormTools::class)->getDataStructureIdentifier($conf, $table,
+        $dataStructArray = array();
+        $dataStructIdentifier = GeneralUtility::makeInstance(FlexFormTools::class)->getDataStructureIdentifier($conf, $table,
             $field, $row);
-        if (is_array($dataStructArray)) {
+        if (!empty($dataStructIdentifier)) {
+            $dataStructArray = GeneralUtility::makeInstance(FlexFormTools::class)->parseDataStructureByIdentifier($dataStructIdentifier);
+        }
+        if (!empty($dataStructArray)) {
             return $dataStructArray;
         } else {
             $dataStructArray = BackendUtility::getFlexFormDS($conf, $row, $table, $field);
@@ -811,10 +815,17 @@ class Tools
             if ($conf['config']['type'] == 'flex') {
                 // We might like to add the filter that detects if record is tt_content/CType is "tx_flex...:" since otherwise we would translate flexform content that might be hidden if say the record had a DS set but was later changed back to "Text w/Image" or so... But probably this is a rare case.
                 // Get current data structure to see if translation is needed:
-                $dataStructArray = GeneralUtility::makeInstance(FlexFormTools::class)->getDataStructureIdentifier($conf,
-                    $table, '', $row);
-                $this->detailsOutput['log'][] = 'FlexForm field "' . $field . '": DataStructure status: ' . (is_array($dataStructArray) ? 'OK' : 'Error: ' . $dataStructArray);
-                if (is_array($dataStructArray) && !$dataStructArray['meta']['langDisable']) {
+                $dataStructArray = array();
+                $dataStructIdentifier = GeneralUtility::makeInstance(FlexFormTools::class)->getDataStructureIdentifier($conf, $table,
+                    $field, $row);
+                if (!empty($dataStructIdentifier)) {
+                    $dataStructArray = GeneralUtility::makeInstance(FlexFormTools::class)->parseDataStructureByIdentifier($dataStructIdentifier);
+                }
+                if (empty($dataStructArray)) {
+                    $dataStructArray = BackendUtility::getFlexFormDS($conf, $row, $table, $field);
+                }
+                $this->detailsOutput['log'][] = 'FlexForm field "' . $field . '": DataStructure status: ' . (!empty($dataStructArray) ? 'OK' : 'Error: ' . $dataStructArray);
+                if (!empty($dataStructArray) && !$dataStructArray['meta']['langDisable']) {
                     $this->detailsOutput['log'][] = 'FlexForm Localization enabled, type: ' . ($dataStructArray['meta']['langChildren'] ? 'Inheritance: Continue' : 'Separate: Stop');
                     if ($dataStructArray['meta']['langChildren']) {
                         $currentValueArray = GeneralUtility::xml2array($row[$field]);
