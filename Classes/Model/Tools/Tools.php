@@ -255,7 +255,7 @@ class Tools
                                     $TCEformsCfg['config']['type']) || $this->bypassFilter
                             ) {
                                 if (!$this->filters['noEmptyValues'] || !(!$dataValue && !$translationValue) || !empty($previewLanguageValues[key($previewLanguageValues)]) || $TCEformsCfg['labelField'] === $kFieldName) { // Checking that no translation value exists either; if a translation value is found it is considered that it should be translated even if the default value is empty for some reason.
-                                    if ($this->filters['noIntegers'] || !MathUtility::canBeInterpretedAsInteger($dataValue) || $this->bypassFilter) {
+                                    if (!$this->filters['noIntegers'] || !MathUtility::canBeInterpretedAsInteger($dataValue) || $this->bypassFilter) {
                                         $this->detailsOutput['fields'][$key] = array(
                                             'defaultValue' => $dataValue,
                                             'translationValue' => $translationValue,
