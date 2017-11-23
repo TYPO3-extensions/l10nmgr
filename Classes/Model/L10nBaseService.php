@@ -501,6 +501,7 @@ class L10nBaseService
                                                         unset($this->TCEmain_cmd[$table][$elementUid]);
                                                     }
                                                     $this->TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
+                                                    $TCEmain_data[$Ttable][$TuidString]['tablenames'] = 'pages';
                                                 } else {
                                                     $parent = BackendUtility::getRecordRaw($element['tablenames'],
                                                         $TCA[$element['tablenames']]['ctrl']['transOrigPointerField'] . ' = ' . (int)$element['uid_foreign'] .
