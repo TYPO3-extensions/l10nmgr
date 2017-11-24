@@ -20,6 +20,7 @@ namespace Localizationteam\L10nmgr\Model;
  ***************************************************************/
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
+use TYPO3\CMS\Core\Database\RelationHandler;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -559,6 +560,28 @@ class L10nBaseService
                                 unset($inputArray[$table][$elementUid]); // Unsetting so in the end we can see if $inputArray was fully processed.
                             }
                         }
+
+                        /** @var $relationHandler RelationHandler */
+                        // integrators have to make sure to configure fields of parent elements properly
+                        // so they will do translations of their children automatically when translated
+                        if (!empty($TCA[$table]['columns'])) {
+                            foreach ($TCA[$table]['columns'] as $column => $setup) {
+                                $configuration = $setup['config'];
+                                if ($configuration['foreign_table']) {
+                                    $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
+                                    $relationHandler->start($element[$column], $configuration['foreign_table'],
+                                        $configuration['MM'], $elementUid, $table, $configuration);
+                                    $relationHandler->processDeletePlaceholder();
+                                    $referenceUids = $relationHandler->tableArray[$configuration['foreign_table']];
+                                    if (!empty($referenceUids)) {
+                                        foreach ($referenceUids as $referenceUid) {
+                                            unset($this->TCEmain_cmd[$configuration['foreign_table']][$referenceUid]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['afterDataFieldsTranslated'];
                         if (is_array($hooks)) {
                             foreach ($hooks as $hookObj) {
