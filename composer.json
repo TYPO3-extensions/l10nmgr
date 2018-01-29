@@ -4,7 +4,7 @@
 	"version" : "7.2.1",
 	"description": "Module for managing localization import and export",
 	"homepage": "https://docs.typo3.org/typo3cms/extensions/l10nmgr/",
-	"license": ["GPL-2.0+"],
+	"license": ["GPL-2.0-or-later"],
 	"keywords": ["TYPO3 CMS", "L10N", "I18N", "T9N", "localization", "translation", "internationalization", "language"],
 	"support": {
 		"issues": "https://forge.typo3.org/projects/extension-l10nmgr/issues"
