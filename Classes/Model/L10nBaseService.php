@@ -418,7 +418,7 @@ class L10nBaseService
             }
             // Should be empty now - or there were more information in the incoming array than there should be!
             if (count($inputArray)) {
-                debug($inputArray, 'These fields were ignored since they were not in the configuration:');
+                debug($inputArray, 'These fields were ignored since they were not in the configuration 1:');
             }
             return $_flexFormDiffArray;
         } else {
@@ -463,7 +463,7 @@ class L10nBaseService
                         }
                         if (is_array($data['fields'])) {
                             foreach ($data['fields'] as $key => $tData) {
-                                if (is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {
+                                if (is_array($tData) && array_key_exists($key, $inputArray[$table][$elementUid])) {
                                     list($Ttable, $TuidString, $Tfield, $Tpath) = explode(':', $key);
                                     list($Tuid, $Tlang, $TdefRecord) = explode('/', $TuidString);
                                     if (!$this->createTranslationAlsoIfEmpty && $inputArray[$table][$elementUid][$key] == '' && $Tuid == 'NEW') {
@@ -688,7 +688,7 @@ class L10nBaseService
             }
             // Should be empty now - or there were more information in the incoming array than there should be!
             if (count($inputArray)) {
-                debug($inputArray, 'These fields were ignored since they were not in the configuration:');
+                debug($inputArray, 'These fields were ignored since they were not in the configuration 2:');
             }
             return $_flexFormDiffArray;
         } else {
