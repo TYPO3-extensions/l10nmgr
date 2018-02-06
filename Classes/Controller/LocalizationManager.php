@@ -498,7 +498,7 @@ return false;
             $translationData->setPreviewLanguage($this->previewLanguage);
             GeneralUtility::unlink_tempfile($uploadedTempFile);
             $service->saveTranslation($l10ncfgObj, $translationData);
-            $info .= '<br/><br/>' . $this->moduleTemplate->icons(1) . $this->getLanguageService()->getLL('import.success.message') . '<br/><br/>';
+            $info .= '<br /><br />' . $this->moduleTemplate->icons(1) . $this->getLanguageService()->getLL('import.success.message') . '<br /><br />';
         }
         // If export of XML is asked for, do that (this will exit and push a file for download)
         if (GeneralUtility::_POST('export_excel')) {
@@ -657,24 +657,24 @@ return false;
                 $translationData->setLanguage($this->sysLanguage);
                 $translationData->setPreviewLanguage($this->previewLanguage);
                 $service->saveTranslation($l10ncfgObj, $translationData);
-                $actionInfo .= '<br/><br/>' . $this->moduleTemplate->icons(1) . 'Import done<br/><br/>(Command count:' . $service->lastTCEMAINCommandsCount . ')';
+                $actionInfo .= '<br /><br />' . $this->moduleTemplate->icons(1) . 'Import done<br /><br />(Command count:' . $service->lastTCEMAINCommandsCount . ')';
             } else {
                 // Relevant processing of XML Import with the help of the Importmanager
                 /** @var CatXmlImportManager $importManager */
                 $importManager = GeneralUtility::makeInstance(CatXmlImportManager::class, $uploadedTempFile,
                     $this->sysLanguage, $xmlString = "");
                 if ($importManager->parseAndCheckXMLFile() === false) {
-                    $actionInfo .= '<br/><br/>' . $this->moduleTemplate->header($this->getLanguageService()->getLL('import.error.title')) . $importManager->getErrorMessages();
+                    $actionInfo .= '<br /><br />' . $this->moduleTemplate->header($this->getLanguageService()->getLL('import.error.title')) . $importManager->getErrorMessages();
                 } else {
                     if (GeneralUtility::_POST('import_delL10N') == '1') {
-                        $actionInfo .= $this->getLanguageService()->getLL('import.xml.delL10N.message') . '<br/>';
+                        $actionInfo .= $this->getLanguageService()->getLL('import.xml.delL10N.message') . '<br />';
                         $delCount = $importManager->delL10N($importManager->getDelL10NDataFromCATXMLNodes($importManager->getXMLNodes()));
                         $actionInfo .= sprintf($this->getLanguageService()->getLL('import.xml.delL10N.count.message'),
-                                $delCount) . '<br/><br/>';
+                                $delCount) . '<br /><br />';
                     }
                     if (GeneralUtility::_POST('make_preview_link') == '1') {
                         $pageIds = $importManager->getPidsFromCATXMLNodes($importManager->getXmlNodes());
-                        $actionInfo .= '<b>' . $this->getLanguageService()->getLL('import.xml.preview_links.title') . '</b><br/>';
+                        $actionInfo .= '<b>' . $this->getLanguageService()->getLL('import.xml.preview_links.title') . '</b><br />';
                         /** @var MkPreviewLinkService $mkPreviewLinks */
                         $mkPreviewLinks = GeneralUtility::makeInstance(MkPreviewLinkService::class,
                             $t3_workspaceId = $importManager->headerData['t3_workspaceId'],
@@ -690,7 +690,7 @@ return false;
                     //$actionInfo.="<pre>".var_export($GLOBALS['BE_USER'],true)."</pre>";
                     unset($importManager);
                     $service->saveTranslation($l10ncfgObj, $translationData);
-                    $actionInfo .= '<br/>' . $this->moduleTemplate->icons(-1) . $this->getLanguageService()->getLL('import.xml.done.message') . '<br/><br/>(Command count:' . $service->lastTCEMAINCommandsCount . ')';
+                    $actionInfo .= '<br />' . $this->moduleTemplate->icons(-1) . $this->getLanguageService()->getLL('import.xml.done.message') . '<br /><br />(Command count:' . $service->lastTCEMAINCommandsCount . ')';
                 }
             }
             GeneralUtility::unlink_tempfile($uploadedTempFile);
