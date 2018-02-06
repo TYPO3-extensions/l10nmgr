@@ -118,7 +118,7 @@ class TranslationTasks extends BaseScriptClass
                 $c++;
                 $tRows[] = '
 	<tr>
-	<td class="bgColor5"><strong>#' . ($c) . ': ' . htmlspecialchars($priorityRecord['title']) . '</strong><br>' . htmlspecialchars($priorityRecord['description']) . '</td>
+	<td class="bgColor5"><strong>#' . ($c) . ': ' . htmlspecialchars($priorityRecord['title']) . '</strong><br />' . htmlspecialchars($priorityRecord['description']) . '</td>
 	</tr>
 	<tr>
 	<td>' . $lTable . '</td>

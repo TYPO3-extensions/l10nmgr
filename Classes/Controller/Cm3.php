@@ -114,7 +114,7 @@ class Cm3 extends BaseScriptClass
                         $res = $this->l10nMgrTools->flushTranslations($table, $uid,
                             GeneralUtility::_POST('_flush') ? true : false);
                         if (!GeneralUtility::_POST('_flush')) {
-                            $output .= 'To flush the translations shown below, press the "Flush" button below:<br/><input type="submit" name="_flush" value="FLUSH" /><br/><br/>';
+                            $output .= 'To flush the translations shown below, press the "Flush" button below:<br /><input type="submit" name="_flush" value="FLUSH" /><br /><br />';
                         } else {
                             $output .= 'Translations below were flushed!';
                         }

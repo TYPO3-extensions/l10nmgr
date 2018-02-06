@@ -169,14 +169,14 @@ class Cm2 extends BaseScriptClass
                     $tRows[] = $this->makeTableRow($rec);
                 }
             }
-            $output .= 'Path: <i>' . $pathShown . '</i><br><table border="0" cellpadding="1" cellspacing="1">' . implode('',
+            $output .= 'Path: <i>' . $pathShown . '</i><br /><table border="0" cellpadding="1" cellspacing="1">' . implode('',
                     $tRows) . '</table>';
             // Updating index
             if ($this->getBackendUser()->isAdmin()) {
-                $output .= '<br><br>Functions for "' . $table . ':' . $uid . '":<br/>
-	<input type="submit" name="_updateIndex" value="Update Index" /><br>
-	<input type="submit" name="_" value="Flush Translations" onclick="' . htmlspecialchars('document.location="../cm3/index.php?table=' . htmlspecialchars($table) . '&id=' . (int)$uid . '&cmd=flushTranslations";return false;') . '"/><br>
-	<input type="submit" name="_" value="Create priority" onclick="' . htmlspecialchars('document.location="' . $GLOBALS['BACK_PATH'] . 'alt_doc.php?returnUrl=' . rawurlencode('db_list.php?id=0&table=tx_l10nmgr_priorities') . '&edit[tx_l10nmgr_priorities][0]=new&defVals[tx_l10nmgr_priorities][element]=' . rawurlencode($table . '_' . $uid) . '";return false;') . '"/><br>
+                $output .= '<br /><br />Functions for "' . $table . ':' . $uid . '":<br />
+	<input type="submit" name="_updateIndex" value="Update Index" /><br />
+	<input type="submit" name="_" value="Flush Translations" onclick="' . htmlspecialchars('document.location="../cm3/index.php?table=' . htmlspecialchars($table) . '&id=' . (int)$uid . '&cmd=flushTranslations";return false;') . '"/><br />
+	<input type="submit" name="_" value="Create priority" onclick="' . htmlspecialchars('document.location="' . $GLOBALS['BACK_PATH'] . 'alt_doc.php?returnUrl=' . rawurlencode('db_list.php?id=0&table=tx_l10nmgr_priorities') . '&edit[tx_l10nmgr_priorities][0]=new&defVals[tx_l10nmgr_priorities][element]=' . rawurlencode($table . '_' . $uid) . '";return false;') . '"/><br />
 	';
             }
         }
@@ -235,7 +235,7 @@ class Cm2 extends BaseScriptClass
 	<td align="center"' . ($rec['flag_unknown'] ? ' bgcolor="#FEFF5A"' : '') . '>' . ($rec['flag_unknown'] ? $rec['flag_unknown'] : '') . '</td>
 	<td align="center"' . ($rec['flag_update'] ? ' bgcolor="#FF7161"' : '') . '>' . ($rec['flag_update'] ? $rec['flag_update'] : '') . '</td>
 	<td align="center"' . ($rec['flag_noChange'] ? ' bgcolor="#78FF82"' : '') . '>' . ($rec['flag_noChange'] ? $rec['flag_noChange'] : '') . '</td>
-	<td>' . implode('<br/>', unserialize($rec['serializedDiff'])) . '</td>
+	<td>' . implode('<br />', unserialize($rec['serializedDiff'])) . '</td>
 	</tr>';
     }
 

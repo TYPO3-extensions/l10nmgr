@@ -124,8 +124,8 @@ class CatXmlView extends AbstractExportView
                                             //Substitute > and < in non-RTE fields
                                             $dataForTranslation = str_replace(' < ', ' &lt; ', $dataForTranslation);
                                             $dataForTranslation = str_replace(' > ', ' &gt; ', $dataForTranslation);
-                                            $dataForTranslation = str_replace('<br>', '<br/>', $dataForTranslation);
-                                            $dataForTranslation = str_replace('<hr>', '<hr/>', $dataForTranslation);
+                                            $dataForTranslation = str_replace('<br>', '<br />', $dataForTranslation);
+                                            $dataForTranslation = str_replace('<hr>', '<hr />', $dataForTranslation);
                                             $params = $this->getBackendUser()->getModuleData('l10nmgr/cm1/prefs',
                                                 'prefs');
                                             if ($params['utf8'] == '1') {
