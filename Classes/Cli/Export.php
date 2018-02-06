@@ -27,7 +27,7 @@ if (!defined('TYPO3_cliMode')) {
 // Load language support
 /* @var $lang LanguageService */
 $lang = GeneralUtility::makeInstance(LanguageService::class);
-$fileRef = 'EXT:l10nmgr/Resources/Private/Language/Cli/locallang.xml';
+$fileRef = 'EXT:l10nmgr/Resources/Private/Language/Cli/locallang.xlf';
 $lang->includeLLFile($fileRef);
 
 class Export extends CommandLineController

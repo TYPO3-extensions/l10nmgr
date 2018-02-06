@@ -113,7 +113,7 @@ class ClickMenu
     }
     
     /**
-     * Reads the [extDir]/locallang.xml and returns the $LOCAL_LANG array found in that file.
+     * Reads the [extDir]/locallang.xlf and returns the $LOCAL_LANG array found in that file.
      *
      * @return  array    Local lang value.
      */
@@ -121,7 +121,7 @@ class ClickMenu
     {
         global $LANG;
         
-        $LOCAL_LANG = $LANG->includeLLFile('EXT:l10nmgr/Resources/Private/Language/locallang.xml', false);
+        $LOCAL_LANG = $LANG->includeLLFile('EXT:l10nmgr/Resources/Private/Language/locallang.xlf', false);
         
         return $LOCAL_LANG;
     }

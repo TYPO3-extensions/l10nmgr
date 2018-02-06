@@ -1,4 +1,5 @@
 <?php
+
 namespace Localizationteam\L10nmgr\Task;
 
 /***************************************************************
@@ -19,6 +20,9 @@ namespace Localizationteam\L10nmgr\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /**
  * Additional BE fields for file garbage collection task.
@@ -30,29 +34,29 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
  * @package TYPO3
  * @subpackage tx_l10nmgr
  */
-class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements tx_scheduler_AdditionalFieldProvider
+class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements AdditionalFieldProviderInterface
 {
-    
+
     /**
      * @var integer Default age
      */
     protected $defaultAge = 30;
-    
+
     /**
      * @var string Default pattern of files to exclude from cleanup
      */
     protected $defaultPattern = '(index\.html|\.htaccess)';
-    
+
     /**
      * Add an integer input field for age of fiels to delete
      *
      * @param array $taskInfo Reference to the array containing the info used in the add/edit form
      * @param object $task When editing, reference to the current task object. Null when adding.
-     * @param tx_scheduler_Module $parentObject Reference to the calling object (Scheduler's BE module)
+     * @param SchedulerModuleController $parentObject Reference to the calling object (Scheduler's BE module)
      *
      * @return array Array containing all the information pertaining to the additional fields
      */
-    public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $parentObject)
+    public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $parentObject)
     {
         // Initialize selected fields
         if (!isset($taskInfo['l10nmgr_fileGarbageCollection_age'])) {
@@ -67,67 +71,67 @@ class LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider implements
                 $taskInfo['l10nmgr_fileGarbageCollection_excludePattern'] = $task->excludePattern;
             }
         }
-        
+
         // Add field for file age
         $fieldName = 'tx_scheduler[l10nmgr_fileGarbageCollection_age]';
         $fieldId = 'task_fileGarbageCollection_age';
         $fieldValue = (int)$taskInfo['l10nmgr_fileGarbageCollection_age'];
         $fieldHtml = '<input type="text" name="' . $fieldName . '" id="' . $fieldId . '" value="' . htmlspecialchars($fieldValue) . '" size="10" />';
-        
-        $additionalFields[$fieldId] = array(
-            'code' => $fieldHtml,
-            'label' => 'LLL:EXT:l10nmgr/tasks/locallang.xml:fileGarbageCollection.age',
-            'cshKey' => '_tasks_txl10nmgr',
+
+        $additionalFields[$fieldId] = [
+            'code'     => $fieldHtml,
+            'label'    => 'LLL:EXT:l10nmgr/Resources/Private/Language/Task/locallang.xlf:fileGarbageCollection.age',
+            'cshKey'   => '_tasks_txl10nmgr',
             'cshLabel' => $fieldId,
-        );
-        
+        ];
+
         // Add field with pattern for excluding files
         $fieldName = 'tx_scheduler[l10nmgr_fileGarbageCollection_excludePattern]';
         $fieldId = 'task_fileGarbageCollection_excludePattern';
         $fieldValue = $taskInfo['l10nmgr_fileGarbageCollection_excludePattern'];
         $fieldHtml = '<input type="text" name="' . $fieldName . '" id="' . $fieldId . '" value="' . htmlspecialchars($fieldValue) . '" size="30" />';
-        
-        $additionalFields[$fieldId] = array(
-            'code' => $fieldHtml,
-            'label' => 'LLL:EXT:l10nmgr/tasks/locallang.xml:fileGarbageCollection.excludePattern',
-            'cshKey' => '_tasks_txl10nmgr',
+
+        $additionalFields[$fieldId] = [
+            'code'     => $fieldHtml,
+            'label'    => 'LLL:EXT:l10nmgr/Resources/Private/Language/Task/locallang.xlf:fileGarbageCollection.excludePattern',
+            'cshKey'   => '_tasks_txl10nmgr',
             'cshLabel' => $fieldId,
-        );
-        
+        ];
+
         return $additionalFields;
     }
-    
+
     /**
      * Checks if the given value is an integer
      *
      * @param array $submittedData Reference to the array containing the data submitted by the user
-     * @param tx_scheduler_Module $parentObject Reference to the calling object (Scheduler's BE module)
+     * @param SchedulerModuleController $parentObject Reference to the calling object (Scheduler's BE module)
      *
      * @return boolean TRUE if validation was ok (or selected class is not relevant), FALSE otherwise
      */
-    public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $parentObject)
+    public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $parentObject)
     {
         $result = true;
         // Check if number of days is indeed a number and greater than 0
         // If not, fail validation and issue error message
         if (!is_numeric($submittedData['l10nmgr_fileGarbageCollection_age']) || (int)$submittedData['l10nmgr_fileGarbageCollection_age'] <= 0) {
             $result = false;
-            $parentObject->addMessage($GLOBALS['LANG']->sL('LLL:EXT:l10nmgr/tasks/locallang.xml:fileGarbageCollection.invalidAge'),
+            $parentObject->addMessage($GLOBALS['LANG']->sL('LLL:EXT:l10nmgr/Resources/Private/Language/Task/locallang.xlf:fileGarbageCollection.invalidAge'),
                 FlashMessage::ERROR);
         }
-        
+
         return $result;
     }
-    
+
     /**
      * Saves given integer value in task object
      *
      * @param array $submittedData Contains data submitted by the user
-     * @param tx_scheduler_Task $task Reference to the current task object
+     * @param AbstractTask $task Reference to the current task object
      *
      * @return void
      */
-    public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task)
+    public function saveAdditionalFields(array $submittedData, AbstractTask $task)
     {
         $task->age = (int)$submittedData['l10nmgr_fileGarbageCollection_age'];
     }
