@@ -1,4 +1,5 @@
 <?php
+
 namespace Localizationteam\L10nmgr\Model;
 
 /***************************************************************
@@ -48,15 +49,15 @@ class L10nBaseService
     /**
      * @var array Extension's configuration as from the EM
      */
-    protected $extensionConfiguration = array();
+    protected $extensionConfiguration = [];
     /**
      * @var array
      */
-    protected $TCEmain_cmd = array();
+    protected $TCEmain_cmd = [];
     /**
      * @var array
      */
-    protected $checkedParentRecords = array();
+    protected $checkedParentRecords = [];
     /**
      * @var int
      */
@@ -152,18 +153,18 @@ class L10nBaseService
         $translatedPageRecords = BackendUtility::getRecordLocalization('pages', $pageUid, $targetLanguageUid);
         if ($translatedPageRecords === false) {
             // translate the page first
-            $commands = array(
-                'pages' => array(
-                    $pageUid => array(
-                        'localize' => $targetLanguageUid
-                    )
-                )
-            );
+            $commands = [
+                'pages' => [
+                    $pageUid => [
+                        'localize' => $targetLanguageUid,
+                    ],
+                ],
+            ];
             $dataHandler = $this->getDataHandlerInstance();
-            $dataHandler->start(array(), $commands);
+            $dataHandler->start([], $commands);
             $dataHandler->process_cmdmap();
         }
-        $commands = array();
+        $commands = [];
         $gridElementsInstalled = ExtensionManagementUtility::isLoaded('gridelements');
         if ($gridElementsInstalled) {
             // find all tt_content elements in the default language of this page that are NOT inside a grid element
@@ -202,7 +203,7 @@ class L10nBaseService
             // don't do the "prependAtCopy"
             $GLOBALS['TCA']['tt_content']['ctrl']['prependAtCopy'] = false;
             $dataHandler = $this->getDataHandlerInstance();
-            $dataHandler->start(array(), $commands);
+            $dataHandler->start([], $commands);
             $dataHandler->process_cmdmap();
         }
     }
@@ -243,7 +244,7 @@ class L10nBaseService
         }
         $inputArray = $translationData->getTranslationData();
         // clean up input array and replace the "NEW" fields with actual values if they have been translated already
-        $cleanedInputArray = array();
+        $cleanedInputArray = [];
         foreach ($inputArray as $table => $elementsInTable) {
             foreach ($elementsInTable as $elementUid => $fields) {
                 foreach ($fields as $fieldKey => $translatedValue) {
@@ -322,8 +323,8 @@ class L10nBaseService
             // Initialize:
             /** @var FlexFormTools $flexToolObj */
             $flexToolObj = GeneralUtility::makeInstance(FlexFormTools::class);
-            $TCEmain_data = array();
-            $_flexFormDiffArray = array();
+            $TCEmain_data = [];
+            $_flexFormDiffArray = [];
             // Traverse:
             foreach ($accum as $pId => $page) {
                 foreach ($accum[$pId]['items'] as $table => $elements) {
@@ -331,9 +332,9 @@ class L10nBaseService
                         $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['beforeDataFieldsDefault'];
                         if (is_array($hooks)) {
                             foreach ($hooks as $hookObj) {
-                                $parameters = array(
-                                    'data' => $data
-                                );
+                                $parameters = [
+                                    'data' => $data,
+                                ];
                                 $data = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
                             }
                         }
@@ -350,16 +351,16 @@ class L10nBaseService
                                     // If FlexForm, we set value in special way:
                                     if ($Tpath) {
                                         if (!is_array($TCEmain_data[$Ttable][$elementUid][$Tfield])) {
-                                            $TCEmain_data[$Ttable][$elementUid][$Tfield] = array();
+                                            $TCEmain_data[$Ttable][$elementUid][$Tfield] = [];
                                         }
                                         //TCEMAINDATA is passed as reference here:
                                         $flexToolObj->setArrayValueByPath($Tpath,
                                             $TCEmain_data[$Ttable][$elementUid][$Tfield],
                                             $inputArray[$table][$elementUid][$key]);
-                                        $_flexFormDiffArray[$key] = array(
+                                        $_flexFormDiffArray[$key] = [
                                             'translated' => $inputArray[$table][$elementUid][$key],
-                                            'default' => $tData['defaultValue']
-                                        );
+                                            'default'    => $tData['defaultValue'],
+                                        ];
                                     } else {
                                         $TCEmain_data[$Ttable][$elementUid][$Tfield] = $inputArray[$table][$elementUid][$key];
                                     }
@@ -376,9 +377,9 @@ class L10nBaseService
                         $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['afterDataFieldsDefault'];
                         if (is_array($hooks)) {
                             foreach ($hooks as $hookObj) {
-                                $parameters = array(
+                                $parameters = [
                                     'TCEmain_data' => $TCEmain_data,
-                                );
+                                ];
                                 $TCEmain_data = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
                             }
                         }
@@ -400,7 +401,7 @@ class L10nBaseService
             $tce->isImporting = true;
             foreach (array_chunk($TCEmain_data, 100, true) as $dataPart) {
                 $tce->start($dataPart,
-                    array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
+                    []); // check has been done previously that there is a backend user which is Admin and also in live workspace
                 $tce->process_datamap();
             }
             if (count($tce->errorLog)) {
@@ -418,7 +419,7 @@ class L10nBaseService
             }
             // Should be empty now - or there were more information in the incoming array than there should be!
             if (count($inputArray)) {
-                debug($inputArray, 'These fields were ignored since they were not in the configuration:');
+                debug($inputArray, 'These fields were ignored since they were not in the configuration 1:');
             }
             return $_flexFormDiffArray;
         } else {
@@ -443,11 +444,11 @@ class L10nBaseService
             $flexToolObj = GeneralUtility::makeInstance(FlexFormTools::class);
             $gridElementsInstalled = ExtensionManagementUtility::isLoaded('gridelements');
             $fluxInstalled = ExtensionManagementUtility::isLoaded('flux');
-            $element = array();
-            $TCEmain_data = array();
-            $this->TCEmain_cmd = array();
+            $element = [];
+            $TCEmain_data = [];
+            $this->TCEmain_cmd = [];
             $Tlang = '';
-            $_flexFormDiffArray = array();
+            $_flexFormDiffArray = [];
             // Traverse:
             foreach ($accum as $pId => $page) {
                 foreach ($accum[$pId]['items'] as $table => $elements) {
@@ -455,19 +456,19 @@ class L10nBaseService
                         $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['beforeDataFieldsTranslated'];
                         if (is_array($hooks)) {
                             foreach ($hooks as $hookObj) {
-                                $parameters = array(
-                                    'data' => $data
-                                );
+                                $parameters = [
+                                    'data' => $data,
+                                ];
                                 $data = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
                             }
                         }
                         if (is_array($data['fields'])) {
                             foreach ($data['fields'] as $key => $tData) {
-                                if (is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {
+                                if (is_array($tData) && array_key_exists($key, $inputArray[$table][$elementUid])) {
                                     list($Ttable, $TuidString, $Tfield, $Tpath) = explode(':', $key);
                                     list($Tuid, $Tlang, $TdefRecord) = explode('/', $TuidString);
-                                    if (!$this->createTranslationAlsoIfEmpty && $inputArray[$table][$elementUid][$key] == '' && $Tuid == 'NEW') {
-                                        //if data is empty do not save it
+                                    if (!$this->createTranslationAlsoIfEmpty && $inputArray[$table][$elementUid][$key] == '' && $Tuid == 'NEW' && $Tfield !== trim($TCA[$Ttable]['ctrl']['label'])) {
+                                        //if data is empty and the field is not the label field of that particular table, do not save it
                                         unset($inputArray[$table][$elementUid][$key]);
                                         continue;
                                     }
@@ -525,10 +526,10 @@ class L10nBaseService
                                         $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['importNewTceMainCmd'];
                                         if (is_array($hooks)) {
                                             foreach ($hooks as $hookObj) {
-                                                $parameters = array(
-                                                    'data' => $data,
-                                                    'TCEmain_cmd' => $this->TCEmain_cmd
-                                                );
+                                                $parameters = [
+                                                    'data'        => $data,
+                                                    'TCEmain_cmd' => $this->TCEmain_cmd,
+                                                ];
                                                 $this->TCEmain_cmd = GeneralUtility::callUserFunction($hookObj,
                                                     $parameters, $this);
                                             }
@@ -537,16 +538,16 @@ class L10nBaseService
                                     // If FlexForm, we set value in special way:
                                     if ($Tpath) {
                                         if (!is_array($TCEmain_data[$Ttable][$TuidString][$Tfield])) {
-                                            $TCEmain_data[$Ttable][$TuidString][$Tfield] = array();
+                                            $TCEmain_data[$Ttable][$TuidString][$Tfield] = [];
                                         }
                                         //TCEMAINDATA is passed as reference here:
                                         $flexToolObj->setArrayValueByPath($Tpath,
                                             $TCEmain_data[$Ttable][$TuidString][$Tfield],
                                             $inputArray[$table][$elementUid][$key]);
-                                        $_flexFormDiffArray[$key] = array(
+                                        $_flexFormDiffArray[$key] = [
                                             'translated' => $inputArray[$table][$elementUid][$key],
-                                            'default' => $tData['defaultValue']
-                                        );
+                                            'default'    => $tData['defaultValue'],
+                                        ];
                                     } else {
                                         $TCEmain_data[$Ttable][$TuidString][$Tfield] = $inputArray[$table][$elementUid][$key];
                                     }
@@ -585,10 +586,10 @@ class L10nBaseService
                         $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['afterDataFieldsTranslated'];
                         if (is_array($hooks)) {
                             foreach ($hooks as $hookObj) {
-                                $parameters = array(
+                                $parameters = [
                                     'TCEmain_data' => $TCEmain_data,
-                                    'TCEmain_cmd' => $this->TCEmain_cmd
-                                );
+                                    'TCEmain_cmd'  => $this->TCEmain_cmd,
+                                ];
                                 $this->TCEmain_cmd = GeneralUtility::callUserFunction($hookObj, $parameters, $this);
                             }
                         }
@@ -607,7 +608,7 @@ class L10nBaseService
             }
             $tce->isImporting = true;
             if (count($this->TCEmain_cmd)) {
-                $tce->start(array(), $this->TCEmain_cmd);
+                $tce->start([], $this->TCEmain_cmd);
                 $tce->process_cmdmap();
                 if (count($tce->errorLog)) {
                     debug($tce->errorLog, 'TCEmain localization errors:');
@@ -659,7 +660,7 @@ class L10nBaseService
             $tce->isImporting = true;
             foreach (array_chunk($TCEmain_data, 100, true) as $dataPart) {
                 $tce->start($dataPart,
-                    array()); // check has been done previously that there is a backend user which is Admin and also in live workspace
+                    []); // check has been done previously that there is a backend user which is Admin and also in live workspace
                 $tce->process_datamap();
             }
             self::$targetLanguageID = null;
@@ -688,7 +689,7 @@ class L10nBaseService
             }
             // Should be empty now - or there were more information in the incoming array than there should be!
             if (count($inputArray)) {
-                debug($inputArray, 'These fields were ignored since they were not in the configuration:');
+                debug($inputArray, 'These fields were ignored since they were not in the configuration 2:');
             }
             return $_flexFormDiffArray;
         } else {
@@ -708,7 +709,7 @@ class L10nBaseService
         $this->depthCounter++;
         if ($this->depthCounter < 100 && !isset($this->checkedParentRecords[$parentField][$element['uid']])) {
             $this->checkedParentRecords[$parentField][$element['uid']] = true;
-            $translatedParent = array();
+            $translatedParent = [];
             if ($element[$parentField] > 0) {
                 $translatedParent = BackendUtility::getRecordRaw('tt_content',
                     $TCA['tt_content']['ctrl']['transOrigPointerField'] . ' = ' . (int)$element[$parentField] .
