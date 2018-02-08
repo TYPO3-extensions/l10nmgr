@@ -1,7 +1,7 @@
 {
 	"name": "localizationteam/l10nmgr",
 	"type": "typo3-cms-extension",
-	"version" : "7.2.1",
+	"version" : "7.1.3",
 	"description": "Module for managing localization import and export",
 	"homepage": "https://docs.typo3.org/typo3cms/extensions/l10nmgr/",
 	"license": ["GPL-2.0-or-later"],

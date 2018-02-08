@@ -323,14 +323,11 @@ class L10nBaseService
                         }
                         if (is_array($data['fields'])) {
                             foreach ($data['fields'] as $key => $tData) {
-                                
-                                if (is_array($tData) && isset($inputArray[$table][$elementUid][$key])) {
-                                    
+                                if (is_array($tData) && array_key_exists($key, $inputArray[$table][$elementUid])) {
                                     list($Ttable, $TuidString, $Tfield, $Tpath) = explode(':', $key);
                                     list($Tuid, $Tlang, $TdefRecord) = explode('/', $TuidString);
-                                    
-                                    if (!$this->createTranslationAlsoIfEmpty && $inputArray[$table][$elementUid][$key] == '' && $Tuid == 'NEW') {
-                                        //if data is empty do not save it
+                                    if (!$this->createTranslationAlsoIfEmpty && $inputArray[$table][$elementUid][$key] == '' && $Tuid == 'NEW' && $Tfield !== trim($TCA[$Ttable]['ctrl']['label'])) {
+                                        //if data is empty and the field is not the label field of that particular table, do not save it
                                         unset($inputArray[$table][$elementUid][$key]);
                                         continue;
                                     }
