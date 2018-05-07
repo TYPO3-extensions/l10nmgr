@@ -135,7 +135,7 @@ class L10nBaseService
             return;
         }
         $inputArray = $translationData->getTranslationData();
-        $pageUids = array_keys($inputArray['pages']);
+        $pageUids = array_keys((array)$inputArray['pages']);
         foreach ($pageUids as $pageUid) {
             $this->translateContentOnPage($pageUid, (int)$translationData->getLanguage());
         }
