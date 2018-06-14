@@ -22,6 +22,8 @@ use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -159,6 +161,7 @@ class L10nAccumulatedInformation
         if ($previewLanguage) {
             $t8Tools->previewLanguages = array($previewLanguage);
         }
+        $fileList = '';
         // Traverse tree elements:
         foreach ($tree->tree as $treeElement) {
             $pageId = $treeElement['row']['uid'];
@@ -185,6 +188,9 @@ class L10nAccumulatedInformation
                                     // Now, for each record, look for localization:
                                     foreach ($allRows as $row) {
                                         BackendUtility::workspaceOL($table, $row);
+                                        if ($table === 'sys_file_reference') {
+                                            $fileList .= $fileList ? ',' . (int)$row['uid_local'] : (int)$row['uid_local'];
+                                        }
                                         if (is_array($row) && count($tableUidConstraintIndex) > 0) {
                                             if (is_array($row) && isset($tableUidConstraintIndex[$table . ':' . $row['uid']])) {
                                                 $accum[$pageId]['items'][$table][$row['uid']] = $t8Tools->translationDetails($table,
@@ -203,9 +209,20 @@ class L10nAccumulatedInformation
                             }
                         }
                     }
+                    if ($table === 'sys_file_reference' && !empty($fileList)) {
+                        $fileList = implode(',', array_keys(array_flip(GeneralUtility::intExplode(',', $fileList, true))));
+                        if (!empty($fileList)) {
+                            $metaData = $this->getDatabaseConnection()->exec_SELECTgetRows('uid', 'sys_file_metadata', 'sys_language_uid = ' . (int)$previewLanguage . ' AND file IN (' . $fileList . ')', '', 'uid', '', 'uid');
+                            if (!empty($metaData)) {
+                                $l10ncfg['include'] .= $l10ncfg['include'] ? ',' : '';
+                                $l10ncfg['include'] .= 'sys_file_metadata:' . implode(',sys_file_metadata:', array_keys($metaData));
+                            }
+                        }
+                    }
                 }
             }
         }
+
         $includeIndex = array_unique(GeneralUtility::trimExplode(',', $l10ncfg['include'], 1));
         foreach ($includeIndex as $recId) {
             list($table, $uid) = explode(':', $recId);
@@ -242,6 +259,21 @@ class L10nAccumulatedInformation
                 }
             }
         }
+    }
+
+    /**
+     * Get DatabaseConnection instance - $GLOBALS['TYPO3_DB']
+     *
+     * This method should be used instead of direct access to
+     * $GLOBALS['TYPO3_DB'] for easy IDE auto completion.
+     *
+     * @return DatabaseConnection
+     * @deprecated since TYPO3 v8, will be removed in TYPO3 v9
+     */
+    protected function getDatabaseConnection()
+    {
+        GeneralUtility::logDeprecatedFunction();
+        return $GLOBALS['TYPO3_DB'];
     }
 
     /**
