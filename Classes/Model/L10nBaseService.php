@@ -59,6 +59,10 @@ class L10nBaseService
      */
     protected $checkedParentRecords = [];
     /**
+     * @var array
+     */
+    protected $childMappingArray = [];
+    /**
      * @var int
      */
     protected $depthCounter = 0;
@@ -454,6 +458,8 @@ class L10nBaseService
             foreach ($accum as $pId => $page) {
                 foreach ($accum[$pId]['items'] as $table => $elements) {
                     foreach ($elements as $elementUid => $data) {
+                        $element = BackendUtility::getRecordRaw($table,
+                            'uid = ' . (int)$elementUid . ($TCA[$table]['delete'] ? ' AND ' . $TCA[$table]['delete'] . '=0' : ''));
                         $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['beforeDataFieldsTranslated'];
                         if (is_array($hooks)) {
                             foreach ($hooks as $hookObj) {
@@ -476,12 +482,10 @@ class L10nBaseService
                                     // If new element is required, we prepare for localization
                                     if ($Tuid === 'NEW') {
                                         if ($table === 'tt_content' && ($gridElementsInstalled === true || $fluxInstalled === true)) {
-                                            $element = BackendUtility::getRecordRaw($table,
-                                                'uid = ' . (int)$elementUid . ' AND deleted = 0');
                                             if (isset($this->TCEmain_cmd['tt_content'][$elementUid])) {
                                                 unset($this->TCEmain_cmd['tt_content'][$elementUid]);
                                             }
-                                            if ((int)$element['colPos'] > -1 && (int)$element['colPos'] !== 18181) {
+                                            if ((int)$element['colPos'] !== -2 && (int)$element['colPos'] !== -1 && (int)$element['colPos'] !== 18181) {
                                                 $this->TCEmain_cmd['tt_content'][$elementUid]['localize'] = $Tlang;
                                             } else {
                                                 if ($element['tx_gridelements_container'] > 0) {
@@ -504,7 +508,7 @@ class L10nBaseService
                                                         unset($this->TCEmain_cmd[$table][$elementUid]);
                                                     }
                                                     $this->TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
-                                                    $TCEmain_data[$Ttable][$TuidString]['tablenames'] = 'pages';
+                                                    $TCEmain_data[$table][$TuidString]['tablenames'] = 'pages';
                                                 } else {
                                                     $parent = BackendUtility::getRecordRaw($element['tablenames'],
                                                         $TCA[$element['tablenames']]['ctrl']['transOrigPointerField'] . ' = ' . (int)$element['uid_foreign'] .
@@ -523,6 +527,27 @@ class L10nBaseService
                                                 unset($this->TCEmain_cmd[$table][$elementUid]);
                                             }
                                             $this->TCEmain_cmd[$table][$elementUid]['localize'] = $Tlang;
+                                            /** @var $relationHandler RelationHandler */
+                                            // integrators have to make sure to configure fields of parent elements properly
+                                            // so they will do translations of their children automatically when translated
+                                            if (!empty($TCA[$table]['columns'][$key])) {
+                                                $configuration = $TCA[$table]['columns'][$key]['config'];
+                                                if ($configuration['foreign_table']) {
+                                                    $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
+                                                    $relationHandler->start($element[$key], $configuration['foreign_table'],
+                                                        $configuration['MM'], $elementUid, $table, $configuration);
+                                                    $relationHandler->processDeletePlaceholder();
+                                                    $referenceUids = $relationHandler->tableArray[$configuration['foreign_table']];
+                                                    if (!empty($referenceUids)) {
+                                                        foreach ($referenceUids as $referenceUid) {
+                                                            $this->childMappingArray[$configuration['foreign_table']][$referenceUid] = true;
+                                                            if ($table !== 'pages') {
+                                                                unset($this->TCEmain_cmd[$configuration['foreign_table']][$referenceUid]);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                         $hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['l10nmgr']['importNewTceMainCmd'];
                                         if (is_array($hooks)) {
@@ -560,27 +585,6 @@ class L10nBaseService
                             }
                             if (is_array($inputArray[$table][$elementUid]) && !count($inputArray[$table][$elementUid])) {
                                 unset($inputArray[$table][$elementUid]); // Unsetting so in the end we can see if $inputArray was fully processed.
-                            }
-                        }
-
-                        /** @var $relationHandler RelationHandler */
-                        // integrators have to make sure to configure fields of parent elements properly
-                        // so they will do translations of their children automatically when translated
-                        if (!empty($TCA[$table]['columns'])) {
-                            foreach ($TCA[$table]['columns'] as $column => $setup) {
-                                $configuration = $setup['config'];
-                                if ($configuration['foreign_table']) {
-                                    $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
-                                    $relationHandler->start($element[$column], $configuration['foreign_table'],
-                                        $configuration['MM'], $elementUid, $table, $configuration);
-                                    $relationHandler->processDeletePlaceholder();
-                                    $referenceUids = $relationHandler->tableArray[$configuration['foreign_table']];
-                                    if (!empty($referenceUids)) {
-                                        foreach ($referenceUids as $referenceUid) {
-                                            unset($this->TCEmain_cmd[$configuration['foreign_table']][$referenceUid]);
-                                        }
-                                    }
-                                }
                             }
                         }
 
@@ -626,7 +630,7 @@ class L10nBaseService
                 foreach ($TCEmain_data[$table] as $TuidString => $fields) {
                     if ($table === 'sys_file_reference' && $fields['tablenames'] === 'pages') {
                         $parent = BackendUtility::getRecordRaw('pages_language_overlay',
-                            'pid = ' . (int)$element['uid_foreign'] . ' AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang);
+                            'pid = ' . (int)$element['pid'] . ' AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang);
                         if ($parent['uid']) {
                             $fields['tablenames'] = 'pages_language_overlay';
                             $fields['uid_foreign'] = $parent['uid'];
@@ -638,6 +642,23 @@ class L10nBaseService
                         if ($tce->copyMappingArray_merged[$table][$TdefRecord]) {
                             $TCEmain_data[$table][BackendUtility::wsMapId($table,
                                 $tce->copyMappingArray_merged[$table][$TdefRecord])] = $fields;
+                        } else if ($this->childMappingArray[$table][$TdefRecord]) {
+                            if ($this->childMappingArray[$table][$TdefRecord] === true) {
+                                $translatedRecordRaw = BackendUtility::getRecordRaw($table,
+                                    $TCA[$table]['ctrl']['transOrigPointerField'] . ' = ' . (int)$TdefRecord . ' AND deleted = 0 AND sys_language_uid = ' . (int)$Tlang);
+                                if ($translatedRecordRaw['uid']) {
+                                    $this->childMappingArray[$table][$TdefRecord] = $translatedRecordRaw['uid'];
+                                }
+                            }
+                            if ($this->childMappingArray[$table][$TdefRecord]) {
+                                if ($this->extensionConfiguration['enable_neverHideAtCopy'] == 1 &&
+                                    $TCA[$table]['ctrl']['enablecolumns'] &&
+                                    $TCA[$table]['ctrl']['enablecolumns']['disabled']) {
+                                    $fields[$TCA[$table]['ctrl']['enablecolumns']['disabled']] = 0;
+                                }
+                                $TCEmain_data[$table][BackendUtility::wsMapId($table,
+                                    $this->childMappingArray[$table][$TdefRecord])] = $fields;
+                            }
                         } else {
                             GeneralUtility::sysLog(__FILE__ . ': ' . __LINE__ . ': Record "' . $table . ':' . $TdefRecord . '" was NOT localized as it should have been!',
                                 'l10nmgr');
