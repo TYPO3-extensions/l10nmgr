@@ -41,6 +41,7 @@ return array(
       'label' => $l10n . ':tx_l10nmgr_cfg.depth',
       'config' => array(
         'type' => 'select',
+        'renderType' => 'selectSingle',
         'items' => array(
           array($l10n . ':tx_l10nmgr_cfg.depth.I.0', '0'),
           array($l10n . ':tx_l10nmgr_cfg.depth.I.1', '1'),
@@ -71,6 +72,7 @@ return array(
       'label' => $l10n . ':tx_l10nmgr_cfg.displaymode',
       'config' => array(
         'type' => 'select',
+        'renderType' => 'selectSingle',
         'items' => array(
           array($l10n . ':tx_l10nmgr_cfg.displaymode.I.0', '0'),
           array($l10n . ':tx_l10nmgr_cfg.displaymode.I.1', '1'),
@@ -85,11 +87,11 @@ return array(
       'label' => $l10n . ':tx_l10nmgr_cfg.tablelist',
       'config' => array(
         'type' => 'select',
+        'renderType' => 'selectMultipleSideBySide',
         'special' => 'tables',
         'size' => '5',
         'autoSizeMax' => 50,
         'maxitems' => 100,
-        'renderMode' => $GLOBALS['TYPO3_CONF_VARS']['BE']['accessListRenderMode'],
       )
     ),
     'exclude' => array(
@@ -125,6 +127,7 @@ return array(
       'label' => $l10n . ':tx_l10nmgr_cfg.sourceLang',
       'config' => array(
         'type' => 'select',
+        'renderType' => 'selectSingle',
         'items' => array(
           array('', 0),
         ),

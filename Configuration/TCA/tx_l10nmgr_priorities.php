@@ -52,6 +52,7 @@ return array(
       'label' => $l10n . ':tx_l10nmgr_priorities.languages',
       'config' => array(
         'type' => 'select',
+        'renderType' => 'selectSingle',
         'foreign_table' => 'sys_language',
         'foreign_table_where' => 'AND sys_language.pid=###SITEROOT### AND sys_language.hidden=0 ORDER BY sys_language.uid',
         'size' => 5,
