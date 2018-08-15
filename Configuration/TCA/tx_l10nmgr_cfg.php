@@ -162,7 +162,7 @@ return array(
     )
   ),
   'types' => array(
-    '0' => array('showitem' => 'title,filenameprefix;;;;2-2-2, depth;;;;3-3-3, pages, sourceLangStaticId, tablelist, exclude, include, metadata, displaymode, incfcewithdefaultlanguage, pretranslatecontent, overrideexistingtranslations')
+    '0' => array('showitem' => 'title,filenameprefix, depth, pages, sourceLangStaticId, tablelist, exclude, include, metadata, displaymode, incfcewithdefaultlanguage, pretranslatecontent, overrideexistingtranslations')
   ),
   'palettes' => array(
     '1' => array('showitem' => '')
