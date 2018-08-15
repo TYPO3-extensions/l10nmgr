@@ -75,9 +75,6 @@ return array(
     ),
   ),
   'types' => array(
-    '0' => array('showitem' => 'hidden;;1;;1-1-1, title;;;;2-2-2, description;;;;3-3-3, languages, element')
+    '0' => array('showitem' => 'hidden, title, description, languages, element')
   ),
-  'palettes' => array(
-    '1' => array('showitem' => '')
-  )
 );
