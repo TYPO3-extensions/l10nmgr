@@ -90,7 +90,6 @@ return array(
         'autoSizeMax' => 50,
         'maxitems' => 100,
         'renderMode' => $GLOBALS['TYPO3_CONF_VARS']['BE']['accessListRenderMode'],
-        'iconsInOptionTags' => 1,
       )
     ),
     'exclude' => array(
