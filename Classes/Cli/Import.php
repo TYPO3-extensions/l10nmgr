@@ -113,6 +113,11 @@ class Import extends CommandLineController
             'Import as default language',
             "If set this setting will overwrite the default language during the import.\nThe values can be: \n TRUE = Content will be imported as default language.\n FALSE = Content will be imported as translation (default).\n"
         );
+        $this->cli_options[] = array(
+            '--srcPID',
+            'Source page ID',
+            "UID of the page used during export. Needs configuration depth to be set to \"current page\" Default = 0\n"
+        );
         // Setting help texts
         $this->cli_help['name'] = 'Localization Manager importer';
         $this->cli_help['synopsis'] = '###OPTIONS###';
@@ -252,6 +257,12 @@ class Import extends CommandLineController
             $importAsDefaultLanguage = (bool)$this->cli_args['_DEFAULT'][6];
         }
         $this->callParameters['importAsDefaultLanguage'] = $importAsDefaultLanguage;
+        // Source PID
+        $sourcePid = 0;
+        if (isset($this->cli_args['--srcPID'])) {
+            $sourcePid = (int)$this->cli_args['--srcPID'][0];
+        }
+        $this->callParameters['sourcePid'] = $sourcePid;
     }
 
     /**
@@ -314,6 +325,7 @@ class Import extends CommandLineController
             /** @var L10nConfiguration $l10ncfgObj */
             $l10ncfgObj = GeneralUtility::makeInstance(L10nConfiguration::class);
             $l10ncfgObj->load($importManager->headerData['t3_l10ncfg']);
+            $l10ncfgObj->setSourcePid($this->callParameters['sourcePid']);
             $status = $l10ncfgObj->isLoaded();
             if ($status === false) {
                 $this->cli_echo("l10ncfg not loaded! Exiting...\n");
@@ -448,6 +460,7 @@ class Import extends CommandLineController
                         /** @var L10nConfiguration $l10ncfgObj */
                         $l10ncfgObj = GeneralUtility::makeInstance(L10nConfiguration::class);
                         $l10ncfgObj->load($importManager->headerData['t3_l10ncfg']);
+                        $l10ncfgObj->setSourcePid($this->callParameters['sourcePid']);
                         $status = $l10ncfgObj->isLoaded();
                         if ($status === false) {
                             $this->cli_echo("l10ncfg not loaded! Exiting...\n");

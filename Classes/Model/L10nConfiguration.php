@@ -44,6 +44,11 @@ class L10nConfiguration
     public $l10ncfg;
 
     /**
+     * @var int
+     */
+    protected $sourcePid;
+
+    /**
      * loads internal array with l10nmgrcfg record
      *
      * @param int $id Id of the cfg record
@@ -89,7 +94,7 @@ class L10nConfiguration
      **/
     public function getData($key)
     {
-        return $this->l10ncfg[$key];
+        return $key === 'pid' && (int)$this->l10ncfg['depth'] === -1 && (int)$this->sourcePid ? (int)$this->sourcePid : $this->l10ncfg[$key];
     }
 
     /**
@@ -98,7 +103,7 @@ class L10nConfiguration
      * @param int $sysLang sys_language_uid
      *
      * @return L10nAccumulatedInformation
-     **/
+     */
     public function getL10nAccumulatedInformationsObjectForLanguage($sysLang)
     {
         $l10ncfg = $this->l10ncfg;
@@ -107,7 +112,8 @@ class L10nConfiguration
         // Showing the tree:
         // Initialize starting point of page tree:
         if ($depth === -1) {
-            $treeStartingPoints = array((int)GeneralUtility::_GET('srcPID'));
+            $sourcePid = (int)$this->sourcePid ? (int)$this->sourcePid : (int)GeneralUtility::_GET('srcPID');
+            $treeStartingPoints = array($sourcePid);
         } else {
             if ($depth === -2 && !empty($l10ncfg['pages'])) {
                 $treeStartingPoints = GeneralUtility::intExplode(',', $l10ncfg['pages']);
@@ -198,4 +204,14 @@ class L10nConfiguration
         GeneralUtility::logDeprecatedFunction();
         return $GLOBALS['TYPO3_DB'];
     }
+
+    /**
+     * @param int $id
+     * @return void
+     */
+    public function setSourcePid($id)
+    {
+        $this->sourcePid = (int)$id;
+    }
+
 }

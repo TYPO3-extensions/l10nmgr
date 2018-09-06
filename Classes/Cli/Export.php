@@ -64,6 +64,16 @@ class Export extends CommandLineController
             "UID of the workspace used during export. Default = 0\n"
         );
         $this->cli_options[] = array(
+            '--srcPID',
+            'Source page ID',
+            "UID of the page used during export. Needs configuration depth to be set to \"current page\" Default = 0\n"
+        );
+        $this->cli_options[] = array(
+            '--forcedSourceLanguage',
+            'Forced Source Language ID',
+            "UID of the already translated language used as overlaid source language during export."
+        );
+        $this->cli_options[] = array(
             '--hidden',
             'Do not export hidden contents',
             "The values can be: \n TRUE = Hidden content is skipped\n FALSE = Hidden content is exported. Default is FALSE.\n"
@@ -238,6 +248,8 @@ class Export extends CommandLineController
         /** @var L10nConfiguration $l10nmgrCfgObj */
         $l10nmgrCfgObj = GeneralUtility::makeInstance(L10nConfiguration::class);
         $l10nmgrCfgObj->load($l10ncfg);
+        $sourcePid = isset($this->cli_args['--srcPID']) ? (int)$this->cli_args['--srcPID'][0] : 0;
+        $l10nmgrCfgObj->setSourcePid($sourcePid);
         if ($l10nmgrCfgObj->isLoaded()) {
             /** @var CatXmlView $l10nmgrGetXML */
             $l10nmgrGetXML = GeneralUtility::makeInstance(CatXmlView::class, $l10nmgrCfgObj, $tlang);
@@ -249,6 +261,10 @@ class Export extends CommandLineController
                     $forceLanguage = $staticLangArr['uid'];
                     $l10nmgrGetXML->setForcedSourceLanguage($forceLanguage);
                 }
+            }
+            $forceLanguage = isset($this->cli_args['--forcedSourceLanguage']) ? (int)$this->cli_args['--forcedSourceLanguage'][0] : 0;
+            if ($forceLanguage) {
+                $l10nmgrGetXML->setForcedSourceLanguage($forceLanguage);
             }
             $onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';
             if ($onlyChanged === 'TRUE') {
@@ -349,6 +365,7 @@ class Export extends CommandLineController
         /** @var L10nConfiguration $l10nmgrCfgObj */
         $l10nmgrCfgObj = GeneralUtility::makeInstance(L10nConfiguration::class);
         $l10nmgrCfgObj->load($l10ncfg);
+        $l10nmgrCfgObj->setSourcePid((int)$this->cli_args['--srcPID']);
         if ($l10nmgrCfgObj->isLoaded()) {
             /** @var ExcelXmlView $l10nmgrGetXML */
             $l10nmgrGetXML = GeneralUtility::makeInstance(ExcelXmlView::class, $l10nmgrCfgObj, $tlang);
@@ -360,6 +377,10 @@ class Export extends CommandLineController
                     $forceLanguage = $staticLangArr['uid'];
                     $l10nmgrGetXML->setForcedSourceLanguage($forceLanguage);
                 }
+            }
+            $forceLanguage = isset($this->cli_args['--forcedSourceLanguage']) ? (int)$this->cli_args['--forcedSourceLanguage'][0] : 0;
+            if ($forceLanguage) {
+                $l10nmgrGetXML->setForcedSourceLanguage($forceLanguage);
             }
             $onlyChanged = isset($this->cli_args['--updated']) ? $this->cli_args['--updated'][0] : 'FALSE';
             if ($onlyChanged === 'TRUE') {
