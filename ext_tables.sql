@@ -92,3 +92,11 @@ CREATE TABLE tx_l10nmgr_exportdata (
 	
 	PRIMARY KEY (uid),
 );
+
+#
+# Table structure for table 'pages'
+#
+CREATE TABLE pages (
+	l10nmgr_configuration tinyint(4) DEFAULT '0' NOT NULL,
+	l10nmgr_configuration_next_level tinyint(4) DEFAULT '0' NOT NULL,
+);
