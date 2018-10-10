@@ -33,3 +33,5 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['Localizationtea
     'description' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/Task/locallang.xlf:fileGarbageCollection.description',
     'additionalFields' => 'LocalizationmanagerFileGarbageCollectionAdditionalFieldProvider',
 );
+
+$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] .= ',l10nmgr_configuration,l10nmgr_configuration_next_level';

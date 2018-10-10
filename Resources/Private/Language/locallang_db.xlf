@@ -115,6 +115,28 @@
 			<trans-unit id="tx_l10nmgr_priorities.element" xml:space="preserve">
 				<source>Element(s):</source>
 			</trans-unit>
+
+			<trans-unit id="pages.palettes.l10nmgr_configuration" xml:space="preserve">
+				<source>Additional Localization Manager Settings (might be overriden by l10nmgr configuration)</source>
+			</trans-unit>
+			<trans-unit id="pages.l10nmgr_configuration" xml:space="preserve">
+				<source>Translation settings (this page only)</source>
+			</trans-unit>
+			<trans-unit id="pages.l10nmgr_configuration_next_level" xml:space="preserve">
+				<source>Translation settings (subpages of this page)</source>
+			</trans-unit>
+			<trans-unit id="pages.l10nmgr_configuration.I.0" xml:space="preserve">
+				<source></source>
+			</trans-unit>
+			<trans-unit id="pages.l10nmgr_configuration.I.1" xml:space="preserve">
+				<source>None (resets subpage settings from rootline)</source>
+			</trans-unit>
+			<trans-unit id="pages.l10nmgr_configuration.I.2" xml:space="preserve">
+				<source>Exclude from translations</source>
+			</trans-unit>
+			<trans-unit id="pages.l10nmgr_configuration.I.3" xml:space="preserve">
+				<source>Always include within translations (overrides exclude)</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>
