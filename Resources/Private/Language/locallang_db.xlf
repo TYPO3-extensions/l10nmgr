@@ -115,7 +115,6 @@
 			<trans-unit id="tx_l10nmgr_priorities.element" xml:space="preserve">
 				<source>Element(s):</source>
 			</trans-unit>
-
 			<trans-unit id="pages.palettes.l10nmgr_configuration" xml:space="preserve">
 				<source>Additional Localization Manager Settings (might be overriden by l10nmgr configuration)</source>
 			</trans-unit>
@@ -136,6 +135,9 @@
 			</trans-unit>
 			<trans-unit id="pages.l10nmgr_configuration.I.3" xml:space="preserve">
 				<source>Always include within translations (overrides exclude)</source>
+			</trans-unit>
+			<trans-unit id="sys_language.restrictions" xml:space="preserve">
+				<source>Exclude this element from Localization Manager exports of selected languages</source>
 			</trans-unit>
         </body>
     </file>

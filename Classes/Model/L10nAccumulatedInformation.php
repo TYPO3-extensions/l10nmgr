@@ -1,4 +1,5 @@
 <?php
+
 namespace Localizationteam\L10nmgr\Model;
 
 /***************************************************************
@@ -20,6 +21,7 @@ namespace Localizationteam\L10nmgr\Model;
  ***************************************************************/
 
 use Localizationteam\L10nmgr\Constants;
+use Localizationteam\L10nmgr\LanguageRestriction\Collection\LanguageRestrictionCollection;
 use Localizationteam\L10nmgr\Model\Tools\Tools;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -53,11 +55,11 @@ class L10nAccumulatedInformation
     /**
      * @var array Selected l10nmgr configuration
      */
-    var $l10ncfg = array();
+    var $l10ncfg = [];
     /**
      * @var array List of not allowed doktypes
      */
-    var $disallowDoktypes = array('--div--', '255');
+    var $disallowDoktypes = ['--div--', '255'];
     /**
      * @var int sys_language_uid of source language
      */
@@ -69,7 +71,7 @@ class L10nAccumulatedInformation
     /**
      * @var array Information about collected data for translation
      */
-    var $_accumulatedInformations = array();
+    var $_accumulatedInformations = [];
     /**
      * @var int Field count, might be needed by tranlation agencies
      */
@@ -81,15 +83,15 @@ class L10nAccumulatedInformation
     /**
      * @var array Extension's configuration as from the EM
      */
-    protected $extensionConfiguration = array();
+    protected $extensionConfiguration = [];
     /**
      * @var array Index of pages to be excluded from translation
      */
-    protected $excludeIndex = array();
+    protected $excludeIndex = [];
     /**
      * @var array Index of pages to be included with translation
      */
-    protected $includeIndex = array();
+    protected $includeIndex = [];
 
     /**
      * Constructor
@@ -147,7 +149,7 @@ class L10nAccumulatedInformation
         global $TCA;
         $tree = $this->tree;
         $l10ncfg = $this->l10ncfg;
-        $accum = array();
+        $accum = [];
         $sysLang = $this->sysLang;
         // FlexForm Diff data:
         $flexFormDiff = unserialize($l10ncfg['flexformdiff']);
@@ -169,7 +171,7 @@ class L10nAccumulatedInformation
                 $this->getBackendUser()->getTSConfigVal('options.additionalPreviewLanguages')));
         }
         if ($previewLanguage) {
-            $t8Tools->previewLanguages = array($previewLanguage);
+            $t8Tools->previewLanguages = [$previewLanguage];
         }
         $fileList = '';
         // Traverse tree elements:
@@ -196,13 +198,24 @@ class L10nAccumulatedInformation
             } elseif ($treeElement['row']['l10nmgr_configuration'] === Constants::L10NMGR_CONFIGURATION_EXCLUDE) {
                 $this->excludeIndex['pages:' . $pageId] = 1;
             }
+            if (!empty($treeElement['row'][Constants::L10NMGR_LANGUAGE_RESTRICTION_FIELDNAME])) {
+                $languageIsRestricted = LanguageRestrictionCollection::load(
+                    (int)$previewLanguage,
+                    true,
+                    'pages',
+                    Constants::L10NMGR_LANGUAGE_RESTRICTION_FIELDNAME
+                );
+                if (!empty($languageIsRestricted)) {
+                    $this->excludeIndex['pages:' . $pageId] = 1;
+                }
+            }
             if (!isset($this->excludeIndex['pages:' . $pageId]) && !in_array($treeElement['row']['doktype'],
                     $this->disallowDoktypes)
             ) {
                 $accum[$pageId]['header']['title'] = $treeElement['row']['title'];
                 $accum[$pageId]['header']['icon'] = $treeElement['HTML'];
                 $accum[$pageId]['header']['prevLang'] = $previewLanguage;
-                $accum[$pageId]['items'] = array();
+                $accum[$pageId]['items'] = [];
                 // Traverse tables:
                 foreach ($TCA as $table => $cfg) {
                     // Only those tables we want to work on:
@@ -218,6 +231,18 @@ class L10nAccumulatedInformation
                                 if (count($allRows)) {
                                     // Now, for each record, look for localization:
                                     foreach ($allRows as $row) {
+                                        if (!empty($row[Constants::L10NMGR_LANGUAGE_RESTRICTION_FIELDNAME])) {
+                                            $languageIsRestricted = LanguageRestrictionCollection::load(
+                                                (int)$previewLanguage,
+                                                true,
+                                                $table,
+                                                Constants::L10NMGR_LANGUAGE_RESTRICTION_FIELDNAME
+                                            );
+                                            if (!empty($languageIsRestricted)) {
+                                                $this->excludeIndex[$table . ':' . (int)$row['uid']] = 1;
+                                                continue;
+                                            }
+                                        }
                                         BackendUtility::workspaceOL($table, $row);
                                         if ($table === 'sys_file_reference') {
                                             $fileList .= $fileList ? ',' . (int)$row['uid_local'] : (int)$row['uid_local'];
@@ -273,61 +298,6 @@ class L10nAccumulatedInformation
     }
 
     /**
-     * @param string $indexList
-     */
-    protected function addPagesMarkedAsIncluded($indexList, $excludeList) {
-        $this->includeIndex = array();
-        $this->excludeIndex = array_flip(GeneralUtility::trimExplode(',', $excludeList, true));
-        if ($indexList) {
-            $this->includeIndex = array_flip(GeneralUtility::trimExplode(',', $indexList, true));
-        }
-        $enableClause = BackendUtility::BEenableFields('pages');
-        $explicitlyIncludedPages = $this->getDatabaseConnection()->exec_SELECTgetRows('uid', 'pages',
-            'l10nmgr_configuration = ' . Constants::L10NMGR_CONFIGURATION_INCLUDE . $enableClause);
-        if (!empty($explicitlyIncludedPages)) {
-            foreach ($explicitlyIncludedPages as $page) {
-                if (!isset($this->excludeIndex['pages:' . $page['uid']]) && !in_array($page['doktype'],
-                        $this->disallowDoktypes)
-                ) {
-                    $this->includeIndex['pages:' . $page['uid']] = 1;
-                }
-            }
-        }
-        $includingParentPages = $this->getDatabaseConnection()->exec_SELECTgetRows('uid', 'pages',
-            'l10nmgr_configuration_next_level = ' . Constants::L10NMGR_CONFIGURATION_INCLUDE . $enableClause);
-        if (!empty($includingParentPages)) {
-            foreach ($includingParentPages as $parentPage) {
-                $this->addSubPagesRecursively($parentPage['uid']);
-            }
-        }
-    }
-
-    /**
-     * Walks through a tree branch and checks if pages are to be included
-     * Will ignore pages with explicit l10nmgr_configuration settings but still walk through their subpages
-     * @param int $uid
-     * @param int $level
-     */
-    protected function addSubPagesRecursively($uid, $level = 0) {
-        $level ++;
-        if ($uid > 0 && $level < 100) {
-            $enableClause = BackendUtility::BEenableFields('pages');
-            $subPages = $this->getDatabaseConnection()->exec_SELECTgetRows('uid,pid,l10nmgr_configuration,l10nmgr_configuration_next_level', 'pages',
-                'pid = ' . (int)$uid . $enableClause);
-            if (!empty($subPages)) {
-                foreach ($subPages as $page) {
-                    if ($page['l10nmgr_configuration'] === Constants::L10NMGR_CONFIGURATION_DEFAULT) {
-                        $this->includeIndex['pages:' . $page['uid']] = 1;
-                    }
-                    if ($page['l10nmgr_configuration_next_level'] === Constants::L10NMGR_CONFIGURATION_DEFAULT || $page['l10nmgr_configuration_next_level'] === Constants::L10NMGR_CONFIGURATION_INCLUDE) {
-                        $this->addSubPagesRecursively($page['uid'], $level);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Returns the Backend User
      * @return BackendUserAuthentication
      */
@@ -364,6 +334,64 @@ class L10nAccumulatedInformation
     {
         GeneralUtility::logDeprecatedFunction();
         return $GLOBALS['TYPO3_DB'];
+    }
+
+    /**
+     * @param string $indexList
+     */
+    protected function addPagesMarkedAsIncluded($indexList, $excludeList)
+    {
+        $this->includeIndex = [];
+        $this->excludeIndex = array_flip(GeneralUtility::trimExplode(',', $excludeList, true));
+        if ($indexList) {
+            $this->includeIndex = array_flip(GeneralUtility::trimExplode(',', $indexList, true));
+        }
+        $enableClause = BackendUtility::BEenableFields('pages');
+        $explicitlyIncludedPages = $this->getDatabaseConnection()->exec_SELECTgetRows('uid', 'pages',
+            'l10nmgr_configuration = ' . Constants::L10NMGR_CONFIGURATION_INCLUDE . $enableClause);
+        if (!empty($explicitlyIncludedPages)) {
+            foreach ($explicitlyIncludedPages as $page) {
+                if (!isset($this->excludeIndex['pages:' . $page['uid']]) && !in_array($page['doktype'],
+                        $this->disallowDoktypes)
+                ) {
+                    $this->includeIndex['pages:' . $page['uid']] = 1;
+                }
+            }
+        }
+        $includingParentPages = $this->getDatabaseConnection()->exec_SELECTgetRows('uid', 'pages',
+            'l10nmgr_configuration_next_level = ' . Constants::L10NMGR_CONFIGURATION_INCLUDE . $enableClause);
+        if (!empty($includingParentPages)) {
+            foreach ($includingParentPages as $parentPage) {
+                $this->addSubPagesRecursively($parentPage['uid']);
+            }
+        }
+    }
+
+    /**
+     * Walks through a tree branch and checks if pages are to be included
+     * Will ignore pages with explicit l10nmgr_configuration settings but still walk through their subpages
+     * @param int $uid
+     * @param int $level
+     */
+    protected function addSubPagesRecursively($uid, $level = 0)
+    {
+        $level++;
+        if ($uid > 0 && $level < 100) {
+            $enableClause = BackendUtility::BEenableFields('pages');
+            $subPages = $this->getDatabaseConnection()->exec_SELECTgetRows('uid,pid,l10nmgr_configuration,l10nmgr_configuration_next_level',
+                'pages',
+                'pid = ' . (int)$uid . $enableClause);
+            if (!empty($subPages)) {
+                foreach ($subPages as $page) {
+                    if ($page['l10nmgr_configuration'] === Constants::L10NMGR_CONFIGURATION_DEFAULT) {
+                        $this->includeIndex['pages:' . $page['uid']] = 1;
+                    }
+                    if ($page['l10nmgr_configuration_next_level'] === Constants::L10NMGR_CONFIGURATION_DEFAULT || $page['l10nmgr_configuration_next_level'] === Constants::L10NMGR_CONFIGURATION_INCLUDE) {
+                        $this->addSubPagesRecursively($page['uid'], $level);
+                    }
+                }
+            }
+        }
     }
 
     /**

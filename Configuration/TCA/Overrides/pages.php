@@ -57,3 +57,8 @@
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette('pages', 'l10nmgr_configuration', 'l10nmgr_configuration,l10nmgr_configuration_next_level');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('pages', '--palette--;LLL:EXT:l10nmgr/Resources/Private/Language/locallang_db.xlf:pages.palettes.l10nmgr_configuration;l10nmgr_configuration', '', 'after:l18n_cfg');
+
+\Localizationteam\L10nmgr\Utility\L10nmgrExtensionManagementUtility::makeTranslationsRestrictable(
+    'core',
+    'pages'
+);
