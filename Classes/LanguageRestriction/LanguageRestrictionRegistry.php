@@ -11,7 +11,6 @@ namespace Localizationteam\L10nmgr\LanguageRestriction;
 use Localizationteam\L10nmgr\Constants;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Lang\LanguageService;
@@ -329,7 +328,6 @@ class LanguageRestrictionRegistry implements SingletonInterface
             if (!empty($options['position'])) {
                 $position = $options['position'];
             }
-            DebugUtility::debug($fieldList);
             // Makes the new "l10nmgr_language_restriction" field to be visible in TSFE.
             ExtensionManagementUtility::addToAllTCAtypes($tableName, $fieldList, $typesList, $position);
         }
