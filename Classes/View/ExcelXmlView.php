@@ -1,4 +1,5 @@
 <?php
+
 namespace Localizationteam\L10nmgr\View;
 
 /***************************************************************
@@ -18,6 +19,7 @@ namespace Localizationteam\L10nmgr\View;
  * GNU General Public License for more details.
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use Localizationteam\L10nmgr\Model\L10nConfiguration;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -68,7 +70,7 @@ class ExcelXmlView extends AbstractExportView
             $accumObj->setForcedPreviewLanguage($this->forcedSourceLanguage);
         }
         $accum = $accumObj->getInfoArray();
-        $output = array();
+        $output = [];
         $sourceColState = '';
         $altSourceColState = '';
         // Traverse the structure and generate HTML output:
@@ -94,7 +96,7 @@ class ExcelXmlView extends AbstractExportView
             foreach ($accum[$pId]['items'] as $table => $elements) {
                 foreach ($elements as $elementUid => $data) {
                     if (is_array($data['fields'])) {
-                        $fieldsForRecord = array();
+                        $fieldsForRecord = [];
                         foreach ($data['fields'] as $key => $tData) {
                             $sourceColState = '';
                             $altSourceColState = '';
@@ -120,14 +122,15 @@ class ExcelXmlView extends AbstractExportView
                                     } elseif ($noChangeFlag) {
                                         $diff = htmlspecialchars('[No change]');
                                     } else {
-                                        $diff = $this->diffCMP($tData['diffDefaultValue'], $tData['defaultValue']);
-                                        $diff = str_replace('<span class="diff-r">',
-                                            '<Font html:Color="#FF0000" xmlns="http://www.w3.org/TR/REC-html40">',
+                                        $diff = html_entity_decode($this->diffCMP($tData['diffDefaultValue'],
+                                            $tData['defaultValue']));
+                                        $diff = str_replace('<del>',
+                                            '<Font ss:Color="#FF0000" xmlns="http://www.w3.org/TR/REC-html40">',
                                             $diff);
-                                        $diff = str_replace('<span class="diff-g">',
-                                            '<Font html:Color="#00FF00" xmlns="http://www.w3.org/TR/REC-html40">',
+                                        $diff = str_replace('<ins>',
+                                            '<Font ss:Color="#00FF00" xmlns="http://www.w3.org/TR/REC-html40">',
                                             $diff);
-                                        $diff = str_replace('</span>', '</Font>', $diff);
+                                        $diff = str_replace(['</del>', '</ins>'], ['</Font>', '</Font>'], $diff);
                                     }
                                     $diff .= ($tData['msg'] ? '[NOTE: ' . htmlspecialchars($tData['msg']) . ']' : '');
                                     if (!$this->modeOnlyChanged || !$noChangeFlag) {
