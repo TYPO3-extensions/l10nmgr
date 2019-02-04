@@ -33,7 +33,7 @@ class LanguageRestrictionCollection extends AbstractRecordCollection implements 
      *
      * @var string
      */
-    protected static $storageTableName = Constants::L10NMGR_LANGUAGE_RESTRICTION_MM_TABLENAME;
+    protected static $storageTableName = Constants::L10NMGR_LANGUAGE_RESTRICTION_FOREIGN_TABLENAME;
 
     /**
      * Name of the language-restrictions-relation field (used in the MM_match_fields/fieldname property of the TCA)
