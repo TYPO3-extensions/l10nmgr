@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\DiffUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -307,10 +308,18 @@ class Tools
         $isRTE = false;
         if (is_array($contentRow)) {
             list($table, $uid, $field) = explode(':', $key);
+            $TCAtype = BackendUtility::getTCAtypeValue($table, $contentRow);
             // Check if the RTE is explicitly declared in the defaultExtras configuration
-            if (isset($TCEformsCfg['defaultExtras']) && strpos($TCEformsCfg['defaultExtras'], 'richtext') !== false) {
+            if (isset($TCEformsCfg['config']['enableRichtext']) && $TCEformsCfg['config']['enableRichtext']) {
                 $isRTE = true;
                 // If not, then we must check per type configuration
+            } else if (
+                isset($GLOBALS['TCA'][$table]['types'][$TCAtype]['columnsOverrides'])
+                && isset($GLOBALS['TCA'][$table]['types'][$TCAtype]['columnsOverrides'][$field])
+                && isset($GLOBALS['TCA'][$table]['types'][$TCAtype]['columnsOverrides'][$field]['config']['enableRichtext'])
+                && $GLOBALS['TCA'][$table]['types'][$TCAtype]['columnsOverrides'][$field]['config']['enableRichtext']
+            ) {
+                $isRTE = true;
             } else {
                 $typesDefinition = BackendUtility::getTCAtypes($table, $contentRow, true);
                 $isRTE = !empty($typesDefinition[$field]['spec']['richtext']);
