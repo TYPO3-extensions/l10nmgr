@@ -99,12 +99,16 @@ class LanguageRestrictionCollection extends AbstractRecordCollection implements 
      */
     public static function load($id, $fillItems = false, $tableName = '', $fieldName = '')
     {
+        /** @var $queryBuilder QueryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(static::$storageTableName);
 
+        /** @var $deletedRestriction DeletedRestriction */
+        $deletedRestriction = GeneralUtility::makeInstance(DeletedRestriction::class);
+
         $queryBuilder->getRestrictions()
             ->removeAll()
-            ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+            ->add($deletedRestriction);
 
         $collectionRecord = $queryBuilder->select('*')
             ->from(static::$storageTableName)

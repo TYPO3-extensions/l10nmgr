@@ -61,11 +61,11 @@ class L10nAccumulatedInformation
      */
     var $disallowDoktypes = ['--div--', '255'];
     /**
-     * @var int sys_language_uid of source language
+     * @var int sys_language_uid of target language
      */
     var $sysLang;
     /**
-     * @var int sys_language_uid of target language
+     * @var int sys_language_uid of forced source language
      */
     var $forcedPreviewLanguage;
     /**
@@ -200,12 +200,12 @@ class L10nAccumulatedInformation
             }
             if (!empty($treeElement['row'][Constants::L10NMGR_LANGUAGE_RESTRICTION_FIELDNAME])) {
                 $languageIsRestricted = LanguageRestrictionCollection::load(
-                    (int)$previewLanguage,
+                    (int)$sysLang,
                     true,
                     'pages',
                     Constants::L10NMGR_LANGUAGE_RESTRICTION_FIELDNAME
                 );
-                if (!empty($languageIsRestricted)) {
+                if (count($languageIsRestricted) > 0) {
                     $this->excludeIndex['pages:' . $pageId] = 1;
                 }
             }
@@ -233,12 +233,12 @@ class L10nAccumulatedInformation
                                     foreach ($allRows as $row) {
                                         if (!empty($row[Constants::L10NMGR_LANGUAGE_RESTRICTION_FIELDNAME])) {
                                             $languageIsRestricted = LanguageRestrictionCollection::load(
-                                                (int)$previewLanguage,
+                                                (int)$sysLang,
                                                 true,
                                                 $table,
                                                 Constants::L10NMGR_LANGUAGE_RESTRICTION_FIELDNAME
                                             );
-                                            if (!empty($languageIsRestricted)) {
+                                            if (count($languageIsRestricted) > 0) {
                                                 $this->excludeIndex[$table . ':' . (int)$row['uid']] = 1;
                                                 continue;
                                             }
