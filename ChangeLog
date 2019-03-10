@@ -1,4 +1,4 @@
-See https://git.typo3.org/TYPO3CMS/Extensions/l10nmgr.git/log/refs/heads/8-0 for 8.x.x specific changes
+See https://gitlab.com/coderscare/l10nmgr/commits/8-0 for a list of commits
 
 2014-12-16 Daniel Zielinski <zielinski@loctimize.com>
 	* [BUG] Fixed: CAT XML export of HTML content elements contains non XML compliant entities making export unusable.

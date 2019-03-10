@@ -130,6 +130,7 @@ class LanguageRestrictionCollection extends AbstractRecordCollection implements 
      */
     protected function getCollectedRecordsQueryBuilder()
     {
+        /** @var $queryBuilder QueryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(static::$storageTableName);
         $queryBuilder->getRestrictions()->removeAll();
